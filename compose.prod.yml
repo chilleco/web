@@ -16,7 +16,6 @@ services:
     build: ./api
     restart: unless-stopped
     depends_on:
-      - db
       - redis
     env_file: .env
     environment:
@@ -45,7 +44,6 @@ services:
     build: ./api
     restart: unless-stopped
     depends_on:
-      - db
       - redis
     env_file: .env
     environment:

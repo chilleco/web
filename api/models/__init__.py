@@ -8,7 +8,7 @@ from lib import cfg
 
 
 Base = make_base(
-    host=cfg('mongo.host', 'db'),
+    host=cfg('mongo.host') or 'db',
     name=cfg('PROJECT_NAME'),
     login=cfg('mongo.user'),
     password=cfg('mongo.pass'),
