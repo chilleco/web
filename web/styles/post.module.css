@@ -1,0 +1,141 @@
+.post {
+    word-break: break-word;
+}
+
+.post h2 {
+    font-size: calc(1.125rem + .9vw);
+    margin-top: 1.6rem;
+}
+
+.post h2:first-child,
+.post h3:first-child {
+    margin-top: 0;
+}
+
+.post h3 {
+    font-size: calc(1.065rem + .6vw);
+    margin-top: 1.3rem;
+}
+
+.post h4 {
+    font-size: calc(1rem + .3vw);
+    margin-top: 0.1rem;
+}
+
+.tools {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@media all and (max-width: 767px) {
+    .tools {
+        margin-bottom: 12px;
+    }
+
+    .post .tools {
+        margin: -12px 0 16px 0;
+    }
+}
+
+.post .tools button {
+    width: 3rem;
+    margin: 0 0 0 10px;
+}
+
+.image {
+    border-radius: .75rem;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.post figure {
+    text-align: center;
+}
+
+.post [class*="image-style-side"] {
+    float: right;
+    margin-left: 1.5em;
+    max-width: 50%;
+}
+
+.post [class*="image-style-align-left"] {
+    float: left;
+    margin-right: 1.5em;
+}
+
+.post [class*="image-style-align-center"] {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.post [class*="image-style-align-right"] {
+    float: right;
+    margin-left: 1.5em;
+}
+
+.info {
+    display: flex;
+    margin: -7px 0 8px 0;
+}
+
+.dot {
+    margin: 0 .45em;
+}
+
+.navigation {
+    list-style: none;
+    padding: 0;
+    display: flex!important;
+}
+
+.category .navigation {
+    margin: 0;
+}
+
+.category span,
+.category h1 {
+    font-size: calc(1.325rem + .9vw) !important;
+}
+
+.category h1 {
+    line-height: var(--bs-body-line-height) !important;
+}
+
+/* .side > div {
+    background-color: #3a4951;
+    border-radius: .75rem;
+    padding: 8px 12px;
+} */
+
+.side > div:last-child {
+    position: sticky;
+    top: 56px;
+}
+
+.side .header {
+    font-size: 1.2em;
+    border-bottom: .12em solid rgba(206, 212, 218, .3);
+    margin-bottom: 20px;
+}
+
+.about {
+    margin-bottom: 28px;
+}
+
+.about > div {
+    display: flex;
+    align-items: center;
+    /* padding-left: 12px; */
+}
+
+.about .user {
+    margin-top: 12px;
+    font-weight: 600;
+    /* padding-left: 0; */
+}
+
+.about i {
+    margin-left: 13px;
+    margin-right: 10px !important;
+}

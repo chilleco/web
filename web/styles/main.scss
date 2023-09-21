@@ -1,0 +1,72 @@
+$body-font-size: 16px;
+$border-radius: .75rem;
+$dropdown-padding-y: 0;
+$input-border-width: 0;
+$input-bg: var(--bs-btn-bg);
+$input-focus-box-shadow: 0;
+$dropdown-link-active-color: inherit;
+$dropdown-link-active-bg: var(--bs-btn-hover-bg);
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+:root {
+    --bs-body-bg: #198754;
+}
+
+.bg-light,
+.btn-light {
+    --bs-btn-bg: var(--bs-gray-200);
+    --bs-btn-border-color: var(--bs-gray-200);
+    --bs-btn-hover-bg: var(--bs-gray-400);
+    --bs-btn-hover-border-color: var(--bs-gray-400);
+}
+
+.bg-dark,
+.btn-dark {
+    --bs-btn-bg: var(--bs-gray-700);
+    --bs-btn-border-color: var(--bs-gray-700);
+    --bs-btn-hover-bg: var(--bs-gray-500);
+    --bs-btn-hover-border-color: var(--bs-gray-500);
+}
+
+.bg-light .input-group-text,
+.bg-light .form-control,
+.bg-light .form-select {
+    color: inherit;
+    background-color: var(--bs-gray-200);
+}
+
+.bg-dark .input-group-text,
+.bg-dark .form-control,
+.bg-dark .form-select {
+    color: inherit;
+    background-color: var(--bs-gray-700);
+}
+
+.pagination {
+    --bs-pagination-focus-box-shadow: 0;
+}
+
+.bg-light .page-link {
+    --bs-pagination-color: var(--bs-body-color);
+    --bs-pagination-hover-color: var(--bs-body-color);
+    --bs-pagination-focus-color: var(--bs-body-color);
+    --bs-pagination-bg: var(--bs-gray-200);
+    --bs-pagination-border-color: var(--bs-gray-200);
+    --bs-pagination-hover-bg: var(--bs-gray-400);
+    --bs-pagination-hover-border-color: var(--bs-gray-400);
+    --bs-pagination-disabled-bg: var(--bs-gray-400);
+    --bs-pagination-disabled-border-color: var(--bs-gray-400);
+}
+
+.bg-dark .page-link {
+    --bs-pagination-color: var(--bs-light);
+    --bs-pagination-hover-color: var(--bs-light);
+    --bs-pagination-focus-color: var(--bs-light);
+    --bs-pagination-bg: var(--bs-gray-700);
+    --bs-pagination-border-color: var(--bs-gray-700);
+    --bs-pagination-hover-bg: var(--bs-gray-500);
+    --bs-pagination-hover-border-color: var(--bs-gray-500);
+    --bs-pagination-disabled-bg: var(--bs-gray-500);
+    --bs-pagination-disabled-border-color: var(--bs-gray-500);
+}

@@ -1,0 +1,68 @@
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setting up environment variables
+        run: |
+          cp base.env .env
+          echo "MODE=TEST" >> .env
+          echo "DATA_PATH=./data" >> .env
+
+      - name: Running tests inside the container
+        run: make run-test
+
+  deploy:
+    needs: tests
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Executing remote ssh command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH }}
+          script: |
+            echo "Stoping old version"
+            if [ -d ~/web ];
+            then
+                cd ~/web
+                make stop
+            fi
+
+            echo "Removing old version"
+            cd ~
+            rm -rf web
+            # yes | sudo docker system prune -a
+
+            echo "Pulling new version"
+            GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone git@github.com:kosyachniy/web.git
+            if [ -d ~/data ];
+            then
+                echo ""
+            else
+                mkdir data
+            fi
+            if [ -d ~/data/web ];
+            then
+                echo ""
+            else
+                cp -r ~/web/data ~/data/web
+            fi
+
+            echo "Copying keys"
+            cp ~/.secrets/web.env ~/web/.env
+
+            echo "Starting new version"
+            cd ~/web
+            make run
