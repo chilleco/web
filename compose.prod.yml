@@ -19,6 +19,7 @@ services:
       - redis
     env_file: .env
     environment:
+      API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
     volumes:
       - ${DATA_PATH}/load:/data/load
