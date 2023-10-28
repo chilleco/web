@@ -5,8 +5,20 @@ Request processing and response statuses formatting
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from consys.errors import BaseError
+from exceptiongroup import ExceptionGroup
 
 from lib import report
+
+
+def handle_exception_group(e_group):
+    for e in e_group.exceptions:
+        if isinstance(e, ExceptionGroup):
+            return handle_exception_group(e)
+
+        if isinstance(e, BaseError):
+            return Response(content=vars(e)['txt'], status_code=400)
+
+        return Response(content=str(e), status_code=500)
 
 
 class ErrorsMiddleware(BaseHTTPMiddleware):
@@ -32,8 +44,8 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
 
             return response
 
-        except BaseError as e:
-            return Response(content=str(e.txt), status_code=400)
+        except ExceptionGroup as e:
+            return handle_exception_group(e)
 
         except Exception as e:  # pylint: disable=broad-except
             await report.critical(str(e), error=e)
