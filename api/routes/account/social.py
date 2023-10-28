@@ -10,12 +10,9 @@ import requests
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from libdev.codes import get_network
-# pylint: disable=import-error
-from libdev.img import convert
-from libdev.s3 import upload_file
 from consys.errors import ErrorAccess, ErrorWrong
 
-from routes.account.auth import auth
+from routes.account.auth import wrap_auth
 from lib import cfg, report
 
 
@@ -24,8 +21,15 @@ router = APIRouter()
 
 def auth_telegram(data):
     """ Authorization via Telegram """
-    data.user = jwt.decode(data.code, cfg('jwt'), algorithms='HS256')['user']
-    return data, lambda: None
+    user = jwt.decode(data.code, cfg('jwt'), algorithms='HS256')['user']
+    return (
+        user.get('login'),
+        user.get('user'),
+        user.get('name'),
+        user.get('surname'),
+        user.get('image'),
+        user.get('mail'),
+    )
 
 def auth_google(data):
     """ Authorization via Google """
@@ -51,28 +55,18 @@ def auth_google(data):
     if 'id' not in response:
         raise ErrorAccess('code')
 
-    data.user = response['id']
-    data.name = response.get('given_name')
-    data.surname = response.get('family_name')
-    data.mail = response.get('email')
+    user = response['id']
+    name = response.get('given_name')
+    surname = response.get('family_name')
+    mail = response.get('email')
+    image = response.get('picture') or None
 
-    def loader_image():
-        return upload_file(convert(response.get('picture')), file_type='webp')
-
-    return data, loader_image
+    return None, user, name, surname, image, mail
 
 
 class Type(BaseModel):
     social: str | int
     code: str
-    # NOTE: For general authorization method fields
-    user: str | int = None
-    login: str = None
-    image: str = None
-    mail: str = None
-    name: str = None
-    surname: str = None
-    utm: str = None
 
 @router.post("/social/")
 async def handler(
@@ -87,27 +81,35 @@ async def handler(
     # TODO: Сшивать профили, если уже есть с такой почтой / ...
 
     # Preparing params
-    data.social = get_network(data.social)
+    social = get_network(data.social)
 
     # TODO: VK
-    if data.social == 2:
-        data, loader_image = auth_telegram(data)
-    elif data.social == 4:
-        data, loader_image = auth_google(data)
+    if social == 2:
+        login, user, name, surname, image, mail = auth_telegram(data)
+    elif social == 4:
+        login, user, name, surname, image, mail = auth_google(data)
 
     # Wrong ID
-    if not data.user:
+    if not user:
         await report.error("Wrong ID", {
-            'social': data.social,
-            'social_user': data.user,
+            'social': social,
+            'social_user': user,
         })
         raise ErrorWrong('id')
 
-    return await auth(request, data, 'social', {
-        'social': {
-            '$elemMatch': {
-                'id': data.social,
-                'user': data.user,
-            },
-        },
-    }, online=True, loader_image=loader_image)
+    return await wrap_auth(
+        'social',
+        request.state.token,
+        network=request.state.network,
+        ip=request.state.ip,
+        locale=request.state.locale,
+        login=login,
+        social=social,
+        user=user,
+        name=name,
+        surname=surname,
+        image=image,
+        mail=mail,
+        # utm=utm,
+        online=True,
+    )

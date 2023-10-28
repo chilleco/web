@@ -13,7 +13,7 @@ from pydantic import BaseModel
 from consys.errors import ErrorWrong, ErrorInvalid
 
 from services.auth import sign
-from routes.account.auth import auth
+from routes.account.auth import wrap_auth
 from lib import cfg, report
 
 
@@ -40,13 +40,11 @@ def is_valid_vk(*, query: dict) -> bool:
 class Type(BaseModel):
     url: str
     referral: str = None
-    # NOTE: For general authorization method fields
-    user: str = None
     login: str = None
-    password: str = None
     name: str = None
     surname: str = None
     image: str = None
+    mail: str = None
     utm: str = None
 
 @router.post("/app/")
@@ -62,7 +60,7 @@ async def handler(
             urlparse(data.url).query,
             keep_blank_values=True,
         ))
-        data.user = int(params['vk_user_id'])
+        data_user = int(params['vk_user_id'])
         status = is_valid_vk(query=params)
     except Exception as e:
         await report.warning("Failed authorization attempt in the app", {
@@ -76,11 +74,18 @@ async def handler(
     if not status:
         raise ErrorWrong('url')
 
-    return await auth(request, data, 'app', {
-        'social': {
-            '$elemMatch': {
-                'id': request.state.network,
-                'user': data.user,
-            },
-        },
-    })
+    return await wrap_auth(
+        'app',
+        request.state.token,
+        network=request.state.network,
+        ip=request.state.ip,
+        locale=request.state.locale,
+        login=data.login,
+        social=3,
+        user=data_user,
+        name=data.name,
+        surname=data.surname,
+        image=data.image,
+        mail=data.mail,
+        utm=data.utm,
+    )

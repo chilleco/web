@@ -5,7 +5,7 @@ The authorization via social networks method of the account object of the API
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 
-from routes.account.auth import auth
+from routes.account.auth import wrap_auth
 
 
 router = APIRouter()
@@ -25,11 +25,16 @@ async def handler(
     data: Type = Body(...),
 ):
     """ By bot """
-    return await auth(request, data, 'bot', {
-        'social': {
-            '$elemMatch': {
-                'id': request.state.network,
-                'user': data.user,
-            },
-        },
-    })
+    return await wrap_auth(
+        'bot',
+        request.state.token,
+        network=request.state.network,
+        ip=request.state.ip,
+        locale=request.state.locale,
+        login=data.login,
+        user=data.social,
+        name=data.name,
+        surname=data.surname,
+        image=data.image,
+        utm=data.utm,
+    )
