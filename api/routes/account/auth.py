@@ -31,6 +31,8 @@ router = APIRouter()
 
 
 async def wrap_auth(*args, **kwargs):
+    """ Unified auth wrapper """
+
     kwargs['project'] = cfg('PROJECT_NAME')
     user, token_id, new = await auth(*args, **kwargs)
 

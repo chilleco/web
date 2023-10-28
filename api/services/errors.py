@@ -11,6 +11,8 @@ from lib import report
 
 
 def handle_exception_group(e_group):
+    """ Handling nested errors """
+
     for e in e_group.exceptions:
         if isinstance(e, ExceptionGroup):
             return handle_exception_group(e)
