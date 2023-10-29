@@ -2,7 +2,7 @@
 The YooKassa payment recieve method of the payment object of the API
 """
 
-import time
+# import time
 
 from fastapi import APIRouter, Body
 from pydantic import BaseModel
