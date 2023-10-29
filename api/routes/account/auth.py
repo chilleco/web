@@ -33,14 +33,14 @@ router = APIRouter()
 async def wrap_auth(*args, **kwargs):
     """ Unified auth wrapper """
 
-    kwargs['project'] = cfg('PROJECT_NAME')
-    user, token_id, new = await auth(*args, **kwargs)
+    user, token_id, new = await auth(cfg('PROJECT_NAME'), *args, **kwargs)
 
     # JWT
     token = jwt.encode({
         'token': token_id,
         'user': user['id'],
-        'network': kwargs['network'],
+        'status': user['status'],
+        # 'network': kwargs['network'],
         # 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
     }, cfg('jwt'), algorithm='HS256')
 

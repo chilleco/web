@@ -6,11 +6,8 @@ import jwt
 from fastapi import APIRouter, Body, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from libdev.codes import get_network
-from libdev.dev import check_public_ip
-from consys.errors import ErrorWrong
+from userhub import token
 
-from models.token import Token
 from lib import cfg
 
 
@@ -30,56 +27,29 @@ async def handler(
 ):
     """ Create token """
 
-    # TODO: ip
-
-    network = get_network(data.network)
-    save = False
-
-    # Get
-    try:
-        token = Token.get(data.token)
-
-    # Create
-    except ErrorWrong:
-        token = Token(
-            id=data.token, # generate(),
-        )
-        save = True
-
-    # Attach data
-    if not token.network and network:
-        token.network = network
-        save = True
-    if not token.utm and data.utm:
-        token.utm = data.utm
-        save = True
-    ip = check_public_ip(request.state.ip)
-    if not token.ip and ip:
-        token.ip = ip
-        save = True
-    if not token.locale and request.state.locale:
-        token.locale = request.state.locale
-        save = True
-    if not token.user_agent and request.state.user_agent:
-        token.user_agent = request.state.user_agent
-        save = True
-    if not token.extra and data.extra:
-        token.extra = data.extra
-        save = True
-    if save:
-        token.save()
+    token_id, user_id, status = await token(
+        cfg('PROJECT_NAME'),
+        data.token,
+        network=data.network,
+        utm=data.utm,
+        extra=data.extra,
+        ip=request.state.ip,
+        locale=request.state.locale,
+        user_agent=request.state.user_agent,
+    )
 
     # JWT
-    token = jwt.encode({
-        'token': token.id,
-        'user': token.user,
-        'network': network,
+    token_jwt = jwt.encode({
+        'token': token_id,
+        'user': user_id,
+        'status': status,
+        # 'network': network,
         # 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
     }, cfg('jwt'), algorithm='HS256')
 
     # Response
     response = JSONResponse(content={
-        'token': token,
+        'token': token_jwt,
     })
-    response.set_cookie(key="Authorization", value=f"Bearer {token}")
+    response.set_cookie(key="Authorization", value=f"Bearer {token_jwt}")
     return response
