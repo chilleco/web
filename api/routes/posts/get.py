@@ -103,7 +103,7 @@ async def handler(
 
             # Comments
             post['comments'] = []
-            users = {}
+            # users = {}
             for comment in Comment.complex(
                 post=post['id'],
                 status={'$exists': False},

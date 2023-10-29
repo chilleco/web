@@ -41,7 +41,7 @@ async def pay(data: Type = Body(...)):
     user_id = int(user_id)
     # FIXME: get via core API
     # user = User.get(user_id)
-    timestamp = int(time.time())
+    # timestamp = int(time.time())
 
     # Initial balance
     value_real = count + 0
@@ -112,8 +112,9 @@ async def pay(data: Type = Body(...)):
         )
 
         # FIXME: update via core API
+        # TODO: Fix in consys.model
         # if data['payment_method']['saved']:
-        #     user.pay = [payment.json(default=False)] # TODO: Fix in consys.model
+        #     user.pay = [payment.json(default=False)]
 
         # Report
         await report.important("Payment", {
@@ -121,14 +122,17 @@ async def pay(data: Type = Body(...)):
             'type': payment.type,
             'card': payment.card,
             'value': f"{int(value_real)} {payment.currency}",
-            'user': "", # FIXME: f"#{user_id} {user.name} {user.surname}",
-            'discount': 0, # FIXME: user.discount and f"{int((1-user.discount)*100)}%",
+            # FIXME: f"#{user_id} {user.name} {user.surname}",
+            'user': "",
+            # FIXME: user.discount and f"{int((1-user.discount)*100)}%",
+            'discount': 0,
             'renewal': data['payment_method']['saved'],
         }, tags=['payment'])
 
         # FIXME: update via core API
         # if day:
-        #     user.subscription = max(user.subscription, timestamp) + 86400 * day
+        #     user.subscription = \
+        #         max(user.subscription, timestamp) + 86400 * day
 
         # Action tracking
         Track(
