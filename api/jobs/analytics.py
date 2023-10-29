@@ -9,7 +9,7 @@ from libdev.time import get_time
 from lib import cfg, report
 # pylint: disable=import-error
 from lib.docs import open_sheets
-from models.user import User
+# from models.user import User
 from models.post import Post
 
 
@@ -70,7 +70,7 @@ async def analytics():
     users_save = {}
     users_second = {}
 
-    for user in User.get():
+    for user in []: # FIXME: User.get()
         utms.add(user.utm)
         users_reg[user.id] = user.utm
 

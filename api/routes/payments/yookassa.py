@@ -7,7 +7,7 @@ import time
 from fastapi import APIRouter, Body
 from pydantic import BaseModel
 
-from models.user import User
+# from models.user import User
 from models.payment import Payment
 from models.track import Track
 from lib import cfg, report
@@ -39,7 +39,8 @@ async def pay(data: Type = Body(...)):
         return '', 200
 
     user_id = int(user_id)
-    user = User.get(user_id)
+    # FIXME: get via core API
+    # user = User.get(user_id)
     timestamp = int(time.time())
 
     # Initial balance
@@ -58,12 +59,14 @@ async def pay(data: Type = Body(...)):
         #     del user.limit
         #     del user.price
 
-        discount_real = user.discount + 0 if user.discount else DISCOUNT
-        if discount_real:
-            count /= discount_real
+        # FIXME: get via core API
+        # discount_real = user.discount + 0 if user.discount else DISCOUNT
+        # if discount_real:
+        #     count /= discount_real
 
-            if user.discount: # TODO: Fix in consys.model
-                del user.discount
+        #     if user.discount: # TODO: Fix in consys.model
+        #         del user.discount
+        discount_real = 0
 
         # Crediting funds
         if count >= cfg('subscription.year'):
@@ -108,8 +111,9 @@ async def pay(data: Type = Body(...)):
             discount=discount_real,
         )
 
-        if data['payment_method']['saved']:
-            user.pay = [payment.json(default=False)] # TODO: Fix in consys.model
+        # FIXME: update via core API
+        # if data['payment_method']['saved']:
+        #     user.pay = [payment.json(default=False)] # TODO: Fix in consys.model
 
         # Report
         await report.important("Payment", {
@@ -117,13 +121,14 @@ async def pay(data: Type = Body(...)):
             'type': payment.type,
             'card': payment.card,
             'value': f"{int(value_real)} {payment.currency}",
-            'user': f"#{user_id} {user.name} {user.surname}",
-            'discount': user.discount and f"{int((1-user.discount)*100)}%",
+            'user': "", # FIXME: f"#{user_id} {user.name} {user.surname}",
+            'discount': 0, # FIXME: user.discount and f"{int((1-user.discount)*100)}%",
             'renewal': data['payment_method']['saved'],
         }, tags=['payment'])
 
-        if day:
-            user.subscription = max(user.subscription, timestamp) + 86400 * day
+        # FIXME: update via core API
+        # if day:
+        #     user.subscription = max(user.subscription, timestamp) + 86400 * day
 
         # Action tracking
         Track(
@@ -132,11 +137,12 @@ async def pay(data: Type = Body(...)):
                 'value': value_real,
                 'days': day,
             },
-            user=user.id,
+            # FIXME: user=user.id,
         ).save()
 
-        # Update
-        user.save()
+        # FIXME: update via core API
+        # # Update
+        # user.save()
 
         # TODO: TG notification
 

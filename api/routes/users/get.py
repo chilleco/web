@@ -2,13 +2,13 @@
 The getting method of the user object of the API
 """
 
-import time
+# import time
 
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess, ErrorInvalid
 
-from models.user import User
+# from models.user import User
 from models.socket import Socket
 
 
@@ -46,6 +46,7 @@ async def handler(
 ):
     """ Get """
 
+    # FIXME: get via core API
     # TODO: cursor
 
     # Checks
@@ -60,63 +61,65 @@ async def handler(
     # if not data.id and request.state.user:
     #     data.id = request.state.user
 
-    # Fields
-    # TODO: right to roles
+    # # Fields
+    # # TODO: right to roles
 
-    fields = {
-        'id',
-        'login',
-        'image',
-        'name',
-        'surname',
-        'title',
-        'status',
-        # 'subscription',
-        # 'balance',
-        'rating',
-        'description',
-        'discount',
-    }
+    # fields = {
+    #     'id',
+    #     'login',
+    #     'image',
+    #     'name',
+    #     'surname',
+    #     'title',
+    #     'status',
+    #     # 'subscription',
+    #     # 'balance',
+    #     'rating',
+    #     'description',
+    #     'discount',
+    # }
 
-    process_self = data.id == request.state.user
-    process_admin = request.state.status >= 7
+    # process_self = data.id == request.state.user
+    # process_admin = request.state.status >= 7
 
-    if process_self:
-        fields |= {
-            'phone',
-            'mail',
-            'social',
-            'subscription',
-            'pay',
-        }
+    # if process_self:
+    #     fields |= {
+    #         'phone',
+    #         'mail',
+    #         'social',
+    #         'subscription',
+    #         'pay',
+    #     }
 
-    if process_admin:
-        fields |= {
-            'phone',
-            'mail',
-            'social',
-            'subscription',
-            'pay',
-        }
+    # if process_admin:
+    #     fields |= {
+    #         'phone',
+    #         'mail',
+    #         'social',
+    #         'subscription',
+    #         'pay',
+    #     }
 
-    if data.fields:
-        fields = fields & set(data.fields) | {'id'}
+    # if data.fields:
+    #     fields = fields & set(data.fields) | {'id'}
 
-    # Processing
-    def handle(user):
-        if data.fields and 'online' in data.fields:
-            user['online'] = online_back(user['id'])
+    # # Processing
+    # def handle(user):
+    #     if data.fields and 'online' in data.fields:
+    #         user['online'] = online_back(user['id'])
 
-        return user
+    #     return user
 
-    # Get
-    users = User.complex(
-        ids=data.id,
-        limit=data.limit,
-        offset=data.offset,
-        fields=fields,
-        handler=handle,
-    )
+    # # Get
+    # users = User.complex(
+    #     ids=data.id,
+    #     limit=data.limit,
+    #     offset=data.offset,
+    #     fields=fields,
+    #     handler=handle,
+    # )
+
+    users = []
 
     # Response
     return {

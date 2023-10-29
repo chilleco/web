@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from libdev.lang import get_pure
 from consys.errors import ErrorAccess
 
-from models.user import User
+# from models.user import User
 from models.post import Post
 from models.comment import Comment
 from models.category import Category
@@ -95,10 +95,11 @@ async def handler(
                 ]
 
             # Author
-            if post.get('user'):
-                post['author'] = User.get(post['user']).json(fields={
-                    'id', 'login', 'name', 'surname', 'title', 'image',
-                })
+            # FIXME: get via core API
+            # if post.get('user'):
+            #     post['author'] = User.get(post['user']).json(fields={
+            #         'id', 'login', 'name', 'surname', 'title', 'image',
+            #     })
 
             # Comments
             post['comments'] = []
@@ -109,12 +110,16 @@ async def handler(
                 fields={'id', 'data', 'user', 'created'},
             ):
                 if comment.get('user'):
-                    if comment['user'] not in users:
-                        users[comment['user']] = User.complex(
-                            ids=comment['user'],
-                            fields={'id', 'name', 'surname', 'title', 'image'},
-                        )
-                    comment['user'] = users[comment['user']]
+                    # FIXME: get via core API
+                    # if comment['user'] not in users:
+                    #     users[comment['user']] = User.complex(
+                    #         ids=comment['user'],
+                    #         fields={
+                    #             'id', 'name', 'surname', 'title', 'image',
+                    #         },
+                    #     )
+                    # comment['user'] = users[comment['user']]
+                    del comment['user']
                 else:
                     del comment['user']
                 post['comments'].append(comment)

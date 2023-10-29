@@ -5,7 +5,6 @@ The logout method of the account object of the API
 from fastapi import APIRouter, Request
 from consys.errors import ErrorAccess
 
-from models.token import Token
 from models.socket import Socket
 from routes.account.disconnect import online_stop
 from lib import report
@@ -39,6 +38,7 @@ async def handler(
         await online_stop(socket.id, close=False)
 
     # Reset
-    token = Token.get(request.state.token, fields={'user'})
-    del token.user
-    token.save()
+    # FIXME: unauth via core API
+    # token = Token.get(request.state.token, fields={'user'})
+    # del token.user
+    # token.save()

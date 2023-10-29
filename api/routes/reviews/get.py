@@ -6,7 +6,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess
 
-from models.user import User
+# from models.user import User
 from models.review import Review
 
 
@@ -46,14 +46,15 @@ async def handler(
     # Processing
     def handle(review):
         # User info
-        if review.get('user'):
-            review['user'] = User.complex(review['user'], fields={
-                'id',
-                'login',
-                'name',
-                'surname',
-                'image',
-            })
+        # FIXME: get via core API
+        # if review.get('user'):
+        #     review['user'] = User.complex(review['user'], fields={
+        #         'id',
+        #         'login',
+        #         'name',
+        #         'surname',
+        #         'image',
+        #     })
 
         return review
 
