@@ -2,11 +2,10 @@
 The creating and editing method of the review object of the API
 """
 
-from fastapi import APIRouter, Body, Request, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 
 from models.review import Review
-from services.auth import sign
 from lib import report
 
 
@@ -22,7 +21,6 @@ class Type(BaseModel):
 async def handler(
     request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Save """
 
@@ -34,7 +32,7 @@ async def handler(
         review = Review.get(data.id, fields={})
     else:
         review = Review(
-            user=user.id,
+            user=request.state.user,
             token=request.state.token,
         )
         new = True
@@ -51,7 +49,7 @@ async def handler(
         'review': review.id,
         'title': review.title,
         'data': review.data,
-        'user': user.id,
+        'user': request.state.user,
         'token': request.state.token,
     })
 

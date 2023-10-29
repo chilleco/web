@@ -2,14 +2,13 @@
 The creating and editing method of the category object of the API
 """
 
-from fastapi import APIRouter, Body, Request, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
 from models.category import Category
 from models.track import Track
-from services.auth import sign
 from services.cache import cache_categories
 from lib import report
 
@@ -31,14 +30,13 @@ class Type(BaseModel):
 async def handler(
     request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Save """
 
     # TODO: Checking for set as a parent of yourself or children
 
     # No access
-    if user.status < 5:
+    if request.state.status < 5:
         raise ErrorAccess('save')
 
     # Get
@@ -46,12 +44,12 @@ async def handler(
     if data.id:
         category = Category.get(data.id)
 
-        if (user.status < 6 and category.user != user.id):
+        if (request.state.status < 6 and category.user != request.state.user):
             raise ErrorAccess('save')
 
     else:
         category = Category(
-            user=user.id,
+            user=request.state.user,
         )
         new = True
 
@@ -93,7 +91,7 @@ async def handler(
             'data': category.data,
             'image': category.image,
         },
-        user=user.id,
+        user=request.state.user,
         token=request.state.token,
         ip=request.state.ip,
     ).save()
@@ -104,7 +102,7 @@ async def handler(
             'category': category.id,
             'title': category.title,
             'locale': category.locale,
-            'user': user.id,
+            'user': request.state.user,
         })
 
     # Response

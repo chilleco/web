@@ -4,10 +4,8 @@ The online socket of the account object of the API
 
 from consys.errors import ErrorWrong
 
-from models.user import User
 from models.socket import Socket
 # from models.space import Space
-from services.auth import get_user
 from lib import report
 from app import sio
 
@@ -55,23 +53,25 @@ def _online_count():
 async def online_start(token_id, socket_id=None):
     """ Start / update online session of the user """
 
-    # TODO: save user data cache in db.sockets
-
-    user, _ = get_user(token_id)
+    # FIXME: get via core API
+    # user, _ = get_user(token_id)
+    user_id = 0
 
     # Send socket about all online users to the user
     # TODO: Full info for all / auth / only for admins
 
     if socket_id:
-        sockets_auth = Socket.get(user={'$exists': True}, fields={'user'})
-        fields = {'id', 'login', 'image', 'name', 'surname', 'status'}
-        users_uniq = [
-            User.get(socket.user, fields=fields).json(fields=fields)
-            for socket in sockets_auth
-            if socket.user not in {0, None}
-        ]
-        count = _online_count()
+        # FIXME: get via core API
+        # sockets_auth = Socket.get(user={'$exists': True}, fields={'user'})
+        # fields = {'id', 'login', 'image', 'name', 'surname', 'status'}
+        # users_uniq = [
+        #     User.get(socket.user, fields=fields).json(fields=fields)
+        #     for socket in sockets_auth
+        #     if socket.user not in {0, None}
+        # ]
+        users_uniq = []
 
+        count = _online_count()
         if count:
             await sio.emit('online_add', {
                 'count': count,
@@ -79,7 +79,7 @@ async def online_start(token_id, socket_id=None):
             }, room=socket_id)
 
     # Already online
-    already = _other_sessions(user.id, token_id)
+    already = _other_sessions(user_id, token_id)
 
     # Save current socket with user & token data
     if socket_id:
@@ -90,7 +90,7 @@ async def online_start(token_id, socket_id=None):
         except ErrorWrong:
             socket = Socket(
                 id=socket_id,
-                user=user.id,
+                user=user_id,
                 token=token_id,
             )
             changed = True
@@ -104,12 +104,12 @@ async def online_start(token_id, socket_id=None):
                 socket.token = token_id
                 changed = True
 
-            if socket.user != user.id:
+            if socket.user != user_id:
                 await report.warning("Wrong socket.user", {
                     'from': socket.user,
-                    'to': user.id,
+                    'to': user_id,
                 })
-                socket.user = user.id
+                socket.user = user_id
                 changed = True
 
         if changed:
@@ -120,7 +120,7 @@ async def online_start(token_id, socket_id=None):
     sockets = Socket.get(token=token_id, fields={'user'})
 
     for socket in sockets:
-        socket.user = user.id
+        socket.user = user_id
         socket.save()
 
     # Send sockets
@@ -136,12 +136,14 @@ async def online_start(token_id, socket_id=None):
 
     count = _online_count()
 
-    if user.id:
-        data = [user.json(
-            fields={'id', 'login', 'image', 'name', 'surname', 'status'}
-        )]
-    else:
-        data = []
+    # FIXME: update via core API
+    # if user_id:
+    #     data = [user.json(
+    #         fields={'id', 'login', 'image', 'name', 'surname', 'status'}
+    #     )]
+    # else:
+    #     data = []
+    data = []
 
     if sio is not None:
         await sio.emit('online_add', {
@@ -151,9 +153,9 @@ async def online_start(token_id, socket_id=None):
 
     # # Redirect to active space
     # # TODO: cache
-    # space = await _get_active_space(user.id)
+    # space = await _get_active_space(user_id)
     # if space:
-    #     for socket in Socket.get(user=user.id, fields={}):
+    #     for socket in Socket.get(user=user_id, fields={}):
     #         await sio.emit('space_return', {
     #             'id': space,
     #         }, room=socket.id)

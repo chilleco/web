@@ -4,13 +4,12 @@ The getting method of the user object of the API
 
 import time
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess, ErrorInvalid
 
 from models.user import User
 from models.socket import Socket
-from services.auth import sign
 
 
 router = APIRouter()
@@ -24,12 +23,14 @@ def online_back(user_id):
     if sockets:
         return 0
 
-    user = User.get(user_id, fields={'last_online'})
+    # FIXME: get via core API
+    # user = User.get(user_id, fields={'last_online'})
 
-    if not user.last_online:
-        return 0
+    # if not user.last_online:
+    #     return 0
 
-    return int(time.time() - user.last_online)
+    # return int(time.time() - user.last_online)
+    return 0
 
 
 class Type(BaseModel):
@@ -40,8 +41,8 @@ class Type(BaseModel):
 
 @router.post("/get/")
 async def handler(
+    request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Get """
 
@@ -49,15 +50,15 @@ async def handler(
 
     # Checks
 
-    if user.status < 4 and data.id != user.id: # TODO: 5
+    if request.state.status < 4 and data.id != request.state.user: # TODO: 5
         raise ErrorAccess('get')
 
-    if user.id == 0:
+    if request.state.user == 0:
         raise ErrorInvalid('id')
 
     # TODO: Get myself
-    # if not data.id and user.id:
-    #     data.id = user.id
+    # if not data.id and request.state.user:
+    #     data.id = request.state.user
 
     # Fields
     # TODO: right to roles
@@ -77,8 +78,8 @@ async def handler(
         'discount',
     }
 
-    process_self = data.id == user.id
-    process_admin = user.status >= 7
+    process_self = data.id == request.state.user
+    process_admin = request.state.status >= 7
 
     if process_self:
         fields |= {

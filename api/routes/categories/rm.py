@@ -2,14 +2,13 @@
 The removal method of the category object of the API
 """
 
-from fastapi import APIRouter, Body, Request, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess
 
 from models.category import Category
 from models.post import Post
 from models.track import Track
-from services.auth import sign
 from services.cache import cache_categories
 
 
@@ -23,18 +22,17 @@ class Type(BaseModel):
 async def handler(
     request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Delete """
 
     # No access
-    if user.status < 2:
+    if request.state.status < 2:
         raise ErrorAccess('rm')
 
     # Get
     category = Category.get(data.id)
 
-    if user.status < 6 and category.user != user.id:
+    if request.state.status < 6 and category.user != request.state.user:
         raise ErrorAccess('rm')
 
     # Reset subcategories
@@ -59,7 +57,7 @@ async def handler(
         data={
             'id': data.id,
         },
-        user=user.id,
+        user=request.state.user,
         token=request.state.token,
         ip=request.state.ip,
     ).save()

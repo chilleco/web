@@ -2,12 +2,11 @@
 The blocking method of the user object of the API
 """
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess
 
 from models.user import User
-from services.auth import sign
 
 
 router = APIRouter()
@@ -18,8 +17,8 @@ class Type(BaseModel):
 
 @router.post("/block/")
 async def handler(
+    request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Block """
 
@@ -27,7 +26,7 @@ async def handler(
     subuser = User.get(data.id, fields={'status'})
 
     # No access
-    if user.status < 6 or user.status > user.status:
+    if request.state.status < 6 or subuser.status > request.state.status:
         raise ErrorAccess('block')
 
     # Save

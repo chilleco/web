@@ -2,13 +2,12 @@
 The getting method of the review object of the API
 """
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess
 
 from models.user import User
 from models.review import Review
-from services.auth import sign
 
 
 router = APIRouter()
@@ -23,15 +22,15 @@ class Type(BaseModel):
 
 @router.post("/get/")
 async def handler(
+    request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Get """
 
     # TODO: get by your token when you unauth
 
     # No access
-    if user.status < 4:
+    if request.state.status < 4:
         raise ErrorAccess('get')
 
     # Fields

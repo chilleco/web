@@ -8,7 +8,7 @@ from consys.errors import ErrorWrong
 
 from models.socket import Socket
 from models.track import Track
-from routes.account.online import _other_sessions, _online_count, get_user
+from routes.account.online import _other_sessions, _online_count
 from lib import report
 from app import sio
 
@@ -25,20 +25,21 @@ async def online_stop(socket_id, close=True):
         # NOTE: method "exit" -> socket "disconnect"
         return
 
-    user, _ = get_user(socket.token)
-
-    # Update user online info
     now = time.time()
-    if user.id:
-        user.last_online = now
-        user.save()
+
+    # TODO: now online & last online
+    # user, _ = get_user(socket.token)
+    # # Update user online info
+    # if user.id:
+    #     user.last_online = now
+    #     user.save()
 
     # Action tracking
     Track(
         title='online',
         created=socket.created,
         expired=now,
-        user=user.id,
+        user=socket.user,
         token=socket.token,
     ).save()
 
@@ -50,7 +51,7 @@ async def online_stop(socket_id, close=True):
         socket.save()
 
     # Other sessions of this user
-    other = _other_sessions(user.id, socket.token)
+    other = _other_sessions(socket.user, socket.token)
     if other:
         return
 
@@ -59,7 +60,7 @@ async def online_stop(socket_id, close=True):
     if count:
         await sio.emit('online_del', {
             'count': count,
-            'users': [{'id': user.id}], # TODO: Админам
+            'users': [{'id': socket.user}], # TODO: Админам
         })
 
 @sio.on('disconnect')

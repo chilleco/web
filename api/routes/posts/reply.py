@@ -2,14 +2,13 @@
 Reply method of the post object of the API
 """
 
-from fastapi import APIRouter, Body, Request, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess
 
 from models.post import Post
 from models.comment import Comment
 from models.track import Track
-from services.auth import sign
 from lib import report
 
 
@@ -26,14 +25,13 @@ class Type(BaseModel):
 async def handler(
     request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Save """
 
     # TODO: fix access to unblock yourself comment
 
     # No access
-    if user.status < 2:
+    if request.state.status < 2:
         raise ErrorAccess('save')
 
     # Check post
@@ -45,16 +43,16 @@ async def handler(
         comment = Comment.get(data.id)
 
         if (
-            user.status < 5
-            and (not comment.user or comment.user != user.id)
+            request.state.status < 5
+            and (not comment.user or comment.user != request.state.user)
             and comment.token != request.state.token
         ):
             raise ErrorAccess('save')
 
     else:
         comment = Comment(
-            user=user.id,
-            token=None if user.id else request.state.token,
+            user=request.state.user,
+            token=None if request.state.user else request.state.token,
             post=data.post,
         )
         new = True
@@ -74,7 +72,7 @@ async def handler(
             'data': comment.data,
             'status': comment.status,
         },
-        user=user.id,
+        user=request.state.user,
         token=request.state.token,
         ip=request.state.ip,
     ).save()
@@ -84,7 +82,7 @@ async def handler(
         await report.important("Reply", {
             'post': comment.post,
             'comment': comment.data,
-            'user': user.id,
+            'user': request.state.user,
         })
 
     # Response

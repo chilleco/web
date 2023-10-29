@@ -43,7 +43,7 @@ async def handler(
         'token': token_id,
         'user': user_id,
         'status': status,
-        # 'network': network,
+        'network': data.network,
         # 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
     }, cfg('jwt'), algorithm='HS256')
 

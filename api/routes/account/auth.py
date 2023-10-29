@@ -40,7 +40,7 @@ async def wrap_auth(*args, **kwargs):
         'token': token_id,
         'user': user['id'],
         'status': user['status'],
-        # 'network': kwargs['network'],
+        'network': kwargs['network'],
         # 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
     }, cfg('jwt'), algorithm='HS256')
 

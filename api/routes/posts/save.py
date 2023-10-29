@@ -2,14 +2,13 @@
 The creating and editing method of the post object of the API
 """
 
-from fastapi import APIRouter, Body, Request, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
 from models.post import Post
 from models.track import Track
-from services.auth import sign
 from lib import report
 
 
@@ -31,14 +30,13 @@ class Type(BaseModel):
 async def handler(
     request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Save """
 
     # TODO: fix access to unblock yourself post
 
     # No access
-    if user.status < 2:
+    if request.state.status < 2:
         raise ErrorAccess('save')
 
     # Get
@@ -47,16 +45,16 @@ async def handler(
         post = Post.get(data.id)
 
         if (
-            user.status < 5
-            and (not post.user or post.user != user.id)
+            request.state.status < 5
+            and (not post.user or post.user != request.state.user)
             and post.token != request.state.token
         ):
             raise ErrorAccess('save')
 
     else:
         post = Post(
-            user=user.id,
-            token=None if user.id else request.state.token,
+            user=request.state.user,
+            token=None if request.state.user else request.state.token,
         )
         new = True
 
@@ -87,7 +85,7 @@ async def handler(
             'tags': post.tags,
             'status': post.status,
         },
-        user=user.id,
+        user=request.state.user,
         token=request.state.token,
         ip=request.state.ip,
     ).save()
@@ -98,7 +96,7 @@ async def handler(
             'post': post.id,
             'title': post.title,
             'locale': post.locale,
-            'user': user.id,
+            'user': request.state.user,
         })
 
     data = post.json()

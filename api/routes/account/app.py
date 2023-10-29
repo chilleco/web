@@ -8,11 +8,10 @@ from base64 import b64encode
 from hmac import HMAC
 from urllib.parse import urlparse, parse_qsl, urlencode
 
-from fastapi import APIRouter, Body, Depends, Request
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorWrong, ErrorInvalid
 
-from services.auth import sign
 from routes.account.auth import wrap_auth
 from lib import cfg, report
 
@@ -51,7 +50,6 @@ class Type(BaseModel):
 async def handler(
     request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Mini app auth """
 
@@ -65,7 +63,7 @@ async def handler(
     except Exception as e:
         await report.warning("Failed authorization attempt in the app", {
             'url': data.url,
-            'user': user.id,
+            'user': request.state.user,
             'network': request.state.network,
             'error': e,
         })

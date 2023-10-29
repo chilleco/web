@@ -4,14 +4,13 @@ The recommendation method of the post object of the API
 
 import re
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
 from models.post import Post
 from models.category import Category
-from services.auth import sign
 from lib.queue import get
 
 
@@ -90,14 +89,14 @@ class Type(BaseModel):
 
 @router.post("/guess/")
 async def handler(
+    request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Recommend """
 
     # No access
     # TODO: -> middleware
-    if user.status < 2:
+    if request.state.status < 2:
         raise ErrorAccess('get')
 
     if data.id is None:

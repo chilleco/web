@@ -4,7 +4,7 @@ The getting method of the post object of the API
 
 import re
 
-from fastapi import APIRouter, Body, Depends, Request
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from libdev.lang import get_pure
 from consys.errors import ErrorAccess
@@ -15,7 +15,6 @@ from models.comment import Comment
 from models.category import Category
 from models.track import Track
 from models.reaction import Reaction
-from services.auth import sign
 from lib.queue import get
 
 
@@ -38,13 +37,12 @@ class Type(BaseModel):
 async def handler(
     request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Get """
 
     # No access
     # TODO: -> middleware
-    if user.status < 2:
+    if request.state.status < 2:
         raise ErrorAccess('get')
 
     extend = isinstance(data.id, int)
@@ -54,7 +52,7 @@ async def handler(
         Track(
             title='post_search',
             data={'search': data.search},
-            user=user.id,
+            user=request.state.user,
             token=request.state.token,
             ip=request.state.ip,
         ).save()
@@ -150,11 +148,11 @@ async def handler(
     # Personal
     if data.my:
         cond['$or'] = [
-            {'user': user.id},
+            {'user': request.state.user},
             {'token': request.state.token},
         ]
     elif data.my is not None:
-        cond['user'] = {'$ne': user.id}
+        cond['user'] = {'$ne': request.state.user}
         cond['token'] = {'$ne': request.state.token}
 
     # Get
@@ -164,7 +162,7 @@ async def handler(
         offset=data.offset,
         search=data.search,
         fields=fields,
-        status={'$exists': False} if user.status < 5 else None,
+        status={'$exists': False} if request.state.status < 5 else None,
         category={
             '$in': Category.get_childs(data.category),
         } if data.category else None,
@@ -185,7 +183,7 @@ async def handler(
                 offset=(data.offset or 0) + data.limit,
                 search=data.search,
                 fields={},
-                status={'$exists': False} if user.status < 5 else None,
+                status={'$exists': False} if request.state.status < 5 else None,
                 category=data.category and {
                     '$in': Category.get_childs(data.category),
                 },
@@ -199,7 +197,7 @@ async def handler(
 
         else:
             count = Post.count(
-                status={'$exists': False} if user.status < 5 else None,
+                status={'$exists': False} if request.state.status < 5 else None,
                 category=data.category and {
                     '$in': Category.get_childs(data.category),
                 },
@@ -215,35 +213,35 @@ async def handler(
 
     # Views counter
     # pylint: disable=too-many-nested-blocks
-    if extend and (user.id or request.state.token):
+    if extend and (request.state.user or request.state.token):
         reactions = Reaction.get(
             type={'$exists': False},
             post=data.id,
             extra={
                 '$or': [
-                    {'user': user.id},
+                    {'user': request.state.user},
                     {'token': request.state.token},
                 ],
             },
         )
         if reactions:
-            if user.id:
+            if request.state.user:
                 viewed = False
                 for reaction in reactions[::-1]:
                     if reaction.user:
-                        if reaction.user == user.id:
+                        if reaction.user == request.state.user:
                             viewed = True
                         continue
                     if viewed:
                         reaction.rm()
                         continue
-                    reaction.user = user.id
+                    reaction.user = request.state.user
                     reaction.save()
                     viewed = True
         else:
             Reaction(
                post=data.id,
-               user=user.id,
+               user=request.state.user,
                token=request.state.token,
                utm=data.utm or None,
             ).save()

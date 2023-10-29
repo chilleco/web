@@ -31,6 +31,7 @@ class AccessMiddleware(BaseHTTPMiddleware):
         if request.method != 'POST' or (not token and url in self.whitelist):
             request.state.token = None
             request.state.user = 0
+            request.state.status = 3
             request.state.network = 0
             return await call_next(request)
 
@@ -61,7 +62,8 @@ class AccessMiddleware(BaseHTTPMiddleware):
             return Response(content="Invalid token", status_code=401)
 
         request.state.token = token['token']
-        request.state.user = token['user']
-        request.state.network = token['network']
+        request.state.user = token.get('user', 0)
+        request.state.status = token.get('status', 3)
+        request.state.network = token.get('network', 0)
 
         return await call_next(request)

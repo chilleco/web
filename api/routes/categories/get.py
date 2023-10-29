@@ -2,12 +2,11 @@
 The getting method of the category object of the API
 """
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess, ErrorWrong
 
 from models.category import Category
-from services.auth import sign
 from lib.queue import get
 
 
@@ -21,13 +20,13 @@ class Type(BaseModel):
 
 @router.post("/get/")
 async def handler(
+    request: Request,
     data: Type = Body(...),
-    user = Depends(sign),
 ):
     """ Get """
 
     # No access
-    if user.status < 2:
+    if request.state.status < 2:
         raise ErrorAccess('get')
 
     # Fields
