@@ -3,6 +3,7 @@ import { connect, useSelector } from 'react-redux';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { appWithTranslation, useTranslation } from 'next-i18next';
+import 'breezu';
 
 import '../styles/main.scss';
 import '../styles/main.css';
@@ -36,8 +37,8 @@ const Body = ({
   const rehydrated = useSelector(state => state._persist.rehydrated); /* eslint-disable-line */
 
   useEffect(() => {
-    // Bootstrap
-    window.bootstrap = require('bootstrap/dist/js/bootstrap');
+    // // Bootstrap
+    // window.bootstrap = require('bootstrap/dist/js/bootstrap');
 
     // Define color theme
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -100,7 +101,7 @@ const Body = ({
   }, [router.locale]);
 
   return (
-    <>
+    <div className="all">
       <Head>
         {/* SEO */}
         <title>{ process.env.NEXT_PUBLIC_NAME }</title>
@@ -138,7 +139,7 @@ const Body = ({
       <Toasts toasts={system.toasts} />
 
       <Footer />
-    </>
+    </div>
   );
 };
 

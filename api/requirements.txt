@@ -2,7 +2,7 @@
 
 # App
 requests==2.31.0
-libdev==0.67
+libdev==0.71
 fastapi==0.90.1  # FIXME: higher version not working
 httptools==0.6.0  # NOTE: for routing
 uvicorn==0.20.0  # FIXME: higher version not working
@@ -11,7 +11,7 @@ python-multipart==0.0.6  # NOTE: for file upload
 slowapi==0.1.8
 
 # Users
-userhub==0.6
+userhub==0.8
 
 # DB
 consys==0.30

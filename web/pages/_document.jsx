@@ -8,23 +8,24 @@ export default class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="icon" type="image/png" href="/favicon.ico" />
-
-          {/* Icons */}
-          <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
-            crossOrigin="anonymous"
-            referrerPolicy="origin-when-cross-origin"
-          />
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-            integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-            crossOrigin="anonymous"
-            referrerPolicy="origin-when-cross-origin"
-          />
         </Head>
-        <body>
+
+        {/* Icons */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+          crossOrigin="anonymous"
+          referrerPolicy="origin-when-cross-origin"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
+          crossOrigin="anonymous"
+          referrerPolicy="origin-when-cross-origin"
+        />
+
+        <body class="breezu">
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{

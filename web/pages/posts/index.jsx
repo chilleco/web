@@ -8,17 +8,15 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import styles from '../../styles/post.module.css';
 import { toastAdd } from '../../redux/actions/system';
-import { displaySet } from '../../redux/actions/main';
 import api from '../../lib/api';
 import Grid from '../../components/Post/Grid';
-import Feed from '../../components/Post/Feed';
 import Paginator from '../../components/Paginator';
 
 const getPage = count => Math.floor(count / 18) + Boolean(count % 18);
 
 export const Posts = ({
   system, main, profile,
-  toastAdd, displaySet,
+  toastAdd,
   category = null, page = 1,
   postsLoaded = [], count = null, subcategories = [],
 }) => {
@@ -105,8 +103,21 @@ export const Posts = ({
         <meta property="og:type" content="website" />
         <link rel="canonical" href={canonical} />
       </Head>
-      <div className={`row ${styles.category}`}>
-        <div className="col-md-8">
+
+      <div className="body">
+        <div className="title">
+          <div className="icon green">
+            <i className="fa-solid fa-folder-open" />
+          </div>
+          <div>
+            <h1>{ t('structure.posts') }</h1>
+            <Link href="/">
+              { t('system.main') }
+            </Link>
+          </div>
+        </div>
+
+        {/* <div className="col-md-8">
           { category ? (
             <ul
               role="navigation"
@@ -180,89 +191,64 @@ export const Posts = ({
               </li>
             </ul>
           ) : (<h1>{ t('structure.posts') }</h1>) }
-        </div>
+        </div> */}
+
         <div className={`col-md-4 ${styles.tools}`}>
-          <div className="btn-group" role="group">
-            <button
-              type="button"
-              className={`btn btn-${main.theme}`}
-              onClick={() => displaySet('grid')}
-            >
-              <i className="fa-solid fa-table-cells-large" />
-            </button>
-            {/* <button
-              type="button"
-              className={`btn btn-${main.theme}`}
-            >
-              <i className="fa-solid fa-list-ul" />
-            </button> */}
-            <button
-              type="button"
-              className={`btn btn-${main.theme}`}
-              onClick={() => displaySet('feed')}
-            >
-              <i className="fa-regular fa-image" />
-            </button>
-          </div>
           { profile.status >= 2 && (
             <Link href="/posts/add" className="btn btn-success ms-3">
               <i className="fa-solid fa-plus" />
             </Link>
           ) }
         </div>
+
+        {/* <div className="mb-2">
+          { subcategories.map(subcategory => (subcategory.status ? (
+            <Link
+              href={`/posts/${subcategory.url}/`}
+              className={`btn btn-${main.theme} me-2 mb-2`}
+              key={subcategory.id}
+            >
+              { subcategory.title }
+            </Link>
+          ) : (
+            <React.Fragment key={subcategory.id} />
+          ))) }
+        </div>
+        { category && (
+          <>
+            { category.image && (
+              <>
+                <img
+                  src={category.image}
+                  alt={category.title}
+                  className={styles.image}
+                />
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                      '@context': 'http://schema.org/',
+                      '@type': 'ImageObject',
+                      contentUrl: category.image,
+                      name: category.title,
+                      description: category.description,
+                    }),
+                  }}
+                />
+              </>
+            ) }
+            <div dangerouslySetInnerHTML={{ __html: category.data }} />
+          </>
+        ) } */}
+
+        <Grid posts={posts} />
+        <Paginator page={page} lastPage={lastPage} prefix={category ? `/posts/${category.url}` : ''} />
       </div>
-      <div className="mb-2">
-        { subcategories.map(subcategory => (subcategory.status ? (
-          <Link
-            href={`/posts/${subcategory.url}/`}
-            className={`btn btn-${main.theme} me-2 mb-2`}
-            key={subcategory.id}
-          >
-            { subcategory.title }
-          </Link>
-        ) : (
-          <React.Fragment key={subcategory.id} />
-        ))) }
-      </div>
-      { category && (
-        <>
-          { category.image && (
-            <>
-              <img
-                src={category.image}
-                alt={category.title}
-                className={styles.image}
-              />
-              <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                  __html: JSON.stringify({
-                    '@context': 'http://schema.org/',
-                    '@type': 'ImageObject',
-                    contentUrl: category.image,
-                    name: category.title,
-                    description: category.description,
-                  }),
-                }}
-              />
-            </>
-          ) }
-          <div dangerouslySetInnerHTML={{ __html: category.data }} />
-        </>
-      ) }
-      {
-        main.display === 'feed' ? (
-          <Feed posts={posts} />
-        ) : (
-          <Grid posts={posts} />
-        )
-      }
-      <Paginator page={page} lastPage={lastPage} prefix={category ? `/posts/${category.url}` : ''} />
     </>
   );
 };
 
-export default connect(state => state, { toastAdd, displaySet })(Posts);
+export default connect(state => state, { toastAdd })(Posts);
 
 export const getServerSideProps = async ({ query, locale }) => {
   const page = !Number.isNaN(Number(query.page)) ? (+query.page || 1) : 1;

@@ -22,12 +22,6 @@ export default (state = {
         locale: action.locale,
       };
 
-    case 'SYSTEM_DISPLAY':
-      return {
-        ...state,
-        display: action.display,
-      };
-
     case 'SET_TOKEN':
       return {
         ...state,

@@ -10,8 +10,7 @@ export default () => {
         <p className="col-md-4 mb-0">
           { process.env.NEXT_PUBLIC_NAME }
           {' '}
-          &copy; 2018-
-          { new Date().getFullYear() }
+          &copy; { new Date().getFullYear() }
         </p>
         <Link href="/" className="col-md-4 d-flex align-items-center justify-content-center mb-md-0 me-md-auto link-dark text-decoration-none">
           <img

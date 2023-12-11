@@ -19,7 +19,9 @@
         "posts": "Posts",
         "room": "Room",
         "events": "Events",
-        "map": "Map"
+        "map": "Map",
+        "hub": "Hub",
+        "entities": "Entities"
     },
     "system": {
         "locale": "Locale",

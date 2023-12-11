@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 
-import styles from '../../styles/header.module.css';
 import { popupSet, toastAdd, searching } from '../../redux/actions/system';
-import { changeTheme } from '../../redux/actions/main';
+// import { changeTheme } from '../../redux/actions/main';
 import { profileOut } from '../../redux/actions/profile';
 import api from '../../lib/api';
 import Hexagon from '../Hexagon';
@@ -16,9 +15,10 @@ const Logo = () => {
   const main = useSelector(state => state.main);
 
   return (
-    <Link href="/" className="navbar-brand">
+    <Link href="/">
       <img
-        src={`/brand/logo_${main.color}.svg`}
+        src={`/brand/logo_dark.svg`}
+        // src={`/brand/logo_${main.color}.svg`}
         alt={process.env.NEXT_PUBLIC_NAME}
       />
     </Link>
@@ -31,12 +31,14 @@ const Navigation = () => {
   const categories = useSelector(state => state.categories);
 
   return (
-    <>
-      <li className="nav-item dropdown">
-        <Link href="/posts/" className="nav-link">
-          { t('structure.posts') }
-        </Link>
-        <ul className={`${styles.menu} dropdown-menu dropdown-menu-${main.theme}`}>
+    <div className="menu">
+      {/* <li className="nav-item dropdown"> */}
+      <Link href="/posts/" className="green">
+        <i className="fa-solid fa-folder-open" />
+        {/* fa-solid fa-newspaper */}
+        { t('structure.posts') }
+      </Link>
+        {/* <ul className={`${styles.menu} dropdown-menu dropdown-menu-${main.theme}`}>
           { categories && categories.map(category => (category.id && category.status ? (
             <Link
               href={`/posts/${category.url}/`}
@@ -49,7 +51,7 @@ const Navigation = () => {
             <React.Fragment key={category.id} />
           ))) }
         </ul>
-      </li>
+      </li> */}
       {/* { categories && categories.map(category => (category.id && category.status ? (
         <li className="nav-item dropdown">
           <Link href={`/posts/${category.url}/`} className="nav-link">
@@ -72,43 +74,46 @@ const Navigation = () => {
       ) : (
         <React.Fragment key={category.id} />
       ))) } */}
-      {/* <li className="nav-item">
-        <Link href="/" className="nav-link">
-          { t('structure.space') }
-        </Link>
-      </li> */}
-      {/* <li className="nav-item">
-        <Link href="/room/" className="nav-link">
-          { t('structure.room') }
-        </Link>
-      </li> */}
-    </>
+      <Link href="/space/" className="violet">
+        <i className="fa-solid fa-paperclip" />
+        { t('structure.space') }
+      </Link>
+      <Link href="/hub/" className="blue">
+        <i className="fa-solid fa-quote-right" />
+        { t('structure.hub') }
+      </Link>
+      <Link href="/entities/" className="orange">
+        <i className="fa-solid fa-key" />
+        { t('structure.entities') }
+      </Link>
+      {/* Quiz */}
+    </div>
   );
 };
 
-const Search = () => {
-  const { t } = useTranslation('common');
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const system = useSelector(state => state.system);
+// const Search = () => {
+//   const { t } = useTranslation('common');
+//   const dispatch = useDispatch();
+//   const router = useRouter();
+//   const system = useSelector(state => state.system);
 
-  const search = value => {
-    dispatch(searching(value));
-    if (router.asPath !== '/posts') {
-      router.push('/posts/');
-    }
-  };
+//   const search = value => {
+//     dispatch(searching(value));
+//     if (router.asPath !== '/posts') {
+//       router.push('/posts/');
+//     }
+//   };
 
-  return (
-    <input
-      className={`${styles.search} form-control`}
-      type="search"
-      placeholder={t('system.search')}
-      value={system.search}
-      onChange={event => search(event.target.value)}
-    />
-  );
-};
+//   return (
+//     <input
+//       className={`${styles.search} form-control`}
+//       type="search"
+//       placeholder={t('system.search')}
+//       value={system.search}
+//       onChange={event => search(event.target.value)}
+//     />
+//   );
+// };
 
 const Profile = () => {
   const { t } = useTranslation('common');
@@ -125,11 +130,32 @@ const Profile = () => {
     background: 'danger',
   })));
 
+  const [isExpanded, setExpanded] = useState(false);
+  const toggleExpand = () => setExpanded(!isExpanded);
+  const blockRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (blockRef.current && !blockRef.current.contains(event.target)) {
+        setExpanded(false);
+      }
+    }
+
+    if (isExpanded) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isExpanded]);
+
   if (!profile.id) {
     return (
       <button
         type="button"
-        className="btn btn-success"
+        className="login"
         onClick={() => dispatch(popupSet('auth'))}
       >
         { t('system.sign_in') }
@@ -138,51 +164,40 @@ const Profile = () => {
   }
 
   return (
-    <>
-      <div
-        className="nav-link"
-        id="navbarDropdown"
-        data-bs-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-        style={{ padding: 0 }}
-      >
-        <Hexagon url={profile.image_optimize} />
-      </div>
-      <ul
-        id="profile"
-        className={`${styles.menu} dropdown-menu dropdown-menu-end dropdown-menu-${main.theme}`}
-        aria-labelledby="navbarDropdown"
-      >
-        <Link href="/profile/" className="dropdown-item">
-          <i className="bi bi-person-bounding-box me-2" />
-          { t('system.profile') }
-        </Link>
-        {/* <Link href="/settings/" className="dropdown-item me-2">
-          <i className="fa-solid fa-gear" />
-          { t('system.settings') }
-        </Link> */}
-        {/* <Link href="/billing/" className="dropdown-item me-2">
-          { t('system.billing') }
-        </Link> */}
-        { profile.status >= 6 && (
-          <>
-            <Link href={`https://docs.google.com/spreadsheets/d/${process.env.NEXT_PUBLIC_ANALYTICS_SHEET}/`} className="dropdown-item">
-              <i className="bi bi-funnel-fill me-2" />
-              { t('system.analytics') }
-            </Link>
-            <Link href="/eye/" className="dropdown-item">
-              <i className="bi bi-cone-striped me-2" />
-              { t('system.admin') }
-            </Link>
-          </>
-        ) }
-        <div className="dropdown-item" onClick={signOut}>
-          <i className="bi bi-door-open-fill me-2" />
-          { t('system.sign_out') }
+    <div ref={blockRef} className="avatar" onClick={ toggleExpand }>
+      <Hexagon url={profile.image_optimize} />
+      { isExpanded && (
+        <div className="profile">
+          <Link href="/profile/">
+            <i className="bi bi-person-bounding-box" />
+            { t('system.profile') }
+          </Link>
+          <Link href="/settings/">
+            <i className="fa-solid fa-gear" />
+            { t('system.settings') }
+          </Link>
+          {/* <Link href="/billing/">
+            { t('system.billing') }
+          </Link> */}
+          { profile.status >= 6 && (
+            <>
+              <Link href={`https://docs.google.com/spreadsheets/d/${process.env.NEXT_PUBLIC_ANALYTICS_SHEET}/`}>
+                <i className="bi bi-funnel-fill" />
+                { t('system.analytics') }
+              </Link>
+              <Link href="/eye/">
+                <i className="bi bi-cone-striped" />
+                { t('system.admin') }
+              </Link>
+            </>
+          ) }
+          <div onClick={signOut}>
+            <i className="bi bi-door-open-fill" />
+            { t('system.sign_out') }
+          </div>
         </div>
-      </ul>
-    </>
+      ) }
+    </div>
   );
 };
 
@@ -191,31 +206,27 @@ export default () => {
   const dispatch = useDispatch();
   const main = useSelector(state => state.main);
 
+  const [isExpanded, setExpanded] = useState(false);
+  const toggleExpand = () => setExpanded(!isExpanded);
+
   return (
-    <nav className={`navbar sticky-top navbar-expand-lg navbar-${main.theme} bg-${main.theme}`}>
-      <div className="container">
+    <div className="header_cover">
+      <nav className="header">
         <Logo />
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#burger"
-          aria-controls="burger"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-        <div className="collapse navbar-collapse" id="burger">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <Navigation />
-          </ul>
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Search />
-            </li>
-          </ul>
-          <ul className="nav navbar-nav navbar-right">
+
+        <div className="space" />
+        <div className="burger" onClick={ toggleExpand }>
+          { isExpanded ? (
+            <i className="fa-solid fa-xmark" />
+          ) : (
+            <i className="fa-solid fa-bars" />
+          ) }
+        </div>
+
+        <div className={`block ${isExpanded ? "" : "hidden"}`}>
+          <Navigation />
+          {/* <Search /> */}
+          {/* <ul className="nav navbar-nav navbar-right">
             <li className={`me-4 ${styles.custom}`}>
               <i
                 className={`me-3 ms-1 ${main.theme === 'dark' ? 'bi bi-sun-fill' : 'fa-solid fa-moon'}`}
@@ -228,7 +239,7 @@ export default () => {
                   width={24}
                   height={24}
                 />
-              </Link>
+              </Link> */}
               {/* <Link
                 href={router.asPath}
                 locale={main.locale === 'ru' ? 'en' : 'ru'}
@@ -240,13 +251,9 @@ export default () => {
                   height={24}
                 />
               </Link> */}
-            </li>
-            <li className="nav-item dropdown">
-              <Profile />
-            </li>
-          </ul>
+          <Profile />
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 };

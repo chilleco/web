@@ -9,11 +9,6 @@ export const changeLang = (locale) => ({
   locale, // i18n.changeLanguage(locale)
 });
 
-export const displaySet = (display) => ({
-  type: 'SYSTEM_DISPLAY',
-  display,
-});
-
 export const setToken = (token) => ({
   type: 'SET_TOKEN',
   token,
