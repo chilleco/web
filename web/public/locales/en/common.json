@@ -21,7 +21,8 @@
         "events": "Events",
         "map": "Map",
         "hub": "Hub",
-        "entities": "Entities"
+        "entities": "Entities",
+        "catalog": "Catalog"
     },
     "system": {
         "locale": "Locale",

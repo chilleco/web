@@ -34,8 +34,7 @@ const Navigation = () => {
     <div className="menu">
       {/* <li className="nav-item dropdown"> */}
       <Link href="/posts/" className="green">
-        <i className="fa-solid fa-folder-open" />
-        {/* fa-solid fa-newspaper */}
+        <i className="fa-solid fa-newspaper" />
         { t('structure.posts') }
       </Link>
         {/* <ul className={`${styles.menu} dropdown-menu dropdown-menu-${main.theme}`}>
@@ -82,9 +81,9 @@ const Navigation = () => {
         <i className="fa-solid fa-quote-right" />
         { t('structure.hub') }
       </Link>
-      <Link href="/entities/" className="orange">
-        <i className="fa-solid fa-key" />
-        { t('structure.entities') }
+      <Link href="/catalog/" className="orange">
+        <i className="fa-solid fa-folder-open" />
+        { t('structure.catalog') }
       </Link>
       {/* Quiz */}
     </div>
