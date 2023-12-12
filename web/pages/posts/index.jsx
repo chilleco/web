@@ -15,10 +15,10 @@ import Paginator from '../../components/Paginator';
 const getPage = count => Math.floor(count / 18) + Boolean(count % 18);
 
 export const Posts = ({
-  system, main, profile,
+  system, main, // profile,
   toastAdd,
   category = null, page = 1,
-  postsLoaded = [], count = null, // subcategories = [],
+  postsLoaded = [], count = null, subcategories = [],
 }) => {
   const { t } = useTranslation('common');
   const mounted = useRef(true);
@@ -107,13 +107,20 @@ export const Posts = ({
       <div className="body">
         <div className="title">
           <div className="icon green">
-            <i className="fa-solid fa-folder-open" />
+            <i className="fa-solid fa-newspaper" />
           </div>
-          <div>
+          <div className="title_body">
             <h1>{ t('structure.posts') }</h1>
             <Link href="/">
               { t('system.main') }
             </Link>
+          </div>
+          <div className="buttons">
+            <div>
+              <a href="/posts/add" aria-label="Create">
+                <i className="fa-solid fa-plus" />
+              </a>
+            </div>
           </div>
         </div>
 
@@ -197,15 +204,7 @@ export const Posts = ({
           ) : (<h1>{ t('structure.posts') }</h1>) }
         </div> */}
 
-        <div className={`col-md-4 ${styles.tools}`}>
-          { profile.status >= 2 && (
-            <Link href="/posts/add" className="btn btn-success ms-3">
-              <i className="fa-solid fa-plus" />
-            </Link>
-          ) }
-        </div>
-
-        {/* <div className="mb-2">
+        <div className="mb-2">
           { subcategories.map(subcategory => (subcategory.status ? (
             <Link
               href={`/posts/${subcategory.url}/`}
@@ -243,7 +242,7 @@ export const Posts = ({
             ) }
             <div dangerouslySetInnerHTML={{ __html: category.data }} />
           </>
-        ) } */}
+        ) }
 
         <Grid posts={posts} />
         <Paginator page={page} lastPage={lastPage} prefix={category ? `/posts/${category.url}` : ''} />

@@ -38,7 +38,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
 
             # Report
-            if response.status_code not in {200, 401}:
+            if response.status_code not in {200, 303, 401}:
                 await report.warning("Non-success response", {
                     'url': request.state.url,
                     'status': response.status_code,

@@ -22,7 +22,6 @@ export default ({ posts }) => {
         <div className="banner_body">
           <h1>template web app</h1>
           <h2>FullStack 100% code web site</h2>
-          {/* <h2>we create web apps, sites & bots that make money</h2> */}
           <Link href="https://github.com/chilleco/web">
             <button
               type="button"
