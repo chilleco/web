@@ -1,23 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import Link from 'next/link';
 // import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 
-import { popupSet, toastAdd, searching } from '../../redux/actions/system';
+import { popupSet, toastAdd } from '../../redux/actions/system'; // searching
 // import { changeTheme } from '../../redux/actions/main';
 import { profileOut } from '../../redux/actions/profile';
 import api from '../../lib/api';
 import Hexagon from '../Hexagon';
 
+// eslint-disable-next-line
 const Logo = () => {
-  const main = useSelector(state => state.main);
-
+  // const main = useSelector(state => state.main);
   return (
     <Link href="/">
       <img
-        src={`/brand/logo_dark.svg`}
+        src="/brand/logo_dark.svg"
         // src={`/brand/logo_${main.color}.svg`}
         alt={process.env.NEXT_PUBLIC_NAME}
       />
@@ -27,8 +27,8 @@ const Logo = () => {
 
 const Navigation = () => {
   const { t } = useTranslation('common');
-  const main = useSelector(state => state.main);
-  const categories = useSelector(state => state.categories);
+  // const main = useSelector(state => state.main);
+  // const categories = useSelector(state => state.categories);
 
   return (
     <div className="menu">
@@ -37,7 +37,7 @@ const Navigation = () => {
         <i className="fa-solid fa-newspaper" />
         { t('structure.posts') }
       </Link>
-        {/* <ul className={`${styles.menu} dropdown-menu dropdown-menu-${main.theme}`}>
+      {/* <ul className={`${styles.menu} dropdown-menu dropdown-menu-${main.theme}`}>
           { categories && categories.map(category => (category.id && category.status ? (
             <Link
               href={`/posts/${category.url}/`}
@@ -137,16 +137,16 @@ const Profile = () => {
       if (blockRef.current && !blockRef.current.contains(event.target)) {
         setExpanded(false);
       }
-    }
+    };
 
     if (isExpanded) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     } else {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isExpanded]);
 
@@ -163,7 +163,7 @@ const Profile = () => {
   }
 
   return (
-    <div ref={blockRef} className="avatar" onClick={ toggleExpand }>
+    <div ref={blockRef} className="avatar" onClick={toggleExpand}>
       <Hexagon url={profile.image_optimize} />
       { isExpanded && (
         <div className="profile">
@@ -201,9 +201,9 @@ const Profile = () => {
 };
 
 export default () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const main = useSelector(state => state.main);
+  // const router = useRouter();
+  // const dispatch = useDispatch();
+  // const main = useSelector(state => state.main);
 
   const [isExpanded, setExpanded] = useState(false);
   const toggleExpand = () => setExpanded(!isExpanded);
@@ -214,7 +214,7 @@ export default () => {
         <Logo />
 
         <div className="space" />
-        <div className="burger" onClick={ toggleExpand }>
+        <div className="burger" onClick={toggleExpand}>
           { isExpanded ? (
             <i className="fa-solid fa-xmark" />
           ) : (
@@ -222,14 +222,22 @@ export default () => {
           ) }
         </div>
 
-        <div className={`block ${isExpanded ? "" : "hidden"}`}>
+        <div className={`block ${isExpanded ? '' : 'hidden'}`}>
           <Navigation />
           {/* <Search /> */}
           {/* <ul className="nav navbar-nav navbar-right">
             <li className={`me-4 ${styles.custom}`}>
               <i
-                className={`me-3 ms-1 ${main.theme === 'dark' ? 'bi bi-sun-fill' : 'fa-solid fa-moon'}`}
-                onClick={() => dispatch(changeTheme(main.theme === 'dark' ? 'light' : 'dark'))}
+                className={`me-3 ms-1 ${
+                  main.theme === 'dark'
+                  ? 'bi bi-sun-fill'
+                  : 'fa-solid fa-moon'
+                }`}
+                onClick={() => dispatch(changeTheme(
+                  main.theme === 'dark'
+                  ? 'light'
+                  : 'dark'
+                ))}
               />
               <Link href={router.query.url || `/locale?url=${router.asPath}`}>
                 <Image
@@ -239,7 +247,7 @@ export default () => {
                   height={24}
                 />
               </Link> */}
-              {/* <Link
+          {/* <Link
                 href={router.asPath}
                 locale={main.locale === 'ru' ? 'en' : 'ru'}
               >

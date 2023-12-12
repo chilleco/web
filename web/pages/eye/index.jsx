@@ -75,6 +75,7 @@ const Container = ({
           className="btn btn-success mt-3"
           style={{ width: '100%' }}
           onClick={addCategory}
+          aria-label="Create a new category"
         >
           <i className="fa-solid fa-plus" />
         </button>

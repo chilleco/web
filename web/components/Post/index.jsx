@@ -113,6 +113,7 @@ export const Edit = ({ post, setEdit, setPost }) => {
           className="btn btn-success"
           style={{ width: '100%' }}
           onClick={editPost}
+          aria-label="Save"
         >
           <i className="fa-regular fa-floppy-disk" />
         </button>
@@ -328,6 +329,7 @@ export default ({ post, setPost }) => {
                 type="button"
                 className="btn btn-outline-secondary"
                 onClick={() => setEdit(!edit)}
+                aria-label="Edit"
               >
                 <i className={edit ? 'fa-regular fa-eye' : 'fa-solid fa-pencil'} />
               </button>
@@ -336,6 +338,7 @@ export default ({ post, setPost }) => {
                   type="button"
                   className="btn btn-danger"
                   onClick={() => blockPost({ status: 0 })}
+                  aria-label="Hide"
                 >
                   <i className="fa-solid fa-lock" />
                 </button>
@@ -344,6 +347,7 @@ export default ({ post, setPost }) => {
                   type="button"
                   className="btn btn-success"
                   onClick={() => blockPost({ status: 1 })}
+                  aria-label="Show"
                 >
                   <i className="fa-solid fa-lock-open" />
                 </button>
@@ -352,6 +356,7 @@ export default ({ post, setPost }) => {
                 type="button"
                 className="btn btn-danger"
                 onClick={rmPost}
+                aria-label="Delete"
               >
                 <i className="fa-solid fa-trash" />
               </button>

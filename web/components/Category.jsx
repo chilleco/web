@@ -102,6 +102,7 @@ const Edit = ({
               className="btn btn-danger"
               style={{ width: '100%' }}
               onClick={() => blockCategory({ status: 0 })}
+              aria-label="Hide category"
             >
               <i className="fa-solid fa-lock" />
             </button>
@@ -111,6 +112,7 @@ const Edit = ({
               className="btn btn-success"
               style={{ width: '100%' }}
               onClick={() => blockCategory({ status: 1 })}
+              aria-label="Show category"
             >
               <i className="fa-solid fa-lock-open" />
             </button>
@@ -122,6 +124,7 @@ const Edit = ({
             className="btn btn-danger"
             style={{ width: '100%' }}
             onClick={() => rmCategory()}
+            aria-label="Delete category"
           >
             <i className="fa-solid fa-trash" />
           </button>
@@ -168,6 +171,7 @@ const Edit = ({
         className="btn btn-success"
         style={{ width: '100%' }}
         onClick={editCategory}
+        aria-label="Save category"
       >
         <i className="fa-regular fa-floppy-disk" />
       </button>

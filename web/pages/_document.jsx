@@ -25,7 +25,7 @@ export default class MyDocument extends Document {
           referrerPolicy="origin-when-cross-origin"
         />
 
-        <body class="breezu">
+        <body className="breezu">
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{

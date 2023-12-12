@@ -175,6 +175,7 @@ const Container = ({
         type="button"
         className={`${styles.btn} btn btn-success`}
         onClick={accountEdit}
+        aria-label="Update profile"
       >
         <i className="fa-regular fa-floppy-disk" />
       </button>

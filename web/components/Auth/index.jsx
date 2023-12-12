@@ -16,6 +16,7 @@ export default () => {
           type="button"
           className={styles.btn_mail}
           onClick={() => dispatch(popupSet('mail'))}
+          aria-label="email"
         >
           <i className="bi bi-envelope-fill" />
         </button>
@@ -24,6 +25,7 @@ export default () => {
             type="button"
             className={styles.btn_g}
             onClick={() => localStorage.setItem('previousPath', document.location.href)}
+            aria-label="Google"
           >
             <i className="fa-brands fa-google" />
           </button>
@@ -34,6 +36,7 @@ export default () => {
             target="_blank"
             className={styles.btn_tg}
             onClick={() => localStorage.setItem('previousPath', document.location.href)}
+            aria-label="Telegram"
           >
             <i className="fa-brands fa-telegram" />
           </button>

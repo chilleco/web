@@ -18,7 +18,7 @@ export const Posts = ({
   system, main, profile,
   toastAdd,
   category = null, page = 1,
-  postsLoaded = [], count = null, subcategories = [],
+  postsLoaded = [], count = null, // subcategories = [],
 }) => {
   const { t } = useTranslation('common');
   const mounted = useRef(true);
@@ -175,7 +175,11 @@ export const Posts = ({
                 itemType="http://schema.org/ListItem"
                 key={category.id}
               >
-                <meta content={category.parents ? category.parents.length + 1 : 1} itemProp="position" />
+                <meta content={
+                  category.parents
+                  ? category.parents.length + 1
+                  : 1
+                } itemProp="position" />
                 <Link
                   href={`/posts/${category.url}`}
                   title={category.title}

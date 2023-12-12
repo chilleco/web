@@ -1,14 +1,12 @@
-import { useTranslation } from 'next-i18next';
+// import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 
 import api from '../lib/api';
 import Grid from '../components/Post/Grid';
 
-
-export default ({
-  posts,
-}) => {
+// eslint-disable-next-line
+export default ({ posts }) => {
   // const router = useRouter();
   // useEffect(() => {
   //   if (main.token && profile.status < 6) {
@@ -16,7 +14,7 @@ export default ({
   //   }
   // }, [main.token]);
 
-  const { t } = useTranslation('common');
+  // const { t } = useTranslation('common');
 
   return (
     <div className="body">
@@ -29,26 +27,44 @@ export default ({
             <button
               type="button"
               className="login"
-              // onClick={() => dispatch(popupSet('auth'))}
             >
               Check code →
             </button>
           </Link>
         </div>
         <div className="banner_side">
-          FastAPI<br />
-          React<br />
-          NextJS<br />
-          Docker<br />
+          FastAPI
+          <br />
+          React
+          <br />
+          NextJS
+          <br />
+          Docker
+          <br />
           Telegram Bot
         </div>
       </div>
 
       <div className="tetra">
-        <div><font>15 locales</font> internationalisation</div>
-        <div><font>WebSockets</font> online users</div>
-        <div><font>SEO & SSR</font>, auto generated sitemaps</div>
-        <div><font>monitoring</font> & health metrics</div>
+        <div>
+          <font>15 locales</font>
+          {' '}
+          internationalisation
+        </div>
+        <div>
+          <font>WebSockets</font>
+          {' '}
+          online users
+        </div>
+        <div>
+          <font>SEO & SSR</font>
+          , auto generated sitemaps
+        </div>
+        <div>
+          <font>monitoring</font>
+          {' '}
+          & health metrics
+        </div>
       </div>
 
       <div className="scroll">
@@ -64,10 +80,11 @@ export default ({
             <h2>Cases</h2>
           </div>
         </div>
-        <Grid posts={ posts }  />
+        <Grid posts={posts} />
       </div>
 
-      <br /><br />
+      <br />
+      <br />
 
       <div id="services">
         <div className="title">
@@ -78,11 +95,11 @@ export default ({
             <h2>Services</h2>
           </div>
         </div>
-        <Grid posts={ posts }  />
+        <Grid posts={posts} />
       </div>
 
       <br />
-{/*
+      {/*
       <div className="left" id="hub">
         <div>
           <div className="text">
