@@ -30,8 +30,8 @@ export default ({
   const categories = useSelector(state => state.categories);
 
   return (
-    <div className="input-group mb-3">
-      <label className="input-group-text" htmlFor="category">
+    <div className="input">
+      <label htmlFor="category">
         { custom || t('categories.category') }
       </label>
       <select

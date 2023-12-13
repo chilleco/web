@@ -1,4 +1,3 @@
-import styles from '../../styles/upload.module.css';
 import upload from '../../lib/upload';
 
 export default ({ image, setImage }) => {
@@ -6,7 +5,7 @@ export default ({ image, setImage }) => {
 
   return (
     <label
-      className={styles.upload}
+      className="upload"
       htmlFor="uploader"
       style={{ border: image ? 0 : null }}
     >

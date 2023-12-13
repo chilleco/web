@@ -7,7 +7,6 @@ import 'breezu';
 
 import '../styles/main.scss';
 import '../styles/main.css';
-import styles from '../styles/body.module.css';
 import wrapper from '../redux/store';
 import {
   changeLang, setToken, setUtm, changeTheme,
@@ -120,7 +119,9 @@ const Body = ({
 
       <Header />
 
-      <Component {...pageProps} />
+      <div className="body">
+        <Component {...pageProps} />
+      </div>
 
       { system.popup === 'auth' && (
         <Auth />

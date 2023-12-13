@@ -73,51 +73,51 @@ export const Edit = ({ post, setEdit, setPost }) => {
 
   return (
     <div>
-      <div className="album py-5">
-        <div className="input-group mb-3">
-          <input
-            type="text"
-            className={`form-control ${styles.title}`}
-            placeholder={t('posts.title')}
-            value={title}
-            onChange={event => setTitle(event.target.value)}
+      <br />
+
+      <input
+        type="text"
+        placeholder={t('posts.title')}
+        value={title}
+        onChange={event => setTitle(event.target.value)}
+      />
+      <div>
+        <div className="half_medium">
+          <Upload image={image} setImage={setImage} />
+        </div>
+        <div className="half_medium">
+          <Locale locale={locale} setLocale={setLocale} />
+          <Category
+            category={category}
+            setCategory={setCategory}
+          />
+          <textarea
+            placeholder={`${t('posts.description')} (SEO)`}
+            value={description}
+            onChange={event => setDescription(event.target.value)}
+            style={{ height: '146px' }}
           />
         </div>
-        <div className="row py-3">
-          <div className="col-12 col-md-6 pb-3">
-            <Upload image={image} setImage={setImage} />
-          </div>
-          <div className="col-12 col-md-6">
-            <Locale locale={locale} setLocale={setLocale} />
-            <Category
-              category={category}
-              setCategory={setCategory}
-            />
-            <textarea
-              className="form-control"
-              placeholder={`${t('posts.description')} (SEO)`}
-              value={description}
-              onChange={event => setDescription(event.target.value)}
-              style={{ height: '146px' }}
-            />
-          </div>
-        </div>
-        <Editor
-          editorLoaded={editorLoaded}
-          data={data}
-          updatePost={text => setData(text)}
-        />
-        <br />
-        <button
-          type="button"
-          className="btn btn-success"
-          style={{ width: '100%' }}
-          onClick={editPost}
-          aria-label="Save"
-        >
-          <i className="fa-regular fa-floppy-disk" />
-        </button>
       </div>
+
+      <Editor
+        editorLoaded={editorLoaded}
+        data={data}
+        updatePost={text => setData(text)}
+      />
+
+      <br />
+      <br />
+
+      <button
+        type="button"
+        className="btn btn-success"
+        style={{ width: '100%' }}
+        onClick={editPost}
+        aria-label="Save"
+      >
+        <i className="fa-regular fa-floppy-disk" />
+      </button>
     </div>
   );
 };

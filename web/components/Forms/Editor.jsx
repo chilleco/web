@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
 import Loader from '../Loader';
 
 export default ({ editorLoaded, data, updatePost }) => {
   const editorRef = useRef();
-  const main = useSelector(state => state.main);
+  // const main = useSelector(state => state.main);
   const { CKEditor, ClassicEditor } = editorRef.current || {};
 
   useEffect(() => {
@@ -41,16 +41,16 @@ export default ({ editorLoaded, data, updatePost }) => {
                 '400px',
                 editor.editing.view.document.getRoot(),
               );
-              writer.setStyle(
-                'background-color',
-                `rgba(var(--bs-${main.theme}-rgb), var(--bs-bg-opacity))!important;`,
-                editor.editing.view.document.getRoot(),
-              );
-              writer.setStyle(
-                'color',
-                `rgba(var(--bs-${main.color}-rgb));`,
-                editor.editing.view.document.getRoot(),
-              );
+              // writer.setStyle(
+              //   'background-color',
+              //   `#fff !important;`,
+              //   editor.editing.view.document.getRoot(),
+              // );
+              // writer.setStyle(
+              //   'color',
+              //   `#000`,
+              //   editor.editing.view.document.getRoot(),
+              // );
             });
           }}
           onChange={(event, editor) => updatePost(editor.getData())}

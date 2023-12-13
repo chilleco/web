@@ -104,130 +104,125 @@ export const Posts = ({
         <link rel="canonical" href={canonical} />
       </Head>
 
-      <div className="body">
-        <div className="title">
-          <div className="icon green">
-            <i className="fa-solid fa-newspaper" />
-          </div>
-          <div className="title_body">
-            { category
-              ? <h1>{category.title}</h1>
-              : <h1>{ t('structure.posts') }</h1>
-            }
+      <div className="title">
+        <div className="icon green">
+          <i className="fa-solid fa-newspaper" />
+        </div>
+        <div className="title_body">
+          { category
+            ? <h1>{category.title}</h1>
+            : <h1>{ t('structure.posts') }</h1>}
 
-            { category ? (
-              <ul
-                role="navigation"
-                aria-label="breadcrumb"
+          { category ? (
+            <ul
+              role="navigation"
+              aria-label="breadcrumb"
+              itemScope="itemscope"
+              itemType="http://schema.org/BreadcrumbList"
+              className={styles.navigation}
+            >
+              <li
+                itemProp="itemListElement"
                 itemScope="itemscope"
-                itemType="http://schema.org/BreadcrumbList"
-                className={styles.navigation}
+                itemType="http://schema.org/ListItem"
               >
+                <meta content="0" itemProp="position" />
+                <Link
+                  href="/posts"
+                  style={{ textDecoration: 'underline dotted' }}
+                  title={t('system.main')}
+                  itemID="/posts"
+                  itemScope="itemscope"
+                  itemProp="item"
+                  itemType="http://schema.org/Thing"
+                >
+                  <span itemProp="name">{ t('system.main') }</span>
+                </Link>
+                { category.parents.length
+                  ? <div className="breadcrumb">/</div>
+                  : <></>}
+              </li>
+              { category.parents && category.parents.map((parent, i) => (
                 <li
                   itemProp="itemListElement"
                   itemScope="itemscope"
                   itemType="http://schema.org/ListItem"
+                  key={parent.id}
                 >
-                  <meta content="0" itemProp="position" />
+                  <meta content={i + 1} itemProp="position" />
                   <Link
-                    href="/posts"
+                    href={`/posts/${parent.url}`}
                     style={{ textDecoration: 'underline dotted' }}
-                    title={t('system.main')}
-                    itemID="/posts"
+                    title={parent.title}
+                    itemID={`/posts/${parent.url}`}
                     itemScope="itemscope"
                     itemProp="item"
                     itemType="http://schema.org/Thing"
                   >
-                    <span itemProp="name">{ t('system.main') }</span>
+                    <span itemProp="name">
+                      {parent.title}
+                    </span>
                   </Link>
-                  { category.parents.length
-                    ? <div class="breadcrumb">/</div>
-                    : <></>
-                  }
+                  { i < category.parents.length - 1
+                    ? <div className="breadcrumb">/</div>
+                    : <></>}
                 </li>
-                { category.parents && category.parents.map((parent, i) => (
-                  <li
-                    itemProp="itemListElement"
-                    itemScope="itemscope"
-                    itemType="http://schema.org/ListItem"
-                    key={parent.id}
-                  >
-                    <meta content={i + 1} itemProp="position" />
-                    <Link
-                      href={`/posts/${parent.url}`}
-                      style={{ textDecoration: 'underline dotted' }}
-                      title={parent.title}
-                      itemID={`/posts/${parent.url}`}
-                      itemScope="itemscope"
-                      itemProp="item"
-                      itemType="http://schema.org/Thing"
-                    >
-                      <span itemProp="name">
-                        {parent.title}
-                      </span>
-                    </Link>
-                    { i < category.parents.length - 1
-                      ? <div class="breadcrumb">/</div>
-                      : <></>
-                    }
-                  </li>
-                )) }
-              </ul>
-            ) : (<></>) }
-          </div>
-
-          <div className="tools">
-            <div>
-              <a href="/posts/add" aria-label="Create">
-                <i className="fa-solid fa-plus" />
-              </a>
-            </div>
-          </div>
+              )) }
+            </ul>
+          ) : (<></>) }
         </div>
 
-        <div className="categories">
-          { subcategories.map(subcategory => (subcategory.status ? (
-            <Link
-              href={`/posts/${subcategory.url}/`}
-              key={subcategory.id}
-            >
-              { subcategory.title }
-            </Link>
-          ) : (
-            <React.Fragment key={subcategory.id} />
-          ))) }
+        <div className="tools">
+          <div>
+            <a href="/posts/add" aria-label="Create">
+              <i className="fa-solid fa-plus" />
+            </a>
+          </div>
         </div>
-
-        { category && (
-          <>
-            { category.image && (
-              <>
-                <img
-                  src={category.image}
-                  alt={category.title}
-                  className={styles.image}
-                />
-                <script
-                  type="application/ld+json"
-                  dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                      '@context': 'http://schema.org/',
-                      '@type': 'ImageObject',
-                      contentUrl: category.image,
-                      name: category.title,
-                      description: category.description,
-                    }),
-                  }}
-                />
-              </>
-            ) }
-            <div dangerouslySetInnerHTML={{ __html: category.data }} />
-          </>
-        ) }
-
-        <Grid posts={posts} />
-        <Paginator page={page} lastPage={lastPage} prefix={category ? `/posts/${category.url}` : ''} />
       </div>
+
+      <div className="categories">
+        { subcategories.map(subcategory => (subcategory.status ? (
+          <Link
+            href={`/posts/${subcategory.url}/`}
+            key={subcategory.id}
+          >
+            { subcategory.title }
+          </Link>
+        ) : (
+          <React.Fragment key={subcategory.id} />
+        ))) }
+      </div>
+
+      { category && (
+        <>
+          { category.image && (
+            <>
+              <img
+                src={category.image}
+                alt={category.title}
+                className={styles.image}
+              />
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'http://schema.org/',
+                    '@type': 'ImageObject',
+                    contentUrl: category.image,
+                    name: category.title,
+                    description: category.description,
+                  }),
+                }}
+              />
+            </>
+          ) }
+          <div dangerouslySetInnerHTML={{ __html: category.data }} />
+        </>
+      ) }
+
+      <Grid posts={posts} />
+      <Paginator page={page} lastPage={lastPage} prefix={category ? `/posts/${category.url}` : ''} />
     </>
   );
 };

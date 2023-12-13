@@ -17,7 +17,7 @@ export default ({ posts }) => {
   // const { t } = useTranslation('common');
 
   return (
-    <div className="body">
+    <>
       <div className="banner">
         <div className="banner_body">
           <h1>template web app</h1>
@@ -25,7 +25,7 @@ export default ({ posts }) => {
           <Link href="https://github.com/chilleco/web">
             <button
               type="button"
-              className="login"
+              id="black"
             >
               Check code →
             </button>
@@ -72,7 +72,7 @@ export default ({ posts }) => {
 
       <div id="cases">
         <div className="title">
-          <div className="icon">
+          <div className="icon red">
             <i className="fa-solid fa-paperclip" />
           </div>
           <div className="title_body">
@@ -86,7 +86,7 @@ export default ({ posts }) => {
 
       <div id="contacts">
         <div className="title">
-          <div className="icon">
+          <div className="icon red">
             <i className="fa-solid fa-address-card" />
           </div>
           <div className="title_body">
@@ -115,7 +115,7 @@ export default ({ posts }) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

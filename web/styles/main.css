@@ -12,15 +12,6 @@
     background-color: #f8f4f0;
 } */
 
-.title .icon {
-    background-color: rgba(255, 68, 1, 0.1);
-    color: rgba(255, 68, 1, 0.4);
-}
-
-.title_body {
-    margin: .5em 0 0 .5em;
-}
-
 /* Icons */
 
 .icon {
@@ -79,31 +70,17 @@
     cursor: pointer;
 }
 
-/* FIXME */
+/* Custom */
 
-button {
+#black {
     background-color: #333 !important;
 }
-
-button:hover {
+#black:hover {
     background-color: #000 !important;
 }
 
-.title_body {
-    margin: 4px 0;
-}
+/* Rewrite */
 
-.title ul {
-    list-style: none;
-    margin: 0;
-}
-
-.breadcrumb {
-    font-size: .75em;
-    font-weight: 600;
-    padding: 0 4px 0 7px;
-}
-
-.body {
-    min-height: calc(100vh - 165px);
+.ck-editor {
+    width: 100% !important;
 }
