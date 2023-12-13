@@ -83,53 +83,6 @@ export default ({ posts }) => {
       </div>
 
       <br />
-      <br />
-
-      <div id="services">
-        <div className="title">
-          <div className="icon">
-            <i className="fa-solid fa-keyboard" />
-          </div>
-          <div className="title_body">
-            <h2>Services</h2>
-          </div>
-        </div>
-        <Grid posts={posts} />
-      </div>
-
-      <br />
-      {/*
-      <div className="left" id="hub">
-        <div>
-          <div className="text">
-            Hub
-          </div>
-        </div>
-      </div>
-
-      <div className="right">
-        <div>
-          <div className="form">
-            <input
-              // value={name}
-              // onChange={event => setName(event.target.value)}
-              placeholder="Name"
-              type="text"
-            />
-            <input
-              // value={name}
-              // onChange={event => setName(event.target.value)}
-              placeholder="Phone"
-              type="text"
-            />
-            <button>
-              Contact
-            </button>
-          </div>
-        </div>
-      </div> */}
-
-      <br />
 
       <div id="contacts">
         <div className="title">
@@ -145,12 +98,14 @@ export default ({ posts }) => {
             <div className="icon">
               <h3>Alex Poloz</h3>
             </div>
+            <br />
             <Link href="https://t.me/kosyachniy/">
               <div className="icon">
                 <i className="fa-brands fa-telegram tg" />
                 <div className="icon_link">@kosyachniy</div>
               </div>
             </Link>
+            <br />
             <Link href="mailto:alexypoloz@gmail.com">
               <div className="icon">
                 <i className="fa-brands fa-google g" />

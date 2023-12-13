@@ -110,12 +110,73 @@ export const Posts = ({
             <i className="fa-solid fa-newspaper" />
           </div>
           <div className="title_body">
-            <h1>{ t('structure.posts') }</h1>
-            <Link href="/">
-              { t('system.main') }
-            </Link>
+            { category
+              ? <h1>{category.title}</h1>
+              : <h1>{ t('structure.posts') }</h1>
+            }
+
+            { category ? (
+              <ul
+                role="navigation"
+                aria-label="breadcrumb"
+                itemScope="itemscope"
+                itemType="http://schema.org/BreadcrumbList"
+                className={styles.navigation}
+              >
+                <li
+                  itemProp="itemListElement"
+                  itemScope="itemscope"
+                  itemType="http://schema.org/ListItem"
+                >
+                  <meta content="0" itemProp="position" />
+                  <Link
+                    href="/posts"
+                    style={{ textDecoration: 'underline dotted' }}
+                    title={t('system.main')}
+                    itemID="/posts"
+                    itemScope="itemscope"
+                    itemProp="item"
+                    itemType="http://schema.org/Thing"
+                  >
+                    <span itemProp="name">{ t('system.main') }</span>
+                  </Link>
+                  { category.parents.length
+                    ? <div class="breadcrumb">/</div>
+                    : <></>
+                  }
+                </li>
+                { category.parents && category.parents.map((parent, i) => (
+                  <li
+                    itemProp="itemListElement"
+                    itemScope="itemscope"
+                    itemType="http://schema.org/ListItem"
+                    key={parent.id}
+                  >
+                    <meta content={i + 1} itemProp="position" />
+                    <Link
+                      href={`/posts/${parent.url}`}
+                      style={{ textDecoration: 'underline dotted' }}
+                      title={parent.title}
+                      itemID={`/posts/${parent.url}`}
+                      itemScope="itemscope"
+                      itemProp="item"
+                      itemType="http://schema.org/Thing"
+                    >
+                      <span itemProp="name">
+                        {parent.title}
+                      </span>
+                    </Link>
+                    { i < category.parents.length - 1
+                      ? <div class="breadcrumb">/</div>
+                      : <></>
+                    }
+                  </li>
+                )) }
+              </ul>
+            ) : (<></>) }
           </div>
-          <div className="buttons">
+
+          <div className="tools">
             <div>
               <a href="/posts/add" aria-label="Create">
                 <i className="fa-solid fa-plus" />
@@ -124,91 +185,10 @@ export const Posts = ({
           </div>
         </div>
 
-        {/* <div className="col-md-8">
-          { category ? (
-            <ul
-              role="navigation"
-              aria-label="breadcrumb"
-              itemScope="itemscope"
-              itemType="http://schema.org/BreadcrumbList"
-              className={styles.navigation}
-            >
-              <li
-                itemProp="itemListElement"
-                itemScope="itemscope"
-                itemType="http://schema.org/ListItem"
-              >
-                <meta content="0" itemProp="position" />
-                <Link
-                  href="/posts"
-                  style={{ textDecoration: 'underline dotted' }}
-                  title={t('system.main')}
-                  itemID="/posts"
-                  itemScope="itemscope"
-                  itemProp="item"
-                  itemType="http://schema.org/Thing"
-                >
-                  <span itemProp="name">{ t('system.main') }</span>
-                </Link>
-                <span>&nbsp;/&nbsp;</span>
-              </li>
-              { category.parents && category.parents.map((parent, i) => (
-                <li
-                  itemProp="itemListElement"
-                  itemScope="itemscope"
-                  itemType="http://schema.org/ListItem"
-                  key={parent.id}
-                >
-                  <meta content={i + 1} itemProp="position" />
-                  <Link
-                    href={`/posts/${parent.url}`}
-                    style={{ textDecoration: 'underline dotted' }}
-                    title={parent.title}
-                    itemID={`/posts/${parent.url}`}
-                    itemScope="itemscope"
-                    itemProp="item"
-                    itemType="http://schema.org/Thing"
-                  >
-                    <span itemProp="name">
-                      {parent.title}
-                    </span>
-                  </Link>
-                  <span>&nbsp;/&nbsp;</span>
-                </li>
-              )) }
-              <li
-                itemProp="itemListElement"
-                itemScope="itemscope"
-                itemType="http://schema.org/ListItem"
-                key={category.id}
-              >
-                <meta content={
-                  category.parents
-                  ? category.parents.length + 1
-                  : 1
-                } itemProp="position" />
-                <Link
-                  href={`/posts/${category.url}`}
-                  title={category.title}
-                  itemID={`/posts/${category.url}`}
-                  itemScope="itemscope"
-                  itemProp="item"
-                  itemType="http://schema.org/Thing"
-                >
-                  <h1 itemProp="name">
-                    {category.title}
-                  </h1>
-                </Link>
-              </li>
-            </ul>
-          ) : (<h1>{ t('structure.posts') }</h1>) }
-        </div> */}
-
-        <div className="mb-2">
+        <div className="categories">
           { subcategories.map(subcategory => (subcategory.status ? (
             <Link
               href={`/posts/${subcategory.url}/`}
-              className={`btn btn-${main.theme} me-2 mb-2`}
               key={subcategory.id}
             >
               { subcategory.title }
@@ -217,6 +197,7 @@ export const Posts = ({
             <React.Fragment key={subcategory.id} />
           ))) }
         </div>
+
         { category && (
           <>
             { category.image && (

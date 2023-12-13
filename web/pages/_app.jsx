@@ -120,11 +120,7 @@ const Body = ({
 
       <Header />
 
-      <div className={`bg-${main.theme}`}>
-        <div className={`container ${styles.main}`}>
-          <Component {...pageProps} />
-        </div>
-      </div>
+      <Component {...pageProps} />
 
       { system.popup === 'auth' && (
         <Auth />

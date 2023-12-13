@@ -8,23 +8,11 @@
     font-family: Gilroy, sans-serif;
 } */
 
-body {
+/* body {
     background-color: #f8f4f0;
-}
-
-button.login {
-    width: auto;
-    height: 46px;
-    margin-top: 24px;
-    padding: 12px 24px;
-}
+} */
 
 .title .icon {
-    font-size: 2.5em; /* 3em */
-    padding: .3em; /* .2em */
-    margin: .3em; /* .2em */
-    height: 1.6em; /* 1.45em */
-    width: 1.6em; /* 1.45em */
     background-color: rgba(255, 68, 1, 0.1);
     color: rgba(255, 68, 1, 0.4);
 }
@@ -59,7 +47,6 @@ button.login {
 /*  */
 
 #cases,
-#services,
 #contacts {
     width: 100%;
 }
@@ -73,13 +60,6 @@ button.login {
 }
 #cases .card_image {
     height: 200px;
-}
-
-#services .card {
-    max-height: 400px; /* 330px; */
-}
-#services .card_image {
-    height: 330px; /* 260px; */
 }
 
 /* Banner */
@@ -99,76 +79,31 @@ button.login {
     cursor: pointer;
 }
 
-/* Scroll */
-
-.scroll {
-    width: 100%;
-    text-align: center;
-    font-size: 1.4em;
-    margin: -1em 0 0 0;
-}
-
-@media (max-width: 768px) {
-    .scroll {
-        display: none !important;
-    }
-}
-
-/* Tetra */
-
-.tetra {
-    width: 100%;
-    padding-top: 2em;
-}
-
-.tetra div {
-    display: inline-block;
-    width: 25%;
-    padding: 0 2em 2em 2em;
-    vertical-align: top;
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: 600;
-}
-
-.tetra div font {
-    font-weight: inherit;
-    color: rgba(255, 68, 1, 0.6);
-}
-
-@media (max-width: 1200px) {
-    .tetra div {
-        padding: 0 1em 2em 1em;
-        font-size: 1.3em;
-    }
-}
-
-@media (max-width: 950px) {
-    .tetra div {
-        font-size: 1.1em;
-    }
-}
-
-@media (max-width: 900px) {
-    .tetra div {
-        padding: 0 0 2em 0;
-        font-size: 1.25em;
-        width: 50%;
-    }
-}
-
 /* FIXME */
 
 button {
-    /* ECDCC9 */
-    /* DDB6A1 */
-    /* FFA07A */
-    /* F1E5D9 */
-    /* D7CCC8 */
-    /* e4be8b */
     background-color: #333 !important;
 }
 
 button:hover {
     background-color: #000 !important;
+}
+
+.title_body {
+    margin: 4px 0;
+}
+
+.title ul {
+    list-style: none;
+    margin: 0;
+}
+
+.breadcrumb {
+    font-size: .75em;
+    font-weight: 600;
+    padding: 0 4px 0 7px;
+}
+
+.body {
+    min-height: calc(100vh - 165px);
 }

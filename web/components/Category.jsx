@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 
-import styles from '../styles/card.module.css';
 import { toastAdd } from '../redux/actions/system';
 import { categoriesClear } from '../redux/actions/categories';
 import api from '../lib/api';
@@ -133,7 +132,7 @@ const Edit = ({
       <div className="input-group mb-3">
         <input
           type="text"
-          className={`form-control ${styles.title}`}
+          className="form-control"
           placeholder={t('categories.title')}
           value={title}
           onChange={event => setTitle(event.target.value)}
