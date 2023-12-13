@@ -41,29 +41,25 @@ export default () => {
     <div>
       <Popup>
         <form onSubmit={signIn}>
-          <div className="input-group mb-3">
-            <input
-              className="form-control"
-              type="text"
-              placeholder={t('profile.mail')}
-              value={mail}
-              onChange={event => setMail(event.target.value)}
-              autoComplete="off"
-              required
-            />
-          </div>
-          <div className="input-group mb-3">
-            <input
-              className="form-control"
-              // className={(response !== null && response.data === 'password') ? 'error' : ''}
-              type="password"
-              placeholder={t('profile.password')}
-              value={password}
-              onChange={event => setPassword(event.target.value)}
-              autoComplete="off"
-              required
-            />
-          </div>
+          <input
+            className="form-control"
+            type="text"
+            placeholder={t('profile.mail')}
+            value={mail}
+            onChange={event => setMail(event.target.value)}
+            autoComplete="off"
+            required
+          />
+          <input
+            className="form-control"
+            // className={(response !== null && response.data === 'password') ? 'error' : ''}
+            type="password"
+            placeholder={t('profile.password')}
+            value={password}
+            onChange={event => setPassword(event.target.value)}
+            autoComplete="off"
+            required
+          />
           <div className={styles.pass_info}>
             <span style={password.length >= 6 ? { color: 'var(--bs-green)' } : { color: '#e74c3c' }}>
               <i className={password.length >= 6 ? 'bi bi-check-circle' : 'bi bi-x-circle'} />

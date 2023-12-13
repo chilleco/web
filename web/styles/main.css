@@ -81,6 +81,15 @@
 
 /* Rewrite */
 
+.ck div {
+    display: block;
+}
+
 .ck-editor {
     width: 100% !important;
+}
+
+.rmain .card {
+    width: 100%;
+    margin: 24px 0 0 0;
 }

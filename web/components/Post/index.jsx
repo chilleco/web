@@ -196,7 +196,7 @@ export default ({ post, setPost }) => {
   canonical += `posts/${post.url}`;
 
   return (
-    <div className={`album pb-2 ${styles.post}`}>
+    <div>
       <Head>
         {/* SEO */}
         <title>{ `${post.title} | ${process.env.NEXT_PUBLIC_NAME}` }</title>
@@ -211,39 +211,41 @@ export default ({ post, setPost }) => {
         <meta property="og:type" content="article" />
         <link rel="canonical" href={canonical} />
       </Head>
-      <div className="row">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'http://schema.org/',
-              '@type': 'Article',
-              mainEntityOfPage: {
-                '@type': 'WebPage',
-                '@id': `${process.env.NEXT_PUBLIC_WEB}posts/${post.url}`,
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'http://schema.org/',
+            '@type': 'Article',
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `${process.env.NEXT_PUBLIC_WEB}posts/${post.url}`,
+            },
+            headline: post.title,
+            image: post.image || '',
+            datePublished: getISO(post.created),
+            dateModified: getISO(post.updated),
+            text: post.description,
+            author: [{
+              '@type': 'Person',
+              name: post.author ? `${post.author.title} ${post.author.id}` : '',
+            }],
+            publisher: {
+              '@type': 'Organization',
+              name: process.env.NEXT_PUBLIC_NAME,
+              logo: {
+                '@type': 'ImageObject',
+                url: `${process.env.NEXT_PUBLIC_WEB}brand/logo.png`,
               },
-              headline: post.title,
-              image: post.image || '',
-              datePublished: getISO(post.created),
-              dateModified: getISO(post.updated),
-              text: post.description,
-              author: [{
-                '@type': 'Person',
-                name: post.author ? `${post.author.title} ${post.author.id}` : '',
-              }],
-              publisher: {
-                '@type': 'Organization',
-                name: process.env.NEXT_PUBLIC_NAME,
-                logo: {
-                  '@type': 'ImageObject',
-                  url: `${process.env.NEXT_PUBLIC_WEB}brand/logo.png`,
-                },
-              },
-              url: `${process.env.NEXT_PUBLIC_WEB}posts/${post.url}`,
-            }),
-          }}
-        />
-        <div className="col-md-8">
+            },
+            url: `${process.env.NEXT_PUBLIC_WEB}posts/${post.url}`,
+          }),
+        }}
+      />
+
+      <div className="title">
+        <div className="title_body">
           <h1>{ post.title }</h1>
           <div className={styles.info}>
             { post.category_data && (
@@ -322,46 +324,45 @@ export default ({ post, setPost }) => {
             ) }
           </div>
         </div>
-        <div className={`col-md-4 ${styles.tools}`}>
-          { profile.status >= 2 && (
-            <>
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setEdit(!edit)}
-                aria-label="Edit"
-              >
-                <i className={edit ? 'fa-regular fa-eye' : 'fa-solid fa-pencil'} />
-              </button>
-              { post.status ? (
+
+        <div className="tools">
+          <div>
+            { profile.status >= 2 && (
+              <>
                 <button
                   type="button"
-                  className="btn btn-danger"
-                  onClick={() => blockPost({ status: 0 })}
-                  aria-label="Hide"
+                  onClick={() => setEdit(!edit)}
+                  aria-label="Edit"
                 >
-                  <i className="fa-solid fa-lock" />
+                  <i className={edit ? 'fa-regular fa-eye' : 'fa-solid fa-pencil'} />
                 </button>
-              ) : (
+                { post.status ? (
+                  <button
+                    type="button"
+                    onClick={() => blockPost({ status: 0 })}
+                    aria-label="Hide"
+                  >
+                    <i className="fa-solid fa-lock" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => blockPost({ status: 1 })}
+                    aria-label="Show"
+                  >
+                    <i className="fa-solid fa-lock-open" />
+                  </button>
+                ) }
                 <button
                   type="button"
-                  className="btn btn-success"
-                  onClick={() => blockPost({ status: 1 })}
-                  aria-label="Show"
+                  onClick={rmPost}
+                  aria-label="Delete"
                 >
-                  <i className="fa-solid fa-lock-open" />
+                  <i className="fa-solid fa-trash" />
                 </button>
-              ) }
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={rmPost}
-                aria-label="Delete"
-              >
-                <i className="fa-solid fa-trash" />
-              </button>
-            </>
-          ) }
+              </>
+            ) }
+          </div>
         </div>
       </div>
 
@@ -375,11 +376,15 @@ export default ({ post, setPost }) => {
         />
       ) : (
         <>
-          <div className="row">
-            <div className="col-md-8">
+          <div className="lcmain">
+            <div>
               { post.image && (
                 <>
-                  <img src={post.image} alt={post.title} className={styles.image} />
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="post_cover"
+                  />
                   <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
@@ -395,8 +400,10 @@ export default ({ post, setPost }) => {
                 </>
               ) }
 
-              <div dangerouslySetInnerHTML={{ __html: post.data }} />
-
+              <div
+                className="text"
+                dangerouslySetInnerHTML={{ __html: post.data }}
+              />
               {/* <MathJax
                 math={post.data}
                 sanitizeOptions={{
@@ -415,35 +422,34 @@ export default ({ post, setPost }) => {
                 )}
               </div> */}
             </div>
-            <div className={`col-md-4 ${styles.side}`}>
-              <div className={styles.about}>
-                { post.author && post.author.title ? (
-                  <div className={styles.user}>
-                    <div className="me-2">
-                      <Hexagon url={post.author.image || '/user.png'} />
-                    </div>
-                    {post.author.title ? post.author.title : t('system.guest')}
+          </div>
+
+          <div className="rmain">
+            <div className={`text ${styles.about}`}>
+              { post.author && post.author.title ? (
+                <div className={styles.user}>
+                  <div className="me-2">
+                    <Hexagon url={post.author.image || '/user.png'} />
                   </div>
-                ) : (<></>) }
-                <div>
-                  <i className="fa-solid fa-pencil me-2" />
-                  { created }
+                  {post.author.title ? post.author.title : t('system.guest')}
                 </div>
-                { post.views ? (
-                  <div>
-                    <i className="fa-regular fa-eye me-2" />
-                    { post.views }
-                  </div>
-                ) : (<></>) }
-              </div>
+              ) : (<></>) }
               <div>
-                <div className={styles.header}>
-                  <i className="bi bi-fire me-2" />
-                  {t('system.popular')}
-                </div>
-                { posts.map(post => <Card post={post} key={post.id} />) }
+                <i className="fa-solid fa-pencil me-2" />
+                { created }
               </div>
+              { post.views ? (
+                <div>
+                  <i className="fa-regular fa-eye me-2" />
+                  { post.views }
+                </div>
+              ) : (<></>) }
             </div>
+            {/* <div className={styles.header}>
+                <i className="bi bi-fire me-2" />
+                {t('system.popular')}
+              </div> */}
+            { posts.map(post => <Card post={post} key={post.id} />) }
           </div>
 
           <Comments post={post.id} comments={post.comments} />

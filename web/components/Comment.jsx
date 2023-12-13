@@ -20,7 +20,7 @@ export const Comment = ({ comment }) => {
     <div className={styles.comment}>
       <div className={styles.header}>
         <Hexagon url={(comment.user && comment.user.image) || '/user.png'} />
-        <div className="ps-2">
+        <div className={styles.title}>
           <div className={styles.user}>
             { comment.user && comment.user.title ? comment.user.title : t('system.guest') }
           </div>
@@ -71,21 +71,19 @@ export default ({ post, comments }) => {
           </h2>
         </div>
       </div>
-      <div className="input-group">
-        <textarea
-          className="form-control"
-          placeholder={t('posts.reply')}
-          value={data}
-          onChange={event => setData(event.target.value)}
-        />
-        <button
-          type="button"
-          className="btn btn-success"
-          onClick={saveComment}
-        >
-          { t('system.send') }
-        </button>
-      </div>
+      <textarea
+        className="form-control"
+        placeholder={t('posts.reply')}
+        value={data}
+        onChange={event => setData(event.target.value)}
+      />
+      <button
+        type="button"
+        className="btn btn-success"
+        onClick={saveComment}
+      >
+        { t('system.send') }
+      </button>
       { replies && replies.map(
         comment => <Comment comment={comment} key={comment.id} />,
       ) }
