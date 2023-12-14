@@ -7,6 +7,7 @@ from fastapi import APIRouter, Body, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from userhub import token
+from libdev.codes import get_network
 
 from lib import cfg
 
@@ -43,7 +44,7 @@ async def handler(
         'token': token_id,
         'user': user_id,
         'status': status,
-        'network': data.network,
+        'network': get_network(data.network),
         # 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
     }, cfg('jwt'), algorithm='HS256')
 

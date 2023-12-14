@@ -7,6 +7,7 @@ from fastapi import APIRouter, Body, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from userhub import auth, detect_type
+from consys.errors import ErrorWrong
 
 from lib import cfg
 
@@ -34,6 +35,9 @@ async def wrap_auth(*args, **kwargs):
     """ Unified auth wrapper """
 
     user, token_id, new = await auth(cfg('PROJECT_NAME'), *args, **kwargs)
+
+    if not user:
+        raise ErrorWrong('password')
 
     # JWT
     token = jwt.encode({

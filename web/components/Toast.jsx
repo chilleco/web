@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 
 const Toast = ({
@@ -6,10 +6,10 @@ const Toast = ({
 }) => {
   const { t } = useTranslation('common');
 
-  useEffect(() => {
-    const toastList = [].slice.call(document.querySelectorAll('.toast'));
-    new bootstrap.Toast(toastList.pop(), { delay: 2000 }).show(); /* eslint-disable-line */
-  }, []);
+  // useEffect(() => {
+  //   const toastList = [].slice.call(document.querySelectorAll('.toast'));
+  //   new bootstrap.Toast(toastList.pop(), { delay: 2000 }).show(); /* eslint-disable-line */
+  // }, []);
 
   return (
     <div
