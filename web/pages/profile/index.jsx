@@ -98,78 +98,72 @@ const Container = ({
   };
 
   return (
-    <div className="container">
-      <div className="row py-3">
-        <div className="col-12 col-md-6 mb-3">
-          <Upload
-            image={image === '/user.png' ? null : image}
-            setImage={setImage}
+    <div>
+      <div className="half_medium">
+        <Upload
+          image={image === '/user.png' ? null : image}
+          setImage={setImage}
+        />
+      </div>
+      <div className="half_medium">
+        <div className="input">
+          <input
+            value={name}
+            onChange={event => setName(event.target.value)}
+            placeholder={t('profile.name')}
+            type="text"
+            aria-label="First name"
+            className="form-control"
+          />
+          <input
+            value={surname}
+            onChange={event => setSurname(event.target.value)}
+            placeholder={t('profile.surname')}
+            type="text"
+            aria-label="Last name"
+            className="form-control"
           />
         </div>
-        <div className="col-12 col-md-6">
-          <div className="input-group mb-3">
-            <input
-              value={name}
-              onChange={event => setName(event.target.value)}
-              placeholder={t('profile.name')}
-              type="text"
-              aria-label="First name"
-              className="form-control"
-            />
-            <input
-              value={surname}
-              onChange={event => setSurname(event.target.value)}
-              placeholder={t('profile.surname')}
-              type="text"
-              aria-label="Last name"
-              className="form-control"
-            />
-          </div>
-          <div className="input-group flex-nowrap mb-3">
-            <span className="input-group-text" id="addon-wrapping">+</span>
-            <input
-              value={phone}
-              onChange={event => setPhone(event.target.value)}
-              placeholder={t('profile.phone')}
-              type="text"
-              className="form-control"
-              aria-label="Phone number"
-              aria-describedby="addon-wrapping"
-            />
-          </div>
-          <div className="input-group flex-nowrap mb-3">
-            <span className="input-group-text" id="addon-wrapping">@</span>
-            <input
-              value={login}
-              onChange={event => setLogin(event.target.value)}
-              placeholder={t('profile.login')}
-              type="text"
-              className="form-control"
-              aria-label="Username"
-              aria-describedby="addon-wrapping"
-            />
-          </div>
-          <div className="input-group mb-3">
-            <input
-              value={mail}
-              onChange={event => setMail(event.target.value)}
-              placeholder={t('profile.mail')}
-              type="email"
-              className="form-control"
-              autoComplete="false"
-            />
-          </div>
-          <div className="input-group mb-3">
-            <input
-              value={password}
-              onChange={event => setPassword(event.target.value)}
-              placeholder={t('profile.password')}
-              type="password"
-              className="form-control"
-              autoComplete="false"
-            />
-          </div>
+        <div className="input">
+          <label>+</label>
+          <input
+            value={phone}
+            onChange={event => setPhone(event.target.value)}
+            placeholder={t('profile.phone')}
+            type="text"
+            className="form-control"
+            aria-label="Phone number"
+            aria-describedby="addon-wrapping"
+          />
         </div>
+        <div className="input">
+          <label>@</label>
+          <input
+            value={login}
+            onChange={event => setLogin(event.target.value)}
+            placeholder={t('profile.login')}
+            type="text"
+            className="form-control"
+            aria-label="Username"
+            aria-describedby="addon-wrapping"
+          />
+        </div>
+        <input
+          value={mail}
+          onChange={event => setMail(event.target.value)}
+          placeholder={t('profile.mail')}
+          type="email"
+          className="form-control"
+          autoComplete="off"
+        />
+        <input
+          value={password}
+          onChange={event => setPassword(event.target.value)}
+          placeholder={t('profile.password')}
+          type="password"
+          className="form-control"
+          autoComplete="new-password"
+        />
       </div>
       <button
         type="button"

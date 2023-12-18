@@ -2,11 +2,10 @@
 The getting method of the user object of the API
 """
 
-# import time
-
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess, ErrorInvalid
+from userhub import get
 
 # from models.user import User
 from models.socket import Socket
@@ -46,80 +45,31 @@ async def handler(
 ):
     """ Get """
 
-    # FIXME: get via core API
-    # TODO: cursor
-
     # Checks
-
     if request.state.status < 4 and data.id != request.state.user: # TODO: 5
         raise ErrorAccess('get')
-
     if request.state.user == 0:
         raise ErrorInvalid('id')
 
-    # TODO: Get myself
-    # if not data.id and request.state.user:
-    #     data.id = request.state.user
+    # UserHub
+    res = await get(
+        token=request.state.token,
+        data={
+            'id': data.id,
+            'limit': data.limit,
+            'offset': data.offset,
+            'fields': data.fields,
+        }
+    )
 
-    # # Fields
-    # # TODO: right to roles
+    if not isinstance(res, dict):
+        raise ErrorInvalid(res)
 
-    # fields = {
-    #     'id',
-    #     'login',
-    #     'image',
-    #     'name',
-    #     'surname',
-    #     'title',
-    #     'status',
-    #     # 'subscription',
-    #     # 'balance',
-    #     'rating',
-    #     'description',
-    #     'discount',
-    # }
-
-    # process_self = data.id == request.state.user
-    # process_admin = request.state.status >= 7
-
-    # if process_self:
-    #     fields |= {
-    #         'phone',
-    #         'mail',
-    #         'social',
-    #         'subscription',
-    #         'pay',
-    #     }
-
-    # if process_admin:
-    #     fields |= {
-    #         'phone',
-    #         'mail',
-    #         'social',
-    #         'subscription',
-    #         'pay',
-    #     }
-
-    # if data.fields:
-    #     fields = fields & set(data.fields) | {'id'}
-
-    # # Processing
-    # def handle(user):
-    #     if data.fields and 'online' in data.fields:
-    #         user['online'] = online_back(user['id'])
-
-    #     return user
-
-    # # Get
-    # users = User.complex(
-    #     ids=data.id,
-    #     limit=data.limit,
-    #     offset=data.offset,
-    #     fields=fields,
-    #     handler=handle,
-    # )
-
-    users = []
+    users = res['users']
+    # if isinstance(users, list):
+    #     users = [User(user) for user in res['users']]
+    # else:
+    #     users = User(users)
 
     # Response
     return {
