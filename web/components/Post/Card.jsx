@@ -10,7 +10,12 @@ export default ({ post }) => (
       />
       ) }
       <div className="card_body">
-        { !post.status && <i className="fa-solid fa-lock me-2" /> }
+        { !post.status && (
+        <>
+          <i className="fa-solid fa-lock me-2" />
+          &nbsp;
+        </>
+        ) }
         { post.title }
       </div>
     </div>

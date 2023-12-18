@@ -25,7 +25,7 @@ const Logo = () => {
   );
 };
 
-const Navigation = () => {
+const Navigation = ({ setExpanded }) => {
   const { t } = useTranslation('common');
   // const main = useSelector(state => state.main);
   // const categories = useSelector(state => state.categories);
@@ -33,7 +33,11 @@ const Navigation = () => {
   return (
     <div className="menu">
       {/* <li className="nav-item dropdown"> */}
-      <Link href="/posts/" className="green">
+      <Link
+        href="/posts/"
+        className="green"
+        onClick={() => setExpanded(false)}
+      >
         <i className="fa-solid fa-newspaper" />
         { t('structure.posts') }
       </Link>
@@ -73,15 +77,27 @@ const Navigation = () => {
       ) : (
         <React.Fragment key={category.id} />
       ))) } */}
-      <Link href="/space/" className="violet">
+      <Link
+        href="/space/"
+        className="violet"
+        onClick={() => setExpanded(false)}
+      >
         <i className="fa-solid fa-paperclip" />
         { t('structure.space') }
       </Link>
-      <Link href="/hub/" className="blue">
+      <Link
+        href="/hub/"
+        className="blue"
+        onClick={() => setExpanded(false)}
+      >
         <i className="fa-solid fa-quote-right" />
         { t('structure.hub') }
       </Link>
-      <Link href="/catalog/" className="orange">
+      <Link
+        href="/catalog/"
+        className="orange"
+        onClick={() => setExpanded(false)}
+      >
         <i className="fa-solid fa-folder-open" />
         { t('structure.catalog') }
       </Link>
@@ -114,7 +130,7 @@ const Navigation = () => {
 //   );
 // };
 
-const Profile = () => {
+const Profile = ({ setExpanded }) => {
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
   const main = useSelector(state => state.main);
@@ -129,17 +145,17 @@ const Profile = () => {
     background: 'danger',
   })));
 
-  const [isExpanded, setExpanded] = useState(false);
-  const toggleExpand = () => setExpanded(!isExpanded);
+  const [isSubExpanded, setSubExpanded] = useState(false);
+  const toggleExpand = () => setSubExpanded(!isSubExpanded);
   const blockRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (blockRef.current && !blockRef.current.contains(event.target)) {
-        setExpanded(false);
+        setSubExpanded(false);
       }
     };
 
-    if (isExpanded) {
+    if (isSubExpanded) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -148,7 +164,7 @@ const Profile = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isExpanded]);
+  }, [isSubExpanded]);
 
   if (!profile.id) {
     return (
@@ -165,26 +181,29 @@ const Profile = () => {
   return (
     <div ref={blockRef} className="avatar" onClick={toggleExpand}>
       <Hexagon url={profile.image_optimize} />
-      { isExpanded && (
+      { isSubExpanded && (
         <div className="profile">
-          <Link href="/profile/">
+          <Link href="/profile/" onClick={() => setExpanded(false)}>
             <i className="bi bi-person-bounding-box" />
             { t('system.profile') }
           </Link>
-          <Link href="/settings/">
+          <Link href="/settings/" onClick={() => setExpanded(false)}>
             <i className="fa-solid fa-gear" />
             { t('system.settings') }
           </Link>
-          {/* <Link href="/billing/">
+          {/* <Link href="/billing/" onClick={() => setExpanded(false)}>
             { t('system.billing') }
           </Link> */}
           { profile.status >= 6 && (
             <>
-              <Link href={`https://docs.google.com/spreadsheets/d/${process.env.NEXT_PUBLIC_ANALYTICS_SHEET}/`}>
+              <Link
+                href={`https://docs.google.com/spreadsheets/d/${process.env.NEXT_PUBLIC_ANALYTICS_SHEET}/`}
+                onClick={() => setExpanded(false)}
+              >
                 <i className="bi bi-funnel-fill" />
                 { t('system.analytics') }
               </Link>
-              <Link href="/eye/">
+              <Link href="/eye/" onClick={() => setExpanded(false)}>
                 <i className="bi bi-cone-striped" />
                 { t('system.admin') }
               </Link>
@@ -223,7 +242,7 @@ export default () => {
         </div>
 
         <div className={`block ${isExpanded ? '' : 'hidden'}`}>
-          <Navigation />
+          <Navigation setExpanded={setExpanded} />
           {/* <Search /> */}
           {/* <ul className="nav navbar-nav navbar-right">
             <li className={`me-4 ${styles.custom}`}>
@@ -258,7 +277,7 @@ export default () => {
                   height={24}
                 />
               </Link> */}
-          <Profile />
+          <Profile setExpanded={setExpanded} />
         </div>
       </nav>
     </div>

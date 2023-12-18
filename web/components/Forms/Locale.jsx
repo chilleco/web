@@ -197,7 +197,6 @@ export default ({ locale, setLocale }) => {
         { t('system.locale') }
       </label>
       <select
-        className="form-select"
         id="categoryLocale"
         value={locale || ''}
         onChange={event => setLocale(event.target.value)}
