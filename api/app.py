@@ -55,6 +55,7 @@ app.add_middleware(
         '/account/token/',
         '/posts/get/',
         '/categories/get/',
+        '/products/get/', # FIXME
     },
 )
 
