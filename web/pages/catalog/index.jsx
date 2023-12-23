@@ -7,6 +7,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { toastAdd } from '../../redux/actions/system';
 import api from '../../lib/api';
 import List from '../../components/Product/List';
+import Search from '../../components/Search';
 
 export const Products = ({
   productsLoaded = [],
@@ -43,6 +44,8 @@ export const Products = ({
           </div>
         </div>
       </div> */}
+
+      <Search />
 
       <List products={products} />
     </>
