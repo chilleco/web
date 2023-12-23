@@ -27,9 +27,9 @@ export const Products = ({
         <meta property="og:type" content="website" />
       </Head>
 
-      <div className="title">
+      {/* <div className="title">
         <div className="icon green">
-          <i className="fa-solid fa-newspaper" />
+          <i className="fa-solid fa-folder-open" />
         </div>
         <div className="title_body">
           <h1>{ t('structure.catalog') }</h1>
@@ -42,7 +42,7 @@ export const Products = ({
             </a>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <List products={products} />
     </>
