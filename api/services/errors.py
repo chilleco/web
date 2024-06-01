@@ -11,18 +11,18 @@ from lib import report
 
 
 async def handle_exception_group(e_group):
-    """ Handling nested errors """
+    """Handling nested errors"""
 
     for e in e_group.exceptions:
         if isinstance(e, ExceptionGroup):
             return await handle_exception_group(e)
 
         if isinstance(e, BaseError):
-            return Response(content=vars(e)['txt'], status_code=400)
+            return Response(content=vars(e)["txt"], status_code=400)
 
         try:
             text = e.txt
-        except:
+        except:  # pylint: disable=bare-except
             text = str(e)
 
         await report.critical(text, error=e)
@@ -30,14 +30,14 @@ async def handle_exception_group(e_group):
 
 
 class ErrorsMiddleware(BaseHTTPMiddleware):
-    """ Formatting errors middleware """
+    """Formatting errors middleware"""
 
     def __init__(self, app):
         super().__init__(app)
 
     async def dispatch(self, request: Request, call_next):
         # Whitelist
-        if request.method != 'POST':
+        if request.method != "POST":
             return await call_next(request)
 
         try:
@@ -45,11 +45,14 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
 
             # Report
             if response.status_code not in {200, 303, 401}:
-                await report.warning("Non-success response", {
-                    'method': request.method,
-                    'url': request.state.url,
-                    'status': response.status_code,
-                })
+                await report.warning(
+                    "Non-success response",
+                    {
+                        "method": request.method,
+                        "url": request.state.url,
+                        "status": response.status_code,
+                    },
+                )
 
             return response
 
