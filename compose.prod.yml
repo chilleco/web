@@ -51,6 +51,7 @@ services:
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
     volumes:
+      - ./scripts:/app/scripts
       # For logs
       - ${DATA_PATH}/logs/jobs.err:/app/app.err
       - ${DATA_PATH}/logs/jobs.log:/app/app.log

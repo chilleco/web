@@ -47,6 +47,8 @@ jobs:
 
             echo "Pulling new version"
             GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone git@github.com:chilleco/web.git
+
+            echo "Checking data directory"
             if [ -d ~/data ];
             then
                 echo ""

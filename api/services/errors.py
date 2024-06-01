@@ -10,17 +10,23 @@ from exceptiongroup import ExceptionGroup
 from lib import report
 
 
-def handle_exception_group(e_group):
+async def handle_exception_group(e_group):
     """ Handling nested errors """
 
     for e in e_group.exceptions:
         if isinstance(e, ExceptionGroup):
-            return handle_exception_group(e)
+            return await handle_exception_group(e)
 
         if isinstance(e, BaseError):
             return Response(content=vars(e)['txt'], status_code=400)
 
-        return Response(content=str(e), status_code=500)
+        try:
+            text = e.txt
+        except:
+            text = str(e)
+
+        await report.critical(text, error=e)
+        return Response(content=text, status_code=500)
 
 
 class ErrorsMiddleware(BaseHTTPMiddleware):
@@ -40,6 +46,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             # Report
             if response.status_code not in {200, 303, 401}:
                 await report.warning("Non-success response", {
+                    'method': request.method,
                     'url': request.state.url,
                     'status': response.status_code,
                 })
@@ -47,7 +54,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             return response
 
         except ExceptionGroup as e:
-            return handle_exception_group(e)
+            return await handle_exception_group(e)
 
         except Exception as e:  # pylint: disable=broad-except
             await report.critical(str(e), error=e)

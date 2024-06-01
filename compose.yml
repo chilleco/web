@@ -62,6 +62,7 @@ services:
       API: http://api:5000/
       WEB: http://localhost/
     volumes:
+      - ./scripts:/app/scripts
       # For logs
       - ${DATA_PATH}/logs/jobs.err:/app/app.err
       - ${DATA_PATH}/logs/jobs.log:/app/app.log
