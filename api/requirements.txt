@@ -9,6 +9,7 @@ uvicorn==0.20.0  # FIXME: higher version not working
 PyJWT==2.8.0
 python-multipart==0.0.6  # NOTE: for file upload
 slowapi==0.1.8
+loguru==0.7.2
 
 # Users
 userhub==0.10

@@ -4,6 +4,7 @@ The main functionality for the Telegram bot
 
 from libdev.cfg import cfg
 from libdev.gen import generate
+from loguru import logger as log
 
 # pylint: disable=import-error,import-self
 from lib._variables import (
@@ -22,6 +23,7 @@ from lib.reports import report
 
 __all__ = (
     "cfg",
+    "log",
     "generate",
     "locales",
     "locales_chosen",
