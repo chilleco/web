@@ -4,22 +4,22 @@ import { useTranslation } from 'next-i18next';
 
 const List = ({ categories, exclude, indent = 0 }) => (
   <>
-    { categories && categories.map(category => category.id && category.id !== exclude && (
-    <React.Fragment key={category.id}>
-      <option value={category.id}>
-        <div dangerouslySetInnerHTML={{ __html: '&nbsp;&nbsp;&nbsp;'.repeat(indent) }} />
-        #
-        { category.id }
-&nbsp;&nbsp;
-        { category.title }
-      </option>
-      <List
-        categories={category.categories}
-        exclude={exclude}
-        indent={indent + 1}
-      />
-    </React.Fragment>
-    )) }
+    {categories && categories.map(category => category.id && category.id !== exclude && (
+      <React.Fragment key={category.id}>
+        <option value={category.id}>
+          <div dangerouslySetInnerHTML={{ __html: '&nbsp;&nbsp;&nbsp;'.repeat(indent) }} />
+          #
+          {category.id}
+          &nbsp;&nbsp;
+          {category.title}
+        </option>
+        <List
+          categories={category.categories}
+          exclude={exclude}
+          indent={indent + 1}
+        />
+      </React.Fragment>
+    ))}
   </>
 );
 
@@ -32,7 +32,7 @@ export default ({
   return (
     <div className="input">
       <label htmlFor="category">
-        { custom || t('categories.category') }
+        {custom || t('categories.category')}
       </label>
       <select
         className="form-select"
@@ -40,7 +40,7 @@ export default ({
         value={category || '0'}
         onChange={event => setCategory(event.target.value)}
       >
-        <option value="0" defaultValue>{ t('categories.top') }</option>
+        <option value="0" defaultValue>{t('categories.top')}</option>
         <List categories={categories} exclude={exclude} />
       </select>
     </div>

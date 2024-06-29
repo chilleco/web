@@ -9,7 +9,7 @@ from models.user import User
 
 
 def sign(request: Request):
-    """ Get user object """
+    """Get user object"""
 
     if request.state.user:
         try:

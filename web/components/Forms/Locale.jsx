@@ -194,15 +194,15 @@ export default ({ locale, setLocale }) => {
   return (
     <div className="input">
       <label htmlFor="categoryLocale">
-        { t('system.locale') }
+        {t('system.locale')}
       </label>
       <select
         id="categoryLocale"
         value={locale || ''}
         onChange={event => setLocale(event.target.value)}
       >
-        <option value="" defaultValue>{ `🌎 ${t('system.worldwide')}` }</option>
-        { locales.map(loc => (
+        <option value="" defaultValue>{`🌎 ${t('system.worldwide')}`}</option>
+        {locales.map(loc => (
           <option value={loc.code}>
             {loc.flag}
             {' '}
@@ -212,7 +212,7 @@ export default ({ locale, setLocale }) => {
             {loc.name}
             )
           </option>
-        )) }
+        ))}
 
       </select>
     </div>

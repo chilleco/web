@@ -128,14 +128,14 @@ export default ({ product }) => { // setProduct
     <div>
       <Head>
         {/* SEO */}
-        <title>{ `${product.title} | ${process.env.NEXT_PUBLIC_NAME}` }</title>
+        <title>{`${product.title} | ${process.env.NEXT_PUBLIC_NAME}`}</title>
         <meta name="title" content={`${product.title} | ${process.env.NEXT_PUBLIC_NAME}`} />
         <meta name="og:title" content={`${product.title} | ${process.env.NEXT_PUBLIC_NAME}`} />
         <meta name="description" content={product.description} />
         <meta name="og:description" content={product.description} />
-        { product.image && (
+        {product.image && (
           <meta name="og:image" content={product.image} />
-        ) }
+        )}
         <meta property="og:url" content={`${process.env.NEXT_PUBLIC_WEB}catalog/${product.url}`} />
         <meta property="og:type" content="article" />
         <link rel="canonical" href={canonical} />
@@ -143,12 +143,12 @@ export default ({ product }) => { // setProduct
 
       <div className="title">
         <div className="title_body">
-          <h1>{ product.title }</h1>
+          <h1>{product.title}</h1>
         </div>
 
         <div className="tools">
           <div>
-            { profile.status >= 2 && (
+            {profile.status >= 2 && (
               <>
                 <button
                   type="button"
@@ -158,7 +158,7 @@ export default ({ product }) => { // setProduct
                   <i className={edit ? 'fa-regular fa-eye' : 'fa-solid fa-pencil'} />
                 </button>
               </>
-            ) }
+            )}
           </div>
         </div>
       </div>

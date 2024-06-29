@@ -26,18 +26,19 @@ class Type(BaseModel):
     category: int = None
     status: int = None
 
+
 @router.post("/save/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Save """
+    """Save"""
 
     # TODO: fix access to unblock yourself post
 
     # No access
     if request.state.status < 2:
-        raise ErrorAccess('save')
+        raise ErrorAccess("save")
 
     # Get
     new = False
@@ -49,7 +50,7 @@ async def handler(
             and (not post.user or post.user != request.state.user)
             and post.token != request.state.token
         ):
-            raise ErrorAccess('save')
+            raise ErrorAccess("save")
 
     else:
         post = Post(
@@ -76,14 +77,14 @@ async def handler(
 
     # Track
     Track(
-        title='post_add' if new else 'post_edit',
+        title="post_add" if new else "post_edit",
         data={
-            'id': post.id,
-            'title': post.title,
-            'data': post.data,
-            'image': post.image,
-            'tags': post.tags,
-            'status': post.status,
+            "id": post.id,
+            "title": post.title,
+            "data": post.data,
+            "image": post.image,
+            "tags": post.tags,
+            "status": post.status,
         },
         user=request.state.user,
         token=request.state.token,
@@ -92,24 +93,27 @@ async def handler(
 
     # Report
     if new:
-        await report.important("Save post", {
-            'post': post.id,
-            'title': post.title,
-            'locale': post.locale,
-            'user': request.state.user,
-        })
+        await report.important(
+            "Save post",
+            {
+                "post": post.id,
+                "title": post.title,
+                "locale": post.locale,
+                "user": request.state.user,
+            },
+        )
 
     data = post.json()
 
     # URL
-    data['url'] = to_url(post.title) or ""
-    if data['url']:
-        data['url'] += "-"
-    data['url'] += f"{post.id}"
+    data["url"] = to_url(post.title) or ""
+    if data["url"]:
+        data["url"] += "-"
+    data["url"] += f"{post.id}"
 
     # Response
     return {
-        'id': post.id,
-        'new': new,
-        'post': data,
+        "id": post.id,
+        "new": new,
+        "post": data,
     }

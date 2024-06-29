@@ -14,7 +14,7 @@ from app import sio
 
 
 async def online_stop(socket_id, close=True):
-    """ Stop online session of the user """
+    """Stop online session of the user"""
 
     # TODO: Объединять сессии в онлайн по пользователю
     # TODO: Если сервер был остановлен, отслеживать сессию
@@ -36,7 +36,7 @@ async def online_stop(socket_id, close=True):
 
     # Action tracking
     Track(
-        title='online',
+        title="online",
         created=socket.created,
         expired=now,
         user=socket.user,
@@ -58,13 +58,17 @@ async def online_stop(socket_id, close=True):
     # Send sockets about the user to all online users
     count = _online_count()
     if count:
-        await sio.emit('online_del', {
-            'count': count,
-            'users': [{'id': socket.user}], # TODO: Админам
-        })
+        await sio.emit(
+            "online_del",
+            {
+                "count": count,
+                "users": [{"id": socket.user}],  # TODO: Админам
+            },
+        )
 
-@sio.on('disconnect')
+
+@sio.on("disconnect")
 async def disconnect(sid):
-    """ Disconnect """
-    await report.debug('OUT', sid)
+    """Disconnect"""
+    await report.debug("OUT", sid)
     await online_stop(sid)

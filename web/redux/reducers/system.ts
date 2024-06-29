@@ -15,7 +15,7 @@ export default (state = {
     case 'SYSTEM_TOAST':
       return {
         ...state,
-        toasts: [ ...state.toasts, action.toast ],
+        toasts: [...state.toasts, action.toast],
       };
 
     case 'SEARCH':

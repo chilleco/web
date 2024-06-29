@@ -13,20 +13,20 @@ export const Online = () => {
 
   return (
     <div className={styles.line}>
-      { online.count ? (
+      {online.count ? (
         <>
-          { t('system.online') }
+          {t('system.online')}
           <div className={styles.online} />
           <div
             className="badge bg-secondary pe-2"
             onClick={() => dispatch(popupSet('online'))}
           >
-            { online.count }
+            {online.count}
           </div>
         </>
       ) : (
         <>
-          { t('system.offline') }
+          {t('system.offline')}
           <div className={styles.offline} />
         </>
       )}
@@ -41,19 +41,19 @@ export default () => {
   return (
     <div>
       <Popup>
-        <h2>{ t('system.online') }</h2>
-        { online.users.map(user => (
+        <h2>{t('system.online')}</h2>
+        {online.users.map(user => (
           <div className={styles.user} key={user.id}>
             <Hexagon url={user.image || '/user.png'} />
             <div>
-              { user.name && user.surname ? (
+              {user.name && user.surname ? (
                 `${user.name || ''} ${user.surname || ''} (@${user.login})`
               ) : (
                 `@${user.login}`
-              ) }
+              )}
             </div>
           </div>
-        )) }
+        ))}
       </Popup>
     </div>
   );

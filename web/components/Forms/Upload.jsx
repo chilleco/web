@@ -9,11 +9,11 @@ export default ({ image, setImage }) => {
       htmlFor="uploader"
       style={{ border: image ? 0 : null }}
     >
-      { image ? (
+      {image ? (
         <div style={{ backgroundImage: `url(${image})` }} />
       ) : (
         <i className="bi bi-file-earmark-arrow-up" />
-      ) }
+      )}
 
       <input
         id="uploader"

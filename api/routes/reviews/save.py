@@ -17,12 +17,13 @@ class Type(BaseModel):
     title: str = None
     data: str = None
 
+
 @router.post("/save/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Save """
+    """Save"""
 
     # Get
 
@@ -38,20 +39,23 @@ async def handler(
         new = True
 
     # Change fields
-    review.title = data.title # TODO: checking if add
-    review.data = data.data # TODO: checking if add
+    review.title = data.title  # TODO: checking if add
+    review.data = data.data  # TODO: checking if add
 
     # Save
     review.save()
 
     # Report
-    await report.request("New review", {
-        'review': review.id,
-        'title': review.title,
-        'data': review.data,
-        'user': request.state.user,
-        'token': request.state.token,
-    })
+    await report.request(
+        "New review",
+        {
+            "review": review.id,
+            "title": review.title,
+            "data": review.data,
+            "user": request.state.user,
+            "token": request.state.token,
+        },
+    )
 
     # Processing
     cont = None
@@ -60,7 +64,7 @@ async def handler(
 
     # Response
     return {
-        'id': review.id,
-        'data': cont,
-        'new': new,
+        "id": review.id,
+        "data": cont,
+        "new": new,
     }

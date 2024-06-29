@@ -17,7 +17,7 @@ export default ({ editorLoaded, data, updatePost }) => {
 
   return (
     <>
-      { editorLoaded ? (
+      {editorLoaded ? (
         <CKEditor
           editor={ClassicEditor}
           config={{
@@ -55,7 +55,7 @@ export default ({ editorLoaded, data, updatePost }) => {
           }}
           onChange={(event, editor) => updatePost(editor.getData())}
         />
-      ) : (<Loader />) }
+      ) : (<Loader />)}
     </>
   );
 };

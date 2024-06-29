@@ -26,26 +26,27 @@ class Type(BaseModel):
     locale: str = None
     status: int = None
 
+
 @router.post("/save/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Save """
+    """Save"""
 
     # TODO: Checking for set as a parent of yourself or children
 
     # No access
     if request.state.status < 5:
-        raise ErrorAccess('save')
+        raise ErrorAccess("save")
 
     # Get
     new = False
     if data.id:
         category = Category.get(data.id)
 
-        if (request.state.status < 6 and category.user != request.state.user):
-            raise ErrorAccess('save')
+        if request.state.status < 6 and category.user != request.state.user:
+            raise ErrorAccess("save")
 
     else:
         category = Category(
@@ -68,13 +69,12 @@ async def handler(
 
     # Checking url format
     if category.url and category.url[-1].isdigit():
-        category.url += '-x'
+        category.url += "-x"
     # Check uniq url
-    if (
-        not category.url
-        or Category.get(id={'$ne': category.id}, url=category.url, fields={})
+    if not category.url or Category.get(
+        id={"$ne": category.id}, url=category.url, fields={}
     ):
-        category.url = str(category.created)[-6:] + '-' + (category.url or 'x')
+        category.url = str(category.created)[-6:] + "-" + (category.url or "x")
 
     # Save
     category.save()
@@ -84,12 +84,12 @@ async def handler(
 
     # Track
     Track(
-        title='cat_save',
+        title="cat_save",
         data={
-            'id': category.id,
-            'title': category.title,
-            'data': category.data,
-            'image': category.image,
+            "id": category.id,
+            "title": category.title,
+            "data": category.data,
+            "image": category.image,
         },
         user=request.state.user,
         token=request.state.token,
@@ -98,16 +98,19 @@ async def handler(
 
     # Report
     if new:
-        await report.important("Save category", {
-            'category': category.id,
-            'title': category.title,
-            'locale': category.locale,
-            'user': request.state.user,
-        })
+        await report.important(
+            "Save category",
+            {
+                "category": category.id,
+                "title": category.title,
+                "locale": category.locale,
+                "user": request.state.user,
+            },
+        )
 
     # Response
     return {
-        'id': category.id,
-        'new': new,
-        'category': category.json(),
+        "id": category.id,
+        "new": new,
+        "category": category.json(),
     }

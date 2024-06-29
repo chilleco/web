@@ -9,14 +9,15 @@ from lib.queue import get
 
 
 async def rm_last(chat, cache):
-    """ Remove last message """
-    if cache.get('m'):
-        await tg.rm(chat.id, cache['m'])
+    """Remove last message"""
+    if cache.get("m"):
+        await tg.rm(chat.id, cache["m"])
 
-async def prepare_message(data, action='typing'):
-    """ Prepare new message """
 
-    if 'message' in data:
+async def prepare_message(data, action="typing"):
+    """Prepare new message"""
+
+    if "message" in data:
         message = data.message
         callback = data
     else:

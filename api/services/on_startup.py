@@ -6,6 +6,6 @@ from services.cache import cache_categories
 
 
 def on_startup():
-    """ Tasks on start """
+    """Tasks on start"""
 
     cache_categories()

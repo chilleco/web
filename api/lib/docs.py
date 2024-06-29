@@ -8,23 +8,25 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 
 SCOPES = (
-    'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive',
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive",
 )
 
 
 credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-    cfg('google.credentials'), SCOPES,
+    cfg("google.credentials"),
+    SCOPES,
 )
 client = gspread.authorize(credentials)
 
 
 def open_sheets(key):
-    """ Open a spreadsheet """
+    """Open a spreadsheet"""
     return client.open_by_key(key).worksheets()
 
+
 def create_sheets(title, mail):
-    """ Create a spreadsheet """
+    """Create a spreadsheet"""
     sheet = client.create(title)
-    sheet.share(mail, perm_type='user', role='writer')
+    sheet.share(mail, perm_type="user", role="writer")
     return sheet.url

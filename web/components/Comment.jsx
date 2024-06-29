@@ -22,14 +22,14 @@ export const Comment = ({ comment }) => {
         <Hexagon url={(comment.user && comment.user.image) || '/user.png'} />
         <div className={styles.title}>
           <div className={styles.user}>
-            { comment.user && comment.user.title ? comment.user.title : t('system.guest') }
+            {comment.user && comment.user.title ? comment.user.title : t('system.guest')}
           </div>
           <div className={styles.time}>
-            { time }
+            {time}
           </div>
         </div>
       </div>
-      { comment.data }
+      {comment.data}
     </div>
   );
 };
@@ -63,11 +63,11 @@ export default ({ post, comments }) => {
     <div className={styles.comments}>
       <div className={styles.title}>
         <div>
-          <h2>{ t('posts.comments') }</h2>
+          <h2>{t('posts.comments')}</h2>
         </div>
         <div className={styles.counter}>
           <h2>
-            { replies.length }
+            {replies.length}
           </h2>
         </div>
       </div>
@@ -82,11 +82,11 @@ export default ({ post, comments }) => {
         className="btn btn-success"
         onClick={saveComment}
       >
-        { t('system.send') }
+        {t('system.send')}
       </button>
-      { replies && replies.map(
+      {replies && replies.map(
         comment => <Comment comment={comment} key={comment.id} />,
-      ) }
+      )}
     </div>
   );
 };

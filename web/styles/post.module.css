@@ -80,7 +80,7 @@
 .navigation {
     list-style: none;
     padding: 0;
-    display: flex!important;
+    display: flex !important;
 }
 
 .category .navigation {
@@ -102,7 +102,7 @@
     padding: 8px 12px;
 } */
 
-.side > div:last-child {
+.side>div:last-child {
     position: sticky;
     top: 56px;
 }
@@ -113,7 +113,7 @@
     margin-bottom: 20px;
 }
 
-.about > div {
+.about>div {
     width: 100%;
     display: flex;
     align-items: center;

@@ -18,22 +18,23 @@ router = APIRouter()
 class Type(BaseModel):
     id: int
 
+
 @router.post("/rm/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Delete """
+    """Delete"""
 
     # No access
     if request.state.status < 2:
-        raise ErrorAccess('rm')
+        raise ErrorAccess("rm")
 
     # Get
     category = Category.get(data.id)
 
     if request.state.status < 6 and category.user != request.state.user:
-        raise ErrorAccess('rm')
+        raise ErrorAccess("rm")
 
     # Reset subcategories
     for subcategory in Category.get(parent=category.id):
@@ -53,9 +54,9 @@ async def handler(
 
     # Track
     Track(
-        title='cat_rm',
+        title="cat_rm",
         data={
-            'id': data.id,
+            "id": data.id,
         },
         user=request.state.user,
         token=request.state.token,

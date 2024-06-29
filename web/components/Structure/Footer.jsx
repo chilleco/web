@@ -7,11 +7,11 @@ export default () => {
   return (
     <footer>
       <div className="footer_left">
-        { process.env.NEXT_PUBLIC_NAME }
+        {process.env.NEXT_PUBLIC_NAME}
         {' '}
         &copy;
         {' '}
-        { new Date().getFullYear() }
+        {new Date().getFullYear()}
       </div>
       <div className="footer_center">
         <Link href="/">
@@ -25,7 +25,7 @@ export default () => {
       </div>
       <div className="footer_right">
         <Link href="https://t.me/hnklny">
-          { main.locale === 'ru' ? 'Канал в Telegram' : 'Telegram Channel' }
+          {main.locale === 'ru' ? 'Канал в Telegram' : 'Telegram Channel'}
         </Link>
       </div>
     </footer>

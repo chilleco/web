@@ -5,6 +5,7 @@ The online socket of the account object of the API
 from consys.errors import ErrorWrong
 
 from models.socket import Socket
+
 # from models.space import Space
 from lib import report
 from app import sio
@@ -27,8 +28,9 @@ from app import sio
 
 #         return spaces[0].id
 
+
 def _other_sessions(user_id, token=None):
-    """ Checking for open online sessions of the user """
+    """Checking for open online sessions of the user"""
 
     if not user_id:
         if not token:
@@ -41,17 +43,19 @@ def _other_sessions(user_id, token=None):
 
     return bool(sockets)
 
-def _online_count():
-    """ Counting the total number of online users """
 
-    sockets = Socket.get(fields={'user', 'token'})
+def _online_count():
+    """Counting the total number of online users"""
+
+    sockets = Socket.get(fields={"user", "token"})
     count = len({socket.user or socket.token for socket in sockets})
 
     return count
 
+
 # pylint: disable=too-many-branches
 async def online_start(token_id, socket_id=None):
-    """ Start / update online session of the user """
+    """Start / update online session of the user"""
 
     # FIXME: get via core API
     # user, _ = get_user(token_id)
@@ -73,10 +77,14 @@ async def online_start(token_id, socket_id=None):
 
         count = _online_count()
         if count:
-            await sio.emit('online_add', {
-                'count': count,
-                'users': users_uniq,
-            }, room=socket_id)
+            await sio.emit(
+                "online_add",
+                {
+                    "count": count,
+                    "users": users_uniq,
+                },
+                room=socket_id,
+            )
 
     # Already online
     already = _other_sessions(user_id, token_id)
@@ -86,7 +94,7 @@ async def online_start(token_id, socket_id=None):
         changed = False
 
         try:
-            socket = Socket.get(socket_id, fields={'user', 'token'})
+            socket = Socket.get(socket_id, fields={"user", "token"})
         except ErrorWrong:
             socket = Socket(
                 id=socket_id,
@@ -97,18 +105,24 @@ async def online_start(token_id, socket_id=None):
 
         else:
             if socket.token != token_id:
-                await report.warning("Wrong socket.token", {
-                    'from': socket.token,
-                    'to': token_id,
-                })
+                await report.warning(
+                    "Wrong socket.token",
+                    {
+                        "from": socket.token,
+                        "to": token_id,
+                    },
+                )
                 socket.token = token_id
                 changed = True
 
             if socket.user != user_id:
-                await report.warning("Wrong socket.user", {
-                    'from': socket.user,
-                    'to': user_id,
-                })
+                await report.warning(
+                    "Wrong socket.user",
+                    {
+                        "from": socket.user,
+                        "to": user_id,
+                    },
+                )
                 socket.user = user_id
                 changed = True
 
@@ -117,7 +131,7 @@ async def online_start(token_id, socket_id=None):
 
     # Update other sockets by token
 
-    sockets = Socket.get(token=token_id, fields={'user'})
+    sockets = Socket.get(token=token_id, fields={"user"})
 
     for socket in sockets:
         socket.user = user_id
@@ -146,10 +160,13 @@ async def online_start(token_id, socket_id=None):
     data = []
 
     if sio is not None:
-        await sio.emit('online_add', {
-            'count': count,
-            'users': data,
-        })
+        await sio.emit(
+            "online_add",
+            {
+                "count": count,
+                "users": data,
+            },
+        )
 
     # # Redirect to active space
     # # TODO: cache
@@ -160,21 +177,22 @@ async def online_start(token_id, socket_id=None):
     #             'id': space,
     #         }, room=socket.id)
 
-@sio.on('online')
+
+@sio.on("online")
 async def online(sid, data):
-    """ Update online status """
+    """Update online status"""
 
     # TODO: Проверка, что токен не скомпрометирован - по ip?
     # TODO: Определить вкладку (tab - sid)
 
-    await report.debug('ON', sid)
+    await report.debug("ON", sid)
 
-    if not data['token']:
+    if not data["token"]:
         await report.warning("Invalid token")
         return
 
     # Send sockets
-    await online_start(data['token'], sid)
+    await online_start(data["token"], sid)
 
     # TODO: UTM parameters
     # TODO: Promos

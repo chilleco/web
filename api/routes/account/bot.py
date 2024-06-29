@@ -19,14 +19,15 @@ class Type(BaseModel):
     image: str = None
     utm: str = None
 
+
 @router.post("/bot/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ By bot """
+    """By bot"""
     return await wrap_auth(
-        'bot',
+        "bot",
         request.state.token,
         network=request.state.network,
         ip=request.state.ip,

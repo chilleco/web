@@ -2,8 +2,9 @@
 The creating method of the payment object of the API
 """
 
-from fastapi import APIRouter # Body, Request, Depends
+from fastapi import APIRouter  # Body, Request, Depends
 from pydantic import BaseModel
+
 # from consys.handlers import pre_process_phone
 
 # from models.user import User
@@ -24,12 +25,13 @@ class Type(BaseModel):
     name: str = None
     surname: str = None
 
+
 @router.post("/create/")
 async def handler(
     # request: Request,
     # data: Type = Body(...),
 ):
-    """ Create a payment request """
+    """Create a payment request"""
 
     # if data.login:
     #     phone = pre_process_phone(data.login) # TODO: optimize

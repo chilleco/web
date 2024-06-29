@@ -95,7 +95,7 @@ const Edit = ({
     <div className="album">
       <div className="row py-3">
         <div className="col-6">
-          { category.status ? (
+          {category.status ? (
             <button
               type="button"
               className="btn btn-danger"
@@ -195,18 +195,18 @@ export default ({
         aria-controls={`collapse${category.id}`}
         onClick={() => setEdit(category.id)}
       >
-        { indent ? (
+        {indent ? (
           <>
             <div dangerouslySetInnerHTML={{ __html: '<div class="px-3 d-inline"></div>'.repeat(indent - 1) }} />
             <div className="px-3 d-inline text-secondary">↳</div>
           </>
-        ) : (<></>) }
+        ) : (<></>)}
         <div className="text-secondary me-2">
           #
-          { category.id }
-          { !category.status && <i className="fa-solid fa-lock ms-2" /> }
+          {category.id}
+          {!category.status && <i className="fa-solid fa-lock ms-2" />}
         </div>
-        { category.title }
+        {category.title}
       </button>
     </h2>
     <div
@@ -216,12 +216,12 @@ export default ({
       data-bs-parent="#accordionCategories"
     >
       <div className="accordion-body">
-        { edit && (
+        {edit && (
           <Edit
             category={category}
             setEdit={setEdit}
           />
-        ) }
+        )}
       </div>
     </div>
   </div>

@@ -16,16 +16,17 @@ router = APIRouter()
 class Type(BaseModel):
     id: int
 
+
 @router.post("/rm/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Delete """
+    """Delete"""
 
     # No access
     if request.state.status < 2:
-        raise ErrorAccess('rm')
+        raise ErrorAccess("rm")
 
     # Get
     post = Post.get(data.id)
@@ -36,16 +37,16 @@ async def handler(
         and (not post.user or post.user != request.state.user)
         and post.token != request.state.token
     ):
-        raise ErrorAccess('rm')
+        raise ErrorAccess("rm")
 
     # Delete
     post.rm()
 
     # Track
     Track(
-        title='post_rm',
+        title="post_rm",
         data={
-            'id': data.id,
+            "id": data.id,
         },
         user=request.state.user,
         token=request.state.token,

@@ -6,9 +6,9 @@ from models import Base, Attribute
 
 
 class Socket(Base):
-    """ Socket """
+    """Socket"""
 
-    _name = 'sockets'
+    _name = "sockets"
 
     id = Attribute(types=str)
     token = Attribute(types=str)

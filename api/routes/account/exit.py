@@ -17,7 +17,7 @@ router = APIRouter()
 async def handler(
     request: Request,
 ):
-    """ Log out """
+    """Log out"""
 
     # TODO: Сокет на авторизацию на всех вкладках токена
     # TODO: Перезапись информации этого токена уже в онлайне
@@ -25,12 +25,15 @@ async def handler(
 
     # Not authorized
     if request.state.status == 2:
-        await report.warning("Already unauth", {
-            'token': request.state.token,
-            'user': request.state.user,
-        })
+        await report.warning(
+            "Already unauth",
+            {
+                "token": request.state.token,
+                "user": request.state.user,
+            },
+        )
 
-        raise ErrorAccess('exit')
+        raise ErrorAccess("exit")
 
     # Close session
     sockets = Socket.get(token=request.state.token, fields={})

@@ -21,18 +21,19 @@ class Type(BaseModel):
     data: str = None
     status: int = None
 
+
 @router.post("/reply/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Save """
+    """Save"""
 
     # TODO: fix access to unblock yourself comment
 
     # No access
     if request.state.status < 2:
-        raise ErrorAccess('save')
+        raise ErrorAccess("save")
 
     # Check post
     Post.get(data.post, fields={})
@@ -47,7 +48,7 @@ async def handler(
             and (not comment.user or comment.user != request.state.user)
             and comment.token != request.state.token
         ):
-            raise ErrorAccess('save')
+            raise ErrorAccess("save")
 
     else:
         comment = Comment(
@@ -66,11 +67,11 @@ async def handler(
 
     # Track
     Track(
-        title='comment_add' if new else 'comment_edit',
+        title="comment_add" if new else "comment_edit",
         data={
-            'id': comment.id,
-            'data': comment.data,
-            'status': comment.status,
+            "id": comment.id,
+            "data": comment.data,
+            "status": comment.status,
         },
         user=request.state.user,
         token=request.state.token,
@@ -79,15 +80,18 @@ async def handler(
 
     # Report
     if new:
-        await report.important("Reply", {
-            'post': comment.post,
-            'comment': comment.data,
-            'user': request.state.user,
-        })
+        await report.important(
+            "Reply",
+            {
+                "post": comment.post,
+                "comment": comment.data,
+                "user": request.state.user,
+            },
+        )
 
     # Response
     return {
-        'id': comment.id,
-        'new': new,
-        'comment': comment.json(),
+        "id": comment.id,
+        "new": new,
+        "comment": comment.json(),
     }

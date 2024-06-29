@@ -39,7 +39,7 @@ const Navigation = ({ setExpanded }) => {
         onClick={() => setExpanded(false)}
       >
         <i className="fa-solid fa-newspaper" />
-        { t('structure.posts') }
+        {t('structure.posts')}
       </Link>
       {/* <ul className={`${styles.menu} dropdown-menu dropdown-menu-${main.theme}`}>
           { categories && categories.map(category => (category.id && category.status ? (
@@ -83,7 +83,7 @@ const Navigation = ({ setExpanded }) => {
         onClick={() => setExpanded(false)}
       >
         <i className="fa-solid fa-paperclip" />
-        { t('structure.space') }
+        {t('structure.space')}
       </Link>
       <Link
         href="/hub/"
@@ -91,7 +91,7 @@ const Navigation = ({ setExpanded }) => {
         onClick={() => setExpanded(false)}
       >
         <i className="fa-solid fa-quote-right" />
-        { t('structure.hub') }
+        {t('structure.hub')}
       </Link>
       <Link
         href="/catalog/"
@@ -99,7 +99,7 @@ const Navigation = ({ setExpanded }) => {
         onClick={() => setExpanded(false)}
       >
         <i className="fa-solid fa-folder-open" />
-        { t('structure.catalog') }
+        {t('structure.catalog')}
       </Link>
       {/* Quiz */}
     </div>
@@ -173,7 +173,7 @@ const Profile = ({ setExpanded }) => {
         className="login"
         onClick={() => dispatch(popupSet('auth'))}
       >
-        { t('system.sign_in') }
+        {t('system.sign_in')}
       </button>
     );
   }
@@ -181,40 +181,40 @@ const Profile = ({ setExpanded }) => {
   return (
     <div ref={blockRef} className="avatar" onClick={toggleExpand}>
       <Hexagon url={profile.image_optimize} />
-      { isSubExpanded && (
+      {isSubExpanded && (
         <div className="profile">
           <Link href="/profile/" onClick={() => setExpanded(false)}>
             <i className="bi bi-person-bounding-box" />
-            { t('system.profile') }
+            {t('system.profile')}
           </Link>
           <Link href="/settings/" onClick={() => setExpanded(false)}>
             <i className="fa-solid fa-gear" />
-            { t('system.settings') }
+            {t('system.settings')}
           </Link>
           {/* <Link href="/billing/" onClick={() => setExpanded(false)}>
             { t('system.billing') }
           </Link> */}
-          { profile.status >= 6 && (
+          {profile.status >= 6 && (
             <>
               <Link
                 href={`https://docs.google.com/spreadsheets/d/${process.env.NEXT_PUBLIC_ANALYTICS_SHEET}/`}
                 onClick={() => setExpanded(false)}
               >
                 <i className="bi bi-funnel-fill" />
-                { t('system.analytics') }
+                {t('system.analytics')}
               </Link>
               <Link href="/eye/" onClick={() => setExpanded(false)}>
                 <i className="bi bi-cone-striped" />
-                { t('system.admin') }
+                {t('system.admin')}
               </Link>
             </>
-          ) }
+          )}
           <div onClick={signOut}>
             <i className="bi bi-door-open-fill" />
-            { t('system.sign_out') }
+            {t('system.sign_out')}
           </div>
         </div>
-      ) }
+      )}
     </div>
   );
 };
@@ -234,11 +234,11 @@ export default () => {
 
         <div className="space" />
         <div className="burger" onClick={toggleExpand}>
-          { isExpanded ? (
+          {isExpanded ? (
             <i className="fa-solid fa-xmark" />
           ) : (
             <i className="fa-solid fa-bars" />
-          ) }
+          )}
         </div>
 
         <div className={`block ${isExpanded ? '' : 'hidden'}`}>

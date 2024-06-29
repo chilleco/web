@@ -42,10 +42,14 @@
     background: #0088cc !important;
 }
 
-.btn_vk, .btn_g, .btn_tg {
+.btn_vk,
+.btn_g,
+.btn_tg {
     display: block;
 }
 
-.btn_vk:hover, .btn_g:hover, .btn_tg:hover {
+.btn_vk:hover,
+.btn_g:hover,
+.btn_tg:hover {
     opacity: 0.95;
 }

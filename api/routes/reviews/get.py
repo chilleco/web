@@ -20,27 +20,28 @@ class Type(BaseModel):
     search: str = None
     # TODO: fields: list[str] = None
 
+
 @router.post("/get/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Get """
+    """Get"""
 
     # TODO: get by your token when you unauth
 
     # No access
     if request.state.status < 4:
-        raise ErrorAccess('get')
+        raise ErrorAccess("get")
 
     # Fields
     fields = {
-        'id',
-        'title',
-        'data',
-        'user',
-        'created',
-        'network',
+        "id",
+        "title",
+        "data",
+        "user",
+        "created",
+        "network",
     }
 
     # Processing
@@ -70,5 +71,5 @@ async def handler(
 
     # Response
     return {
-        'reviews': reviews,
+        "reviews": reviews,
     }

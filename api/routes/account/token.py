@@ -21,15 +21,16 @@ class Type(BaseModel):
     utm: str = None
     extra: dict = None
 
+
 @router.post("/token/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Create token """
+    """Create token"""
 
     token_id, user_id, status = await token(
-        cfg('PROJECT_NAME'),
+        cfg("PROJECT_NAME"),
         data.token,
         network=data.network,
         utm=data.utm,
@@ -40,17 +41,23 @@ async def handler(
     )
 
     # JWT
-    token_jwt = jwt.encode({
-        'token': token_id,
-        'user': user_id,
-        'status': status,
-        'network': get_network(data.network),
-        # 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
-    }, cfg('jwt'), algorithm='HS256')
+    token_jwt = jwt.encode(
+        {
+            "token": token_id,
+            "user": user_id,
+            "status": status,
+            "network": get_network(data.network),
+            # 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
+        },
+        cfg("jwt"),
+        algorithm="HS256",
+    )
 
     # Response
-    response = JSONResponse(content={
-        'token': token_jwt,
-    })
+    response = JSONResponse(
+        content={
+            "token": token_jwt,
+        }
+    )
     response.set_cookie(key="Authorization", value=f"Bearer {token_jwt}")
     return response

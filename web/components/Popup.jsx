@@ -13,7 +13,7 @@ export default ({ children }) => {
         onClick={() => dispatch(popupSet(null))}
       />
       <div className="popup_body">
-        { children }
+        {children}
       </div>
     </div>
   );

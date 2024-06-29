@@ -49,6 +49,7 @@
 #cases .card {
     max-height: 270px;
 }
+
 #cases .card_image {
     height: 200px;
 }
@@ -56,13 +57,13 @@
 /* Banner */
 
 .banner {
-    background: url(/bg1.svg),#f8f4f0;
+    background: url(/bg1.svg), #f8f4f0;
     background-image: url(/bg1.svg), initial;
 }
 
 @media (max-width: 769px) {
     .banner {
-        background: url(/bg1.svg) left center,#f8f4f0;
+        background: url(/bg1.svg) left center, #f8f4f0;
     }
 }
 
@@ -75,6 +76,7 @@
 #black {
     background-color: #333 !important;
 }
+
 #black:hover {
     background-color: #000 !important;
 }

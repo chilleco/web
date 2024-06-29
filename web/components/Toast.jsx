@@ -19,8 +19,8 @@ const Toast = ({
       aria-atomic="true"
     >
       <div className={`toast-header text-${color} bg-${background}`}>
-        <strong className="me-auto">{ header }</strong>
-        <small>{ t('system.now') }</small>
+        <strong className="me-auto">{header}</strong>
+        <small>{t('system.now')}</small>
         <button
           type="button"
           className="btn-close"
@@ -28,7 +28,7 @@ const Toast = ({
           aria-label="Close"
         />
       </div>
-      <div className="toast-body">{ text }</div>
+      <div className="toast-body">{text}</div>
     </div>
   );
 };
@@ -38,6 +38,6 @@ export default ({ toasts }) => (
     className="position-fixed bottom-0 end-0 p-3"
     style={{ zIndex: 5000 }}
   >
-    { toasts.map((toast, i) => <Toast {...toast} key={i} />) }
+    {toasts.map((toast, i) => <Toast {...toast} key={i} />)}
   </div>
 );

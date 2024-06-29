@@ -6,10 +6,10 @@ from lib import report
 from app import sio
 
 
-@sio.on('connect')
+@sio.on("connect")
 async def connect(sid, request, data):
-    """ Connect """
+    """Connect"""
 
     # TODO: ip = request['asgi.scope']['client'][0]
 
-    await report.debug('IN', sid)
+    await report.debug("IN", sid)

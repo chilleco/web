@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 def online_back(user_id):
-    """ Checking how long has been online """
+    """Checking how long has been online"""
 
     sockets = Socket.get(user=user_id, fields={})
 
@@ -38,34 +38,35 @@ class Type(BaseModel):
     offset: int = None
     fields: list[str] = None
 
+
 @router.post("/get/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Get """
+    """Get"""
 
     # Checks
-    if request.state.status < 4 and data.id != request.state.user: # TODO: 5
-        raise ErrorAccess('get')
+    if request.state.status < 4 and data.id != request.state.user:  # TODO: 5
+        raise ErrorAccess("get")
     if request.state.user == 0:
-        raise ErrorInvalid('id')
+        raise ErrorInvalid("id")
 
     # UserHub
     res = await get(
         token=request.state.token,
         data={
-            'id': data.id,
-            'limit': data.limit,
-            'offset': data.offset,
-            'fields': data.fields,
-        }
+            "id": data.id,
+            "limit": data.limit,
+            "offset": data.offset,
+            "fields": data.fields,
+        },
     )
 
     if not isinstance(res, dict):
         raise ErrorInvalid(res)
 
-    users = res['users']
+    users = res["users"]
     # if isinstance(users, list):
     #     users = [User(user) for user in res['users']]
     # else:
@@ -73,5 +74,5 @@ async def handler(
 
     # Response
     return {
-        'users': users,
+        "users": users,
     }

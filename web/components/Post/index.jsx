@@ -199,14 +199,14 @@ export default ({ post, setPost }) => {
     <div>
       <Head>
         {/* SEO */}
-        <title>{ `${post.title} | ${process.env.NEXT_PUBLIC_NAME}` }</title>
+        <title>{`${post.title} | ${process.env.NEXT_PUBLIC_NAME}`}</title>
         <meta name="title" content={`${post.title} | ${process.env.NEXT_PUBLIC_NAME}`} />
         <meta name="og:title" content={`${post.title} | ${process.env.NEXT_PUBLIC_NAME}`} />
         <meta name="description" content={post.description} />
         <meta name="og:description" content={post.description} />
-        { post.image && (
+        {post.image && (
           <meta name="og:image" content={post.image} />
-        ) }
+        )}
         <meta property="og:url" content={`${process.env.NEXT_PUBLIC_WEB}posts/${post.url}`} />
         <meta property="og:type" content="article" />
         <link rel="canonical" href={canonical} />
@@ -246,9 +246,9 @@ export default ({ post, setPost }) => {
 
       <div className="title">
         <div className="title_body">
-          <h1>{ post.title }</h1>
+          <h1>{post.title}</h1>
           <div className={styles.info}>
-            { post.category_data && (
+            {post.category_data && (
               <ul
                 role="navigation"
                 aria-label="breadcrumb"
@@ -271,11 +271,11 @@ export default ({ post, setPost }) => {
                     itemProp="item"
                     itemType="http://schema.org/Thing"
                   >
-                    <span itemProp="name">{ t('system.main') }</span>
+                    <span itemProp="name">{t('system.main')}</span>
                   </Link>
                   <span>&nbsp;/&nbsp;</span>
                 </li>
-                { post.category_data.parents && post.category_data.parents.map((parent, i) => (
+                {post.category_data.parents && post.category_data.parents.map((parent, i) => (
                   <li
                     itemProp="itemListElement"
                     itemScope="itemscope"
@@ -298,7 +298,7 @@ export default ({ post, setPost }) => {
                     </Link>
                     <span>&nbsp;/&nbsp;</span>
                   </li>
-                )) }
+                ))}
                 <li
                   itemProp="itemListElement"
                   itemScope="itemscope"
@@ -321,13 +321,13 @@ export default ({ post, setPost }) => {
                   </Link>
                 </li>
               </ul>
-            ) }
+            )}
           </div>
         </div>
 
         <div className="tools">
           <div>
-            { profile.status >= 2 && (
+            {profile.status >= 2 && (
               <>
                 <button
                   type="button"
@@ -336,7 +336,7 @@ export default ({ post, setPost }) => {
                 >
                   <i className={edit ? 'fa-regular fa-eye' : 'fa-solid fa-pencil'} />
                 </button>
-                { post.status ? (
+                {post.status ? (
                   <button
                     type="button"
                     onClick={() => blockPost({ status: 0 })}
@@ -352,7 +352,7 @@ export default ({ post, setPost }) => {
                   >
                     <i className="fa-solid fa-lock-open" />
                   </button>
-                ) }
+                )}
                 <button
                   type="button"
                   onClick={rmPost}
@@ -361,12 +361,12 @@ export default ({ post, setPost }) => {
                   <i className="fa-solid fa-trash" />
                 </button>
               </>
-            ) }
+            )}
           </div>
         </div>
       </div>
 
-      { edit ? (
+      {edit ? (
         <Edit
           post={post}
           setEdit={setEdit}
@@ -378,7 +378,7 @@ export default ({ post, setPost }) => {
         <>
           <div className="lcmain">
             <div>
-              { post.image && (
+              {post.image && (
                 <>
                   <img
                     src={post.image}
@@ -398,7 +398,7 @@ export default ({ post, setPost }) => {
                     }}
                   />
                 </>
-              ) }
+              )}
 
               <div
                 className="text"
@@ -426,35 +426,35 @@ export default ({ post, setPost }) => {
 
           <div className="rmain">
             <div className={`text ${styles.about}`}>
-              { post.author && post.author.title ? (
+              {post.author && post.author.title ? (
                 <div className={styles.user}>
                   <div className="me-2">
                     <Hexagon url={post.author.image || '/user.png'} />
                   </div>
                   {post.author.title ? post.author.title : t('system.guest')}
                 </div>
-              ) : (<></>) }
+              ) : (<></>)}
               <div>
                 <i className="fa-solid fa-pencil me-2" />
-                { created }
+                {created}
               </div>
-              { post.views ? (
+              {post.views ? (
                 <div>
                   <i className="fa-regular fa-eye me-2" />
-                  { post.views }
+                  {post.views}
                 </div>
-              ) : (<></>) }
+              ) : (<></>)}
             </div>
             {/* <div className={styles.header}>
                 <i className="bi bi-fire me-2" />
                 {t('system.popular')}
               </div> */}
-            { posts.map(post => <Card post={post} key={post.id} />) }
+            {posts.map(post => <Card post={post} key={post.id} />)}
           </div>
 
           <Comments post={post.id} comments={post.comments} />
         </>
-      ) }
+      )}
     </div>
   );
 };

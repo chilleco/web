@@ -15,16 +15,17 @@ router = APIRouter()
 class Type(BaseModel):
     id: int
 
+
 @router.post("/rm/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """ Delete """
+    """Delete"""
 
     # No access
     if request.state.status < 5:
-        raise ErrorAccess('rm')
+        raise ErrorAccess("rm")
 
     # Get
     review = Review.get(data.id)
