@@ -15,5 +15,6 @@ ENV PYTHONUNBUFFERED 1
 
 # RUN make setup-tests
 RUN pip install -r api/requirements.txt
-RUN pip install -r tg/requirements.txt
+# TODO: turn tg on
+# RUN pip install -r tg/requirements.txt
 RUN pip install -r tests/requirements.txt
