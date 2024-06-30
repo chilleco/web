@@ -3,7 +3,7 @@ The connect socket of the account object of the API
 """
 
 from lib import report
-from app import sio
+from lib.sockets import sio
 
 
 @sio.on("connect")

@@ -4,11 +4,11 @@ The online socket of the account object of the API
 
 from consys.errors import ErrorWrong
 
+from lib import report
+from lib.sockets import sio
 from models.socket import Socket
 
 # from models.space import Space
-from lib import report
-from app import sio
 
 
 # async def _get_active_space(user_id):

@@ -12,13 +12,14 @@ from slowapi.middleware import SlowAPIMiddleware
 from libdev.img import convert
 from libdev.s3 import upload_file
 
+from lib import cfg, report
+from lib.sockets import asgi
 from services.parameters import ParametersMiddleware
 from services.monitoring import MonitoringMiddleware
 from services.errors import ErrorsMiddleware
 from services.access import AccessMiddleware
 from services.limiter import get_uniq
 from services.on_startup import on_startup
-from lib import cfg, report
 
 
 app = FastAPI(title=cfg("NAME", "API"), root_path="/api")
@@ -80,8 +81,6 @@ app.add_middleware(
 )
 
 # Socket.IO
-sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins="*")
-asgi = socketio.ASGIApp(sio)
 app.mount("/ws", asgi)
 
 
