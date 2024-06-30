@@ -1,5 +1,5 @@
 """
-Payments functionality for the API
+Payments via YooKassa
 """
 
 from libdev.cfg import cfg

@@ -1,5 +1,5 @@
 """
-Google Documents functionality for the API
+Google Docs & Sheets
 """
 
 from libdev.cfg import cfg

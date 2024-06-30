@@ -1,5 +1,5 @@
 """
-Functionality for working with Telegram
+Telegram Bot
 """
 
 from libdev.cfg import cfg

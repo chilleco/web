@@ -6,7 +6,8 @@ disable=unsubscriptable-object,
         unused-argument,
         no-name-in-module,
         duplicate-code,
-        invalid-name
+        invalid-name,
+        cyclic-import
 
 [FORMAT]
 max-line-length=88

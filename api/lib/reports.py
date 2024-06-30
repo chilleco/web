@@ -1,5 +1,5 @@
 """
-Reports functionality for the API
+Telegram Reports & Alerts
 """
 
 from libdev.cfg import cfg

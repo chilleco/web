@@ -1,5 +1,5 @@
 """
-Queue functionality for the API
+Message Broker via Redis
 """
 
 import pickle
