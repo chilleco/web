@@ -2,16 +2,20 @@
 jobs=2
 
 [MESSAGES CONTROL]
-disable=unsubscriptable-object,unused-argument,no-name-in-module,duplicate-code
+disable=unsubscriptable-object,
+        unused-argument,
+        no-name-in-module,
+        duplicate-code,
+        invalid-name
 
 [FORMAT]
-max-line-length=80
+max-line-length=88
 
 [MISCELLANEOUS]
 notes=BUG,UGLY # TODO,FIXME
 
 [BASIC]
-good-names=i,j,e,f,k,v,by,db,ip,id,to,rm,el,tz,tg,vk
+docstring-min-length=-1
 no-docstring-rgx=[(__.*__)(Type)]
 
 [DESIGN]
