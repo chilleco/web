@@ -1,5 +1,5 @@
 # Pull base image
-FROM node:19.8
+FROM node:20.15.0
 
 # Install dependencies
 COPY package.json package.json

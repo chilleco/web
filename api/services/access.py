@@ -18,7 +18,7 @@ class AccessMiddleware(BaseHTTPMiddleware):
         self.whitelist = whitelist
 
     async def dispatch(self, request: Request, call_next):
-        url = request.url.path[4:]
+        url = request.url.path
 
         # TODO: check current ip with token ip
 

@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   redis:
-    image: redis:7.0
+    image: redis:7.2
     restart: unless-stopped
     env_file: .env
     volumes:
@@ -11,7 +11,7 @@ services:
     command: bash -c "redis-server --requirepass ${REDIS_PASS}"
 
   db:
-    image: mongo:6.0
+    image: mongo:7.0.12
     ports:
       - 27017:27017
     restart: unless-stopped
@@ -102,7 +102,7 @@ services:
     command: npm run dev
 
   server:
-    image: nginx:1.23
+    image: nginx:1.27.0
     restart: unless-stopped
     env_file: .env
     volumes:
