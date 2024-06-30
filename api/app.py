@@ -9,6 +9,8 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
+from libdev.img import convert
+from libdev.s3 import upload_file
 
 from services.parameters import ParametersMiddleware
 from services.monitoring import MonitoringMiddleware
@@ -17,11 +19,6 @@ from services.access import AccessMiddleware
 from services.limiter import get_uniq
 from services.on_startup import on_startup
 from lib import cfg, report
-
-if cfg("s3.pass"):
-    # pylint: disable=import-error
-    from libdev.img import convert
-    from libdev.s3 import upload_file
 
 
 app = FastAPI(title=cfg("NAME", "API"), root_path="/api")

@@ -90,6 +90,9 @@ async def handler(
         login, user, name, surname, image, mail = auth_telegram(data)
     elif social == 4:
         login, user, name, surname, image, mail = auth_google(data)
+    else:
+        await report.error("Unknown social", {"social": social})
+        raise ErrorWrong("social")
 
     # Wrong ID
     if not user:

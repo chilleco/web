@@ -4,29 +4,8 @@ Request processing and response statuses formatting
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-from consys.errors import BaseError
-from exceptiongroup import ExceptionGroup
 
 from lib import report
-
-
-async def handle_exception_group(e_group):
-    """Handling nested errors"""
-
-    for e in e_group.exceptions:
-        if isinstance(e, ExceptionGroup):
-            return await handle_exception_group(e)
-
-        if isinstance(e, BaseError):
-            return Response(content=vars(e)["txt"], status_code=400)
-
-        try:
-            text = e.txt
-        except:  # pylint: disable=bare-except
-            text = str(e)
-
-        await report.critical(text, error=e)
-        return Response(content=text, status_code=500)
 
 
 class ErrorsMiddleware(BaseHTTPMiddleware):
@@ -55,9 +34,6 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
                 )
 
             return response
-
-        except ExceptionGroup as e:
-            return await handle_exception_group(e)
 
         except Exception as e:  # pylint: disable=broad-except
             await report.critical(str(e), error=e)
