@@ -1,5 +1,6 @@
 # Pull base image
-FROM python:3.12
+# TODO: update to 3.12
+FROM python:3.10
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
