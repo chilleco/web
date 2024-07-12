@@ -5,8 +5,8 @@ FROM node:20.15.0
 WORKDIR /app
 
 # Install dependencies
-COPY package.json .
+COPY package.json package.json
 RUN npm i --production --force
 
 # Copy project
-COPY . .
+COPY . /app
