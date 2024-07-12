@@ -95,7 +95,7 @@ async def uploader(upload: bytes = File()):
     """Upload files to file server"""
 
     try:
-        url = upload_file(convert(upload), file_type="webp")
+        url = await upload_file(await convert(upload), file_type="webp")
     except Exception as e:  # pylint: disable=broad-except
         url = None
         await report.critical("Upload", error=e)
