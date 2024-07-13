@@ -33,7 +33,7 @@ async def handler(
         ip=request.state.ip,
         locale=request.state.locale,
         login=data.login,
-        user=data.social,
+        user=data.user,
         name=data.name,
         surname=data.surname,
         image=data.image,

@@ -5,9 +5,8 @@ The getting method of the user object of the API
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess, ErrorInvalid
-from userhub import get
 
-# from models.user import User
+from models.user import User
 from models.socket import Socket
 
 
@@ -44,8 +43,6 @@ async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """Get"""
-
     # Checks
     if request.state.status < 4 and data.id != request.state.user:  # TODO: 5
         raise ErrorAccess("get")
@@ -53,24 +50,16 @@ async def handler(
         raise ErrorInvalid("id")
 
     # UserHub
-    res = await get(
+    users = await User.complex(
         token=request.state.token,
-        data={
-            "id": data.id,
-            "limit": data.limit,
-            "offset": data.offset,
-            "fields": data.fields,
-        },
+        id=data.id,
+        limit=data.limit,
+        offset=data.offset,
+        fields=data.fields,
     )
 
-    if not isinstance(res, dict):
-        raise ErrorInvalid(res)
-
-    users = res["users"]
-    # if isinstance(users, list):
-    #     users = [User(user) for user in res['users']]
-    # else:
-    #     users = User(users)
+    if isinstance(users, str):
+        raise ErrorInvalid("res")
 
     # Response
     return {
