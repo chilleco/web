@@ -22,7 +22,9 @@ class ParametersMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         # Request parameters
-        request.state.url = request.url.path[4:]
+        request.state.url = (
+            request.url.path[4:] if request.url.path[:4] == "/api" else request.url.path
+        )
         request.state.start = time.time()
         locale = request.headers.get("accept-language")
         request.state.locale = (

@@ -58,14 +58,14 @@ async def validation_exception_handler(request: Request, exc: Exception):
 
 
 # Limiter
-# NOTE: 6st middleware
+# NOTE: 6th middleware
 limits = ["25/second", "100/minute", "2500/hour", "10000/day"]
 app.state.limiter = Limiter(key_func=get_uniq, default_limits=limits)
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
 # JWT
-# NOTE: 5st middleware
+# NOTE: 5th middleware
 app.add_middleware(
     AccessMiddleware,
     jwt_secret=cfg("jwt"),
@@ -79,7 +79,7 @@ app.add_middleware(
 )
 
 # Errors
-# NOTE: 4st middleware
+# NOTE: 4th middleware
 app.add_middleware(ErrorsMiddleware)
 
 # Monitoring

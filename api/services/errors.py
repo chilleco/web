@@ -21,15 +21,20 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         try:
+            # # Create a new request with the cached body
+            # body = await request.body()
+            # request = Request(
+            #     request.scope,
+            #     receive=lambda: {"type": "http.request", "body": request_body},
+            # )
+
             response = await call_next(request)
 
-            # Report
             if response.status_code not in {200, 303, 401}:
-                # Log request
-                body = await request.body()
-                body = body.decode("utf-8")
-                log.info(f"Request: {request.method} {request.url}")
-                log.info(f"Request Body: {body}")
+                # # Log request
+                # request_body = body.decode("utf-8")
+                # log.info(f"Request: {request.method} {request.url}")
+                # log.info(f"Request Body: {request_body}")
 
                 # Log response
                 response_body = b""
@@ -45,9 +50,9 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
                     response_body,
                     {
                         "method": request.method,
-                        "url": request.url,
+                        "url": request.state.url,
                         "status": response.status_code,
-                        "request": body,
+                        # "request": request_body,
                     },
                 )
 
