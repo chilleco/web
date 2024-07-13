@@ -2,8 +2,11 @@
 API Endpoints (Transport level)
 """
 
-from fastapi import FastAPI, File
+import traceback
+
+from fastapi import FastAPI, Request, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from prometheus_fastapi_instrumentator import Instrumentator
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -11,7 +14,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from libdev.img import convert
 from libdev.s3 import upload_file
 
-from lib import cfg, report
+from lib import cfg, log, report
 from lib.sockets import asgi
 from services.parameters import ParametersMiddleware
 from services.monitoring import MonitoringMiddleware
@@ -21,12 +24,18 @@ from services.limiter import get_uniq
 from services.on_startup import on_startup
 
 
+log.add("/backup/app.log")  # FIXME: file (to tgreports)
+
 app = FastAPI(title=cfg("NAME", "API"), root_path="/api")
 
 
 @app.on_event("startup")
+@log.catch
 async def startup():
     """Application startup event"""
+
+    # Report about start
+    await report.info("Restart server")
 
     # Prometheus
     if cfg("mode") in {"PRE", "PROD"}:
@@ -34,6 +43,17 @@ async def startup():
 
     # Tasks on start
     on_startup()
+
+
+# High-level errors
+@app.exception_handler(Exception)
+async def validation_exception_handler(request: Request, exc: Exception):
+    tb_str = "".join(traceback.format_tb(exc.__traceback__))
+    log.error(f"Unhandled exception: {exc}\nTraceback: {tb_str}")
+    return JSONResponse(
+        status_code=500,  # 422
+        content={"detail": str(exc)},  # {"message": "Internal Server Error"}
+    )
 
 
 # Limiter

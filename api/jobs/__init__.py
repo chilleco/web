@@ -20,9 +20,6 @@ CURRENT_MODULE = CURRENT_PATH.replace("/", ".")
 async def background(sio):
     """Background infinite process"""
 
-    # Report about start
-    await report.info("Restart server")
-
     # Processes
 
     handlers = []
