@@ -1,5 +1,5 @@
 """
-The authorization via mini app method of the account object of the API
+The authorization via mini app method of the user object of the API
 """
 
 import hashlib
@@ -12,8 +12,8 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorWrong, ErrorInvalid
 
-from routes.account.auth import wrap_auth
 from lib import cfg, report
+from routes.users.auth import wrap_auth
 
 
 router = APIRouter()

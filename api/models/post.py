@@ -7,8 +7,8 @@ import time
 from libdev.time import get_time
 from libdev.lang import get_pure, to_url
 
-from models import Base, Attribute
 from lib import cfg
+from models import Base, Attribute
 
 
 def default_title(instance):

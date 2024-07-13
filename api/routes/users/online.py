@@ -1,5 +1,5 @@
 """
-The online socket of the account object of the API
+The online socket of the user object of the API
 """
 
 from consys.errors import ErrorWrong

@@ -54,7 +54,7 @@ const Container = ({
     }
   }, [main.token]);
 
-  const accountEdit = () => {
+  const userEdit = () => {
     const data = {};
     if (login && login !== profile.login) {
       data.login = login;
@@ -78,7 +78,7 @@ const Container = ({
       data.image = image;
     }
 
-    api(main, 'account.save', data).then(() => {
+    api(main, 'users.save', data).then(() => {
       profileUpdate({
         login, image, name, surname, phone, mail,
       });
@@ -164,7 +164,7 @@ const Container = ({
       </div>
       <button
         type="button"
-        onClick={accountEdit}
+        onClick={userEdit}
         aria-label="Update profile"
       >
         <i className="fa-regular fa-floppy-disk" />

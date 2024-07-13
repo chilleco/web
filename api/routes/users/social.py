@@ -1,5 +1,5 @@
 """
-The authorization via social networks method of the account object of the API
+The authorization via social networks method of the user object of the API
 """
 
 import json
@@ -12,8 +12,8 @@ from pydantic import BaseModel
 from libdev.codes import get_network
 from consys.errors import ErrorAccess, ErrorWrong
 
-from routes.account.auth import wrap_auth
 from lib import cfg, report
+from routes.users.auth import wrap_auth
 
 
 router = APIRouter()

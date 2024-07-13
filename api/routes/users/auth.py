@@ -1,5 +1,5 @@
 """
-The authorization method of the account object of the API
+The authorization method of the user object of the API
 """
 
 import jwt

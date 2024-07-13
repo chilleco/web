@@ -70,7 +70,7 @@ const Body = ({
       // Generate token
       if (!main.token) {
         const token = generate();
-        api(main, 'account.token', {
+        api(main, 'users.token', {
           token,
           network: 'web',
           utm,
@@ -103,7 +103,7 @@ const Body = ({
     <div className="all">
       <Head>
         {/* SEO */}
-        <title>{ process.env.NEXT_PUBLIC_NAME }</title>
+        <title>{process.env.NEXT_PUBLIC_NAME}</title>
         <meta name="title" content={process.env.NEXT_PUBLIC_NAME} />
         <meta name="og:title" content={process.env.NEXT_PUBLIC_NAME} />
         <meta name="description" content={t('brand.description')} />
@@ -123,15 +123,15 @@ const Body = ({
         <Component {...pageProps} />
       </div>
 
-      { system.popup === 'auth' && (
+      {system.popup === 'auth' && (
         <Auth />
-      ) }
-      { system.popup === 'mail' && (
+      )}
+      {system.popup === 'mail' && (
         <AuthMail />
-      ) }
-      { system.popup === 'online' && (
+      )}
+      {system.popup === 'online' && (
         <Online />
-      ) }
+      )}
 
       <Toasts toasts={system.toasts} />
 

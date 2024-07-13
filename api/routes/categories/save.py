@@ -7,10 +7,10 @@ from pydantic import BaseModel
 from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
+from lib import report
 from models.category import Category
 from models.track import Track
 from services.cache import cache_categories
-from lib import report
 
 
 router = APIRouter()

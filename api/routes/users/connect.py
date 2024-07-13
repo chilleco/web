@@ -1,5 +1,5 @@
 """
-The connect socket of the account object of the API
+The connect socket of the user object of the API
 """
 
 from lib import report

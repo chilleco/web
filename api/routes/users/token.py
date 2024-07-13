@@ -1,5 +1,5 @@
 """
-The token creating method of the account object of the API
+The token creating method of the user object of the API
 """
 
 import jwt

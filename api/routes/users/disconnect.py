@@ -1,5 +1,5 @@
 """
-The disconnect socket of the account object of the API
+The disconnect socket of the user object of the API
 """
 
 import time
@@ -10,7 +10,7 @@ from lib import report
 from lib.sockets import sio
 from models.socket import Socket
 from models.track import Track
-from routes.account.online import _other_sessions, _online_count
+from routes.users.online import _other_sessions, _online_count
 
 
 async def online_stop(socket_id, close=True):

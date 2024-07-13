@@ -71,7 +71,7 @@ app.add_middleware(
     jwt_secret=cfg("jwt"),
     whitelist={
         "/",
-        "/account/token/",
+        "/users/token/",
         "/posts/get/",
         "/categories/get/",
         "/products/get/",  # FIXME

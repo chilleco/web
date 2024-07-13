@@ -1,11 +1,11 @@
 """
-The authorization via social networks method of the account object of the API
+The authorization via social networks method of the user object of the API
 """
 
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 
-from routes.account.auth import wrap_auth
+from routes.users.auth import wrap_auth
 
 
 router = APIRouter()

@@ -136,7 +136,7 @@ const Profile = ({ setExpanded }) => {
   const main = useSelector(state => state.main);
   const profile = useSelector(state => state.profile);
 
-  const signOut = () => api(main, 'account.exit', {}).then(
+  const signOut = () => api(main, 'users.exit', {}).then(
     res => dispatch(profileOut(res)),
   ).catch(err => dispatch(toastAdd({
     header: t('system.error'),

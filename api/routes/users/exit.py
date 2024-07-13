@@ -1,13 +1,13 @@
 """
-The logout method of the account object of the API
+The logout method of the user object of the API
 """
 
 from fastapi import APIRouter, Request
 from consys.errors import ErrorAccess
 
-from models.socket import Socket
-from routes.account.disconnect import online_stop
 from lib import report
+from models.socket import Socket
+from routes.users.disconnect import online_stop
 
 
 router = APIRouter()

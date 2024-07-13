@@ -4,12 +4,12 @@ Media handler
 
 import io
 
-from middlewares.prepare_message import rm_last
-from middlewares.check_user import check_user
-from handlers.posts import send_post
 from lib import api, upload, cfg, report
 from lib.tg import tg
 from lib.queue import save, get
+from middlewares.prepare_message import rm_last
+from middlewares.check_user import check_user
+from handlers.posts import send_post
 
 
 @tg.dp.message_handler(content_types=["photo"])

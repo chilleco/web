@@ -20,7 +20,7 @@ export default () => {
   const [password, setPassword] = useState('');
 
   const signIn = event => {
-    api(main, 'account.auth', {
+    api(main, 'users.auth', {
       login: mail,
       password,
       utm: main.utm,
