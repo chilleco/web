@@ -1,12 +1,12 @@
 """
 Create a spreadsheet in Google Sheets
 
-python -m scripts.create_sheets --title="" --mail=""
+python -m scripts.create_sheets --title="" --page="" --mail=""
 """
 
 import argparse
 
-from lib.docs import create_sheets
+from lib.docs import Sheets
 
 
 def _args():
@@ -21,6 +21,14 @@ def _args():
     )
 
     parser.add_argument(
+        "--page",
+        type=str,
+        required=False,
+        default="Main",
+        help="Worksheet title",
+    )
+
+    parser.add_argument(
         "--mail",
         type=str,
         required=True,
@@ -32,8 +40,15 @@ def _args():
 
 def main(args: argparse.Namespace):
     """Create a spreadsheet by title and email"""
-    print(create_sheets(args.title, args.mail))
-    print("Don't forget to add a second sheet to the table!")
+
+    sheets = Sheets.create(args.title, args.page, args.mail)
+    print(sheets.sheets.url)
+
+    while True:
+        title = input("To add extra page, enter the name (or press Enter): ")
+        if not title:
+            break
+        print(sheets.add_sheet(title.strip()))
 
 
 if __name__ == "__main__":

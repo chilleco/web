@@ -7,7 +7,7 @@ from libdev.time import get_time
 
 from lib import cfg, handle_tasks
 
-from lib.docs import open_sheets
+from lib.docs import Sheets
 
 # from models.user import User
 from models.post import Post
@@ -23,7 +23,7 @@ STEPS = [
 ]
 
 
-sheets = open_sheets(cfg("ANALYTICS_SHEET"))
+sheets = Sheets(cfg("ANALYTICS_SHEET")).get_sheets()
 
 
 def get_funnel(users_reg, users_fill, users_save, users_second, utm=None):
@@ -144,8 +144,7 @@ async def analytics():
             utm=utm,
         )
 
-    sheets[0].clear()
-    sheets[0].update(data)
+    sheets[0].replace(data)
 
     # TODO: merging cells
     data = [
@@ -185,5 +184,4 @@ async def analytics():
             ]
         )
 
-    sheets[1].clear()
-    sheets[1].update(data)
+    sheets[1].replace(data)
