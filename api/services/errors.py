@@ -55,9 +55,9 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
 
         except Exception as e:  # pylint: disable=broad-except
             # Log
-            tb_str = "".join(traceback.format_tb(exc.__traceback__))
-            logger.error(
-                f"Exception during request processing: {str(exc)}\nTraceback: {tb_str}"
+            tb_str = "".join(traceback.format_tb(e.__traceback__))
+            log.error(
+                f"Exception during request processing: {str(e)}\nTraceback: {tb_str}"
             )
 
             # Report

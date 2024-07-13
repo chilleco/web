@@ -48,6 +48,7 @@ async def startup():
 # High-level errors
 @app.exception_handler(Exception)
 async def validation_exception_handler(request: Request, exc: Exception):
+    """Handles all uncaught exceptions and logs them"""
     tb_str = "".join(traceback.format_tb(exc.__traceback__))
     log.error(f"Unhandled exception: {exc}\nTraceback: {tb_str}")
     return JSONResponse(
