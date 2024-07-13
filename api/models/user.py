@@ -1,7 +1,3 @@
-"""
-User model of DB object
-"""
-
 from consys.handlers import (
     default_login,
     check_login_uniq,
@@ -23,8 +19,6 @@ from lib import cfg
 
 
 class User(Base):
-    """User"""
-
     _name = "users"
 
     # status:

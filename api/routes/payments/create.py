@@ -7,10 +7,10 @@ from pydantic import BaseModel
 
 # from consys.handlers import pre_process_phone
 
+# from lib.pay import create
 # from models.user import User
 # from routes.users.auth import reg
 # from routes.promos.invite import get_promo
-# from lib.pay import create
 
 
 router = APIRouter()

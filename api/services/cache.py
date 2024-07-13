@@ -4,8 +4,8 @@ Cache
 
 from collections import defaultdict
 
-from models.category import Category
 from lib.queue import save
+from models.category import Category
 
 
 def get_parents(categories_tree):

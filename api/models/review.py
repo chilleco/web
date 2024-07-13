@@ -1,13 +1,7 @@
-"""
-Review model of DB object
-"""
-
 from models import Base, Attribute
 
 
 class Review(Base):
-    """Review"""
-
     _name = "reviews"
     _search_fields = {"title", "data"}
 

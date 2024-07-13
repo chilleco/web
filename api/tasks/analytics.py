@@ -7,7 +7,6 @@ from libdev.time import get_time
 
 from lib import cfg, handle_errors
 
-# pylint: disable=import-error
 from lib.docs import open_sheets
 
 # from models.user import User

@@ -4,12 +4,12 @@ Bot commands handler
 
 import jwt
 
-from middlewares.prepare_message import prepare_message
-from handlers.main import get_user
-from handlers.posts import send_posts
 from lib import cfg
 from lib.tg import tg
 from lib.queue import save
+from middlewares.prepare_message import prepare_message
+from handlers.main import get_user
+from handlers.posts import send_posts
 
 
 @tg.dp.message_handler(commands=["menu"])

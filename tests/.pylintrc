@@ -2,22 +2,15 @@
 jobs=2
 
 [MESSAGES CONTROL]
-disable=unsubscriptable-object,
+disable=missing-docstring,
         unused-argument,
-        no-name-in-module,
-        duplicate-code,
-        invalid-name,
-        cyclic-import
+        duplicate-code
 
 [FORMAT]
 max-line-length=88
 
 [MISCELLANEOUS]
 notes=BUG,UGLY # TODO,FIXME
-
-[BASIC]
-docstring-min-length=-1
-no-docstring-rgx=[(__.*__)(Type)]
 
 [DESIGN]
 max-args=8

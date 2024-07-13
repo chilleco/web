@@ -1,11 +1,7 @@
-"""
-Category model of DB object
-"""
-
 from libdev.lang import get_pure
 
-from models import Base, Attribute
 from lib.queue import get
+from models import Base, Attribute
 
 
 def default_description(instance):
@@ -14,8 +10,6 @@ def default_description(instance):
 
 
 class Category(Base):
-    """Category"""
-
     _name = "categories"
     _search_fields = {"title", "data"}
 

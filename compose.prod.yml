@@ -68,7 +68,7 @@ services:
     build: ./api
     restart: unless-stopped
     depends_on:
-      - dramatiq
+      - jobs
     env_file: .env
     command: bash -c "cd /app && python cron.py"
 

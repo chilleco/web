@@ -1,13 +1,7 @@
-"""
-Payment model of User object
-"""
-
 from models import Base, Attribute
 
 
 class Payment(Base):
-    """Payments data"""
-
     _name = None
 
     id = Attribute(types=str)

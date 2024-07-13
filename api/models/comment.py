@@ -1,13 +1,7 @@
-"""
-Comment model of DB object
-"""
-
 from models import Base, Attribute
 
 
 class Comment(Base):
-    """Comment"""
-
     _name = "comments"
     _search_fields = {"data"}
 

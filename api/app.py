@@ -20,8 +20,8 @@ from services.parameters import ParametersMiddleware
 from services.monitoring import MonitoringMiddleware
 from services.errors import ErrorsMiddleware
 from services.access import AccessMiddleware
-from services.limiter import get_uniq
 from services.on_startup import on_startup
+from routes import router
 
 
 log.add("/backup/app.log")  # FIXME: file (to tgreports)
@@ -60,7 +60,12 @@ async def validation_exception_handler(request: Request, exc: Exception):
 # Limiter
 # NOTE: 6th middleware
 limits = ["25/second", "100/minute", "2500/hour", "10000/day"]
-app.state.limiter = Limiter(key_func=get_uniq, default_limits=limits)
+app.state.limiter = Limiter(
+    key_func=lambda request: request.state.ip
+    or request.state.user
+    or request.state.token,
+    default_limits=limits,
+)
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
@@ -126,5 +131,4 @@ async def uploader(upload: bytes = File()):
     }
 
 
-# pylint: disable=wrong-import-order,wrong-import-position,unused-import
-import routes
+app.include_router(router)

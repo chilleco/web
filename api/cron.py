@@ -1,3 +1,7 @@
+"""
+Sets up and starts scheduled tasks using APScheduler
+"""
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 

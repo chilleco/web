@@ -14,6 +14,7 @@ dramatiq.set_broker(redis_broker)
 
 
 # NOTE: there is for import dramatiq to activate it
+# pylint: disable=wrong-import-position
 from tasks.analytics import analytics
 from tasks.sitemap import sitemap
 

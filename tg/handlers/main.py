@@ -5,11 +5,11 @@ Main commands handler
 import jwt
 from libdev.codes import get_flag
 
-from middlewares.prepare_message import prepare_message
-from handlers.posts import send_post, send_posts
 from lib import api, cfg, report, locales, user_logins, user_titles
 from lib.tg import tg
 from lib.queue import save
+from middlewares.prepare_message import prepare_message
+from handlers.posts import send_post, send_posts
 
 
 def get_user(chat_id):

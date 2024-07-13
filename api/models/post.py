@@ -1,7 +1,3 @@
-"""
-Post model of DB object
-"""
-
 import time
 
 from libdev.time import get_time
@@ -35,8 +31,6 @@ def default_url(instance):
 
 
 class Post(Base):
-    """Post"""
-
     _name = "posts"
     _search_fields = {"title", "data", "tags"}
 

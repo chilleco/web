@@ -17,7 +17,7 @@ def handle_errors(method):
     async def inner(*args, **kwargs):
         try:
             return await method(*args, **kwargs)
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             await report.critical(f"Task failed: {e}", error=e)
 
     return inner

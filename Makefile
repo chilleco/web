@@ -37,12 +37,21 @@ connect:
 script:
 	docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` python -m scripts.$(name)
 
+release:
+	git checkout dev
+	git pull
+	git checkout main
+	git merge dev
+	git push
+	git checkout dev
+
 # TODO: turn tg on
 test-linter-all:
 	find . -type f -name '*.py' \
 	| grep -vE 'env/' \
 	| grep -vE 'tests/' \
 	| grep -vE 'tg/' \
+	| grep -vE 'web/' \
 	| xargs pylint -f text \
 		--rcfile=tests/.pylintrc \
 		--msg-template='{path}:{line}:{column}: [{symbol}] {msg}'
@@ -52,6 +61,7 @@ test-linter:
 	git status -s \
 	| grep -vE 'tests/' \
 	| grep -vE 'tg/' \
+	| grep -vE 'web/' \
 	| grep '\.py$$' \
 	| awk '{print $$1,$$2}' \
 	| grep -i '^[ma]' \
