@@ -33,20 +33,17 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH }}
           script: |
-            echo "Stoping old version"
+            echo "Pulling new version"
             if [ -d ~/web ];
             then
                 cd ~/web
-                make stop
+                git checkout -f main
+                git reset --hard
+                GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git pull --rebase origin main
+            else
+                GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone git@github.com:chilleco/web.git
+                cd ~/web
             fi
-
-            echo "Removing old version"
-            cd ~
-            rm -rf web
-            # yes | sudo docker system prune -a
-
-            echo "Pulling new version"
-            GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone git@github.com:chilleco/web.git
 
             echo "Checking data directory"
             if [ -d ~/data ];
@@ -66,5 +63,4 @@ jobs:
             cp ~/.secrets/web.env ~/web/.env
 
             echo "Starting new version"
-            cd ~/web
             make run
