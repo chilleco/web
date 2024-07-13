@@ -6,11 +6,11 @@ import time
 import datetime
 import gzip
 import shutil
-import asyncio
 
+import dramatiq
 from libdev.codes import LOCALES
 
-from lib import cfg, report
+from lib import cfg, handle_errors
 from models.category import Category
 from models.post import Post
 
@@ -107,8 +107,18 @@ async def generate_file(links, locale=None, kind=None, ind=None):
     return sitemap_name
 
 
-async def generate_sitemap():
+@dramatiq.actor
+@handle_errors
+async def sitemap():
     """Update sitemap.xml"""
+
+    # Robots
+    # TODO: only on start
+    with open("/data/robots.txt", "w", encoding="utf-8") as file:
+        if cfg("mode") == "PROD":
+            print(ROBOTS, file=file)
+        else:
+            print(ROBOTS_OFF, file=file)
 
     timestamp = datetime.datetime.utcnow()
     links = []
@@ -188,21 +198,3 @@ async def generate_sitemap():
         )
     with open("/data/sitemap.xml", "w", encoding="utf-8") as file:
         print(BODY.format(data), file=file)
-
-
-async def handle(_):
-    """Update sitemap.xml"""
-
-    with open("/data/robots.txt", "w", encoding="utf-8") as file:
-        if cfg("mode") == "PROD":
-            print(ROBOTS, file=file)
-        else:
-            print(ROBOTS_OFF, file=file)
-
-    while True:
-        try:
-            await generate_sitemap()
-        except Exception as e:  # pylint: disable=broad-except
-            await report.critical(str(e), error=e)
-
-        await asyncio.sleep(3600)  # 1 hour

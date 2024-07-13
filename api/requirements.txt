@@ -10,6 +10,10 @@ PyJWT==2.8.0
 python-multipart==0.0.9  # NOTE: for file upload
 slowapi==0.1.9
 
+# Jobs
+dramatiq==1.17.0
+APScheduler==3.10.4
+
 # Users
 userhub==0.10
 

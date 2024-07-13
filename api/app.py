@@ -42,7 +42,7 @@ async def startup():
         Instrumentator().instrument(app).expose(app)
 
     # Tasks on start
-    on_startup()
+    await on_startup()
 
 
 # High-level errors

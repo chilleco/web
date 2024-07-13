@@ -2,11 +2,10 @@
 Analytics
 """
 
-import asyncio
-
+import dramatiq
 from libdev.time import get_time
 
-from lib import cfg, report
+from lib import cfg, handle_errors
 
 # pylint: disable=import-error
 from lib.docs import open_sheets
@@ -73,6 +72,8 @@ def get_funnel(users_reg, users_fill, users_save, users_second, utm=None):
 
 
 # pylint: disable=too-many-branches
+@dramatiq.actor
+@handle_errors
 async def analytics():
     """Get funnel"""
 
@@ -187,20 +188,3 @@ async def analytics():
 
     sheets[1].clear()
     sheets[1].update(data)
-
-
-async def handle(_):
-    """Analytics"""
-
-    if cfg("mode") not in {"PRE", "PROD"}:
-        return
-
-    while True:
-        try:
-            count = await analytics()
-        except Exception as e:  # pylint: disable=broad-except
-            count = None
-            await report.critical(str(e), error=e)
-
-        if count is None:
-            await asyncio.sleep(10800)  # 3 hours
