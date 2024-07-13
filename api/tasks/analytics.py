@@ -5,7 +5,7 @@ Analytics
 import dramatiq
 from libdev.time import get_time
 
-from lib import cfg, handle_errors
+from lib import cfg, handle_tasks
 
 from lib.docs import open_sheets
 
@@ -72,7 +72,7 @@ def get_funnel(users_reg, users_fill, users_save, users_second, utm=None):
 
 # pylint: disable=too-many-branches
 @dramatiq.actor
-@handle_errors
+@handle_tasks
 async def analytics():
     """Get funnel"""
 

@@ -7,6 +7,7 @@ import json
 
 from consys._db import get_db
 from libdev.cfg import cfg
+from libdev.log import log
 
 
 db = get_db(
@@ -26,8 +27,7 @@ for db_name in dbs:
         for row in file:
             try:
                 db[db_name].insert_one(json.loads(row))
-            # pylint: disable=bare-except
-            except:
-                print(f"❌ {row}")
+            except Exception as e:  # pylint: disable=broad-exception-caught
+                log.error(f"{row}: {e}")
 
-    print(f"✅\t{db_name}")
+    log.success(db_name)

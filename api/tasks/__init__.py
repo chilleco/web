@@ -1,6 +1,7 @@
 import dramatiq
 from dramatiq.brokers.redis import RedisBroker
 from libdev.cfg import cfg
+from libdev.log import log
 
 
 redis_broker = RedisBroker(
@@ -21,7 +22,7 @@ from tasks.sitemap import sitemap
 
 @dramatiq.actor
 async def ping():
-    print("ping")
+    log.info("ping")
 
 
 __all__ = [

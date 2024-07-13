@@ -10,7 +10,7 @@ import shutil
 import dramatiq
 from libdev.codes import LOCALES
 
-from lib import cfg, handle_errors
+from lib import cfg, handle_tasks
 from models.category import Category
 from models.post import Post
 
@@ -108,7 +108,7 @@ async def generate_file(links, locale=None, kind=None, ind=None):
 
 
 @dramatiq.actor
-@handle_errors
+@handle_tasks
 async def sitemap():
     """Update sitemap.xml"""
 

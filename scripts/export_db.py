@@ -7,6 +7,7 @@ from bson.objectid import ObjectId
 
 from consys._db import get_db
 from libdev.cfg import cfg
+from libdev.log import log
 
 
 db = get_db(
@@ -26,4 +27,4 @@ for db_name in dbs:
                 del i["_id"]
             print(json.dumps(i, ensure_ascii=False), file=file)
 
-    print(f"✅\t{db_name}")
+    log.success(db_name)

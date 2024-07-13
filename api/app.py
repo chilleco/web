@@ -118,14 +118,8 @@ async def ping():
 
 @app.post("/upload/")
 async def uploader(upload: bytes = File()):
-    """Upload files to file server"""
-
-    try:
-        url = await upload_file(await convert(upload), file_type="webp")
-    except Exception as e:  # pylint: disable=broad-except
-        url = None
-        await report.critical("Upload", error=e)
-
+    """Upload optimized images to S3"""
+    url = await upload_file(await convert(upload), file_type="webp")
     return {
         "url": url,
     }

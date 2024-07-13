@@ -61,8 +61,8 @@ class AccessMiddleware(BaseHTTPMiddleware):
                 {
                     "url": url,
                     "token": token,
-                    "error": e,
                 },
+                error=e,
             )
             return Response(content="Invalid token", status_code=401)
 
