@@ -13,11 +13,11 @@ router = APIRouter()
 
 class Type(BaseModel):
     user: int
-    login: str = None
-    name: str = None
-    surname: str = None
-    image: str = None
-    utm: str = None
+    login: str | None = None
+    name: str | None = None
+    surname: str | None = None
+    image: str | None = None
+    utm: str | None = None
 
 
 @router.post("/bot/")

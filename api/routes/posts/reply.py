@@ -17,9 +17,9 @@ router = APIRouter()
 
 class Type(BaseModel):
     post: int
-    id: int = None
-    data: str = None
-    status: int = None
+    id: int | None = None
+    data: str | None = None
+    status: int | None = None
 
 
 @router.post("/reply/")

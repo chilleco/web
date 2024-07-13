@@ -18,8 +18,8 @@ router = APIRouter()
 class Type(BaseModel):
     token: str
     network: str
-    utm: str = None
-    extra: dict = None
+    utm: str | None = None
+    extra: dict | None = None
 
 
 @router.post("/token/")

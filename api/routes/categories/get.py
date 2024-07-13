@@ -14,9 +14,9 @@ router = APIRouter()
 
 
 class Type(BaseModel):
-    id: int = None
-    url: str = None
-    locale: str = None
+    id: int | None = None
+    url: str | None = None
+    locale: str | None = None
 
 
 @router.post("/get/")

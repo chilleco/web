@@ -39,13 +39,13 @@ def is_valid_vk(*, query: dict) -> bool:
 
 class Type(BaseModel):
     url: str
-    referral: str = None
-    login: str = None
-    name: str = None
-    surname: str = None
-    image: str = None
-    mail: str = None
-    utm: str = None
+    referral: str | None = None
+    login: str | None = None
+    name: str | None = None
+    surname: str | None = None
+    image: str | None = None
+    mail: str | None = None
+    utm: str | None = None
 
 
 @router.post("/app/")

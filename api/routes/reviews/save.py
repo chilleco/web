@@ -13,9 +13,9 @@ router = APIRouter()
 
 
 class Type(BaseModel):
-    id: int = None
-    title: str = None
-    data: str = None
+    id: int | None = None
+    title: str | None = None
+    data: str | None = None
 
 
 @router.post("/save/")

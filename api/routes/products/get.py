@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 class Type(BaseModel):
-    id: int | list[int] = None
+    id: int | list[int] | None = None
 
 
 @router.post("/get/")

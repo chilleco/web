@@ -33,10 +33,10 @@ def online_back(user_id):
 
 
 class Type(BaseModel):
-    id: int | list[int] = None
-    limit: int = None
-    offset: int = None
-    fields: list[str] = None
+    id: int | list[int] | None = None
+    limit: int | None = None
+    offset: int | None = None
+    fields: list[str] | None = None
 
 
 @router.post("/get/")

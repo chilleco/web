@@ -1,6 +1,9 @@
 # Pull base image
 FROM python:3.12
 
+# Set work directory
+WORKDIR /app
+
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -15,9 +18,6 @@ RUN pip install --prefer-binary -r requirements.txt
 # RUN pip install --prefer-binary -r requirements.txt
 COPY tests/requirements.txt requirements.txt
 RUN pip install --prefer-binary -r requirements.txt
-
-# Set work directory
-WORKDIR /app
 
 # Copy project
 COPY . /app

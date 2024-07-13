@@ -17,13 +17,13 @@ router = APIRouter()
 
 
 class Type(BaseModel):
-    user: int = None
-    login: str | int = None
-    promo: str = None
+    user: int | None = None
+    login: str | int | None = None
+    promo: str | None = None
     value: int
     # NOTE: For general authorization method fields
-    name: str = None
-    surname: str = None
+    name: str | None = None
+    surname: str | None = None
 
 
 @router.post("/create/")

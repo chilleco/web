@@ -14,10 +14,10 @@ router = APIRouter()
 
 
 class Type(BaseModel):
-    id: int | list[int] = None
-    limit: int = None
-    offset: int = None
-    search: str = None
+    id: int | list[int] | None = None
+    limit: int | None = None
+    offset: int | None = None
+    search: str | None = None
     # TODO: fields: list[str] = None
 
 

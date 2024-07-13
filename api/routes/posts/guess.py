@@ -80,9 +80,9 @@ def get_posts(ids, limit, category, locale):
 
 
 class Type(BaseModel):
-    id: int | list[int] = None
-    category: int = None
-    locale: str = None
+    id: int | list[int] | None = None
+    category: int | None = None
+    locale: str | None = None
     limit: int = 3
 
 

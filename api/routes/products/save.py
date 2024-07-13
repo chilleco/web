@@ -16,13 +16,13 @@ router = APIRouter()
 
 
 class Type(BaseModel):
-    id: int = None
-    title: str = None
-    description: str = None
-    data: str = None
-    image: str = None
-    tags: list[str] = None
-    status: int = None
+    id: int | None = None
+    title: str | None = None
+    description: str | None = None
+    data: str | None = None
+    image: str | None = None
+    tags: list[str] | None = None
+    status: int | None = None
 
 
 @router.post("/save/")

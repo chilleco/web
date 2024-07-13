@@ -67,11 +67,11 @@ async def wrap_auth(*args, **kwargs):
 class Type(BaseModel):
     login: str  # login / mail / phone
     password: str
-    name: str = None
-    surname: str = None
-    image: str = None
-    mail: str = None
-    utm: str = None
+    name: str | None = None
+    surname: str | None = None
+    image: str | None = None
+    mail: str | None = None
+    utm: str | None = None
 
 
 @router.post("/auth/")
