@@ -2,13 +2,12 @@
 The authorization via social networks method of the user object of the API
 """
 
-import json
 import urllib
 
 import jwt
-import requests
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
+from libdev.req import fetch
 from libdev.codes import get_network
 from consys.errors import ErrorAccess, ErrorWrong
 
@@ -21,7 +20,7 @@ router = APIRouter()
 
 def auth_telegram(data):
     """Authorization via Telegram"""
-    user = jwt.decode(data.code, cfg("jwt"), algorithms="HS256")["user"]
+    user = jwt.decode(data.code, cfg("jwt"), algorithms="HS256")
     return (
         user.get("login"),
         user.get("user"),
@@ -32,28 +31,28 @@ def auth_telegram(data):
     )
 
 
-def auth_google(data):
+async def auth_google(data):
     """Authorization via Google"""
 
     link = "https://accounts.google.com/o/oauth2/token"
-    cont = {
-        "client_id": cfg("google.id"),
-        "client_secret": cfg("google.secret"),
-        "redirect_uri": f"{cfg('web')}callback",
-        "grant_type": "authorization_code",
-        "code": urllib.parse.unquote(data.code),
-    }
-    response = json.loads(requests.post(link, json=cont, timeout=10).text)
+    code, response = await fetch(
+        link,
+        {
+            "client_id": cfg("google.id"),
+            "client_secret": cfg("google.secret"),
+            "redirect_uri": f"{cfg('web')}callback",
+            "grant_type": "authorization_code",
+            "code": urllib.parse.unquote(data.code),
+        },
+    )
 
-    if "access_token" not in response:
+    if code != 200 or "access_token" not in response:
         raise ErrorAccess("code")
 
     link = "https://www.googleapis.com/oauth2/v1/userinfo?access_token={}"
-    response = json.loads(
-        requests.get(link.format(response["access_token"]), timeout=10).text
-    )
+    code, response = await fetch(link.format(response["access_token"]), type_req="get")
 
-    if "id" not in response:
+    if code != 200 or "id" not in response:
         raise ErrorAccess("code")
 
     user = response["id"]
@@ -89,7 +88,7 @@ async def handler(
     if social == 2:
         login, user, name, surname, image, mail = auth_telegram(data)
     elif social == 4:
-        login, user, name, surname, image, mail = auth_google(data)
+        login, user, name, surname, image, mail = await auth_google(data)
     else:
         await report.error("Unknown social", {"social": social})
         raise ErrorWrong("social")

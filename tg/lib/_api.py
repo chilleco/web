@@ -4,10 +4,10 @@ API functionality for the Telegram bot
 
 import io
 import json
-import time
+import asyncio
 
-import requests
 from libdev.cfg import cfg
+from libdev.req import fetch
 
 # pylint: disable=import-error
 from lib._variables import (
@@ -57,19 +57,18 @@ async def api(chat, method, data=None, locale=None, force=False):
 
     # TODO: Rewrite `while True` & `time.sleep`
     while True:
-        res = requests.post(
+        code, res = await fetch(
             cfg("api") + method.replace(".", "/") + ("/" if method else ""),
-            json=data,
+            data,
             headers=headers,
-            timeout=60,
         )
 
-        if int(res.status_code) != 502:
+        if code != 502:
             break
 
-        time.sleep(5)
+        await asyncio.sleep(5)
 
-    if int(res.status_code) >= 500:
+    if code >= 500:
         await report.error(
             "API response",
             {
@@ -78,27 +77,22 @@ async def api(chat, method, data=None, locale=None, force=False):
                 "params": data,
                 "token": tokens.get(chat.id),
                 "locale": locales.get(chat.id),
-                "error": res.status_code,
+                "error": code,
             },
         )
         return 1, None
-
-    try:
-        data = res.json()
-    except requests.exceptions.JSONDecodeError:
-        data = res.text
 
     # TODO: rm
     await report.debug(
         "API response",
         {
             "user": chat.id,
-            "status": res.status_code,
-            "data": data,
+            "status": code,
+            "data": res,
         },
     )
 
-    return int(res.status_code), data
+    return code, res
 
 
 async def auth(chat, utm=None, locale=None, image=None) -> bool:
@@ -193,9 +187,9 @@ async def auth(chat, utm=None, locale=None, image=None) -> bool:
 
 async def upload(chat, data):
     """Upload image"""
-    return requests.post(
+    _, res = await fetch(
         f"{cfg('api')}upload/",
         files={"upload": data},
         headers={"Authorization": f"Bearer {tokens[chat.id]}"},
-        timeout=30,
-    ).json()["url"]
+    )
+    return res["url"]

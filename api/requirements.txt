@@ -1,7 +1,6 @@
 # env/bin/python -m pip install -U --force-reinstall pip
 
 # App
-requests==2.32.3
 libdev==0.82
 fastapi==0.111.0
 httptools==0.6.1  # NOTE: for routing
