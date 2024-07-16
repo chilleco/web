@@ -36,9 +36,7 @@ class AccessMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         if not token:
-            # await report.warning("No token", {
-            #     'url': url,
-            # })
+            await report.warning("No token", {"url": url})
             return Response(content="Invalid token", status_code=401)
 
         try:
