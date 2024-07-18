@@ -6,6 +6,7 @@ import traceback
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+from consys.errors import BaseError
 
 from lib import log, report
 
@@ -57,6 +58,9 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
                 )
 
             return response
+
+        except BaseError as e:
+            return Response(content=vars(e)["txt"], status_code=400)
 
         except Exception as e:  # pylint: disable=broad-except
             # Log

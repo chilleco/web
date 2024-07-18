@@ -22,9 +22,7 @@ class ParametersMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         # Request parameters
-        request.state.url = (
-            request.url.path[4:] if request.url.path[:4] == "/api" else request.url.path
-        )
+        request.state.url = request.url.path
         request.state.start = time.time()
         locale = request.headers.get("accept-language")
         request.state.locale = (
@@ -37,6 +35,7 @@ class ParametersMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         # Response parameters
+        request.state.process_time = time.time() - request.state.start
         response.headers["X-Process-Time"] = f"{request.state.process_time:.3f}"
 
         return response

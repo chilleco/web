@@ -275,6 +275,15 @@ class Sheets:
                 self._get_col_idx(rng[0]), self._get_col_idx(rng[1]), size
             )
 
+    def height(self, size=None, rows=None, sheet=None):
+        """Set the height of specified rows in a worksheet"""
+
+        ws = self._get_sheet(sheet)
+        rngs = self._get_rows_range(rows)
+
+        for rng in rngs:
+            ws.adjust_row_height(int(rng[0]), int(rng[1]), size)
+
     def merge(self, cells, sheet=None):
         """Merge specified cells in a worksheet"""
 
