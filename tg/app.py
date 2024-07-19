@@ -36,13 +36,23 @@ async def handle_errors(update, error):
         error=error,
     )
 
-    message_id = await tg.send(
-        chat_id,
-        "Бот умер 😵‍💫\nМеня уже лечат!",
-        buttons=[{"name": "Мои посты", "data": "menu"}],
-    )
-    cache["m"] = message_id
-    save(chat_id, cache)
+    try:
+        message_id = await tg.send(
+            chat_id,
+            "Бот умер 😵‍💫\nМеня уже лечат!",
+            buttons=[{"name": "Мои посты", "data": "menu"}],
+        )
+    except Exception as e:
+        await report.error(
+            "Can't write",
+            {
+                "chat": chat_id,
+            },
+            error=e,
+        )
+    else:
+        cache["m"] = message_id
+        save(chat_id, cache)
 
     return True
 

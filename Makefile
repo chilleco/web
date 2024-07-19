@@ -46,7 +46,7 @@ release:
 	git checkout dev
 
 # TODO: turn tg on
-test-linter-all:
+test-lint-all:
 	find . -type f -name '*.py' \
 	| grep -vE 'env/' \
 	| grep -vE 'tests/' \
@@ -57,7 +57,7 @@ test-linter-all:
 		--msg-template='{path}:{line}:{column}: [{symbol}] {msg}'
 
 # TODO: turn tg on
-test-linter:
+test-lint:
 	git status -s \
 	| grep -vE 'tests/' \
 	| grep -vE 'tg/' \
@@ -82,7 +82,7 @@ test-unit:
 	| xargs pytest -s
 
 test:
-	make test-linter-all
+	make test-lint-all
 	make test-unit-all
 
 clear:
