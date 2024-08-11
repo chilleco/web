@@ -51,7 +51,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
                     response_body,
                     {
                         "method": request.method,
-                        "url": request.state.url,
+                        "url": getattr(request.state, "url", None),
                         "status": response.status_code,
                         # "request": request_body,
                     },

@@ -1,14 +1,14 @@
-import json
-from urllib.parse import unquote  # urlparse, parse_qsl, urlencode
 import hashlib
 import hmac
+import json
+from urllib.parse import unquote  # urlparse, parse_qsl, urlencode
 
 from libdev.cfg import cfg
 from consys.errors import ErrorInvalid
 from userhub import auth
 
 
-def verify_telegram_web_app_data(telegram_init_data: str) -> bool:
+def verify_telegram_web_app_data(telegram_init_data: str) -> tuple[bool, dict]:
     if not telegram_init_data:
         return False, {}
 
@@ -59,6 +59,23 @@ async def parse_token(request, token):
         # TODO: premium=data.get("is_premium") or False,
         # TODO: mailing=data.get("allows_write_to_pm") or False,
     )
+
+    # TODO: Update
+    # if (
+    #     user.login != login
+    #     or user.name != name
+    #     or user.surname != surname
+    #     or user.locale != locale
+    #     or user.premium != premium
+    #     or user.mailing != mailing
+    # ):
+    #     user.login = login
+    #     user.name = name
+    #     user.surname = surname
+    #     user.locale = locale
+    #     user.premium = premium
+    #     user.mailing = mailing
+    #     user.save()
 
     return verified, user, new
 
