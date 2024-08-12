@@ -9,6 +9,7 @@ import re
 
 from google.oauth2.service_account import Credentials
 from libdev.cfg import cfg
+from libdev.req import fetch
 import pygsheets
 from pygsheets.custom_types import VerticalAlignment, HorizontalAlignment
 import pandas as pd
@@ -49,6 +50,15 @@ class Sheets:
             return self.sheet
         for ws in self.get_sheets():
             if ws.id == sheet:
+                return ws
+        return None
+
+    def get_sheet(self, title=None):
+        """Open a worksheet"""
+        if title is None:
+            return self.sheet
+        for ws in self.get_sheets():
+            if ws.title == title:
                 return ws
         return None
 
@@ -300,5 +310,25 @@ class Sheets:
         """Create a public link with reader access for anyone"""
         self.sheets.share("", role="reader", type="anyone")
         return f"https://docs.google.com/spreadsheets/d/{self.id}/edit?usp=sharing"
+
+    async def pdf(self, sheet=None):
+        ws = self._get_sheet(sheet)
+
+        url = f"https://docs.google.com/spreadsheets/d/{self.id}/export?format=pdf&gid={ws.id}"
+        code, response = await fetch(
+            url,
+            headers={
+                "Authorization": f"Bearer {credentials.token}",
+            },
+        )
+
+        if code != 200:
+            print(f"Failed to export the worksheet ({code}): {response}")
+            return None
+
+        name = f"/data/load/{ws.title}.pdf"
+        with open(name, "wb") as f:
+            f.write(response)
+        return name
 
     # TODO: рамка, тип данных, вставка ссылки, формула, размер текста, высота ячейки
