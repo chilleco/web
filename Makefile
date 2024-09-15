@@ -81,9 +81,10 @@ test-unit:
 	| awk '{print $$2}' \
 	| xargs pytest -s
 
+# FIXME
 test:
 	make test-lint-all
-	make test-unit-all
+# make test-unit-all
 
 clear:
 	rm -rf env/

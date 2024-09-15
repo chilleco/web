@@ -7,6 +7,8 @@ import traceback
 from fastapi import FastAPI, Request, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+
 from prometheus_fastapi_instrumentator import Instrumentator
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -45,15 +47,41 @@ async def startup():
     await on_startup()
 
 
-# High-level errors
+# Exceptions
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    error = None
+    message = None
+    for err in exc.errors():
+        error = err["loc"][-1]
+        message = err["msg"]
+        # err["type"]
+        # err.get("input")
+        break
+
+    log.error(f"Validation Error: {exc}")
+    return JSONResponse(
+        status_code=422,
+        content={
+            "status": "error",
+            "error": "ErrorValidation",
+            "detail": error,
+            "message": message,
+        },
+    )
+
+
 @app.exception_handler(Exception)
-async def validation_exception_handler(request: Request, exc: Exception):
-    """Handles all uncaught exceptions and logs them"""
+async def uncaught_exception_handler(request: Request, exc: Exception):
     tb_str = "".join(traceback.format_tb(exc.__traceback__))
     log.error(f"Unhandled exception: {exc}\nTraceback: {tb_str}")
     return JSONResponse(
-        status_code=500,  # 422
-        content={"detail": str(exc)},  # {"message": "Internal Server Error"}
+        status_code=500,
+        content={
+            "status": "error",
+            "error": "ErrorCritical",
+            "detail": str(exc),
+        },
     )
 
 

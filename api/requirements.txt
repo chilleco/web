@@ -17,7 +17,7 @@ APScheduler==3.10.4
 userhub==0.13
 
 # DB
-consys==0.31
+consys==0.32
 
 # MQ
 redis==5.0.7

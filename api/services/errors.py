@@ -2,10 +2,10 @@
 Request processing and response statuses formatting
 """
 
-import json
 import traceback
 
-from fastapi import Request, Response
+from fastapi import Request
+from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from consys.errors import BaseError
 
@@ -22,6 +22,10 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
         yield body
 
     async def dispatch(self, request: Request, call_next):
+        # # Whitelist
+        # if request.method != "POST":
+        #     return await call_next(request)
+
         try:
             # # Create a new request with the cached body
             # body = await request.body()
@@ -61,14 +65,13 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             return response
 
         except BaseError as e:
-            response = {
-                "error": "BASE_ERROR",
-                "error_message": vars(e).get("txt", "An error occurred."),
-            }
-            return Response(
-                content=json.dumps(response),
+            return JSONResponse(
                 status_code=400,
-                media_type="application/json",
+                content={
+                    "status": "error",
+                    "error": e.__class__.__name__,
+                    "detail": vars(e)["txt"],
+                },
             )
 
         except Exception as e:  # pylint: disable=broad-except
@@ -81,12 +84,11 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             # Report
             await report.critical(str(e), error=e)
 
-            error_response = {
-                "error_code": "INTERNAL_SERVER_ERROR",
-                "error_message": str(e),
-            }
-            return Response(
-                content=json.dumps(error_response),
+            return JSONResponse(
                 status_code=500,
-                media_type="application/json",
+                content={
+                    "status": "error",
+                    "error": "ErrorServer",
+                    "detail": str(e),
+                },
             )
