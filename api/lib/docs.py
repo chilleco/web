@@ -25,6 +25,7 @@ credentials = Credentials.from_service_account_info(
 gc = pygsheets.authorize(custom_credentials=credentials)
 
 
+# pylint: disable=too-many-public-methods
 class Sheets:
     def __init__(self, key, sheet=None):
         self.id = key
@@ -314,7 +315,10 @@ class Sheets:
     async def pdf(self, sheet=None):
         ws = self._get_sheet(sheet)
 
-        url = f"https://docs.google.com/spreadsheets/d/{self.id}/export?format=pdf&gid={ws.id}"
+        url = (
+            f"https://docs.google.com/spreadsheets/d/{self.id}"
+            f"/export?format=pdf&gid={ws.id}"
+        )
         code, response = await fetch(
             url,
             headers={

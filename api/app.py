@@ -29,6 +29,10 @@ log.add("/backup/app.log")  # FIXME: file (to tgreports)
 app = FastAPI(title=cfg("NAME", "API"), root_path="/api")
 
 
+# Prometheus
+Instrumentator().instrument(app).expose(app)
+
+
 @app.on_event("startup")
 @log.catch
 async def startup():
@@ -36,10 +40,6 @@ async def startup():
 
     # Report about start
     await report.info("Restart server")
-
-    # Prometheus
-    if cfg("mode") in {"PRE", "PROD"}:
-        Instrumentator().instrument(app).expose(app)
 
     # Tasks on start
     await on_startup()

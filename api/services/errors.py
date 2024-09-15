@@ -2,6 +2,7 @@
 Request processing and response statuses formatting
 """
 
+import json
 import traceback
 
 from fastapi import Request, Response
@@ -60,7 +61,15 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             return response
 
         except BaseError as e:
-            return Response(content=vars(e)["txt"], status_code=400)
+            response = {
+                "error": "BASE_ERROR",
+                "error_message": vars(e).get("txt", "An error occurred."),
+            }
+            return Response(
+                content=json.dumps(response),
+                status_code=400,
+                media_type="application/json",
+            )
 
         except Exception as e:  # pylint: disable=broad-except
             # Log
@@ -72,4 +81,12 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             # Report
             await report.critical(str(e), error=e)
 
-            return Response(content=str(e), status_code=500)
+            error_response = {
+                "error_code": "INTERNAL_SERVER_ERROR",
+                "error_message": str(e),
+            }
+            return Response(
+                content=json.dumps(error_response),
+                status_code=500,
+                media_type="application/json",
+            )
