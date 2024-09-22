@@ -19,6 +19,11 @@ const api = (
   setted = false,
 ) => new Promise((resolve, reject) => {
   // TODO: reject errors
+  data = {
+    locale: main ? main.locale : 'en',
+    ...data,
+  }
+
   serverRequest(method, data, external).then(async (response) => {
     if (!response.ok) {
       if (response.status === 401 && !setted) {
@@ -34,9 +39,18 @@ const api = (
         }, external, true);
         resolve(await api(main, method, data, external, true));
       } else {
-        const text = await response.text();
-        console.log('Error', response.status, text);
-        reject(text);
+        let res = await response.text();
+        try {
+          res = JSON.parse(res);
+        } catch { };
+
+        if (typeof res.detail === 'object') {
+          res.message = res.detail[0].msg;
+          res.type = res.detail[0].loc[res.detail[0].loc.length - 1];
+        }
+
+        console.log('! Error', response.status, res.message);
+        reject(res.detail);
       }
     } else {
       resolve(await response.json());
