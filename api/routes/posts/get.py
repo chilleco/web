@@ -161,12 +161,7 @@ async def handler(
         cond["token"] = {"$ne": request.state.token}
 
     # Get
-    posts = Post.complex(
-        ids=data.id,
-        limit=data.limit,
-        offset=data.offset,
-        search=data.search,
-        fields=fields,
+    params = dict(
         status={"$exists": False} if request.state.status < 5 else None,
         category=(
             {
@@ -175,51 +170,25 @@ async def handler(
             if data.category
             else None
         ),
-        locale=data.locale
-        and {
-            "$in": [None, data.locale],
-        },  # NOTE: None → all locales
+        locale=(
+            data.locale and {"$in": [None, data.locale]}
+        ),  # NOTE: None → all locales
         extra=cond or None,
+        search=data.search,
+    )
+    posts = Post.complex(
+        ids=data.id,
+        limit=data.limit,
+        offset=data.offset,
+        **params,
+        fields=fields,
         handler=handle,
     )
 
     # Count
-    # TODO: with search
     count = None
     if not data.id:
-        if data.search:
-            more = Post.get(
-                limit=1,
-                offset=(data.offset or 0) + data.limit,
-                search=data.search,
-                fields={},
-                status={"$exists": False} if request.state.status < 5 else None,
-                category=data.category
-                and {
-                    "$in": Category.get_childs(data.category),
-                },
-                locale=data.locale
-                and {
-                    "$in": [None, data.locale],
-                },  # NOTE: None → all locales
-                extra=cond or None,
-            )
-            if more:
-                count = data.limit + 1
-
-        else:
-            count = Post.count(
-                status={"$exists": False} if request.state.status < 5 else None,
-                category=data.category
-                and {
-                    "$in": Category.get_childs(data.category),
-                },
-                locale=data.locale
-                and {
-                    "$in": [None, data.locale],
-                },  # NOTE: None → all locales
-                extra=cond or None,
-            )
+        count = Post.count(**params)
 
     # Sort
     if isinstance(posts, list):

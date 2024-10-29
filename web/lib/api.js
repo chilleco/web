@@ -19,12 +19,12 @@ const api = (
   setted = false,
 ) => new Promise((resolve, reject) => {
   // TODO: reject errors
-  data = {
+  const requestData = {
     locale: main ? main.locale : 'en',
     ...data,
-  }
+  };
 
-  serverRequest(method, data, external).then(async (response) => {
+  serverRequest(method, requestData, external).then(async (response) => {
     if (!response.ok) {
       if (response.status === 401 && !setted) {
         // TODO: auto request on token creation
@@ -37,7 +37,7 @@ const api = (
             languages: navigator.languages,
           },
         }, external, true);
-        resolve(await api(main, method, data, external, true));
+        resolve(await api(main, method, requestData, external, true));
       } else {
         let res = await response.text();
         try {
