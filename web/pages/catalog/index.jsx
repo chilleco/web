@@ -7,7 +7,47 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { toastAdd } from '../../redux/actions/system';
 import api from '../../lib/api';
 import List from '../../components/Product/List';
-import Search from '../../components/Search';
+import Checkbox from '../../components/Forms/Checkbox';
+
+const FilterOptions = ({
+  onlyWithPhoto, setOnlyWithPhoto,
+  onlyWithFinance, setOnlyWithFinance,
+  onlyWithDescription, setOnlyWithDescription,
+  onlyWithContacts, setOnlyWithContacts,
+  onlyWithProducts, setOnlyWithProducts
+}) => {
+  return (
+    <div className="text filters" style={{ marginBottom: '20px' }}>
+      <h2>Отображать только</h2>
+      {/* <label>Фильтры</label> */}
+      <Checkbox
+        title="с финансами"
+        checked={onlyWithFinance}
+        onChange={() => setOnlyWithFinance(!onlyWithFinance)}
+      />
+      <Checkbox
+        title="с контактами"
+        checked={onlyWithContacts}
+        onChange={() => setOnlyWithContacts(!onlyWithContacts)}
+      />
+      <Checkbox
+        title="с продуктами"
+        checked={onlyWithProducts}
+        onChange={() => setOnlyWithProducts(!onlyWithProducts)}
+      />
+      <Checkbox
+        title="с фото"
+        checked={onlyWithPhoto}
+        onChange={() => setOnlyWithPhoto(!onlyWithPhoto)}
+      />
+      <Checkbox
+        title="с описанием"
+        checked={onlyWithDescription}
+        onChange={() => setOnlyWithDescription(!onlyWithDescription)}
+      />
+    </div>
+  );
+};
 
 export const Products = ({
   productsLoaded = [],
@@ -22,7 +62,7 @@ export const Products = ({
     <>
       <Head>
         {/* SEO */}
-        <title>{ title }</title>
+        <title>{title}</title>
         <meta name="title" content={title} />
         <meta name="og:title" content={title} />
         <meta property="og:type" content="website" />
@@ -45,7 +85,9 @@ export const Products = ({
         </div>
       </div> */}
 
-      <Search />
+      <div className="lmain">
+        <FilterOptions />
+      </div>
 
       <List products={products} />
     </>

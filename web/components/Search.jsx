@@ -17,7 +17,7 @@ export default () => (
       placeholder="Search"
       ref={input => input && input.focus()}
     />
-    <Filter />
-    <Filter />
+    {/* <Filter /> */}
+    {/* <Filter /> */}
   </div>
 );
