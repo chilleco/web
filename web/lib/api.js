@@ -49,7 +49,7 @@ const api = (
           res.type = res.detail[0].loc[res.detail[0].loc.length - 1];
         }
 
-        console.log('! Error', response.status, res.message);
+        console.log('! Error', method, response.status, res.message);
         reject(res.detail);
       }
     } else {

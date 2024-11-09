@@ -8,6 +8,11 @@ export default class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="icon" type="image/png" href="/favicon.ico" />
+
+          {/* Telegram Mini Apps */}
+          <script src="https://telegram.org/js/telegram-web-app.js"></script>
+          {/* <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+          <script>eruda.init();</script> */}
         </Head>
 
         {/* Icons */}

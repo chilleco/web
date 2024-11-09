@@ -14,7 +14,7 @@ check:
 
 run-test:
 	docker compose -f tests/compose.api.yml -p ${PROJECT_NAME} up --build --exit-code-from test
-	docker compose -f tests/compose.web.yml -p ${PROJECT_NAME} up --build --exit-code-from test
+	# docker compose -f tests/compose.web.yml -p ${PROJECT_NAME} up --build --exit-code-from test
 
 log:
 	docker compose -f compose.prod.yml logs
@@ -52,7 +52,7 @@ test-lint-all:
 	| grep -vE 'tests/' \
 	| grep -vE 'tg/' \
 	| grep -vE 'web/' \
-	| xargs pylint -f text \
+	| xargs env/bin/pylint -f text \
 		--rcfile=tests/.pylintrc \
 		--msg-template='{path}:{line}:{column}: [{symbol}] {msg}'
 

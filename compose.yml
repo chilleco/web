@@ -91,6 +91,7 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
+      NEXT_PUBLIC_MODE: ${MODE}
       NEXT_PUBLIC_API: http://localhost/api/
       NEXT_PUBLIC_WEB: http://localhost/
       NEXT_PUBLIC_NAME: ${NAME}
