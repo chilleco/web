@@ -13,9 +13,8 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip setuptools wheel
 COPY api/requirements.txt requirements.txt
 RUN pip install --prefer-binary -r requirements.txt
-# TODO: turn tg on
-# COPY tg/requirements.txt requirements.txt
-# RUN pip install --prefer-binary -r requirements.txt
+COPY tg/requirements.txt requirements.txt
+RUN pip install --prefer-binary -r requirements.txt
 COPY tests/requirements.txt requirements.txt
 RUN pip install --prefer-binary -r requirements.txt
 

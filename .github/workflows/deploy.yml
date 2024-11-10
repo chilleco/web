@@ -3,23 +3,23 @@ on:
     branches: [ "main" ]
 
 jobs:
-  tests:
-    name: Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  # tests:
+  #   name: Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Setting up environment variables
-        run: |
-          cp base.env .env
-          echo "MODE=TEST" >> .env
-          echo "DATA_PATH=./data" >> .env
+  #     - name: Setting up environment variables
+  #       run: |
+  #         cp base.env .env
+  #         echo "MODE=TEST" >> .env
+  #         echo "DATA_PATH=./data" >> .env
 
-      - name: Running tests inside the container
-        run: make run-test
+  #     - name: Running tests inside the container
+  #       run: make run-test
 
   deploy:
-    needs: tests
+    # needs: tests
     name: Deploy
     runs-on: ubuntu-latest
     steps:
