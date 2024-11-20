@@ -1,30 +1,30 @@
 # env/bin/python -m pip install -U --force-reinstall pip
 
 # App
-libdev==0.87
-fastapi==0.111.0
-httptools==0.6.1  # NOTE: for routing
-uvicorn==0.30.1
-PyJWT==2.8.0
-python-multipart==0.0.9  # NOTE: for file upload
+libdev==0.88
+fastapi==0.115.5
+httptools==0.6.4  # NOTE: for routing
+uvicorn==0.32.0
+PyJWT==2.10.0
+python-multipart==0.0.17  # NOTE: for file upload
 slowapi==0.1.9
 
 # Jobs
-dramatiq==1.17.0
+dramatiq==1.17.1
 APScheduler==3.10.4
 
 # Users
 userhub==0.14
 
 # DB
-consys==0.39
+consys==0.42
 
 # MQ
-redis==5.0.7
+redis==5.2.0
 
 # Sockets
-python-socketio==5.11.3
-websockets==12.0  # NOTE: for Socket.IO
+python-socketio==5.11.4
+websockets==14.1  # NOTE: for Socket.IO
 
 # Monitoring
 prometheus_fastapi_instrumentator==7.0.0
@@ -36,12 +36,12 @@ tgio==0.13
 tgreports==0.16
 
 # # Payments
-# yookassa==2.3.5
+# yookassa==3.4.1
 
 # Google Docs
-google-auth==2.32.0
+google-auth==2.36.0
 pygsheets==2.0.6
-pandas==2.2.2
+pandas==2.2.3
 
 # # SMS
 # smsc==0.1.1

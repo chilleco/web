@@ -2,12 +2,26 @@
 Check access by token
 """
 
+import jwt
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+from consys.errors import ErrorInvalid
 
 from lib import report
-from lib.auth import jwt_auth
-from lib.auth.tg import tg_auth
+
+
+async def jwt_auth(jwt_secret, token):
+    if not token or token == "null":
+        raise ErrorInvalid("token")
+
+    token = jwt.decode(token, jwt_secret, algorithms="HS256")
+
+    return (
+        token["token"],
+        token.get("user", 0),
+        token.get("status", 3),
+        token.get("network", 0),
+    )
 
 
 class AccessMiddleware(BaseHTTPMiddleware):
@@ -40,13 +54,8 @@ class AccessMiddleware(BaseHTTPMiddleware):
             return Response(content="Invalid token", status_code=401)
 
         try:
-            # JWT
-            if " " in token:
-                token = token.split(" ")[1]
-                token, user, status, network = await jwt_auth(self.jwt, token)
-            # TG auth
-            else:
-                token, user, status, network = await tg_auth(request, token)
+            token = token.split(" ")[1]
+            token, user, status, network = await jwt_auth(self.jwt, token)
         except Exception as e:  # pylint: disable=broad-except
             await report.warning(
                 "Invalid token",

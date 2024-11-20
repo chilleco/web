@@ -1,5 +1,5 @@
 """
-The authorization via mini app method of the user object of the API
+The authorization via VK mini app method of the user object of the API
 """
 
 import hashlib
@@ -48,13 +48,11 @@ class Type(BaseModel):
     utm: str | None = None
 
 
-@router.post("/app/")
+@router.post("/app/vk/")
 async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """Mini app auth"""
-
     try:
         params = dict(
             parse_qsl(

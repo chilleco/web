@@ -35,7 +35,13 @@ const Body = ({
   const router = useRouter();
   const rehydrated = useSelector(state => state._persist.rehydrated); /* eslint-disable-line */
 
+  let telegramApi = window.Telegram.WebApp;
+
   useEffect(() => {
+    // Telegram
+    telegramApi.expand();
+    telegramApi.disableVerticalSwipes();
+
     // // Bootstrap
     // window.bootstrap = require('bootstrap/dist/js/bootstrap');
 
@@ -79,6 +85,28 @@ const Body = ({
             languages: navigator.languages,
           },
         }, true).then(() => setToken(token));
+
+        // Telegram auth
+        if (telegramApi.initDataUnsafe && telegramApi.initDataUnsafe.user) {
+          if (telegramApi && telegramApi.initData) {
+            api(main, 'users.app.tg', {
+              url: telegramApi.initData,
+              // utm: main.utm,
+            }).then(res => {
+              dispatch(profileIn(res));
+            }).catch(err => {
+              dispatch(toastAdd({
+                header: t('system.error'),
+                text: err,
+                color: 'white',
+                background: 'danger',
+              }));
+              // onModal('failed', 'Oops! It seems you have an unstable internet connection (we recommend disconnecting from weak networks or VPNs). Try to log in again. If the problem repeats - write us in the chat.');
+            });
+          } else {
+            // onModal('failed', 'Not use direct link, open telegram mini app: @...');
+          }
+        }
       }
     }
   }, [rehydrated, router.isReady, router.query]);

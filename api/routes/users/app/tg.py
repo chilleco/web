@@ -1,11 +1,21 @@
+"""
+The authorization via TG mini app method of the user object of the API
+"""
+
 import hashlib
 import hmac
 import json
-from urllib.parse import unquote  # urlparse, parse_qsl, urlencode
+from urllib.parse import unquote
 
-from libdev.cfg import cfg
-from consys.errors import ErrorInvalid
-from userhub import auth
+from fastapi import APIRouter, Body, Request
+from pydantic import BaseModel
+from consys.errors import ErrorWrong, ErrorInvalid
+
+from lib import cfg
+from routes.users.auth import wrap_auth
+
+
+router = APIRouter()
 
 
 def verify_telegram_web_app_data(telegram_init_data: str) -> tuple[bool, dict]:
@@ -33,31 +43,46 @@ def verify_telegram_web_app_data(telegram_init_data: str) -> tuple[bool, dict]:
     return computed_hash == hash_value, init_data
 
 
-async def parse_token(request, token):
-    verified, init_data = verify_telegram_web_app_data(token)
+class Type(BaseModel):
+    url: str
+    referral: str | None = None
+    login: str | None = None
+    name: str | None = None
+    surname: str | None = None
+    image: str | None = None
+    mail: str | None = None
+    utm: str | None = None
 
-    data = json.loads(init_data.get("user", ""))
-    if not data.get("id"):
-        return False, {}
 
-    # TODO: save token in cookies
-    user, _, new = await auth(
-        cfg("PROJECT_NAME"),
+@router.post("/app/tg/")
+async def handler(
+    request: Request,
+    data: Type = Body(...),
+):
+    verified, init_data = verify_telegram_web_app_data(data.url)
+    if not verified:
+        raise ErrorInvalid("url")
+
+    data_user = json.loads(init_data.get("user", ""))
+    if not data_user.get("id"):
+        raise ErrorWrong("url")
+
+    return await wrap_auth(
         "app",
         request.state.token,
         network=request.state.network,
         ip=request.state.ip,
-        locale=data.get("language_code") or None,  # request.state.locale,
-        login=data.get("username") or None,
+        locale=data_user.get("language_code") or None,  # request.state.locale,
+        login=data_user.get("username") or None,
         social=2,
-        user=data["id"],
-        name=data.get("first_name") or None,
-        surname=data.get("last_name") or None,
-        image=data.image,
-        mail=data.mail,
-        utm=data.utm,
-        # TODO: premium=data.get("is_premium") or False,
-        # TODO: mailing=data.get("allows_write_to_pm") or False,
+        user=data_user["id"],
+        name=data_user.get("first_name") or None,
+        surname=data_user.get("last_name") or None,
+        image=data_user.image,
+        mail=data_user.mail,
+        utm=data_user.utm,
+        # TODO: premium=data_user.get("is_premium") or False,
+        # TODO: mailing=data_user.get("allows_write_to_pm") or False,
     )
 
     # TODO: Update
@@ -76,17 +101,3 @@ async def parse_token(request, token):
     #     user.premium = premium
     #     user.mailing = mailing
     #     user.save()
-
-    return verified, user, new
-
-
-async def tg_auth(request, token):
-    verified, user, _ = await parse_token(request, token)
-    if not verified:
-        raise ErrorInvalid("token")
-    return (
-        token,  # token["token"]
-        user.id,  # token.get("user", 0)
-        3,  # token.get("status", 3)
-        2,  # token.get("network", 0)
-    )
