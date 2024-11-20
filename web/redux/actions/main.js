@@ -1,3 +1,8 @@
+export const changeNetwork = (network) => ({
+  type: 'CHANGE_NETWORK',
+  network,
+});
+
 export const changeTheme = (theme) => ({
   type: 'CHANGE_THEME',
   theme,

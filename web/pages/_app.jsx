@@ -9,7 +9,7 @@ import '../styles/main.scss';
 import '../styles/main.css';
 import wrapper from '../redux/store';
 import { toastAdd } from '../redux/actions/system';
-import { changeLang, setToken, setAuth, setUtm, changeTheme } from '../redux/actions/main';
+import { changeNetwork, changeLang, setToken, setAuth, setUtm, changeTheme } from '../redux/actions/main';
 import { profileIn } from '../redux/actions/profile';
 import { onlineAdd, onlineDelete, onlineReset } from '../redux/actions/online';
 import { categoriesGet, categoriesClear } from '../redux/actions/categories';
@@ -25,9 +25,9 @@ import Online from '../components/Online';
 import Toasts from '../components/Toast';
 
 const Body = ({
-  toastAdd,
   system, main, profile, online, categories,
-  changeLang, setToken, setAuth, setUtm, changeTheme,
+  toastAdd,
+  changeNetwork, changeLang, setToken, setAuth, setUtm, changeTheme,
   profileIn,
   onlineAdd, onlineDelete, onlineReset,
   categoriesGet, categoriesClear,
@@ -43,6 +43,7 @@ const Body = ({
     if (telegramApi) {
       telegramApi.expand();
       telegramApi.disableVerticalSwipes();
+      changeNetwork('tg');
     }
 
     // // Bootstrap
@@ -62,18 +63,14 @@ const Body = ({
     if (main.token && !profile.id) {
       const telegramApi = window?.Telegram?.WebApp;
       if (telegramApi && telegramApi?.initDataUnsafe?.user) {
-        console.log('!', telegramApi.initDataUnsafe.user);
         if (telegramApi && telegramApi.initData) {
-          console.log('!!', telegramApi.initData);
           api(main, 'users.app.tg', {
             url: telegramApi.initData,
             // utm: main.utm,
           }).then(res => {
-            console.log('OK3, ', res);
             profileIn(res);
             setAuth(res.token);
           }).catch(err => {
-            console.log('NO3, ', err);
             toastAdd({
               header: t('system.error'),
               text: err,
@@ -186,6 +183,7 @@ const Body = ({
 
 export default wrapper.withRedux(appWithTranslation(connect(state => state, {
   toastAdd,
+  changeNetwork,
   changeLang,
   setToken,
   setAuth,

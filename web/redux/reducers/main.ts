@@ -1,6 +1,7 @@
 import { AnyAction } from 'redux';
 
 export default (state = {
+  network: 'web',
   token: null,
   auth: null,
   locale: process.env.NEXT_PUBLIC_LOCALE,
@@ -10,6 +11,12 @@ export default (state = {
   utm: null,
 }, action: AnyAction) => {
   switch (action.type) {
+    case 'CHANGE_NETWORK':
+      return {
+        ...state,
+        network: action.network,
+      };
+
     case 'CHANGE_THEME':
       return {
         ...state,

@@ -1,17 +1,4 @@
-// const getCookie = (name) => {
-//   const matches = document.cookie.match(
-//     new RegExp(
-//       '(?:^|; )' +
-//       name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') +
-//       '=([^;]*)',
-//     ),
-//   );
-//   return matches ? decodeURIComponent(matches[1]) : undefined;
-// };
-
 const serverRequest = async (method = '', data = {}, external = true, auth = null) => {
-  // const token = getCookie('Authorization');
-
   let url = external ? process.env.NEXT_PUBLIC_API : 'http://api:5000/';
   url += method.replaceAll('.', '/') + (method ? '/' : '');
   return fetch(url, {
@@ -19,7 +6,6 @@ const serverRequest = async (method = '', data = {}, external = true, auth = nul
     headers: {
       'Content-Type': 'application/json',
       ...(auth && { 'Authorization': `Bearer ${auth}` }),
-      // ...(token && { 'Authorization': `Bearer ${token}` }),
       // TODO: ssr get cookie
     },
     body: JSON.stringify(data),
@@ -39,13 +25,13 @@ const api = (
     ...data,
   };
 
-  serverRequest(method, requestData, external, main.auth).then(async (response) => {
+  serverRequest(method, requestData, external, main?.auth).then(async (response) => {
     if (!response.ok) {
       if (response.status === 401 && !setted) {
         // TODO: auto request on token creation
         await api(main, 'users.token', {
           token: main.token,
-          network: 'web',
+          network: main?.network ? network : 'web',
           utm: main.utm,
           extra: {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,

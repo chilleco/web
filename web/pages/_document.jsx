@@ -11,8 +11,8 @@ export default class MyDocument extends Document {
 
           {/* Telegram Mini Apps */}
           <script src="https://telegram.org/js/telegram-web-app.js"></script>
-          {/* <script src="//cdn.jsdelivr.net/npm/eruda"></script>
-          <script>eruda.init();</script> */}
+          <script src="//cdn.jsdelivr.net/npm/eruda"></script>
+          <script>eruda.init();</script>
         </Head>
 
         {/* Icons */}
