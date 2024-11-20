@@ -8,9 +8,9 @@ import 'breezu';
 import '../styles/main.scss';
 import '../styles/main.css';
 import wrapper from '../redux/store';
-import {
-  changeLang, setToken, setUtm, changeTheme,
-} from '../redux/actions/main';
+import { toastAdd } from '../redux/actions/system';
+import { changeLang, setToken, setAuth, setUtm, changeTheme } from '../redux/actions/main';
+import { profileIn } from '../redux/actions/profile';
 import { onlineAdd, onlineDelete, onlineReset } from '../redux/actions/online';
 import { categoriesGet, categoriesClear } from '../redux/actions/categories';
 import api from '../lib/api';
@@ -25,8 +25,10 @@ import Online from '../components/Online';
 import Toasts from '../components/Toast';
 
 const Body = ({
-  system, main, online, categories,
-  changeLang, setToken, setUtm, changeTheme,
+  toastAdd,
+  system, main, profile, online, categories,
+  changeLang, setToken, setAuth, setUtm, changeTheme,
+  profileIn,
   onlineAdd, onlineDelete, onlineReset,
   categoriesGet, categoriesClear,
   Component, pageProps,
@@ -35,12 +37,13 @@ const Body = ({
   const router = useRouter();
   const rehydrated = useSelector(state => state._persist.rehydrated); /* eslint-disable-line */
 
-  let telegramApi = window.Telegram.WebApp;
-
   useEffect(() => {
     // Telegram
-    telegramApi.expand();
-    telegramApi.disableVerticalSwipes();
+    const telegramApi = window?.Telegram?.WebApp;
+    if (telegramApi) {
+      telegramApi.expand();
+      telegramApi.disableVerticalSwipes();
+    }
 
     // // Bootstrap
     // window.bootstrap = require('bootstrap/dist/js/bootstrap');
@@ -53,6 +56,38 @@ const Body = ({
       changeTheme(e.matches ? 'dark' : 'light');
     });
   }, []);
+
+  // Telegram auth
+  useEffect(() => {
+    if (main.token && !profile.id) {
+      const telegramApi = window?.Telegram?.WebApp;
+      if (telegramApi && telegramApi?.initDataUnsafe?.user) {
+        console.log('!', telegramApi.initDataUnsafe.user);
+        if (telegramApi && telegramApi.initData) {
+          console.log('!!', telegramApi.initData);
+          api(main, 'users.app.tg', {
+            url: telegramApi.initData,
+            // utm: main.utm,
+          }).then(res => {
+            console.log('OK3, ', res);
+            profileIn(res);
+            setAuth(res.token);
+          }).catch(err => {
+            console.log('NO3, ', err);
+            toastAdd({
+              header: t('system.error'),
+              text: err,
+              color: 'white',
+              background: 'danger',
+            });
+            // onModal('failed', 'Oops! It seems you have an unstable internet connection (we recommend disconnecting from weak networks or VPNs). Try to log in again. If the problem repeats - write us in the chat.');
+          });
+        } else {
+          // onModal('failed', 'Not use direct link, open telegram mini app: @...');
+        }
+      }
+    }
+  }, [main.token, profile.id]);
 
   // Online
   useEffect(() => {
@@ -84,29 +119,10 @@ const Body = ({
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             languages: navigator.languages,
           },
-        }, true).then(() => setToken(token));
-
-        // Telegram auth
-        if (telegramApi.initDataUnsafe && telegramApi.initDataUnsafe.user) {
-          if (telegramApi && telegramApi.initData) {
-            api(main, 'users.app.tg', {
-              url: telegramApi.initData,
-              // utm: main.utm,
-            }).then(res => {
-              dispatch(profileIn(res));
-            }).catch(err => {
-              dispatch(toastAdd({
-                header: t('system.error'),
-                text: err,
-                color: 'white',
-                background: 'danger',
-              }));
-              // onModal('failed', 'Oops! It seems you have an unstable internet connection (we recommend disconnecting from weak networks or VPNs). Try to log in again. If the problem repeats - write us in the chat.');
-            });
-          } else {
-            // onModal('failed', 'Not use direct link, open telegram mini app: @...');
-          }
-        }
+        }, true).then((res) => {
+          setToken(token);
+          setAuth(res.token);
+        });
       }
     }
   }, [rehydrated, router.isReady, router.query]);
@@ -169,10 +185,13 @@ const Body = ({
 };
 
 export default wrapper.withRedux(appWithTranslation(connect(state => state, {
+  toastAdd,
   changeLang,
   setToken,
+  setAuth,
   setUtm,
   changeTheme,
+  profileIn,
   onlineAdd,
   onlineDelete,
   onlineReset,

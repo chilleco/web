@@ -2,6 +2,7 @@ import { AnyAction } from 'redux';
 
 export default (state = {
   token: null,
+  auth: null,
   locale: process.env.NEXT_PUBLIC_LOCALE,
   theme: 'light',
   color: 'dark',
@@ -26,6 +27,12 @@ export default (state = {
       return {
         ...state,
         token: action.token,
+      };
+
+    case 'SET_AUTH':
+      return {
+        ...state,
+        auth: action.token,
       };
 
     case 'SET_UTM':

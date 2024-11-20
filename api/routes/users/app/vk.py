@@ -48,7 +48,7 @@ class Type(BaseModel):
     utm: str | None = None
 
 
-@router.post("/app/vk/")
+@router.post("/vk/")
 async def handler(
     request: Request,
     data: Type = Body(...),

@@ -45,16 +45,11 @@ def verify_telegram_web_app_data(telegram_init_data: str) -> tuple[bool, dict]:
 
 class Type(BaseModel):
     url: str
-    referral: str | None = None
-    login: str | None = None
-    name: str | None = None
-    surname: str | None = None
-    image: str | None = None
-    mail: str | None = None
+    # TODO: referral: str | None = None
     utm: str | None = None
 
 
-@router.post("/app/tg/")
+@router.post("/tg/")
 async def handler(
     request: Request,
     data: Type = Body(...),
@@ -75,12 +70,11 @@ async def handler(
         locale=data_user.get("language_code") or None,  # request.state.locale,
         login=data_user.get("username") or None,
         social=2,
-        user=data_user["id"],
+        user=int(data_user["id"]),
         name=data_user.get("first_name") or None,
         surname=data_user.get("last_name") or None,
-        image=data_user.image,
-        mail=data_user.mail,
-        utm=data_user.utm,
+        image=data_user.get("photo_url") or None,  # TODO: download
+        utm=data.utm,
         # TODO: premium=data_user.get("is_premium") or False,
         # TODO: mailing=data_user.get("allows_write_to_pm") or False,
     )

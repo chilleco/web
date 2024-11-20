@@ -14,6 +14,11 @@ export const setToken = (token) => ({
   token,
 });
 
+export const setAuth = (token) => ({
+  type: 'SET_AUTH',
+  token,
+});
+
 export const setUtm = (utm) => ({
   type: 'SET_UTM',
   utm,
