@@ -1,7 +1,7 @@
 # env/bin/python -m pip install -U --force-reinstall pip
 
 # App
-libdev==0.88
+libdev==0.89
 fastapi==0.115.5
 httptools==0.6.4  # NOTE: for routing
 uvicorn==0.32.0

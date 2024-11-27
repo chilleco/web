@@ -25,7 +25,7 @@ export default function upload(file) {
     // xhr.withCredentials = false
 
     const data = new FormData();
-    data.append('upload', file);
+    data.append('data', file);
 
     xhr.send(data);
   });

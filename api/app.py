@@ -14,7 +14,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from libdev.img import convert
-from libdev.s3 import upload_file
+from libdev.s3 import upload
 
 from lib import cfg, log, report
 from lib.sockets import asgi
@@ -145,9 +145,9 @@ async def ping():
 
 
 @app.post("/upload/")
-async def uploader(upload: bytes = File()):
+async def uploader(data: bytes = File()):
     """Upload optimized images to S3"""
-    url = await upload_file(await convert(upload), file_type="webp")
+    url = await upload(await convert(data), file_type="webp")
     return {
         "url": url,
     }

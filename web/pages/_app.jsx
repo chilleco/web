@@ -110,7 +110,7 @@ const Body = ({
         const token = generate();
         api(main, 'users.token', {
           token,
-          network: 'web',
+          network: main?.network ? main.network : 'web',
           utm,
           extra: {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,

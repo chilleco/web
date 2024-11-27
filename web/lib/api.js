@@ -31,7 +31,7 @@ const api = (
         // TODO: auto request on token creation
         await api(main, 'users.token', {
           token: main.token,
-          network: main?.network ? network : 'web',
+          network: main?.network ? main.network : 'web',
           utm: main.utm,
           extra: {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
