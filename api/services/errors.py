@@ -12,6 +12,11 @@ from consys.errors import BaseError
 from lib import log, report
 
 
+SUSPICIOUS_PATHS = {
+    "vendor/phpunit",
+}
+
+
 class ErrorsMiddleware(BaseHTTPMiddleware):
     """Formatting errors middleware"""
 
@@ -27,12 +32,29 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
         #     return await call_next(request)
 
         try:
+            for path in SUSPICIOUS_PATHS:
+                if path not in request.url.path:
+                    continue
+                return JSONResponse(
+                    status_code=403,
+                    content={
+                        "status": "error",
+                        "error": "Forbidden",
+                        "detail": path,
+                    },
+                )
+
             # # Create a new request with the cached body
             # body = await request.body()
             # request = Request(
             #     request.scope,
             #     receive=lambda: {"type": "http.request", "body": request_body},
             # )
+
+            # log.info(f"Method: {request.method}")
+            # log.info(f"URL: {request.url}")
+            # log.info(f"Headers: {dict(request.headers)}")
+            # log.info(f"Query Params: {dict(request.query_params)}")
 
             response = await call_next(request)
 
@@ -56,7 +78,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
                     response_body,
                     {
                         "method": request.method,
-                        "url": getattr(request.state, "url", None),
+                        "url": getattr(request.state, "url", None) or request.url,
                         "status": response.status_code,
                         # "request": request_body,
                     },
