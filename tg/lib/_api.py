@@ -61,6 +61,7 @@ async def api(chat, method, data=None, locale=None, force=False):
             cfg("api") + method.replace(".", "/") + ("/" if method else ""),
             data,
             headers=headers,
+            timeout=15,
         )
 
         if code != 502:
@@ -189,7 +190,8 @@ async def upload(chat, data):
     """Upload image"""
     _, res = await fetch(
         f"{cfg('api')}upload/",
-        files={"upload": data},
+        files={"data": data},
         headers={"Authorization": f"Bearer {tokens[chat.id]}"},
+        timeout=60,
     )
     return res["url"]

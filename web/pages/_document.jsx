@@ -1,6 +1,5 @@
-import Document, {
-  Html, Head, Main, NextScript,
-} from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+// import Script from 'next/script';
 
 export default class MyDocument extends Document {
   render() {
@@ -46,6 +45,20 @@ export default class MyDocument extends Document {
           />
           <Main />
           <NextScript />
+
+          {/* Google Analytics */}
+          {/* <Script
+            strategy="afterInteractive" // beforeInteractive
+            src="https://www.googletagmanager.com/gtag/js?id=G-5WJ60T06ZQ"
+          />
+          <Script
+            strategy="afterInteractive" // beforeInteractive
+            dangerouslySetInnerHTML={{
+              __html: `
+              function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-5WJ60T06ZQ")
+              `,
+            }}
+          /> */}
         </body>
       </Html>
     );

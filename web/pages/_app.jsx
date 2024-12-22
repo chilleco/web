@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
+// import { YMInitializer } from 'react-yandex-metrika';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { appWithTranslation, useTranslation } from 'next-i18next';
@@ -177,6 +178,18 @@ const Body = ({
       <Toasts toasts={system.toasts} />
 
       <Footer />
+
+      {/* Yandex Metrika */}
+      {/* <YMInitializer
+        accounts={[99171217]}
+        options={{
+          clickmap: true,
+          trackLinks: true,
+          accurateTrackBounce: true,
+          webvisor: true,
+        }}
+        version="2"
+      /> */}
     </div>
   );
 };
