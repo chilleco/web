@@ -24,9 +24,13 @@ async def prepare_message(data, action="typing"):
         message = data
         callback = None
 
+    locale = message.from_user.language_code
+    if locale != "ru":
+        locale = "en"
+
     chat = message.chat
     if chat.id < 0:
-        return None, None, None
+        return None, None, None, locale
 
     if callback:
         text = callback.data
@@ -43,16 +47,15 @@ async def prepare_message(data, action="typing"):
     except Exception as e:  # pylint: disable=broad-except
         await report.error("prepare_message", error=e)
 
-    locale = message.from_user.language_code
     image = message.from_user.get_profile_photos()
 
     if await check_user(
         chat,
         public=True,
         text=text,
-        locale=locale,
+        locale=message.from_user.language_code,
         image=image,
     ):
-        return None, None, None
+        return None, None, None, locale
 
-    return chat, text, cache
+    return chat, text, cache, locale

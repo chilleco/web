@@ -4,7 +4,9 @@ Media handler
 
 import io
 
-from lib import api, upload, cfg, report
+from aiogram.utils.exceptions import MessageCantBeForwarded
+
+from lib import api, upload, log, cfg, report
 from lib.tg import tg
 from lib.queue import save, get
 from middlewares.prepare_message import rm_last
@@ -180,13 +182,17 @@ async def handle_doc(message):
                 **cache,
             },
         )
-        await tg.forward(cfg("bug_chat"), chat.id, message.message_id)
 
-        text = "Передал твой запрос!"
-        message_id = await tg.send(
-            chat.id,
-            text,
-            buttons=[{"name": "Мои посты", "data": "menu"}],
-        )
-        cache["m"] = message_id
-        save(chat.id, cache)
+        try:
+            await tg.forward(cfg("bug_chat"), message.chat.id, message.message_id)
+        except MessageCantBeForwarded:
+            log.warning(message.chat.id, message.message_id)
+        else:
+            text = "Передал твой запрос!"
+            message_id = await tg.send(
+                chat.id,
+                text,
+                buttons=[{"name": "Мои посты", "data": "menu"}],
+            )
+            cache["m"] = message_id
+            save(chat.id, cache)

@@ -16,7 +16,7 @@ from handlers.posts import send_posts
 async def handler_menu_command(message):
     """Menu handler"""
 
-    chat, _, cache = await prepare_message(message)
+    chat, _, cache, _ = await prepare_message(message)
     if chat is None:
         return
 
@@ -28,7 +28,7 @@ async def handler_menu_command(message):
 async def handler_menu_callback(message):
     """Menu handler"""
 
-    chat, _, cache = await prepare_message(message)
+    chat, _, cache, _ = await prepare_message(message)
     if chat is None:
         return
 
@@ -40,7 +40,7 @@ async def handler_menu_callback(message):
 async def handler_menu_text(message):
     """Menu handler"""
 
-    chat, _, cache = await prepare_message(message)
+    chat, _, cache, _ = await prepare_message(message)
     if chat is None:
         return
 
@@ -52,7 +52,7 @@ async def handler_menu_text(message):
 async def handler_profile_command(message):
     """Profile"""
 
-    chat, _, _ = await prepare_message(message)
+    chat, _, _, _ = await prepare_message(message)
     if chat is None:
         return
 
@@ -81,7 +81,7 @@ async def handler_profile_command(message):
 async def handler_profile_callback(message):
     """Profile"""
 
-    chat, _, _ = await prepare_message(message)
+    chat, _, _, _ = await prepare_message(message)
     if chat is None:
         return
 
@@ -110,7 +110,7 @@ async def handler_profile_callback(message):
 async def handler_profile_text(message):
     """Profile"""
 
-    chat, _, _ = await prepare_message(message)
+    chat, _, _, _ = await prepare_message(message)
     if chat is None:
         return
 

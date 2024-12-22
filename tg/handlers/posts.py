@@ -76,7 +76,7 @@ async def send_posts(chat, posts=None):
 async def get_post(callback):
     """Get"""
 
-    chat, text, cache = await prepare_message(callback)
+    chat, text, cache, _ = await prepare_message(callback)
     if chat is None:
         return
 
@@ -102,7 +102,7 @@ async def get_post(callback):
 async def edit_title(callback):
     """Edit title"""
 
-    chat, _, cache = await prepare_message(callback)
+    chat, _, cache, _ = await prepare_message(callback)
     if chat is None:
         return
 
@@ -117,7 +117,7 @@ async def edit_title(callback):
 async def edit_data(callback):
     """Edit data"""
 
-    chat, _, cache = await prepare_message(callback)
+    chat, _, cache, _ = await prepare_message(callback)
     if chat is None:
         return
 
@@ -132,7 +132,7 @@ async def edit_data(callback):
 async def edit_image(callback):
     """Edit image"""
 
-    chat, _, cache = await prepare_message(callback)
+    chat, _, cache, _ = await prepare_message(callback)
     if chat is None:
         return
 
@@ -147,7 +147,7 @@ async def edit_image(callback):
 async def create(callback):
     """Create"""
 
-    chat, _, _ = await prepare_message(callback)
+    chat, _, _, _ = await prepare_message(callback)
     if chat is None:
         return
 
@@ -168,7 +168,7 @@ async def create(callback):
 async def delete(callback):
     """Delete"""
 
-    chat, _, cache = await prepare_message(callback)
+    chat, _, cache, _ = await prepare_message(callback)
     if chat is None:
         return
 
@@ -201,7 +201,7 @@ async def delete(callback):
 async def deletey(callback):
     """Approve delete"""
 
-    chat, _, cache = await prepare_message(callback)
+    chat, _, cache, _ = await prepare_message(callback)
     if chat is None:
         return
 
@@ -217,7 +217,7 @@ async def finish(callback):
     """Finish"""
 
     # TODO: upload_document, typing
-    chat, text, cache = await prepare_message(callback, "upload_document")
+    chat, text, cache, _ = await prepare_message(callback, "upload_document")
     if chat is None:
         return
 

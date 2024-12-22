@@ -27,7 +27,7 @@ def get_user(chat_id):
 async def start(message):
     """Start handler"""
 
-    chat, text, cache = await prepare_message(message)
+    chat, text, cache, locale = await prepare_message(message)
     if chat is None:
         return
 
@@ -95,7 +95,7 @@ async def start(message):
 async def info(message):
     """Info handler"""
 
-    chat, _, cache = await prepare_message(message)
+    chat, _, cache, locale = await prepare_message(message)
     if chat is None:
         return
 
@@ -122,13 +122,19 @@ async def info(message):
     save(chat.id, cache)
 
 
+TEXTS_FEEDBACK = {
+    "en": "Forwarded your feedback",
+    "ru": "Передал твой фидбек",
+}
+
+
 @tg.dp.message_handler()
 async def echo(message):
     """Main handler"""
 
     # TODO: move sub functions to individual handlers
 
-    chat, text, cache = await prepare_message(message)
+    chat, text, cache, locale = await prepare_message(message)
     if chat is None:
         return
 
@@ -190,6 +196,7 @@ async def echo(message):
         "Feedback",
         {
             "text": text,
+            "locale": locale,
             **cache,
         },
     )
@@ -201,5 +208,7 @@ async def echo(message):
         text,
         buttons=[{"name": "Мои посты", "data": "menu"}],
     )
+    await message.reply(TEXTS_FEEDBACK[locale])
+
     cache["m"] = message_id
     save(chat.id, cache)
