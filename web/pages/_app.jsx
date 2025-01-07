@@ -40,11 +40,22 @@ const Body = ({
 
   useEffect(() => {
     // Telegram
-    const telegramApi = window?.Telegram?.WebApp;
-    if (telegramApi) {
-      telegramApi.expand();
-      telegramApi.disableVerticalSwipes();
+    const tma = window?.Telegram?.WebApp;
+    if (tma) {
+      if (tma.initDataUnsafe?.write_access) {
+        tma.requestWriteAccess().then(() => {
+          console.log('WRITE');
+        });
+      }
+
+      tma.expand();
+      tma.disableVerticalSwipes();
       changeNetwork('tg');
+
+      const utm = tma.initDataUnsafe?.start_param;
+      if (utm) {
+        setUtm(utm);
+      }
     }
 
     // // Bootstrap
@@ -62,15 +73,15 @@ const Body = ({
   // Telegram auth
   useEffect(() => {
     if (main.token && !profile.id) {
-      const telegramApi = window?.Telegram?.WebApp;
-      if (telegramApi && telegramApi?.initDataUnsafe?.user) {
-        if (telegramApi && telegramApi.initData) {
+      const tma = window?.Telegram?.WebApp;
+      if (tma && tma?.initDataUnsafe?.user) {
+        if (tma && tma.initData) {
           api(main, 'users.app.tg', {
-            url: telegramApi.initData,
-            // utm: main.utm,
+            url: tma.initData,
+            utm: main.utm,
           }).then(res => {
-            profileIn(res);
             setAuth(res.token);
+            profileIn(res);
           }).catch(err => {
             toastAdd({
               header: t('system.error'),
@@ -118,8 +129,8 @@ const Body = ({
             languages: navigator.languages,
           },
         }, true).then((res) => {
-          setToken(token);
           setAuth(res.token);
+          setToken(token);
         });
       }
     }

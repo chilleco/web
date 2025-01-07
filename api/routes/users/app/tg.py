@@ -11,23 +11,29 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorWrong, ErrorInvalid
 
-from lib import cfg
+from lib import cfg, report
 from routes.users.auth import wrap_auth
 
 
 router = APIRouter()
 
 
-def verify_telegram_web_app_data(telegram_init_data: str) -> tuple[bool, dict]:
+async def verify_telegram_web_app_data(telegram_init_data: str) -> tuple[bool, dict]:
     if not telegram_init_data:
         return False, {}
 
-    telegram_init_data_unquote = unquote(telegram_init_data)
-    init_data = dict(qc.split("=") for qc in telegram_init_data_unquote.split("&"))
-    hash_value = init_data.pop("hash", None)
-    data_to_check = "\n".join(
-        f"{key}={init_data[key]}" for key in sorted(init_data.keys()) if key != "hash"
-    )
+    try:
+        telegram_init_data_unquote = unquote(telegram_init_data)
+        init_data = dict(qc.split("=") for qc in telegram_init_data_unquote.split("&"))
+        hash_value = init_data.pop("hash", None)
+        data_to_check = "\n".join(
+            f"{key}={init_data[key]}"
+            for key in sorted(init_data.keys())
+            if key != "hash"
+        )
+    except ValueError:
+        await report.error("Telegram auth data", {"data": telegram_init_data})
+        return False, {}
 
     secret_key_stage1 = hmac.new(
         key=bytes("WebAppData", "utf-8"),
@@ -54,7 +60,7 @@ async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    verified, init_data = verify_telegram_web_app_data(data.url)
+    verified, init_data = await verify_telegram_web_app_data(data.url)
     if not verified:
         raise ErrorInvalid("url")
 
