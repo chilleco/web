@@ -429,7 +429,7 @@ export default ({ post, setPost }) => {
               {post.author && post.author.title ? (
                 <div className={styles.user}>
                   <div className="me-2">
-                    <Hexagon url={post.author.image || '/user.png'} />
+                    <Hexagon url={post.author.image || '/empty.png'} />
                   </div>
                   {post.author.title ? post.author.title : t('system.guest')}
                 </div>

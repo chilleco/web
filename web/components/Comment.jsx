@@ -19,7 +19,7 @@ export const Comment = ({ comment }) => {
   return (
     <div className={styles.comment}>
       <div className={styles.header}>
-        <Hexagon url={(comment.user && comment.user.image) || '/user.png'} />
+        <Hexagon url={(comment.user && comment.user.image) || '/empty.png'} />
         <div className={styles.title}>
           <div className={styles.user}>
             {comment.user && comment.user.title ? comment.user.title : t('system.guest')}

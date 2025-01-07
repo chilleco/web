@@ -101,7 +101,7 @@ const Container = ({
       <div>
         <div className="half_medium">
           <Upload
-            image={image === '/user.png' ? null : image}
+            image={image === '/empty.png' ? null : image}
             setImage={setImage}
           />
         </div>

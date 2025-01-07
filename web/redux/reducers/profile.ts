@@ -8,8 +8,8 @@ export default (state = {
   title: null,
   phone: null,
   mail: null,
-  image: '/user.png',
-  image_optimize: '/user.png',
+  image: '/empty.png',
+  image_optimize: '/empty.png',
   social: [],
   status: 2,
 }, action: AnyAction) => {
@@ -23,8 +23,8 @@ export default (state = {
         title: action.title,
         phone: action.phone,
         mail: action.mail,
-        image: action.image || '/user.png',
-        image_optimize: action.image || '/user.png',
+        image: action.image || '/empty.png',
+        image_optimize: action.image || '/empty.png',
         status: action.status,
       };
 

@@ -44,7 +44,7 @@ export default () => {
         <h2>{t('system.online')}</h2>
         {online.users.map(user => (
           <div className={styles.user} key={user.id}>
-            <Hexagon url={user.image || '/user.png'} />
+            <Hexagon url={user.image || '/empty.png'} />
             <div>
               {user.name && user.surname ? (
                 `${user.name || ''} ${user.surname || ''} (@${user.login})`
