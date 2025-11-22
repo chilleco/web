@@ -1,18 +1,17 @@
-version: "3.11"
 services:
   db:
-    image: mongo:6.0
+    image: mongo:7.0
     ports:
       - 27017:27017
 
   test:
     image: test
     build:
-      context: ../
+      context: ../../api
       dockerfile: ./tests/Dockerfile
     depends_on:
       - db
-    env_file: ../.env
+    env_file: ../../.env
     volumes:
-      - ../scripts:/app/scripts
+      - ../../api/scripts:/app/scripts
     command: make test
