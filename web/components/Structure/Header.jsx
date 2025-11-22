@@ -101,6 +101,14 @@ const Navigation = ({ setExpanded }) => {
         <i className="fa-solid fa-folder-open" />
         {t('structure.catalog')}
       </Link>
+      <Link
+        href="/giveaway/"
+        className="yellow"
+        onClick={() => setExpanded(false)}
+      >
+        <i className="fa-solid fa-gift" />
+        {t('structure.giveaway')}
+      </Link>
       {/* Quiz */}
     </div>
   );
