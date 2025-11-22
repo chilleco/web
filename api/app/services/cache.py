@@ -1,7 +1,3 @@
-"""
-Cache
-"""
-
 from collections import defaultdict
 
 from lib.queue import save

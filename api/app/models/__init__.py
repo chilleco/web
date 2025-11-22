@@ -1,7 +1,3 @@
-"""
-Base model of DB object
-"""
-
 from consys import make_base, Attribute
 
 from lib import cfg

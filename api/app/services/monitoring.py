@@ -1,7 +1,3 @@
-"""
-Monitoring requests
-"""
-
 import time
 
 from fastapi import Request

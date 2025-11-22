@@ -1,0 +1,53 @@
+[project]
+name = "api"
+version = "1.0.0"
+description = "API backend service"
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    # App
+    "requests==2.31.0",
+    "libdev==0.67",
+    "fastapi==0.90.1",  # FIXME: higher version not working
+    "httptools==0.6.0",  # NOTE: for routing
+    "uvicorn==0.20.0",  # FIXME: higher version not working
+    "PyJWT==2.8.0",
+    "python-multipart==0.0.6",  # NOTE: for file upload
+    "slowapi==0.1.8",
+
+    # Jobs
+    "dramatiq==1.17.1",
+    "APScheduler==3.11.0",
+
+    # Users
+    "userhub==0.14",
+
+    # DB
+    "consys==0.30",
+
+    # MQ
+    "redis==4.6.0",
+
+    # Sockets
+    "python-socketio==5.8.0",
+    "websockets==11.0.3",  # NOTE: for Socket.IO
+
+    # Monitoring
+    "prometheus_fastapi_instrumentator==6.1.0",
+
+    # Telegram
+    "aiogram==2.25.1",
+
+    # Reports
+    "tgreports==0.16",
+
+    # Docs
+    "google-auth==2.36.0",
+    "pygsheets==2.0.6",
+    "pandas==2.2.3",
+
+    # # SMS
+    # "smsc==0.1.1",
+]
+
+[tool.uv]
+dev-dependencies = []

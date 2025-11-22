@@ -1,15 +1,11 @@
-"""
-API Endpoints (Transport level)
-"""
-
 import traceback
 
 from fastapi import FastAPI, Request, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-
 from prometheus_fastapi_instrumentator import Instrumentator
+from starlette.middleware.errors import ServerErrorMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -22,6 +18,7 @@ from services.parameters import ParametersMiddleware
 from services.monitoring import MonitoringMiddleware
 from services.errors import ErrorsMiddleware
 from services.access import AccessMiddleware
+from services.limiter import get_uniq
 from services.on_startup import on_startup
 from routes import router
 
@@ -31,8 +28,10 @@ log.add("/backup/app.log")  # FIXME: file (to tgreports)
 app = FastAPI(title=cfg("NAME", "API"), root_path="/api")
 
 
-# Prometheus
-Instrumentator().instrument(app).expose(app)
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "api"}
 
 
 @app.on_event("startup")
@@ -42,6 +41,10 @@ async def startup():
 
     # Report about start
     await report.info("Restart server")
+
+    # Prometheus
+    if cfg("mode") in {"PRE", "PROD"}:
+        Instrumentator().instrument(app).expose(app)
 
     # Tasks on start
     await on_startup()
@@ -88,12 +91,7 @@ async def uncaught_exception_handler(request: Request, exc: Exception):
 # Limiter
 # NOTE: 6th middleware
 limits = ["25/second", "100/minute", "2500/hour", "10000/day"]
-app.state.limiter = Limiter(
-    key_func=lambda request: request.state.ip
-    or request.state.user
-    or request.state.token,
-    default_limits=limits,
-)
+app.state.limiter = Limiter(key_func=get_uniq, default_limits=limits)
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
@@ -114,6 +112,7 @@ app.add_middleware(
 # Errors
 # NOTE: 4th middleware
 app.add_middleware(ErrorsMiddleware)
+app.add_middleware(ServerErrorMiddleware, handler=None)  # FIXME
 
 # Monitoring
 # NOTE: 3rd middleware

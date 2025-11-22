@@ -1,7 +1,3 @@
-"""
-Sending SMS messages
-"""
-
 from libdev.cfg import cfg
 
 

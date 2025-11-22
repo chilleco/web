@@ -2,15 +2,17 @@
 jobs=2
 
 [MESSAGES CONTROL]
-disable=missing-docstring,
-        unused-argument,
-        duplicate-code
+disable=unsubscriptable-object,unused-argument,no-name-in-module,duplicate-code,missing-module-docstring
 
 [FORMAT]
 max-line-length=88
 
 [MISCELLANEOUS]
-notes=BUG,UGLY # TODO,FIXME
+notes=FIXME,BUG,UGLY
+
+[BASIC]
+good-names=i,j,e,f,k,v,by,db,ip,id,to,rm,el,tz,tg,vk
+no-docstring-rgx=[(__.*__)(Type)]
 
 [DESIGN]
 max-args=8

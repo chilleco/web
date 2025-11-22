@@ -1,5 +1,5 @@
 """
-Sets up and starts scheduled tasks using APScheduler
+Sets up and starts scheduled tasks
 """
 
 from apscheduler.schedulers.blocking import BlockingScheduler

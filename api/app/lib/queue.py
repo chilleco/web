@@ -1,5 +1,5 @@
 """
-Message Broker via Redis
+Message Queue
 """
 
 import pickle
@@ -78,3 +78,11 @@ def get(key, default=None):
         return default
 
     return pickle.loads(data)
+
+
+def increment(key):
+    try:
+        return redis.incr(key)
+    except Exception as e:  # pylint: disable=broad-except
+        print(f"Redis increment error: {e}")
+        return None
