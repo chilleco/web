@@ -7,9 +7,6 @@ services:
 
   api:
     volumes:
-      # For logs
-      - ${DATA_PATH}/logs/api.err:/app/app.err
-      - ${DATA_PATH}/logs/api.log:/app/app.log
       # For monitoring
       - /proc/cpuinfo:/proc/cpuinfo:ro
     ports:
@@ -18,7 +15,7 @@ services:
 
   # jobs:
   #   image: ${PROJECT_NAME}/jobs
-  #   build: ../../backend
+  #   build: ../../api
   #   restart: unless-stopped
   #   env_file: ../../.env
   #   environment:

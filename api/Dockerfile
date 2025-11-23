@@ -9,13 +9,16 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     gcc \
     g++ \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+# NOTE: without relying on ghcr.io access
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    mv /root/.local/bin/uv /usr/local/bin/uv
 
 # Set working directory
-WORKDIR /app
+WORKDIR /
 
 # Copy dependency files
 COPY pyproject.toml uv.lock* ./
@@ -26,17 +29,16 @@ ENV UV_COMPILE_BYTECODE=1 \
     UV_PYTHON_DOWNLOADS=never
 
 # Install dependencies in virtual environment
-RUN uv sync --frozen --no-cache
+RUN if [ -f uv.lock ]; then \
+        uv sync --frozen --no-cache; \
+    else \
+        uv sync --no-cache; \
+    fi
 
 # ========================================
 # Final Stage - Runtime image
 # ========================================
 FROM python:3.11-slim AS final
-
-# Metadata
-LABEL maintainer="Alex Poloz <alexypoloz@gmail.com>"
-LABEL description="FastAPI backend service"
-LABEL version="1.0.0"
 
 # Install only runtime dependencies
 RUN apt-get update && apt-get install -y \
@@ -49,22 +51,30 @@ RUN groupadd --gid 1000 appuser && \
     useradd --uid 1000 --gid appuser --shell /bin/bash --create-home appuser
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY --from=builder /usr/local/bin/uv /usr/local/bin/uv
 
 # Set working directory
 WORKDIR /app
 
 # Copy virtual environment from builder
-COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
+COPY --from=builder /.venv /.venv
 
 # Set environment variables for runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app \
-    PATH="/app/.venv/bin:$PATH"
+    PYTHONPATH=/ \
+    PATH="/.venv/bin:$PATH"
 
 # Copy application code
-COPY --chown=appuser:appuser . .
+COPY --chown=appuser:appuser /app /app
+
+# Ensure log files under /app/logs exist and expose them via the expected paths
+# FIXME
+RUN mkdir -p /app/logs && \
+    touch /app/logs/api.log /app/logs/api.err && \
+    ln -sf /app/logs/api.log /app/app.log && \
+    ln -sf /app/logs/api.err /app/app.err && \
+    chown -R appuser:appuser /app/logs
 
 # Switch to non-root user
 USER appuser

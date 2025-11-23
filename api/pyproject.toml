@@ -1,15 +1,13 @@
 [project]
 name = "api"
 version = "1.0.0"
-description = "API backend service"
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10,<3.15"
 dependencies = [
     # App
-    "requests==2.31.0",
-    "libdev==0.67",
-    "fastapi==0.90.1",  # FIXME: higher version not working
+    "libdev==0.95",
+    "fastapi==0.121.3",
     "httptools==0.6.0",  # NOTE: for routing
-    "uvicorn==0.20.0",  # FIXME: higher version not working
+    "uvicorn==0.32.0",
     "PyJWT==2.8.0",
     "python-multipart==0.0.6",  # NOTE: for file upload
     "slowapi==0.1.8",
@@ -22,7 +20,7 @@ dependencies = [
     "userhub==0.14",
 
     # DB
-    "consys==0.30",
+    "consys==0.43",
 
     # MQ
     "redis==4.6.0",

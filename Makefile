@@ -86,7 +86,7 @@ test:
 	cd infra/compose && docker compose --env-file ../../.env -f compose.test-api.yml -p ${PROJECT_NAME} up --build --exit-code-from test
 	cd infra/compose && docker compose --env-file ../../.env -f compose.test-web.yml -p ${PROJECT_NAME} up --build --exit-code-from test
 
-test-backend:
+test-api:
 	cd infra/compose && docker compose --env-file ../../.env -f compose.test-api.yml -p ${PROJECT_NAME} up --build --exit-code-from test
 
 test-web:

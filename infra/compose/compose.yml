@@ -24,6 +24,9 @@ services:
       - ${DATA_PATH}/load:/data/load
       - ${DATA_PATH}/backup:/backup
       - ../../api/scripts:/app/scripts
+      # For logs
+      # FIXME
+      - ${DATA_PATH}/logs:/app/logs
     depends_on:
       - mq
 
