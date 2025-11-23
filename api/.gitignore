@@ -1,11 +1,8 @@
 # Cache
 ## Python
-**/__pycache__/
-**/*.pyc
+__pycache__/
+*.pyc
 
 # Environments
 env/
-
-# Logs
-app.log
-app.err
+venv/

@@ -1,9 +1,0 @@
-version: "3.11"
-services:
-  test:
-    image: node:20.15.0
-    build: ../web
-    volumes:
-      - ../web:/app
-    working_dir: /app
-    command: bash -c "npm i && node_modules/.bin/eslint . --ext .js --ext .jsx"
