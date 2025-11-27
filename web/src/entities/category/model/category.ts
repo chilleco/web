@@ -52,10 +52,12 @@ export interface UpdateCategoryRequest {
 }
 
 export interface GetCategoriesRequest {
+  id?: number;        // Direct category id (API supports subtree fetch)
+  url?: string;       // Fetch by url (API will resolve to id internally)
   locale?: string;
-  parent?: number;
+  parent?: number;    // Legacy parent filter - mapped to id for subtree requests
   status?: number;
-  include_tree?: boolean;
+  include_tree?: boolean; // Legacy flag - API always returns a tree
 }
 
 export interface CategoryWithSubcategories extends Category {

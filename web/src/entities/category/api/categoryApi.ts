@@ -1,12 +1,12 @@
 import { api } from '@/shared/services/api/client';
 import { shouldUseMockFallback, logApiWarning, addMockDelay } from '@/shared/config/api';
-import type { 
-  Category, 
-  CategoryTree, 
+import type {
+  Category,
+  CategoryTree,
   CategoryWithSubcategories,
-  CreateCategoryRequest, 
+  CreateCategoryRequest,
   UpdateCategoryRequest,
-  GetCategoriesRequest 
+  GetCategoriesRequest
 } from '../model/category';
 
 // Mock categories for development/fallback
@@ -38,92 +38,130 @@ const mockCategories: Category[] = [
 ];
 
 interface CategoriesResponse {
-  categories: Category[];
+  categories?: Category | Category[];
+}
+
+function resolveCategoryId(params: GetCategoriesRequest): number | undefined {
+  if (typeof params.id === 'number') {
+    return params.id;
+  }
+  if (typeof params.parent === 'number' && params.parent > 0) {
+    return params.parent;
+  }
+  return undefined;
+}
+
+function filterCategoriesByStatus(categories: Category[], status?: number): Category[] {
+  if (status === undefined) return categories;
+
+  return categories
+    .filter(category => category.status === status)
+    .map(category => ({
+      ...category,
+      categories: category.categories
+        ? filterCategoriesByStatus(category.categories, status)
+        : category.categories
+    }));
+}
+
+function normalizeCategoriesResponse(
+  response: CategoriesResponse,
+  params: GetCategoriesRequest
+): Category[] {
+  const { categories } = response;
+  if (!categories) return [];
+
+  const statusFilter = params.status;
+
+  if (Array.isArray(categories)) {
+    return filterCategoriesByStatus(categories, statusFilter);
+  }
+
+  const requestedCategory = categories;
+
+  // When requesting a parent category, return its direct children for compatibility
+  if (params.parent !== undefined && params.parent > 0) {
+    return filterCategoriesByStatus(requestedCategory.categories || [], statusFilter);
+  }
+
+  // For specific id/url requests, return the category itself (with nested tree)
+  return filterCategoriesByStatus([requestedCategory], statusFilter);
+}
+
+function buildCategoriesRequest(params: GetCategoriesRequest) {
+  const payload: Record<string, unknown> = {};
+
+  const resolvedId = resolveCategoryId(params);
+  if (resolvedId) {
+    payload.id = resolvedId;
+  }
+  if (params.url) {
+    payload.url = params.url;
+  }
+  if (params.locale) {
+    payload.locale = params.locale;
+  }
+
+  return payload;
+}
+
+async function fetchCategories(params: GetCategoriesRequest): Promise<Category[]> {
+  const response = await api.post<CategoriesResponse>('/categories/get/', buildCategoriesRequest(params));
+  return normalizeCategoriesResponse(response, params);
+}
+
+function filterMockCategories(params: GetCategoriesRequest): Category[] {
+  let filtered = [...mockCategories];
+
+  if (params.locale) {
+    filtered = filtered.filter(cat => cat.locale === params.locale);
+  }
+
+  if (params.parent !== undefined) {
+    filtered = filtered.filter(cat => (cat.parent || 0) === params.parent);
+  }
+
+  if (params.status !== undefined) {
+    filtered = filtered.filter(cat => cat.status === params.status);
+  }
+
+  return filtered;
 }
 
 export async function getCategories(params: GetCategoriesRequest = {}): Promise<Category[]> {
   if (shouldUseMockFallback()) {
     try {
-      // Use new REST endpoint with query parameters
-      const queryParams = new URLSearchParams();
-      if (params.locale) queryParams.append('locale', params.locale);
-      if (params.parent !== undefined) queryParams.append('parent', params.parent.toString());
-      if (params.status !== undefined) queryParams.append('status', params.status.toString());
-      queryParams.append('include_tree', 'true'); // Get nested structure
-      
-      const response = await api.get<CategoriesResponse>(`/categories/?${queryParams.toString()}`);
-      return response.categories || [];
+      return await fetchCategories(params);
     } catch (error) {
       logApiWarning('Categories API not available, using mock data', error);
       await addMockDelay();
-      
-      // Filter mock data based on parameters
-      let filtered = [...mockCategories];
-      
-      if (params.locale) {
-        filtered = filtered.filter(cat => cat.locale === params.locale);
-      }
-      
-      if (params.parent !== undefined) {
-        filtered = filtered.filter(cat => cat.parent === params.parent);
-      }
-      
-      if (params.status !== undefined) {
-        filtered = filtered.filter(cat => cat.status === params.status);
-      }
-      
-      return filtered;
+      return filterMockCategories(params);
     }
-  } else {
-    // Production mode - use new REST endpoint
-    const queryParams = new URLSearchParams();
-    if (params.locale) queryParams.append('locale', params.locale);
-    if (params.parent !== undefined) queryParams.append('parent', params.parent.toString());
-    if (params.status !== undefined) queryParams.append('status', params.status.toString());
-    queryParams.append('include_tree', 'true'); // Get nested structure
-    
-    const response = await api.get<CategoriesResponse>(`/categories/?${queryParams.toString()}`);
-    return response.categories || [];
   }
+
+  // Production mode - use the official API route
+  return fetchCategories(params);
 }
 
 export async function getCategoryTree(): Promise<CategoryTree[]> {
-  if (shouldUseMockFallback()) {
-    try {
-      const response = await api.get<CategoriesResponse>('/categories/tree/');
-      return response.categories as CategoryTree[] || [];
-    } catch (error) {
-      logApiWarning('Category tree API not available, using fallback', error);
-      return [];
-    }
-  } else {
-    const response = await api.get<CategoriesResponse>('/categories/tree/');
-    return response.categories as CategoryTree[] || [];
-  }
+  return getCategories() as Promise<CategoryTree[]>;
 }
 
-export async function getCategory(id: number): Promise<Category> {
-  if (shouldUseMockFallback()) {
-    try {
-      const response = await api.get<Category>(`/categories/${id}/`);
-      return response;
-    } catch (error) {
-      logApiWarning(`Category ${id} API not available, checking mock data`, error);
-      const mockCategory = mockCategories.find(cat => cat.id === id);
-      if (!mockCategory) {
-        throw new Error('Category not found');
-      }
-      return mockCategory;
-    }
-  } else {
-    return await api.get<Category>(`/categories/${id}/`);
+export async function getCategory(id: number, locale?: string): Promise<Category> {
+  const categories = await getCategories({ id, locale });
+  const category = categories[0];
+
+  if (!category) {
+    throw new Error('Category not found');
   }
+
+  return category;
 }
 
 // Helper function to build the complete parent hierarchy for a category
 function buildParentHierarchy(categories: Category[], targetCategory: Category): Array<{ id: number; url: string; title: string; }> {
   const parents: Array<{ id: number; url: string; title: string; }> = [];
-  
+
   // Helper to find category by ID in nested structure
   const findCategoryById = (cats: Category[], id: number): Category | null => {
     for (const cat of cats) {
@@ -137,10 +175,10 @@ function buildParentHierarchy(categories: Category[], targetCategory: Category):
     }
     return null;
   };
-  
+
   // Build the path by traversing up through parent IDs
   let currentParentId = targetCategory.parent;
-  
+
   while (currentParentId && currentParentId !== 0) {
     const parent = findCategoryById(categories, currentParentId);
     if (parent) {
@@ -155,7 +193,7 @@ function buildParentHierarchy(categories: Category[], targetCategory: Category):
       break;
     }
   }
-  
+
   return parents;
 }
 
@@ -212,7 +250,7 @@ export async function getCategoryByUrl(url: string, locale?: string): Promise<Ca
         return result;
       }
     }
-    
+
     // Fallback: search without locale filter to find categories with different locales
     const allCategories = await getCategories({ parent: 0, status: 1, include_tree: true });
     return findCategoryByUrlRecursive(allCategories, url);
@@ -249,7 +287,7 @@ export async function getSubcategories(parentId?: number, locale?: string): Prom
 }
 
 export async function getCategoryWithSubcategories(
-  id: number, 
+  id: number,
   locale?: string
 ): Promise<CategoryWithSubcategories> {
   const category = await getCategory(id);
@@ -265,7 +303,7 @@ export async function createCategory(data: CreateCategoryRequest): Promise<Categ
     } catch (error) {
       logApiWarning('Create category API not available, using mock response', error);
       await addMockDelay();
-      
+
       // Return mock created category
       const newCategory: Category = {
         id: Math.max(...mockCategories.map(c => c.id)) + 1,
@@ -278,11 +316,12 @@ export async function createCategory(data: CreateCategoryRequest): Promise<Categ
         created: Date.now(),
         updated: Date.now()
       };
-      
+
       mockCategories.push(newCategory);
       return newCategory;
     }
   } else {
+    // Production mode - global error handler will handle errors and show toast notifications
     return api.post<Category>('/categories/', data);
   }
 }
@@ -295,23 +334,24 @@ export async function updateCategory(id: number, data: UpdateCategoryRequest): P
     } catch (error) {
       logApiWarning(`Update category ${id} API not available, using mock response`, error);
       await addMockDelay();
-      
+
       // Find and update mock category
       const categoryIndex = mockCategories.findIndex(cat => cat.id === id);
       if (categoryIndex === -1) {
         throw new Error('Category not found');
       }
-      
+
       const updatedCategory = {
         ...mockCategories[categoryIndex],
         ...data,
         updated: Date.now()
       };
-      
+
       mockCategories[categoryIndex] = updatedCategory;
       return updatedCategory;
     }
   } else {
+    // Production mode - global error handler will handle errors and show toast notifications
     return api.put<Category>(`/categories/${id}/`, data);
   }
 }
@@ -323,16 +363,17 @@ export async function deleteCategory(id: number): Promise<void> {
     } catch (error) {
       logApiWarning(`Delete category ${id} API not available, using mock response`, error);
       await addMockDelay();
-      
+
       // Remove from mock data
       const categoryIndex = mockCategories.findIndex(cat => cat.id === id);
       if (categoryIndex === -1) {
         throw new Error('Category not found');
       }
-      
+
       mockCategories.splice(categoryIndex, 1);
     }
   } else {
+    // Production mode - global error handler will handle errors and show toast notifications
     await api.delete(`/categories/${id}/`);
   }
 }

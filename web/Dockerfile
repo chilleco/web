@@ -73,11 +73,6 @@ CMD ["npm", "run", "dev"]
 # ========================================
 FROM node:24.6-alpine AS runner
 
-# Metadata
-LABEL maintainer="Alex Poloz <alexypoloz@gmail.com>"
-LABEL description="Next.js frontend application"
-LABEL version="1.0.0"
-
 # Install runtime dependencies
 RUN apk add --no-cache \
     curl \
