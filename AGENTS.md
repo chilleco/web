@@ -127,6 +127,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Default Icon Styling**: `bg-muted text-muted-foreground` for neutral/default standalone icons.
 - **Colored Icon Pattern**: `bg-{color}-500/15 text-{color}-600 dark:bg-{color}-500/20 dark:text-{color}-400` for themed icons.
 - **Opacity Standards**: Background opacity 15% (light) / 20% (dark), icon/text at full opacity for proper contrast.
+- **Examples** (`web/src/shared/ui/icons.tsx`): Save <- `SaveIcon` <- `FaFloppyDisk`
 
 #### Feedback (Toasts / Popups)
 - Use `widgets/feedback-system` components for all user feedback.

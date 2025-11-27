@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Box } from '@/shared/ui/box';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
-import { Alert, AlertDescription } from '@/shared/ui/alert';
+import { EntityManagement } from '@/shared/ui';
 import { getCategories, deleteCategory } from '@/entities/category/api/categoryApi';
 import type { Category } from '@/entities/category/model/category';
 import { CategoryForm } from './CategoryForm';
@@ -86,85 +85,61 @@ export function CategoryManagement({
     setEditingCategory(null);
   };
 
-  if (loading) {
-    return (
-      <Box>
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          <span className="ml-2">{t('loading')}</span>
-        </div>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box>
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      </Box>
-    );
-  }
-
   return (
-    <div className="space-y-6">
-
-      {/* Categories Tree */}
-      <Box>
-        {categories.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <p>{t('noCategories')}</p>
-          </div>
-        ) : (
-          <div>
-            {categories.map((category, index) => (
-              <CategoryTreeItem
-                key={category.id}
-                category={category}
-                level={0}
-                onEdit={handleEditCategory}
-                onDelete={handleDeleteCategory}
+    <EntityManagement
+      loading={loading}
+      error={error}
+      isEmpty={categories.length === 0}
+      loadingLabel={t('loading')}
+      emptyLabel={t('noCategories')}
+      renderList={() => (
+        <div>
+          {categories.map((category, index) => (
+            <CategoryTreeItem
+              key={category.id}
+              category={category}
+              level={0}
+              onEdit={handleEditCategory}
+              onDelete={handleDeleteCategory}
+              allCategories={categories}
+              isFirst={index === 0}
+            />
+          ))}
+        </div>
+      )}
+      createModal={
+        onCreateModalChange ? (
+          <Dialog open={isCreateModalOpen} onOpenChange={onCreateModalChange}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{t('createTitle')}</DialogTitle>
+              </DialogHeader>
+              <CategoryForm
+                onSuccess={handleFormSuccess}
+                onCancel={handleFormCancel}
                 allCategories={categories}
-                isFirst={index === 0}
               />
-            ))}
-          </div>
-        )}
-      </Box>
-
-      {/* Create Category Modal - controlled by parent */}
-      {onCreateModalChange && (
-        <Dialog open={isCreateModalOpen} onOpenChange={onCreateModalChange}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{t('createTitle')}</DialogTitle>
-            </DialogHeader>
-            <CategoryForm
-              onSuccess={handleFormSuccess}
-              onCancel={handleFormCancel}
-              allCategories={categories}
-            />
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Edit Category Modal */}
-      {editingCategory && (
-        <Dialog open={!!editingCategory} onOpenChange={() => setEditingCategory(null)}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{t('editTitle', { title: editingCategory.title })}</DialogTitle>
-            </DialogHeader>
-            <CategoryForm
-              category={editingCategory}
-              onSuccess={handleFormSuccess}
-              onCancel={handleFormCancel}
-              allCategories={categories}
-            />
-          </DialogContent>
-        </Dialog>
-      )}
-    </div>
+            </DialogContent>
+          </Dialog>
+        ) : undefined
+      }
+      editModal={
+        editingCategory ? (
+          <Dialog open={!!editingCategory} onOpenChange={() => setEditingCategory(null)}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{t('editTitle', { title: editingCategory.title })}</DialogTitle>
+              </DialogHeader>
+              <CategoryForm
+                category={editingCategory}
+                onSuccess={handleFormSuccess}
+                onCancel={handleFormCancel}
+                allCategories={categories}
+              />
+            </DialogContent>
+          </Dialog>
+        ) : undefined
+      }
+    />
   );
 }

@@ -12,6 +12,7 @@ export * from './input';
 export * from './multi-file-upload';
 export * from './page-header';
 export * from './popover';
+export * from './entity-management';
 export * from './search';
 export * from './sheet';
 export * from './sidebar-card';

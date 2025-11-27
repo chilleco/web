@@ -64,3 +64,7 @@ export async function saveProduct(payload: ProductSaveRequest): Promise<ProductS
     product: normalizeProduct(response.product),
   };
 }
+
+export async function deleteProduct(id: number): Promise<void> {
+  await api.post('/products/rm/', { id });
+}

@@ -197,7 +197,15 @@
             "save": "Save Product",
             "saving": "Saving...",
             "saved": "Product saved successfully",
-            "error": "Failed to save product"
+            "error": "Failed to save product",
+            "loading": "Loading products...",
+            "empty": "No products yet",
+            "edit": "Edit",
+            "editTitle": "Edit Product: {title}",
+            "cancel": "Cancel",
+            "noCategory": "No category",
+            "delete": "Delete",
+            "deleteConfirm": "Delete \"{title}\"?"
         }
     },
     "posts": {
