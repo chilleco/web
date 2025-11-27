@@ -1,27 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
 import { ShoppingIcon, TagIcon, TrendingIcon, StarIcon, ReviewsIcon } from '@/shared/ui/icons';
-
-interface Product {
-    id: number;
-    title: string;
-    description: string;
-    images: string[];
-    price: number;
-    originalPrice?: number;
-    currency?: string;
-    rating?: number;
-    ratingCount?: number;
-    category?: string;
-    inStock?: boolean;
-    isNew?: boolean;
-    isFeatured?: boolean;
-    discount?: number;
-}
+import { Product } from '@/entities/product';
 
 interface ProductCardProps {
     product: Product;
@@ -36,6 +20,10 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
     
     // Like functionality - in production this would come from props or global state
     const [isLiked, setIsLiked] = useState(isInFavorites);
+
+    useEffect(() => {
+        setIsLiked(isInFavorites);
+    }, [isInFavorites]);
 
     const handleLikeClick = (id?: string | number) => {
         // In production, this would call an API to like/unlike the product
@@ -83,7 +71,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
     if (product.isNew) {
         tags.push({
             icon: <TagIcon size={10} />,
-            label: 'New',
+            label: t('tagNew'),
             variant: 'success' as const
         });
     }
@@ -91,14 +79,14 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
     if (product.isFeatured) {
         tags.push({
             icon: <TrendingIcon size={10} />,
-            label: 'Featured',
+            label: t('tagFeatured'),
             variant: 'warning' as const
         });
     }
     
     if (!product.inStock) {
         tags.push({
-            label: 'Out of Stock',
+            label: t('tagOutOfStock'),
             variant: 'destructive' as const
         });
     }

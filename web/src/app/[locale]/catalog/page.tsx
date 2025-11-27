@@ -17,10 +17,13 @@ import { toggleFavorite, selectFavoriteItemsAsSet } from '@/features/favorites';
 export default function CatalogPage() {
     const t = useTranslations('navigation');
     const tCatalog = useTranslations('catalog.product');
+    const tCatalogPage = useTranslations('catalog');
     const tSearch = useTranslations('search');
 
     const [query, setQuery] = useState('');
     const [filters, setFilters] = useState<SearchFilters>({});
+    const [appliedQuery, setAppliedQuery] = useState('');
+    const [appliedFilters, setAppliedFilters] = useState<SearchFilters>({});
     
     // Redux state
     const dispatch = useAppDispatch();
@@ -54,15 +57,20 @@ export default function CatalogPage() {
             type: 'promo-code',
             label: tSearch('promoCode'),
             key: 'promoCode',
-            placeholder: 'SAVE20, DISCOUNT10, etc.'
+            placeholder: tSearch('promoPlaceholder')
         }
     ];
 
     // Handle search
     const handleSearch = useCallback((searchQuery: string, searchFilters: SearchFilters) => {
-        console.log('Catalog search:', { searchQuery, searchFilters });
-        // TODO: Integrate with actual product search API
-    }, []);
+        const nextQuery = searchQuery ?? query;
+        const nextFilters = searchFilters ?? filters;
+
+        setQuery(nextQuery);
+        setFilters(nextFilters);
+        setAppliedQuery(nextQuery);
+        setAppliedFilters(nextFilters);
+    }, [filters, query]);
 
     // Handle favorites and cart actions
     const handleOpenFavorites = () => {
@@ -92,7 +100,7 @@ export default function CatalogPage() {
                         icon={<CatalogIcon size={24} />}
                         iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
                         title={t('catalog')}
-                        description="Discover our curated collection of products and services with advanced filtering and search capabilities."
+                        description={tCatalogPage('description')}
                         actions={
                             <ButtonGroup>
                                 <IconButton
@@ -159,24 +167,13 @@ export default function CatalogPage() {
 
                             {/* Products Grid */}
                             <ProductsGrid
+                                searchQuery={appliedQuery}
+                                filters={appliedFilters}
                                 onProductAddToCart={handleProductAddToCart}
                                 onProductToggleFavorite={handleProductToggleFavorite}
                                 cartItems={cartItems}
                                 favoriteItems={favoriteItems}
                             />
-
-                            {/* Pagination */}
-                            <div className="flex justify-center mt-8">
-                                <div className="flex items-center space-x-2">
-                                    <button className="px-3 py-1 border rounded">Previous</button>
-                                    <button className="px-3 py-1 bg-primary text-primary-foreground rounded">1</button>
-                                    <button className="px-3 py-1 border rounded">2</button>
-                                    <button className="px-3 py-1 border rounded">3</button>
-                                    <span className="px-3 py-1">...</span>
-                                    <button className="px-3 py-1 border rounded">10</button>
-                                    <button className="px-3 py-1 border rounded">Next</button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

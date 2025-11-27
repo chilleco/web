@@ -337,12 +337,22 @@
         "takeAgain": "Пройти снова"
     },
     "catalog": {
+        "description": "Откройте нашу подборку товаров и сервисов с расширенным поиском и фильтрами.",
         "product": {
             "addToCart": "Добавить в Корзину",
             "favorite": "Избранное",
             "cart": "Корзина",
             "unavailable": "Недоступно",
-            "inCart": "В Корзине"
+            "inCart": "В Корзине",
+            "tagNew": "Новинка",
+            "tagFeatured": "Рекомендуемое",
+            "tagOutOfStock": "Нет в наличии",
+            "loadError": "Не удалось загрузить товары",
+            "retry": "Попробовать снова",
+            "empty": "Товары не найдены",
+            "emptyHint": "Измените фильтры или запрос, чтобы увидеть больше результатов",
+            "addedToCartToast": "«{title}» добавлен в корзину",
+            "favoriteToggledToast": "Избранное обновлено для {title}"
         }
     },
     "search": {
@@ -361,6 +371,7 @@
         "priceFrom": "От",
         "priceTo": "До",
         "promoCode": "Промокод",
+        "promoPlaceholder": "SAVE20, DISCOUNT10 и т.д.",
         "sortBy": "Сортировать по",
         "category": "Категория",
         "priceRange": "Диапазон Цен",

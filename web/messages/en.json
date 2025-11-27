@@ -337,12 +337,22 @@
         "takeAgain": "Take Again"
     },
     "catalog": {
+        "description": "Discover our curated collection of products and services with advanced filtering and search capabilities.",
         "product": {
             "addToCart": "Add to Cart",
             "favorite": "Favorites",
             "cart": "Cart",
             "unavailable": "Unavailable",
-            "inCart": "In Cart"
+            "inCart": "In Cart",
+            "tagNew": "New",
+            "tagFeatured": "Featured",
+            "tagOutOfStock": "Out of Stock",
+            "loadError": "Failed to load products",
+            "retry": "Try Again",
+            "empty": "No products found",
+            "emptyHint": "Adjust filters or search terms to see more results",
+            "addedToCartToast": "{title} added to cart",
+            "favoriteToggledToast": "Updated favorites for {title}"
         }
     },
     "search": {
@@ -361,6 +371,7 @@
         "priceFrom": "From",
         "priceTo": "To",
         "promoCode": "Promo Code",
+        "promoPlaceholder": "SAVE20, DISCOUNT10, etc.",
         "sortBy": "Sort by",
         "category": "Category",
         "priceRange": "Price Range",
