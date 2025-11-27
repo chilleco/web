@@ -32,6 +32,7 @@
         "space": "Space",
         "hub": "Hub",
         "catalog": "Catalog",
+        "products": "Products",
         "home": "Home",
         "sections": "Sections"
     },
@@ -172,6 +173,31 @@
                 "createCategory": "Create Category",
                 "updateCategory": "Update Category"
             }
+        },
+        "products": {
+            "title": "Products",
+            "description": "Create and manage products for the catalog",
+            "add": "Save Product",
+            "name": "Title",
+            "descriptionLabel": "Description",
+            "price": "Price",
+            "originalPrice": "Original Price",
+            "currency": "Currency",
+            "category": "Category",
+            "images": "Images (comma-separated URLs)",
+            "rating": "Rating",
+            "ratingCount": "Rating Count",
+            "discount": "Discount (%)",
+            "inStock": "In Stock",
+            "isNew": "New",
+            "isFeatured": "Featured",
+            "status": "Status",
+            "statusActive": "Active",
+            "statusInactive": "Hidden",
+            "save": "Save Product",
+            "saving": "Saving...",
+            "saved": "Product saved successfully",
+            "error": "Failed to save product"
         }
     },
     "posts": {

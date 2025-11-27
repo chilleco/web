@@ -3,109 +3,178 @@ The creating and editing method of the product object of the API
 """
 
 from fastapi import APIRouter, Body, Request
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, ConfigDict
 from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
-from lib import report
-from models.post import Post
-from models.track import Track
+from models.product import Product
+from .get import ProductResponse
 
 
 router = APIRouter()
 
 
-class Type(BaseModel):
-    id: int | None = None
-    title: str | None = None
-    description: str | None = None
-    data: str | None = None
-    image: str | None = None
-    tags: list[str] | None = None
-    status: int | None = None
+class ProductSaveRequest(BaseModel):
+    """Payload for creating or updating a product"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: int | None = Field(
+        default=None,
+        description="Product id to update. Omit for creating a new product",
+        examples=[1],
+    )
+    title: str = Field(
+        ...,
+        description="Product title",
+        examples=["Premium Wireless Headphones"],
+    )
+    description: str | None = Field(
+        default=None,
+        description="Short description of the product",
+        examples=["High-quality wireless headphones with ANC"],
+    )
+    images: list[str] = Field(
+        default_factory=list,
+        description="Image URLs for the product gallery",
+        examples=[["https://example.com/image.webp"]],
+    )
+    price: float = Field(
+        default=0.0,
+        ge=0,
+        description="Current price",
+        examples=[199.99],
+    )
+    original_price: float | None = Field(
+        default=None,
+        ge=0,
+        description="Original price before discount",
+        examples=[299.99],
+    )
+    currency: str | None = Field(
+        default="$",
+        description="Currency symbol or code",
+        examples=["$"],
+        max_length=8,
+    )
+    rating: float | None = Field(
+        default=None,
+        ge=0,
+        le=5,
+        description="Average rating",
+        examples=[4.8],
+    )
+    rating_count: int | None = Field(
+        default=None,
+        ge=0,
+        description="Number of ratings",
+        examples=[234],
+    )
+    category: str | None = Field(
+        default=None,
+        description="Category label",
+        examples=["Electronics"],
+    )
+    in_stock: bool = Field(
+        default=True,
+        description="Is the product available for purchase",
+        examples=[True],
+    )
+    is_new: bool = Field(
+        default=False,
+        description="Marks product as new arrival",
+        examples=[True],
+    )
+    is_featured: bool = Field(
+        default=False,
+        description="Marks product as featured",
+        examples=[True],
+    )
+    discount: int | None = Field(
+        default=None,
+        ge=0,
+        le=100,
+        description="Discount percentage",
+        examples=[20],
+    )
+    status: int | None = Field(
+        default=None,
+        description="Product status flag",
+        examples=[1],
+    )
 
 
-@router.post("/save/")
+class ProductSaveResponse(BaseModel):
+    id: int
+    new: bool
+    product: ProductResponse
+
+
+def _serialize_product(product: Product) -> ProductResponse:
+    return ProductResponse(
+        id=product.id,
+        title=product.title or "",
+        description=product.description,
+        images=product.images or [],
+        price=float(product.price or 0),
+        originalPrice=product.original_price,
+        currency=product.currency,
+        rating=product.rating,
+        ratingCount=product.rating_count,
+        category=product.category,
+        inStock=product.in_stock,
+        isNew=product.is_new,
+        isFeatured=product.is_featured,
+        discount=product.discount,
+        url=product.url,
+    )
+
+
+@router.post("/save/", response_model=ProductSaveResponse, tags=["products"])
 async def handler(
     request: Request,
-    data: Type = Body(...),
+    data: ProductSaveRequest = Body(...),
 ):
-    """Save"""
+    """Create or update product"""
 
-    # TODO: fix access to unblock yourself post
-
-    # No access
     if request.state.status < 2:
         raise ErrorAccess("save")
 
-    # Get
     new = False
     if data.id:
-        post = Post.get(data.id)
-
-        if (
-            request.state.status < 5
-            and (not post.user or post.user != request.state.user)
-            and post.token != request.state.token
-        ):
-            raise ErrorAccess("save")
-
+        product = Product.get(data.id)
     else:
-        post = Post(
-            user=request.state.user,
-            token=None if request.state.user else request.state.token,
+        product = Product(
+            token=request.state.token,
         )
         new = True
 
-    # Change fields
-    post.title = data.title
-    post.description = data.description
-    post.data = data.data
-    post.image = data.image
-    post.tags = data.tags
-    post.status = data.status
+    product.title = data.title
+    product.description = data.description
+    product.images = data.images or []
+    product.price = data.price
+    product.original_price = data.original_price
+    product.currency = data.currency
+    product.rating = data.rating
+    product.rating_count = data.rating_count
+    product.category = data.category
+    product.in_stock = data.in_stock
+    product.is_new = data.is_new
+    product.is_featured = data.is_featured
+    product.discount = data.discount
+    product.status = data.status
 
-    # Save
-    post.save()
+    product.save()
 
-    # Track
-    Track(
-        title="post_add" if new else "post_edit",
-        data={
-            "id": post.id,
-            "title": post.title,
-            "data": post.data,
-            "image": post.image,
-            "tags": post.tags,
-            "status": post.status,
-        },
-        user=request.state.user,
-        token=request.state.token,
-        ip=request.state.ip,
-    ).save()
+    # URL with id suffix for consistency
+    url = to_url(product.title) or ""
+    if url:
+        url += "-"
+    product.url = f"{url}{product.id}"
+    product.save()
 
-    # Report
-    if new:
-        await report.important(
-            "Save post",
-            {
-                "post": post.id,
-                "title": post.title,
-                "user": request.state.user,
-            },
-        )
-
-    data = post.json()
-
-    # URL
-    data["url"] = to_url(post.title) or ""
-    if data["url"]:
-        data["url"] += "-"
-    data["url"] += f"{post.id}"
-
-    # Response
     return {
-        "id": post.id,
+        "id": product.id,
         "new": new,
-        "post": data,
+        "product": _serialize_product(product),
     }

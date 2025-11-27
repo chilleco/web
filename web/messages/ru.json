@@ -32,6 +32,7 @@
         "space": "Пространство",
         "hub": "Хаб",
         "catalog": "Каталог",
+        "products": "Товары",
         "home": "Главная",
         "sections": "Разделы"
     },
@@ -172,6 +173,31 @@
                 "createCategory": "Создать категорию",
                 "updateCategory": "Обновить категорию"
             }
+        },
+        "products": {
+            "title": "Товары",
+            "description": "Создавайте и управляйте товарами каталога",
+            "add": "Сохранить товар",
+            "name": "Название",
+            "descriptionLabel": "Описание",
+            "price": "Цена",
+            "originalPrice": "Старая цена",
+            "currency": "Валюта",
+            "category": "Категория",
+            "images": "Изображения (URL через запятую)",
+            "rating": "Рейтинг",
+            "ratingCount": "Кол-во оценок",
+            "discount": "Скидка (%)",
+            "inStock": "В наличии",
+            "isNew": "Новинка",
+            "isFeatured": "Рекомендуемое",
+            "status": "Статус",
+            "statusActive": "Активен",
+            "statusInactive": "Скрыт",
+            "save": "Сохранить товар",
+            "saving": "Сохраняем...",
+            "saved": "Товар сохранен",
+            "error": "Не удалось сохранить товар"
         }
     },
     "posts": {

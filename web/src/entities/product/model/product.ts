@@ -31,3 +31,21 @@ export interface ProductsGetResponse {
   products: Product[];
   count?: number;
 }
+
+export interface ProductSaveRequest {
+  id?: number;
+  title: string;
+  description?: string;
+  images?: string[];
+  price: number;
+  originalPrice?: number;
+  currency?: string;
+  rating?: number;
+  ratingCount?: number;
+  category?: string;
+  inStock?: boolean;
+  isNew?: boolean;
+  isFeatured?: boolean;
+  discount?: number;
+  status?: number;
+}

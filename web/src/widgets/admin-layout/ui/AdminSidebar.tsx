@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { SidebarCard } from '@/shared/ui/sidebar-card';
 import { Button } from '@/shared/ui/button';
-import { EyeIcon, CategoriesIcon, PostsIcon, UsersIcon } from '@/shared/ui/icons';
+import { EyeIcon, CategoriesIcon, PostsIcon, UsersIcon, ShoppingIcon } from '@/shared/ui/icons';
 
 interface AdminSidebarProps {
   className?: string;
@@ -36,6 +36,12 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
       icon: <PostsIcon size={20} />
     },
     {
+      key: 'products',
+      label: tNav('products'),
+      href: '/admin/products' as const,
+      icon: <ShoppingIcon size={20} />
+    },
+    {
       key: 'users',
       label: t('users'),
       href: '/admin/users' as const,
@@ -43,7 +49,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
     }
   ] as const;
 
-  const handleNavigation = (href: '/admin' | '/admin/categories' | '/admin/posts' | '/admin/users') => {
+  const handleNavigation = (href: '/admin' | '/admin/categories' | '/admin/posts' | '/admin/products' | '/admin/users') => {
     router.push(href);
   };
 

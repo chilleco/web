@@ -87,7 +87,9 @@ SAMPLE_PRODUCTS = [
         "id": 5,
         "title": "Eco-Friendly Water Bottle",
         "description": "Sustainable stainless steel water bottle that keeps drinks cold for 24 hours or hot for 12 hours.",
-        "images": ["https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400"],
+        "images": [
+            "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400"
+        ],
         "price": 34.99,
         "currency": "$",
         "rating": 4.6,
@@ -134,7 +136,9 @@ SAMPLE_PRODUCTS = [
         "id": 8,
         "title": "Smart Home Hub",
         "description": "Control all your smart devices from one central hub. Compatible with Alexa, Google Assistant, and Apple HomeKit.",
-        "images": ["https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400"],
+        "images": [
+            "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400"
+        ],
         "price": 79.99,
         "original_price": 99.99,
         "currency": "$",
@@ -212,17 +216,12 @@ class ProductResponse(BaseModel):
     isNew: bool | None = None
     isFeatured: bool | None = None
     discount: int | None = None
+    url: str | None = None
 
 
 class ProductsGetResponse(BaseModel):
     products: list[ProductResponse]
     count: int
-
-
-def _as_dict(product) -> dict:
-    if hasattr(product, "json"):
-        return product.json()
-    return dict(product)
 
 
 def _filter_products(products: list[dict], params: ProductsGetRequest) -> list[dict]:
@@ -253,37 +252,11 @@ def _filter_products(products: list[dict], params: ProductsGetRequest) -> list[d
     return filtered
 
 
-def _serialize_products(products: Iterable[dict]) -> list[ProductResponse]:
-    serialized: list[ProductResponse] = []
-    for product in products:
-        serialized.append(
-            ProductResponse(
-                id=product.get("id"),
-                title=product.get("title") or "",
-                description=product.get("description"),
-                images=product.get("images") or [],
-                price=float(product.get("price") or 0),
-                originalPrice=product.get("original_price"),
-                currency=product.get("currency"),
-                rating=product.get("rating"),
-                ratingCount=product.get("rating_count"),
-                category=product.get("category"),
-                inStock=product.get("in_stock"),
-                isNew=product.get("is_new"),
-                isFeatured=product.get("is_featured"),
-                discount=product.get("discount"),
-            )
-        )
-    return serialized
-
-
-@router.post("/get/", response_model=ProductsGetResponse)
+@router.post("/get/", response_model=ProductsGetResponse, tags=["products"])
 async def handler(
     request: Request,
     data: ProductsGetRequest = Body(...),
 ):
-    """Get"""
-
     if request.state.status < 2:
         raise ErrorAccess("get")
 
@@ -302,36 +275,30 @@ async def handler(
         "is_new",
         "is_featured",
         "discount",
+        "url",
         "created",
         "updated",
         "status",
     }
 
-    products: list[dict] = []
+    # Get
+    params = dict(
+        # FIXME: status={"$exists": False} if request.state.status < 5 else None,
+    )
+    products = Product.complex(
+        ids=data.id,
+        limit=data.limit,
+        offset=data.offset,
+        **params,
+        fields=fields,
+    )
 
-    try:
-        db_products = Product.complex(
-            ids=data.id,
-            fields=fields,
-            status={"$exists": False} if request.state.status < 5 else None,
-        )
-
-        if isinstance(db_products, list):
-            products = [_as_dict(product) for product in db_products]
-        elif db_products:
-            products = [_as_dict(db_products)]
-    except Exception as exc:  # pylint: disable=broad-except
-        log.error(f"Failed to fetch products from database: {exc}")
-
-    if not products:
-        products = SAMPLE_PRODUCTS.copy()
-
-    filtered_products = _filter_products(products, data)
-    count = len(filtered_products)
-
-    paginated_products = filtered_products[data.offset : data.offset + data.limit]
+    # Count
+    count = None
+    if not data.id:
+        count = Product.count(**params)
 
     return {
-        "products": _serialize_products(paginated_products),
+        "products": products,
         "count": count,
     }

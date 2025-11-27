@@ -39,8 +39,6 @@ async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    """Get"""
-
     # No access
     # TODO: -> middleware
     if request.state.status < 2:
@@ -161,17 +159,17 @@ async def handler(
         cond["token"] = {"$ne": request.state.token}
 
     # Get
-    params = {
-        "status": {"$exists": False} if request.state.status < 5 else None,
-        "category": (
+    params = dict(
+        status={"$exists": False} if request.state.status < 5 else None,
+        category=(
             {"$in": Category.get_childs(data.category)} if data.category else None
         ),
-        "locale": (
+        locale=(
             data.locale and {"$in": [None, data.locale]}
         ),  # NOTE: None → all locales
-        "extra": cond or None,
-        "search": data.search,
-    }
+        extra=cond or None,
+        search=data.search,
+    )
     posts = Post.complex(
         ids=data.id,
         limit=data.limit,

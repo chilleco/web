@@ -12,7 +12,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 
 ## Golden Rules of coding & editing
 - **Explain the plan** (brief) and show a *unified diff* preview before writing
-- **Development**: Follow the **Backend Principles** & **Frontend Principles**
+- **Development**: Follow the **DevOps Principles** & **Backend Principles** & **Frontend Principles**
 - **Minimal, focused diffs**: change only what's necessary; Make minimal changes in relevant files & rows only
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
@@ -59,6 +59,14 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 #### Local
 - **Frontend Access**: Web App available at `http://localhost/` and **API Access**: Backend API available at `http://localhost/api/` when containers are running (using `infra/nginx` in `server` service in `compose.local.yml`)
 
+## DevOps Principles
+- Make (Makefile)
+    - all main commands are stored here
+- NGINX (infra/nginx/)
+    - use http://localhost/ for local frontend test and http://localhost/api/ for local api requests (managed by compose.local.yml)
+- Docker & Docker Compose & Docker Swarm (infra/compose/)
+    - all compose files are overwrites of the base `infra/compose.yml` (for example of run: `docker compose -f compose.yml -f compose.local.yml`)
+
 ## Backend Principles
 - **Database**: MongoDB with custom ConSys library for ODM
 - API-first and POST-only JSON (Stripe/Twitter style). Endpoints are JSON-RPC-ish: POST body carries action payload; responses have consistent success/error envelopes; avoid form/multipart unless required.
@@ -87,7 +95,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Adaptive**: Mobile-first; build single adaptive components instead of breakpoint forks. Honor theme tokens and reuse Radix primitives.
 - **Themes**: system (default) / light / dark; components should honor tokens.
 - Path alias `@/*` → `web/src/*`. Strict TS; PascalCase components; hooks as `useThing`; slices in `features/*/stores/*Slice.ts`. Keep barrels small.
-- **Use toasts/popups for feedback**: errors/warnings/success/info should use app toasts/dialogs, not `alert()` or raw text
+- **Use toasts / popups for feedback**: errors/warnings/success/info should use app toasts/dialogs, not `alert()` or raw text
 - **Icons**: Centralized icon management: ALL icons MUST be imported from `shared/ui/icons.tsx` file, never directly from `react-icons`; React-icons priority system**: use `react-icons` with priority order: 1. `fa6` (Font Awesome 6), 2. `bi` (Bootstrap Icons), 3. `hi` (Heroicons). Never use inline SVG
 - **Special symbols vs icons**: use Unicode symbols (©, ®, ™) as text characters, not icons with backgrounds
 - **Accessibility first**: proper aria labels/roles, focus states, keyboard nav; no color-only affordances
@@ -98,11 +106,11 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Theme-aware**: Support both light & dark themes via CSS variables/tokens
 
 #### Borders
-- **No borders**: Use shadows for big/outer elements, backgrounds for small/inner elements
+- **No borders**: Use shadows for big / outer elements, backgrounds for small/inner elements
 
 #### Border Radius
-- Small/inner elements: `rounded-[0.75rem]` (buttons, inputs, avatars, icons)
-- Big/outer elements: `rounded-[1rem]` (boxes, containers, cards, sections)
+- Small / inner elements: `rounded-[0.75rem]` (buttons, inputs, avatars, icons)
+- Big / outer elements: `rounded-[1rem]` (boxes, containers, cards, sections)
 
 #### Shadows
 - Interactive shadows: Big/outer components use Card-style shadow with hover effects:
@@ -110,7 +118,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
     - Transition: `transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)]`
     - Hover effect: `hover:scale-[1.01]` (subtle scale animation)
 
-#### Time/Date
+#### Time / Date
 - Standardized Format: `%dd.%mm.%YYYY` (e.g., "01.01.2024") everywhere. No other date formats allowed
 
 #### Icons
@@ -119,6 +127,12 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Default Icon Styling**: `bg-muted text-muted-foreground` for neutral/default standalone icons.
 - **Colored Icon Pattern**: `bg-{color}-500/15 text-{color}-600 dark:bg-{color}-500/20 dark:text-{color}-400` for themed icons.
 - **Opacity Standards**: Background opacity 15% (light) / 20% (dark), icon/text at full opacity for proper contrast.
+
+#### Feedback (Toasts / Popups)
+- Use `widgets/feedback-system` components for all user feedback.
+- Map severities to variants: `success`, `error`, `warning`, `info`.
+- Never use `window.alert()` for UX feedback.
+- Import: `import { ToastProvider, useToast } from '@/widgets/feedback-system'`
 
 #### Custom Components
 

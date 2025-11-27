@@ -107,6 +107,7 @@ app.add_middleware(
         "/categories/get/",
         "/categories/save/",  # FIXME
         "/products/get/",  # FIXME
+        "/products/save/",  # FIXME
     },
 )
 
