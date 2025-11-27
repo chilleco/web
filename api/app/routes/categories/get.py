@@ -43,6 +43,8 @@ async def handler(
         "status",
         "created",
         "updated",
+        "icon",
+        "color",
     }
 
     # Get by url

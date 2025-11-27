@@ -41,15 +41,15 @@ class AccessMiddleware(BaseHTTPMiddleware):
             "Authorization"
         )
 
-        # Whitelist
-        if request.method != "POST" or (not token and url in self.whitelist):
-            request.state.token = None
-            request.state.user = 0
-            request.state.status = 3
-            request.state.network = 0
-            return await call_next(request)
-
         if not token:
+            # Whitelist
+            if request.method != "POST" or url in self.whitelist:
+                request.state.token = None
+                request.state.user = 0
+                request.state.status = 3
+                request.state.network = 0
+                return await call_next(request)
+
             await report.warning("No token", {"url": url})
             return Response(content="Invalid token", status_code=401)
 

@@ -44,9 +44,9 @@
  * 
  * ### API Endpoints Expected
  * The system expects these backend endpoints:
- * - `POST /categories/get/` - Get categories with filtering
- * - `GET /categories/tree/` - Get category hierarchy
- * - `GET /categories/{id}/` - Get single category
+ * - `POST /categories/get/` - Get categories with filtering or by id/url
+ * - `POST /categories/save/` - Create or update a category
+ * - `POST /categories/rm/` - Delete a category
  * - `POST /posts/get/` - Get posts with filtering
  * 
  * ### Configuration API

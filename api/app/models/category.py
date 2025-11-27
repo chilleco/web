@@ -6,7 +6,7 @@ from models import Base, Attribute
 
 def default_description(instance):
     """Default description"""
-    return get_pure(instance.data).split("\n")[0]
+    return get_pure(instance.data or "").split("\n")[0]
 
 
 class Category(Base):

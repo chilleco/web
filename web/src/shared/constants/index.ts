@@ -43,12 +43,12 @@ export const API_ENDPOINTS = {
     DELETE: (id: number) => `/posts/${id}/`,
   },
   CATEGORIES: {
-    LIST: '/categories/',
+    LIST: '/categories/get/',
     TREE: '/categories/tree/',
-    GET: (id: number) => `/categories/${id}/`,
-    CREATE: '/categories/',
-    UPDATE: (id: number) => `/categories/${id}/`,
-    DELETE: (id: number) => `/categories/${id}/`,
+    GET: (id: number) => '/categories/get/',
+    CREATE: '/categories/save/',
+    UPDATE: (id: number) => '/categories/save/',
+    DELETE: '/categories/rm/',
   },
 } as const;
 

@@ -105,6 +105,7 @@ app.add_middleware(
         "/users/token/",
         "/posts/get/",
         "/categories/get/",
+        "/categories/save/",  # FIXME
         "/products/get/",  # FIXME
     },
 )

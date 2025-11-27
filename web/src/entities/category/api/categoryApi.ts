@@ -298,7 +298,7 @@ export async function getCategoryWithSubcategories(
 export async function createCategory(data: CreateCategoryRequest): Promise<Category> {
   if (shouldUseMockFallback()) {
     try {
-      const response = await api.post<Category>('/categories/', data);
+      const response = await api.post<Category>('/categories/save/', data);
       return response;
     } catch (error) {
       logApiWarning('Create category API not available, using mock response', error);
@@ -322,14 +322,14 @@ export async function createCategory(data: CreateCategoryRequest): Promise<Categ
     }
   } else {
     // Production mode - global error handler will handle errors and show toast notifications
-    return api.post<Category>('/categories/', data);
+    return api.post<Category>('/categories/save/', data);
   }
 }
 
 export async function updateCategory(id: number, data: UpdateCategoryRequest): Promise<Category> {
   if (shouldUseMockFallback()) {
     try {
-      const response = await api.put<Category>(`/categories/${id}/`, data);
+      const response = await api.post<Category>('/categories/save/', { id, ...data });
       return response;
     } catch (error) {
       logApiWarning(`Update category ${id} API not available, using mock response`, error);
@@ -352,14 +352,14 @@ export async function updateCategory(id: number, data: UpdateCategoryRequest): P
     }
   } else {
     // Production mode - global error handler will handle errors and show toast notifications
-    return api.put<Category>(`/categories/${id}/`, data);
+    return api.post<Category>('/categories/save/', { id, ...data });
   }
 }
 
 export async function deleteCategory(id: number): Promise<void> {
   if (shouldUseMockFallback()) {
     try {
-      await api.delete(`/categories/${id}/`);
+      await api.post('/categories/rm/', { id });
     } catch (error) {
       logApiWarning(`Delete category ${id} API not available, using mock response`, error);
       await addMockDelay();
@@ -374,6 +374,6 @@ export async function deleteCategory(id: number): Promise<void> {
     }
   } else {
     // Production mode - global error handler will handle errors and show toast notifications
-    await api.delete(`/categories/${id}/`);
+    await api.post('/categories/rm/', { id });
   }
 }
