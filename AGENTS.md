@@ -1,30 +1,36 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-- Root services: `web/` (Next.js 15 + TypeScript, feature-sliced: `src/app`, `entities`, `features`, `widgets`, `shared`, `i18n`, `styles`), `api/` (FastAPI), `tg/` (Telegram worker), `infra/` (Docker Compose stacks), `data/` (runtime storage).
-- Env templates: copy `base.env` to `.env`; merge `prod.env` values for deploys. Web assets in `web/public/`; locales in `web/messages/`.
-- Path alias: `@/*` -> `web/src/*`; keep module barrels lean.
+## Architecture & Structure
+- Services: `api/` FastAPI backend; `web/` Next.js 15 + TypeScript (dirs: `src/app`, `entities`, `features`, `widgets`, `shared`, `i18n`, `styles`); `tg/` Telegram worker; `infra/` Docker Compose; `data/` runtime storage.
+- Localization: bundles in `web/messages/*.json`; per-locale routing under `web/src/app/[locale]/**`. All user-facing text must use locale files.
 
-## Build, Test, and Development Commands
-- Frontend (in `web/`): `npm install`; `npm run dev` (`0.0.0.0:3000`); `npm run build`; `npm run start`; `npm run lint`.
-- Containers (repo root): `make up` for local stack, `make up-dev` for dev overrides, `make down` to stop, `make logs-local` for tails.
-- Tests: `make test` runs API + web suites in compose; `make test-api` or `make test-web` targets one service.
+## Environments
+- `.env` defines `MODE`: LOCAL / TEST / DEV / PRE / PROD; loaded in `api/`, `web/`, and `tg/` containers. Copy `base.env` → `.env`; merge `prod.env` values for production.
 
-## Coding Style & Naming Conventions
-- TypeScript strict; 2-space indent; prefer single quotes. React components and files in PascalCase; hooks as `useThing`; Redux Toolkit slices under `features/*/stores/*Slice.ts`.
-- Reuse utilities from `shared/`; Tailwind 4 + `clsx`/`class-variance-authority` available. Keep server/client component boundaries explicit in Next 15.
-- Run `npm run lint` before commits; follow `eslint.config.mjs` (Next/TS rules, alias support).
+## API & Backend Principles
+- API-first and POST-only JSON (Stripe/Twitter style). Endpoints are JSON-RPC-ish: POST body carries action payload; responses have consistent success/error envelopes; avoid form/multipart unless required.
+- Real async: async/await end-to-end with non-blocking clients; try/catch with domain error mapping; avoid blocking I/O.
+- Keep it lean: no unnecessary wrappers, deep inheritance, or extra deps; keep schemas/models near routes.
+- Custom libs: `consys` ORM (`docs/CONSYS_ORM_DOCUMENTATION.md`), `libdev` helpers (`docs/LIBDEV_DOCUMENTATION.md`), `userhub` (auth), `tgio` (Telegram helpers), `tgreports` (reporting). Check docs/README before changes.
 
-## Testing Guidelines
-- API tests live in `api/tests` (pytest). Add coverage alongside new routes/models; name tests `test_*` and centralize fixtures in `tests/conftest.py`.
-- Frontend currently relies on lint + manual checks; if you add tests, mirror components under `web/src/**/__tests__` and wire into `make test-web`.
-- Execute `make test` before PRs; document any skips or flakes in the PR body.
+## Frontend Principles
+- Tailwind CSS + Radix UI (shadcn/ui)
+- Mobile-first; build single adaptive components instead of breakpoint forks. Honor theme tokens and reuse Radix primitives.
+- Themes: system (default) / light / dark; components should honor tokens.
+- Path alias `@/*` → `web/src/*`. Strict TS; PascalCase components; hooks as `useThing`; slices in `features/*/stores/*Slice.ts`. Keep barrels small.
 
-## Commit & Pull Request Guidelines
-- Commits are short and imperative (e.g., `Fix local API requests`, `Change frontend structure`); squash noisy WIP locally.
-- PRs: include a brief summary, linked issue, commands run (lint/tests), and UI screenshots/GIFs when visuals change. Flag env var or migration updates.
-- Branch naming: `feature/login-form`, `bugfix/cart-total`; keep diffs focused.
+## Development Workflow (AI-friendly)
+1) Plan requirements (locale keys, timezone, themes, access rules, API contracts, error shapes). 2) Define models + DB migrations. 3) Draft corner/edge-case backend tests (aim for 100% on models/routes/functions; add fixtures). 4) Implement routes/functions/scripts. 5) Update docs and generate TS schemas. 6) Build frontend components/pages; verify styling/locales/themes/access/mobile. 7) Add frontend tests. 8) Run tests and linters. Avoid extra layers unless justified.
 
-## Security & Configuration Tips
-- Never commit secrets; derive `.env` from `base.env` (local `MODE=LOCAL` per `README.md`). Use `prod.env` overrides for deployments.
-- `DATA_PATH` defaults to `./data`; compose binds host storage—avoid removing logs or user data without backups.
+## Commands
+- Frontend (`web/`): `npm install`; `npm run dev`; `npm run build`; `npm run start`; `npm run lint`.
+- Stack (repo root): `make up` / `make up-dev` / `make down`; logs via `make logs-local`.
+- Tests: `make test` for API + web in compose; `make test-api` or `make test-web` individually.
+
+## Testing & QA
+- API tests live in `api/tests` (pytest). Add alongside new routes/models; name `test_*`; share fixtures in `tests/conftest.py`; target high coverage.
+- Frontend currently lint/manual; if adding tests, place under `web/src/**/__tests__` and wire into `make test-web`.
+- Note skips/flakes in PRs.
+
+## Git & PR Hygiene
+- Commits: short, imperative (`Fix local API requests`). Branches: `feature/*`, `bugfix/*`. PRs: summary, linked issue, commands run, screenshots/GIFs for UI changes, and env/migration updates.
