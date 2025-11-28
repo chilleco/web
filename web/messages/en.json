@@ -181,6 +181,17 @@
                 "updateCategory": "Update Category"
             }
         },
+        "posts": {
+            "title": "Posts",
+            "description": "Create, edit and manage all website posts",
+            "loading": "Loading posts...",
+            "empty": "No posts yet",
+            "editTitle": "Edit Post: {title}",
+            "titleLabel": "Title",
+            "descriptionLabel": "Description",
+            "content": "Content",
+            "image": "Image URL"
+        },
         "products": {
             "title": "Products",
             "description": "Create and manage products for the catalog",
@@ -188,9 +199,12 @@
             "name": "Title",
             "descriptionLabel": "Description",
             "price": "Price",
+            "priceLabel": "Price",
             "originalPrice": "Original Price",
+            "originalPriceLabel": "Original Price",
             "currency": "Currency",
             "category": "Category",
+            "categoryLabel": "Category",
             "images": "Images (comma-separated URLs)",
             "rating": "Rating",
             "ratingCount": "Rating Count",
@@ -212,7 +226,9 @@
             "cancel": "Cancel",
             "noCategory": "No category",
             "delete": "Delete",
-            "deleteConfirm": "Delete \"{title}\"?"
+            "deleteConfirm": "Delete \"{title}\"?",
+            "ratingLabel": "Rating",
+            "ratingCountLabel": "Rating Count"
         }
     },
     "posts": {

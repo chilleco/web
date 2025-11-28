@@ -5,73 +5,73 @@ import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { EntityManagement } from '@/shared/ui';
 import { useToastActions } from '@/shared/hooks/useToast';
-import { getProducts, Product, deleteProduct } from '@/entities/product';
-import { ProductForm } from './ProductForm';
-import { ProductListItem } from './ProductListItem';
+import { getPosts, deletePost, Post } from '@/entities/post';
+import { PostForm } from './PostForm';
+import { PostListItem } from './PostListItem';
 
-interface ProductManagementProps {
+interface PostManagementProps {
   isCreateModalOpen?: boolean;
   onCreateModalChange?: (open: boolean) => void;
   triggerRefresh?: number;
 }
 
-export function ProductManagement({
+export function PostManagement({
   isCreateModalOpen = false,
   onCreateModalChange,
   triggerRefresh,
-}: ProductManagementProps = {}) {
-  const t = useTranslations('admin.products');
+}: PostManagementProps = {}) {
+  const tAdmin = useTranslations('admin.posts');
   const tSystem = useTranslations('system');
-  const [products, setProducts] = useState<Product[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
   const { success, error: showError } = useToastActions();
 
-  const loadProducts = useCallback(async () => {
+  const loadPosts = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getProducts({ limit: 100 });
-      setProducts(data.products);
+      const data = await getPosts({ limit: 100 });
+      setPosts(data.posts);
     } catch (err) {
-      const message = err instanceof Error ? err.message : t('error');
+      const message = err instanceof Error ? err.message : tSystem('error');
       setError(message);
       showError(message);
     } finally {
       setLoading(false);
     }
-  }, [showError, t]);
+  }, [showError, tSystem]);
 
   useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+    loadPosts();
+  }, [loadPosts]);
 
   useEffect(() => {
     if (triggerRefresh) {
-      loadProducts();
+      loadPosts();
     }
-  }, [triggerRefresh, loadProducts]);
+  }, [triggerRefresh, loadPosts]);
 
   const handleFormSuccess = async () => {
     if (onCreateModalChange) onCreateModalChange(false);
-    setEditingProduct(null);
-    await loadProducts();
+    setEditingPost(null);
+    await loadPosts();
   };
 
   const handleFormCancel = () => {
     if (onCreateModalChange) onCreateModalChange(false);
-    setEditingProduct(null);
+    setEditingPost(null);
   };
 
-  const handleDelete = async (product: Product) => {
-    if (!confirm(t('deleteConfirm', { title: product.title }))) return;
+  const handleDelete = async (post: Post) => {
+    if (!confirm(tSystem('delete'))) return;
     try {
-      await deleteProduct(product.id);
-      await loadProducts();
+      await deletePost(post.id);
+      await loadPosts();
       success(tSystem('deleted'));
     } catch (err) {
-      const message = err instanceof Error ? err.message : t('error');
+      const message = err instanceof Error ? err.message : tSystem('error');
       setError(message);
       showError(message);
     }
@@ -81,16 +81,16 @@ export function ProductManagement({
     <EntityManagement
       loading={loading}
       error={error}
-      isEmpty={products.length === 0}
-      loadingLabel={t('loading')}
-      emptyLabel={t('empty')}
+      isEmpty={posts.length === 0}
+      loadingLabel={tAdmin('loading')}
+      emptyLabel={tAdmin('empty')}
       renderList={() => (
         <div className="space-y-3">
-          {products.map((product) => (
-            <ProductListItem
-              key={product.id}
-              product={product}
-              onEdit={(item) => setEditingProduct(item)}
+          {posts.map((post) => (
+            <PostListItem
+              key={post.id}
+              post={post}
+              onEdit={(item) => setEditingPost(item)}
               onDelete={handleDelete}
             />
           ))}
@@ -101,21 +101,21 @@ export function ProductManagement({
           <Dialog open={isCreateModalOpen} onOpenChange={onCreateModalChange}>
             <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{t('add')}</DialogTitle>
+                <DialogTitle>{tAdmin('title')}</DialogTitle>
               </DialogHeader>
-              <ProductForm onSuccess={handleFormSuccess} onCancel={handleFormCancel} />
+              <PostForm onSuccess={handleFormSuccess} onCancel={handleFormCancel} />
             </DialogContent>
           </Dialog>
         ) : undefined
       }
       editModal={
-        editingProduct ? (
-          <Dialog open={!!editingProduct} onOpenChange={() => setEditingProduct(null)}>
+        editingPost ? (
+          <Dialog open={!!editingPost} onOpenChange={() => setEditingPost(null)}>
             <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{t('editTitle', { title: editingProduct.title })}</DialogTitle>
+                <DialogTitle>{tAdmin('editTitle', { title: editingPost.title })}</DialogTitle>
               </DialogHeader>
-              <ProductForm product={editingProduct} onSuccess={handleFormSuccess} onCancel={handleFormCancel} />
+              <PostForm post={editingPost} onSuccess={handleFormSuccess} onCancel={handleFormCancel} />
             </DialogContent>
           </Dialog>
         ) : undefined

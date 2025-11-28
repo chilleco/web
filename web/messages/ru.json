@@ -181,6 +181,17 @@
                 "updateCategory": "Обновить категорию"
             }
         },
+        "posts": {
+            "title": "Посты",
+            "description": "Создавайте, редактируйте и управляйте постами сайта",
+            "loading": "Загружаем посты...",
+            "empty": "Постов пока нет",
+            "editTitle": "Редактировать пост: {title}",
+            "titleLabel": "Заголовок",
+            "descriptionLabel": "Описание",
+            "content": "Контент",
+            "image": "URL изображения"
+        },
         "products": {
             "title": "Товары",
             "description": "Создавайте и управляйте товарами каталога",
@@ -188,9 +199,12 @@
             "name": "Название",
             "descriptionLabel": "Описание",
             "price": "Цена",
+            "priceLabel": "Цена",
             "originalPrice": "Старая цена",
+            "originalPriceLabel": "Старая цена",
             "currency": "Валюта",
             "category": "Категория",
+            "categoryLabel": "Категория",
             "images": "Изображения (URL через запятую)",
             "rating": "Рейтинг",
             "ratingCount": "Кол-во оценок",
@@ -212,7 +226,9 @@
             "cancel": "Отмена",
             "noCategory": "Без категории",
             "delete": "Удалить",
-            "deleteConfirm": "Удалить «{title}»?"
+            "deleteConfirm": "Удалить «{title}»?",
+            "ratingLabel": "Рейтинг",
+            "ratingCountLabel": "Кол-во оценок"
         }
     },
     "posts": {

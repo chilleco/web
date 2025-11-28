@@ -151,9 +151,8 @@ async def save_category(
         if data.locale:
             category.locale = data.locale
         else:
+            # Explicitly clear locale when empty/none passed (worldwide)
             del category.locale
-    elif new_category:
-        category.locale = "en"
 
     if category.url and category.url[-1].isdigit():
         category.url += "-x"

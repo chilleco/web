@@ -2,13 +2,13 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/shared/ui/badge';
 import { iconContainerVariants } from '@/shared/ui/page-header';
 import { cn } from '@/shared/lib/utils';
 import { ImageIcon } from '@/shared/ui/icons';
 import { formatDate } from '@/shared/lib/date';
+import { EntityRow } from '@/shared/ui/entity-management';
 
 interface CategoryMetadata {
   icon?: string;
@@ -132,56 +132,20 @@ export function CategoryPreview({
     <div className={cn('hover:bg-muted/30 transition-colors duration-200', containerClassName)}>
       <div 
         className={cn('flex items-center justify-between p-2 py-3 min-w-0', className)} 
-        style={{ marginLeft: `${paddingLeft}px` }}
+        style={{ paddingLeft: `${paddingLeft}px` }}
       >
-        <div className="flex items-center space-x-3 flex-1 min-w-0">
-          {/* Left Actions Area (expand/collapse buttons, etc.) */}
-          <div className="w-8 flex items-center justify-center">
-            {leftActions}
-          </div>
+        <EntityRow
+          id={category.id || 'NEW'}
+          title={category.title}
+          url={`posts/${category.url}`}
+          badges={[
+            <div className="hidden md:block" key="status">
+              {getStatusBadge(category.status ?? 1)}
+            </div>,
+          ]}
+          secondRowItems={(() => {
+            const contentItems: React.ReactNode[] = [];
 
-          {/* Category Colored Icon */}
-          {metadata.icon ? (
-            <div
-              className={cn(
-                iconContainerVariants({ size: 'sm' }),
-                metadata.color ? getCategoryColorClass().className : getCategoryColorClass(true).className,
-                "mt-0" // Override margin to align with category image
-              )}
-              style={metadata.color ? getCategoryColorClass().style : getCategoryColorClass(true).style}
-            >
-              <i className={`fas fa-${metadata.icon}`}></i>
-            </div>
-          ) : metadata.color ? (
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: metadata.color }}
-            />
-          ) : null}
-
-          {/* Category Image - Hidden on mobile */}
-          {category.image ? (
-            <div className="w-10 h-10 rounded-[0.75rem] overflow-hidden bg-muted hidden md:flex">
-              <Image
-                src={category.image}
-                alt={category.title}
-                width={40}
-                height={40}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ) : (
-            <div className="w-10 h-10 rounded-[0.75rem] bg-muted flex items-center justify-center hidden md:flex">
-              <ImageIcon size={16} className="text-muted-foreground" />
-            </div>
-          )}
-
-          {/* Category Info */}
-          {(() => {
-            // Build array of content items that will actually be displayed in 2nd row
-            const contentItems = [];
-            
-            // Add locale flag if it exists
             if (category.locale) {
               const getLocaleFlag = (locale: string) => {
                 switch (locale) {
@@ -195,54 +159,62 @@ export function CategoryPreview({
               };
               contentItems.push(`${tSystem('locale')}: ${getLocaleFlag(category.locale)}`);
             }
-            
+
             if (showCreated && category.created) {
               contentItems.push(`${t('created')}: ${formatDate(category.created)}`);
             }
-            
+
             if (showSubcategoriesCount && hasSubcategories) {
               contentItems.push(t('subcategoriesCount', { count: category.categories!.length }));
             }
-            
+
             if (showDescription && category.description) {
               contentItems.push(category.description);
             }
-            
-            const hasSecondRow = contentItems.length > 0;
-            
-            return (
-              <div className={cn(
-                "flex-1 min-w-0 overflow-hidden",
-                hasSecondRow ? "" : "flex items-center" // Center vertically when no 2nd row
-              )}>
-                <div className="flex items-center space-x-2">
-                  <span className="font-bold text-muted-foreground hidden md:inline">#{category.id || 'NEW'}</span>
-                  <h3 className="font-medium truncate">{category.title}</h3>
-                  <Link 
-                    href={`/posts/${category.url}`}
-                    className="text-xs text-muted-foreground hover:text-primary transition-colors underline decoration-dashed underline-offset-2"
-                  >
-                    /{category.url}
-                  </Link>
-                  <div className="hidden md:block">
-                    {getStatusBadge(category.status ?? 1)}
-                  </div>
-                </div>
 
-                {hasSecondRow && (
-                  <div className="flex items-center text-sm text-muted-foreground mt-1 hidden md:flex">
-                    <span className="truncate">{contentItems.join(' • ')}</span>
-                  </div>
-                )}
-              </div>
-            );
+            return contentItems;
           })()}
-        </div>
-
-        {/* Right Actions Area (edit/delete buttons, preview badge, etc.) */}
-        <div className="flex-shrink-0">
-          {rightActions || defaultRightActions}
-        </div>
+          leftSlot={
+            <div className="flex items-center space-x-3 min-w-0">
+              <div className="w-8 flex items-center justify-center">
+                {leftActions}
+              </div>
+              {metadata.icon ? (
+                <div
+                  className={cn(
+                    iconContainerVariants({ size: 'sm' }),
+                    metadata.color ? getCategoryColorClass().className : getCategoryColorClass(true).className,
+                    "mt-0"
+                  )}
+                  style={metadata.color ? getCategoryColorClass().style : getCategoryColorClass(true).style}
+                >
+                  <i className={`fas fa-${metadata.icon}`}></i>
+                </div>
+              ) : metadata.color ? (
+                <div
+                  className="w-4 h-4 rounded-full"
+                  style={{ backgroundColor: metadata.color }}
+                />
+              ) : null}
+              {category.image ? (
+                <div className="w-10 h-10 rounded-[0.75rem] overflow-hidden bg-muted hidden md:flex">
+                  <Image
+                    src={category.image}
+                    alt={category.title}
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-[0.75rem] bg-muted flex items-center justify-center hidden md:flex">
+                  <ImageIcon size={16} className="text-muted-foreground" />
+                </div>
+              )}
+            </div>
+          }
+          rightActions={rightActions || defaultRightActions}
+        />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { EntityManagement } from '@/shared/ui';
+import { useToastActions } from '@/shared/hooks/useToast';
 import { getCategories, deleteCategory } from '@/entities/category/api/categoryApi';
 import type { Category } from '@/entities/category/model/category';
 import { CategoryForm } from './CategoryForm';
@@ -21,6 +22,7 @@ export function CategoryManagement({
   triggerRefresh 
 }: CategoryManagementProps = {}) {
   const t = useTranslations('admin.categories');
+  const { success, error: showError } = useToastActions();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,10 +40,11 @@ export function CategoryManagement({
       // Global error handler already showed toast, just set local error state
       const errorMessage = err instanceof Error ? err.message : 'Failed to load categories';
       setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showError]);
 
   useEffect(() => {
     loadCategories();
@@ -63,10 +66,11 @@ export function CategoryManagement({
       // Global error handler will automatically show toast notifications for any failures
       await deleteCategory(category.id);
       await loadCategories(); // Refresh the list
-      // TODO: Add success toast for delete operation
+      success(t('deleteSuccess', { title: category.title }));
     } catch (err) {
       // Global error handler already showed error toast
-      console.error('Delete failed:', err);
+      const message = err instanceof Error ? err.message : 'Failed to delete category';
+      showError(message);
     }
   };
 

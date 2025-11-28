@@ -16,3 +16,4 @@ export * from './entity-management';
 export * from './search';
 export * from './sheet';
 export * from './sidebar-card';
+export * from './textarea';

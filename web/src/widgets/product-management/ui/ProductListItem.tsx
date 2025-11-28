@@ -4,7 +4,8 @@ import { useTranslations } from 'next-intl';
 import { Badge } from '@/shared/ui/badge';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ButtonGroup } from '@/shared/ui/button-group';
-import { EditIcon, TagIcon, StarIcon, ShoppingIcon, DeleteIcon, ImageIcon } from '@/shared/ui/icons';
+import { EditIcon, TagIcon, StarIcon, DeleteIcon, ImageIcon } from '@/shared/ui/icons';
+import { EntityRow } from '@/shared/ui/entity-management';
 import { Product } from '@/entities/product';
 
 interface ProductListItemProps {
@@ -18,91 +19,85 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
   const previewImage = product.images?.[0];
 
   return (
-    <div className="flex items-center gap-4 p-4">
-      <div className="w-12 h-12 rounded-[0.75rem] overflow-hidden bg-muted flex-shrink-0">
-        {previewImage ? (
-          <img
-            src={previewImage}
-            alt={product.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <ImageIcon size={16} className="text-muted-foreground" />
-          </div>
-        )}
-      </div>
-
-      <div className="flex-1 min-w-0 space-y-1">
-        <div className="flex items-center gap-2 text-lg font-semibold truncate">
-          <span className="truncate">{product.title}</span>
-          {product.category && (
-            <span className="text-sm text-muted-foreground truncate">{product.category}</span>
+    <EntityRow
+      id={product.id}
+      title={product.title}
+      url={product.url}
+      leftSlot={
+        <div className="w-12 h-12 rounded-[0.75rem] overflow-hidden bg-muted flex-shrink-0">
+          {previewImage ? (
+            <img
+              src={previewImage}
+              alt={product.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <ImageIcon size={16} className="text-muted-foreground" />
+            </div>
           )}
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-3 text-sm text-muted-foreground flex-wrap">
-            <span className="font-semibold text-foreground">
-              {product.price} {product.currency || ''}
+      }
+      badges={[
+        product.inStock === false ? <Badge key="stock" variant="destructive">{t('statusInactive')}</Badge> : <Badge key="stock" variant="secondary">{t('inStock')}</Badge>,
+        product.isNew ? <Badge key="new" variant="success">{t('isNew')}</Badge> : null,
+        product.isFeatured ? <Badge key="featured" variant="warning">{t('isFeatured')}</Badge> : null,
+        product.originalPrice && product.originalPrice > product.price ? (
+          <Badge key="discount" variant="default">
+            -{Math.round((1 - product.price / product.originalPrice) * 100)}%
+          </Badge>
+        ) : null,
+      ].filter(Boolean)}
+      secondRowItems={(() => {
+        const items: React.ReactNode[] = [];
+        if (product.rating) {
+          items.push(
+            <span className="inline-flex items-center gap-1" key="rating">
+              <StarIcon size={12} className="text-amber-500" />
+              {product.rating}
             </span>
-            {product.originalPrice && product.originalPrice > product.price && (
-              <span className="line-through opacity-70">
-                {product.originalPrice} {product.currency || ''}
-              </span>
-            )}
-            {product.rating && (
-              <span className="flex items-center gap-1">
-                <StarIcon size={12} className="text-amber-500" />
-                {product.rating}
-              </span>
-            )}
-            {product.ratingCount && (
-              <span className="flex items-center gap-1">
-                <TagIcon size={12} />
-                {product.ratingCount}
-              </span>
-            )}
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {product.inStock === false && (
-              <Badge variant="destructive">{t('statusInactive')}</Badge>
-            )}
-            {product.inStock !== false && (
-              <Badge variant="secondary">{t('inStock')}</Badge>
-            )}
-            {product.isNew && <Badge variant="success">{t('isNew')}</Badge>}
-            {product.isFeatured && <Badge variant="warning">{t('isFeatured')}</Badge>}
-            {product.originalPrice && product.originalPrice > product.price ? (
-              <Badge variant="default">
-                -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-              </Badge>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
-      <ButtonGroup>
-        <IconButton
-          variant="outline"
-          size="sm"
-          icon={<EditIcon size={12} />}
-          onClick={() => onEdit(product)}
-          responsive
-        >
-          {t('edit')}
-        </IconButton>
-        <IconButton
-          variant="destructive"
-          size="sm"
-          icon={<DeleteIcon size={12} />}
-          onClick={() => onDelete(product)}
-          responsive
-        >
-          {t('delete')}
-        </IconButton>
-      </ButtonGroup>
-    </div>
+          );
+        }
+        if (product.ratingCount) {
+          items.push(
+            <span className="inline-flex items-center gap-1" key="ratingCount">
+              <TagIcon size={12} />
+              {product.ratingCount}
+            </span>
+          );
+        }
+        items.push(`${t('priceLabel')}: ${product.price} ${product.currency || ''}`.trim());
+        if (product.originalPrice && product.originalPrice > product.price) {
+          items.push(`${t('originalPriceLabel')}: ${product.originalPrice} ${product.currency || ''}`.trim());
+        }
+        if (product.category) {
+          items.push(`${t('categoryLabel')}: ${product.category}`);
+        }
+        return items;
+      })()}
+      rightActions={
+        <ButtonGroup>
+          <IconButton
+            variant="outline"
+            size="sm"
+            icon={<EditIcon size={12} />}
+            onClick={() => onEdit(product)}
+            responsive
+          >
+            {t('edit')}
+          </IconButton>
+          <IconButton
+            variant="destructive"
+            size="sm"
+            icon={<DeleteIcon size={12} />}
+            onClick={() => onDelete(product)}
+            responsive
+          >
+            {t('delete')}
+          </IconButton>
+        </ButtonGroup>
+      }
+    />
   );
 }

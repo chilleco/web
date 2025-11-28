@@ -1,5 +1,5 @@
 import { Post, PostsGetRequest, PostsGetResponse } from '../model/post';
-import { api } from '@/shared/services/api/client';
+import { api, ApiError } from '@/shared/services/api/client';
 import { shouldUseMockFallback, logApiWarning, addMockDelay } from '@/shared/config/api';
 import { getCategories } from '@/entities/category/api/categoryApi';
 import type { Category } from '@/entities/category/model/category';
@@ -94,14 +94,29 @@ export async function getPost(id: number): Promise<Post> {
     return response.posts[0];
 }
 
+function mapPostToApi(data: Partial<Post>) {
+    return {
+        id: data.id,
+        title: data.title,
+        description: data.description,
+        data: data.data,
+        image: data.image,
+        category: data.category,
+        status: data.status,
+        locale: data.locale,
+    };
+}
+
 export async function createPost(postData: Partial<Post>): Promise<Post> {
-    return api.post<Post>('/posts/', postData);
+    const response = await api.post<{ post: Post }>('/posts/save/', mapPostToApi(postData));
+    return response.post;
 }
 
 export async function updatePost(id: number, postData: Partial<Post>): Promise<Post> {
-    return api.put<Post>(`/posts/${id}/`, postData);
+    const response = await api.post<{ post: Post }>('/posts/save/', mapPostToApi({ ...postData, id }));
+    return response.post;
 }
 
 export async function deletePost(id: number): Promise<void> {
-    return api.delete(`/posts/${id}/`);
+    await api.post('/posts/rm/', { id });
 }

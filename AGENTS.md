@@ -21,6 +21,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Ask before destructive or external actions** (network, DB migrations, Docker, `git push`, etc.)
 - **Files & Paths Not To Touch**: `.env*`, `secrets/**`.
 - **Common i18n**: Reuse common system translations for generic actions (Add, Save, Update, Edit, Delete/Remove, Cancel, etc.) instead of creating duplicated or feature-scoped keys.
+- **API routing objects**: When calling backend routes, use the existing typed API helpers and common endpoints (`/posts/get|save|rm`, `/categories/get|save|rm`, `/products/get|save|rm`, etc.) instead of ad-hoc URLs or duplicated schemas.
 
 ### Validation Checklist
 
@@ -135,6 +136,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - Map severities to variants: `success`, `error`, `warning`, `info`.
 - Never use `window.alert()` for UX feedback.
 - Import: `import { ToastProvider, useToast } from '@/widgets/feedback-system'`
+- Success actions (create/save/delete) must show green success toasts; failures must show red error toasts. Use shared toast helpers (`useToastActions`) consistently.
 
 #### Custom Components
 
@@ -175,6 +177,14 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Header**: Optional `title` + `icon` props (icon size 20px)
 - **Content Spacing**: `sm` (space-y-4), `default` (space-y-6), `lg` (space-y-8)
 - **Never**: Manual `<div className="flex items-center gap-2">` headers
+
+##### EntityManagement / EntityRow
+- **Imports**: `import { EntityManagement, EntityRow } from '@/shared/ui/entity-management'`
+- **Layout**: Always a single outer `Box` from EntityManagement; rows use full-width `EntityRow` with first line `#id + title + /url + badges`, second line dot-separated metadata.
+- **Left slot**: Pass icons/images/expanders via `leftSlot`; do NOT add extra wrappers that break alignment.
+- **Right actions**: Provide button groups via `rightActions`; alignment comes from EntityRow (no extra flex wrappers needed).
+- **Second-row items**: Pass an array of React nodes/strings; they auto-join with dots (same pattern as categories admin).
+- **Reuse**: Products, posts, categories admin lists must reuse EntityRow instead of custom row markup.
 
 ## Development Workflow
 1. **Make plan of changing**: Explain the plan (brief)
