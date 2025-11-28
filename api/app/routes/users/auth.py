@@ -7,9 +7,16 @@ from fastapi import APIRouter, Body, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from userhub import auth, detect_type
-from consys.errors import ErrorWrong
+from consys.errors import ErrorInvalid, ErrorWrong
 
-from lib import cfg
+from lib import cfg, log, report
+from models.user import (
+    DEFAULT_BALANCE,
+    UserLocal,
+    complex_global_user_by_social,
+    get_name,
+    get_social,
+)
 
 
 USER_FIELDS = {
@@ -23,40 +30,129 @@ USER_FIELDS = {
     "mail",
     "social",
     "status",
-    # 'subscription',
-    # 'balance',
+    "balance",
 }
 
 
 router = APIRouter()
 
 
+def get_user(global_user, **kwargs):
+    if not global_user:
+        raise ErrorInvalid("user_id")
+
+    social = get_social(global_user, 2) or {}
+
+    if not global_user["id"]:
+        raise ErrorInvalid("user_id")
+
+    new = False
+    try:
+        user = UserLocal.get(global_user["id"])
+    except ErrorWrong:
+        user = UserLocal(
+            id=global_user["id"],
+            balance=DEFAULT_BALANCE,
+            social=social.get("id"),
+            locale=kwargs.get("locale"),
+        )
+        user.save()
+        new = True
+    else:
+        if user.locale and kwargs.get("locale") and user.locale != kwargs["locale"]:
+            user.locale = kwargs["locale"]
+            user.save()
+
+    return user, new
+
+
+async def update_utm(user, global_user, utm):
+    if not utm:
+        return user, None, None
+
+    if not utm.isdigit():
+        if user.utm:
+            return user, None, None
+
+        user.utm = utm
+        user.save()
+        return user, None, None
+
+    try:
+        global_referrer = await complex_global_user_by_social(int(utm))
+    except ErrorWrong:
+        await report.error("No referral", {"utm": utm})
+        return user, None, None
+
+    referrer, _ = get_user(global_referrer)
+    log.info(f"referrer #{referrer.id}")
+
+    if referrer.id == user.id:
+        return user, None, None
+
+    if user.referrer is None:
+        user.referrer = referrer.id
+
+    if referrer.id not in user.frens:
+        user.frens.append(referrer.id)
+    user.save()
+
+    if user.id not in referrer.frens:
+        referrer.frens.append(user.id)
+        referrer.save()
+
+    return user, referrer, global_referrer
+
+
 async def wrap_auth(*args, **kwargs):
     """Unified auth wrapper"""
 
-    user, token_id, new = await auth(cfg("PROJECT_NAME"), *args, **kwargs)
+    user, token_id, new_global = await auth(cfg("PROJECT_NAME"), *args, **kwargs)
 
     if not user:
         raise ErrorWrong("password")
 
-    # JWT
+    local_user, new_local = get_user(user, **kwargs)
+    user["status"] = local_user["status"]
+    user["roles"] = local_user.roles
+
+    global_referrer = None
+    if kwargs.get("utm"):
+        _, _, global_referrer = await update_utm(local_user, user, kwargs["utm"])
+
     token = jwt.encode(
         {
             "token": token_id,
             "user": user["id"],
             "status": user["status"],
             "network": kwargs["network"],
-            # 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
         },
         cfg("jwt"),
         algorithm="HS256",
     )
 
-    # Response
+    if new_local:
+        social = get_social(user, 2) or {}
+        try:
+            locale = user.get("locale") or social.get("locale")
+
+            await report.important(
+                "User registration",
+                {
+                    "social": social.get("id"),
+                    "locale": locale if locale and locale != "en" else None,
+                    "user": get_name(user),
+                    "referrer": global_referrer and get_name(global_referrer),
+                    "utm": kwargs.get("utm") if not global_referrer else None,
+                },
+            )
+        except Exception as e:  # pylint: disable=broad-except
+            print(e)
+
     response = JSONResponse(
         content={
             **user,
-            "new": new,
+            "new": new_local,
             "token": token,
         }
     )

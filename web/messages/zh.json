@@ -401,7 +401,22 @@
     },
     "profile": {
         "description": "管理个人信息和账号偏好。",
-        "comingSoon": "个人资料编辑即将上线。"
+        "name": "名",
+        "surname": "姓",
+        "phone": "电话",
+        "login": "登录名",
+        "mail": "邮箱",
+        "password": "密码",
+        "status": "状态",
+        "statusUnknown": "未知",
+        "statusValue": "状态: {value}",
+        "id": "ID",
+        "network": "网络",
+        "networkWeb": "Web",
+        "loading": "加载中",
+        "loaded": "已加载",
+        "loadError": "加载个人资料失败。",
+        "locked": "资料暂不可编辑"
     },
     "fileUpload": {
         "clickToUpload": "点击上传文件",

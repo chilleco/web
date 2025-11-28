@@ -401,7 +401,22 @@
     },
     "profile": {
         "description": "Administra tu información personal y preferencias de cuenta.",
-        "comingSoon": "La edición de perfil estará disponible pronto."
+        "name": "Nombre",
+        "surname": "Apellido",
+        "phone": "Teléfono",
+        "login": "Usuario",
+        "mail": "Correo",
+        "password": "Contraseña",
+        "status": "Estado",
+        "statusUnknown": "Desconocido",
+        "statusValue": "Estado: {value}",
+        "id": "ID",
+        "network": "Red",
+        "networkWeb": "Web",
+        "loading": "Cargando",
+        "loaded": "Cargado",
+        "loadError": "No se pudo cargar el perfil.",
+        "locked": "Perfil bloqueado para edición"
     },
     "fileUpload": {
         "clickToUpload": "Haga clic para cargar archivo",

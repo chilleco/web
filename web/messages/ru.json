@@ -469,7 +469,22 @@
     },
     "profile": {
         "description": "Управляйте персональными данными и настройками аккаунта.",
-        "comingSoon": "Редактирование профиля скоро будет доступно."
+        "name": "Имя",
+        "surname": "Фамилия",
+        "phone": "Телефон",
+        "login": "Логин",
+        "mail": "Email",
+        "password": "Пароль",
+        "status": "Статус",
+        "statusUnknown": "Неизвестно",
+        "statusValue": "Статус: {value}",
+        "id": "ID",
+        "network": "Сеть",
+        "networkWeb": "Web",
+        "loading": "Загрузка",
+        "loaded": "Загружено",
+        "loadError": "Не удалось загрузить профиль.",
+        "locked": "Профиль недоступен для редактирования"
     },
     "fileUpload": {
         "clickToUpload": "Нажмите для загрузки файла",

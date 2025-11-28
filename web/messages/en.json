@@ -469,7 +469,22 @@
     },
     "profile": {
         "description": "Manage your personal information and account preferences.",
-        "comingSoon": "Profile editing is coming soon."
+        "name": "First name",
+        "surname": "Last name",
+        "phone": "Phone",
+        "login": "Login",
+        "mail": "Email",
+        "password": "Password",
+        "status": "Status",
+        "statusUnknown": "Unknown",
+        "statusValue": "Status: {value}",
+        "id": "ID",
+        "network": "Network",
+        "networkWeb": "Web",
+        "loading": "Loading",
+        "loaded": "Loaded",
+        "loadError": "Failed to load profile data.",
+        "locked": "Profile locked"
     },
     "fileUpload": {
         "clickToUpload": "Click to upload file",

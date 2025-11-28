@@ -1,126 +1,110 @@
 from userhub import BaseUser as User
+from libdev.codes import get_flag
+from consys.errors import ErrorWrong
 
-__all__ = ("User",)
+from lib import cfg
+from models import Base, Attribute
 
-
-# from consys.handlers import (
-#     default_login,
-#     check_login_uniq,
-#     check_password,
-#     process_password,
-#     check_name,
-#     check_surname,
-#     check_phone_uniq,
-#     pre_process_phone,
-#     check_mail_uniq,
-#     process_title,
-#     process_lower,
-#     default_status,
-#     default_title,
-# )
-
-# from models import Base, Attribute
-# from lib import cfg
+ADMIN_TOKEN = cfg("userhub.token")
+DEFAULT_BALANCE = 1000
 
 
-# class User(Base):
-#     """User"""
+class UserLocal(Base):
+    _name = "users"
 
-#     _name = "users"
-#     _search_fields = {
-#         "login",
-#         "name",
-#         "surname",
-#         "title",
-#         "phone",
-#         "mail",
-#         "description",
-#     }
+    roles = Attribute(types=list)
 
-#     # status:
-#     # 0 - deleted
-#     # 1 - blocked
-#     # 2 - unauthorized
-#     # 3 - authorized
-#     # 4 - has access to platform resources
-#     # 5 - supervisor
-#     # 6 - moderator
-#     # 7 - admin
-#     # 8 - owner
+    step = Attribute(types=int, default=0)
 
-#     login = Attribute(
-#         types=str,
-#         default=default_login,
-#         checking=check_login_uniq,
-#         pre_processing=process_lower,
-#     )
-#     password = Attribute(
-#         types=str,
-#         checking=check_password,
-#         processing=process_password,
-#     )
-#     # Personal
-#     name = Attribute(
-#         types=str,
-#         checking=check_name,
-#         processing=process_title,
-#     )
-#     surname = Attribute(
-#         types=str,
-#         checking=check_surname,
-#         processing=process_title,
-#     )
-#     title = Attribute(
-#         types=str,
-#         default=default_title,
-#     )
-#     birth = Attribute(types=int)  # TODO: datetime
-#     sex = Attribute(types=str)  # TODO: enum: male / female
-#     # Contacts
-#     phone = Attribute(
-#         types=int,
-#         checking=check_phone_uniq,
-#         pre_processing=pre_process_phone,
-#     )
-#     phone_verified = Attribute(types=bool, default=True)
-#     mail = Attribute(
-#         types=str,
-#         checking=check_mail_uniq,
-#         pre_processing=process_lower,
-#     )
-#     mail_verified = Attribute(types=bool, default=True)
-#     social = Attribute(types=list)  # TODO: list[{}] # TODO: checking
-#     #
-#     description = Attribute(types=str)
-#     status = Attribute(types=int, default=default_status)
-#     rating = Attribute(types=float)
-#     # global_channel = Attribute(types=int, default=1)
-#     # channels = Attribute(types=list)
-#     discount = Attribute(types=float)
-#     balance = Attribute(types=int, default=0)
-#     subscription = Attribute(types=int, default=0)
-#     utm = Attribute(types=str)  # Source
-#     pay = Attribute(types=list)  # Saved data for payment
-#     # Permissions
-#     mailing = Attribute(types=dict)
-#     # Cache
-#     last_online = Attribute(types=int)
+    balance = Attribute(types=int, default=0)
+    premium = Attribute(types=bool, default=False)
+    mailing = Attribute(types=bool, default=False)
+    wallet = Attribute(types=str)
 
-#     # TODO: UTM / promo
-#     # TODO: referal_parent
-#     # TODO: referal_code
-#     # TODO: attempts (password)
-#     # TODO: middle name
+    # Referral
+    referrer = Attribute(types=int)
+    frens = Attribute(types=list)
+    utm = Attribute(types=str)
 
-#     # TODO: del Base.user
+    # Cache
+    locale = Attribute(types=str, default="en")
+    social = Attribute(types=int)
+    tasks = Attribute(types=list)
+    # draws = Attribute(types=list)
+    # pays = Attribute(types=list)
 
-#     def get_social(self, social):
-#         """Get user social info by social ID"""
-#         for i in self.social:
-#             if i["id"] == social:
-#                 return {
-#                     "id": i["user"],
-#                     "login": i.get("login"),
-#                     "locale": i.get("locale") or cfg("locale"),
-#                 }
-#         return None
+
+async def complex_global_users(**kwargs):
+    return await User.complex(
+        token=ADMIN_TOKEN,  # FIXME: app token in userhub
+        **kwargs,
+    )
+
+
+def get_social(obj, social):
+    for i in obj.get("social", []):
+        if i["id"] == social:
+            return {
+                "id": i["user"],
+                "login": i.get("login"),
+                "locale": i.get("locale") or cfg("locale", "en"),
+                "title": f"{i.get('name') or ''} {i.get('surname') or ''}".strip(),
+            }
+    return None
+
+
+def get_name(obj):
+    social = get_social(obj, 2)  # FIXME: 2
+
+    id_ = f"#{obj['id']}"  # social['id']
+
+    login = social.get("login")
+    if login:
+        login = f"@{login.lower()}"
+
+    title = obj.get("title") or social.get("title")
+    title = title.replace("None", "").strip()
+
+    locale = obj.get("locale") or social.get("locale")
+    if locale and locale in {"en"}:
+        locale = None
+
+    text = ""
+    used_login = False
+    used_id = False
+    if locale:
+        text += f"{get_flag(locale)} "  # FIXME: undefined == 🇬🇧
+    if title:
+        text += title
+    elif login:
+        text += login
+        used_login = True
+    else:
+        text += id_
+        used_id = True
+
+    if not used_id:
+        text += f" ({id_}"
+        if not used_login and login:
+            text += f", {login}"
+        text += ")"
+
+    return text
+
+
+async def complex_global_user_by_social(social_user):
+    users = await complex_global_users(extra={"social.user": str(social_user)})
+    if not users:
+        raise ErrorWrong("user")
+    return users[0]
+
+
+__all__ = (
+    "DEFAULT_BALANCE",
+    "User",
+    "UserLocal",
+    "complex_global_users",
+    "get_social",
+    "get_name",
+    "complex_global_user_by_social",
+)

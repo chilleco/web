@@ -146,15 +146,17 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
                         <CreditCardIcon size={16} />
                         <span className="ml-2">{t('billing')}</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleAnalyticsClick} className="cursor-pointer">
-                        <ChartIcon size={16} />
-                        <span className="ml-2">{t('analytics')}</span>
-                    </DropdownMenuItem>
-                    {user?.status !== undefined && user.status >= 6 && (
-                        <DropdownMenuItem onClick={handleAdminClick} className="cursor-pointer">
-                            <ShieldIcon size={16} />
-                            <span className="ml-2">{t('admin_panel')}</span>
-                        </DropdownMenuItem>
+                    {user?.status !== undefined && user.status >= 4 && (
+                        <>
+                            <DropdownMenuItem onClick={handleAnalyticsClick} className="cursor-pointer">
+                                <ChartIcon size={16} />
+                                <span className="ml-2">{t('analytics')}</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleAdminClick} className="cursor-pointer">
+                                <ShieldIcon size={16} />
+                                <span className="ml-2">{t('admin_panel')}</span>
+                            </DropdownMenuItem>
+                        </>
                     )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 dark:text-red-400">
