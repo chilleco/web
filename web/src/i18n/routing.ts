@@ -20,7 +20,9 @@ export const routing = defineRouting({
         '/admin': '/admin',
         '/admin/categories': '/admin/categories',
         '/admin/posts': '/admin/posts',
-        '/admin/users': '/admin/users'
+        '/admin/users': '/admin/users',
+        '/profile': '/profile',
+        '/callback': '/callback'
         // You can add more custom pathnames here if needed
     },
 

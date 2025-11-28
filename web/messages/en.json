@@ -446,6 +446,31 @@
     "session": {
         "tokenError": "We couldn't start your session. Please refresh the page."
     },
+    "auth": {
+        "title": "Log in to your account",
+        "subtitle": "Choose how you want to continue",
+        "credentialsTitle": "Log In",
+        "credentialsSubtitle": "Enter your credentials to continue",
+        "continueWithEmail": "Continue with email",
+        "continueWithGoogle": "Continue with Google",
+        "continueWithTelegram": "Continue with Telegram",
+        "loginLabel": "Email / Phone / Login",
+        "loginPlaceholder": "you@example.com or +1234567890",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "passwordTipLength": "At least 6 characters",
+        "passwordTipStrength": "Include letters and numbers",
+        "back": "Back",
+        "login": "Log In",
+        "processing": "Signing in...",
+        "loginSuccess": "Welcome back!",
+        "loginFailed": "Login failed. Check your credentials.",
+        "providerUnavailable": "This method is not available right now."
+    },
+    "profile": {
+        "description": "Manage your personal information and account preferences.",
+        "comingSoon": "Profile editing is coming soon."
+    },
     "fileUpload": {
         "clickToUpload": "Click to upload file",
         "dragAndDrop": "or drag and drop",

@@ -98,6 +98,8 @@ import {
   FaRotateLeft,
   FaLocationDot,
   FaHeart,
+  FaGoogle,
+  FaRightToBracket,
   // Category icons
   FaMobile,
   FaShirt,
@@ -495,6 +497,14 @@ export function TiktokIcon({ size = 16, ...props }: IconProps) {
 
 export function RedditIcon({ size = 16, ...props }: IconProps) {
   return <FaReddit size={size} {...props} />
+}
+
+export function GoogleIcon({ size = 16, ...props }: IconProps) {
+  return <FaGoogle size={size} {...props} />
+}
+
+export function LoginIcon({ size = 16, ...props }: IconProps) {
+  return <FaRightToBracket size={size} {...props} />
 }
 
 // Footer Related Icons

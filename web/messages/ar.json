@@ -378,6 +378,31 @@
     "session": {
         "tokenError": "تعذر بدء الجلسة. يرجى إعادة تحميل الصفحة."
     },
+    "auth": {
+        "title": "تسجيل الدخول إلى حسابك",
+        "subtitle": "اختر طريقة المتابعة",
+        "credentialsTitle": "تسجيل الدخول",
+        "credentialsSubtitle": "أدخل بياناتك للمتابعة",
+        "continueWithEmail": "المتابعة بالبريد",
+        "continueWithGoogle": "المتابعة عبر Google",
+        "continueWithTelegram": "المتابعة عبر Telegram",
+        "loginLabel": "البريد / الهاتف / اسم الدخول",
+        "loginPlaceholder": "you@example.com أو +201234567890",
+        "passwordLabel": "كلمة المرور",
+        "passwordPlaceholder": "أدخل كلمة المرور",
+        "passwordTipLength": "6 أحرف على الأقل",
+        "passwordTipStrength": "تتضمن حروفًا وأرقامًا",
+        "back": "رجوع",
+        "login": "تسجيل الدخول",
+        "processing": "جاري تسجيل الدخول...",
+        "loginSuccess": "مرحبًا بعودتك!",
+        "loginFailed": "فشل تسجيل الدخول. تحقق من البيانات.",
+        "providerUnavailable": "هذه الطريقة غير متاحة حاليًا."
+    },
+    "profile": {
+        "description": "إدارة معلوماتك الشخصية وتفضيلات الحساب.",
+        "comingSoon": "تعديل الملف الشخصي سيصبح متاحًا قريبًا."
+    },
     "fileUpload": {
         "clickToUpload": "انقر لتحميل الملف",
         "dragAndDrop": "أو اسحب وأفلت",

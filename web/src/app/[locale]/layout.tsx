@@ -9,11 +9,13 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { UserSettingsInitializer } from '@/features/user';
 import { SessionInitializer } from '@/features/session';
+import { TelegramAuthInitializer } from '@/features/auth';
 import { ThemeProvider } from '@/providers';
 import { PopupProvider } from '@/widgets/feedback-system';
 import { ToastProvider } from '@/widgets/feedback-system';
 import { StructuredData } from '@/shared/components/layout';
 import { ThemeAwareContent } from '@/shared/components/layout';
+import Script from "next/script";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -121,9 +123,14 @@ export default async function LocaleLayout({
     const messages = await getMessages();
 
     return (
-        <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+        <>
             <head>
                 <StructuredData />
+                <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
+                <Script src="//cdn.jsdelivr.net/npm/eruda" strategy="afterInteractive" />
+                <Script id="eruda-init" strategy="afterInteractive">
+                    {`if (typeof eruda !== 'undefined') { eruda.init(); }`}
+                </Script>
                 <link rel="manifest" href="/manifest.json" />
                 <meta name="theme-color" content="#708E6C" />
                 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -132,8 +139,10 @@ export default async function LocaleLayout({
                 <link rel="icon" type="image/svg+xml" href="/icon.svg" />
                 <link rel="apple-touch-icon" href="/logo.svg" />
             </head>
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            <div
+                lang={locale}
+                dir={locale === 'ar' ? 'rtl' : 'ltr'}
+                className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
             >
                 <NextIntlClientProvider messages={messages}>
                     <ReduxProvider>
@@ -141,6 +150,7 @@ export default async function LocaleLayout({
                             <PopupProvider>
                                 <ToastProvider />
                                 <SessionInitializer />
+                                <TelegramAuthInitializer />
                                 <UserSettingsInitializer />
                                 <ThemeAwareContent>
                                     {children}
@@ -149,7 +159,7 @@ export default async function LocaleLayout({
                         </ThemeProvider>
                     </ReduxProvider>
                 </NextIntlClientProvider>
-            </body>
-        </html>
+            </div>
+        </>
     );
 }

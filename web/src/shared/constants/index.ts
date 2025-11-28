@@ -36,6 +36,10 @@ export const API_ENDPOINTS = {
     ME: '/users/me/',
     UPDATE: '/users/me/',
     TOKEN: '/users/token/',
+    AUTH: '/users/auth/',
+    EXIT: '/users/exit/',
+    APP_TG: '/users/app/tg/',
+    SOCIAL: '/users/social/',
   },
   POSTS: {
     LIST: '/posts/',

@@ -11,7 +11,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - `.env` defines `MODE`: LOCAL / TEST / DEV / PRE / PROD; loaded in `api/`, `web/`, and `tg/` containers. Copy `base.env` → `.env`; merge `prod.env` values for production.
 
 ## Golden Rules of coding & editing
-- **Explain the plan** (brief) and show a *unified diff* preview before writing
+- **Explain the plan** (brief): research, make strategy and all steps of changing. compliance with the rules of the repository and the specifics of custom libraries and components
 - **Development**: Follow the **DevOps Principles** & **Backend Principles** & **Frontend Principles**
 - **Minimal, focused diffs**: change only what's necessary; Make minimal changes in relevant files & rows only
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
@@ -81,6 +81,17 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Caching**: Redis for session storage and caching
 - **Testing**: pytest with async test support
 - **Background Tasks**: Celery with Redis broker
+- **Auth/Session flow (FE+BE)**:
+    - **Guest bootstrap**: On first client load `SessionInitializer` generates a client token (UUID/random), calls `/users/token/` with network=`web`, utm + browser tz/langs, receives JWT. Tokens persist in `localStorage` as `sessionToken` (client) and `authToken` (JWT). API client automatically adds `Authorization: Bearer <authToken>`.
+    - **JWT contents**: encodes `token` (session id), `user` (id or 0), `status` (rights), `network` (provider id). Backend `AccessMiddleware` validates JWT and sets `request.state.token|user|status|network` for all routes.
+    - **Rights/status**: Status codes follow UserHub (0 deleted, 1 blocked, 2 unauthorized, 3 authorized, 4+ elevated incl. moderators/admins up to 8 owner). Whitelist in `AccessMiddleware` allows public POSTs (token creation, content fetch/save as configured); others require valid JWT.
+    - **User storage (BE)**: Users and tokens live in core UserHub (`userhub` lib). Creation/auth flows go through `routes/users/auth.py`, `routes/users/token.py`, `routes/users/social.py`, `routes/users/app/tg.py` using `userhub.auth/token`. See `docs/USERHUB_DOC.md` for contract, validation, and status meanings. No local user DB.
+    - **Login**: FE dispatches `loginWithCredentials` → `/users/auth/` with login/password/utm, stores returned JWT in `authToken`, updates Redux `auth` slice with user profile. API requests immediately use new JWT.
+    - **Telegram Mini App auto-auth**: `TelegramAuthInitializer` checks `window.Telegram.WebApp.initData` + user; if present and user not set, calls `/users/app/tg/` with `initData` + utm to auth/link Telegram session and rotate JWT.
+    - **Social callback**: External providers (Google/Telegram/etc.) redirect to `/[locale]/callback` with `code`; page infers provider, calls `/users/social/` with `code` + utm, stores JWT/user, and redirects to previous path or profile.
+    - **Logout**: FE `logout` thunk hits `/users/exit/`, clears `authToken`, resets auth slice, and re-runs guest token bootstrap.
+    - **API signing**: All FE API requests flow through `apiClient` which reads `authToken` from storage, sets `Authorization`, and uses global error handling/toasts.
+    - **Head scripts for TMA**: Locale layout loads Telegram WebApp script `beforeInteractive` plus `eruda` (dev) for Mini App debugging.
 
 ## Frontend Principles
 - TypeScript
@@ -211,3 +222,5 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 
 ## Notes
 - Frontend now auto-creates a guest session on client load via `SessionInitializer` (Redux-persisted `session` slice), calling `/users/token/` and storing tokens in `localStorage` keys `authToken` / `sessionToken`.
+- Auth flow restored with modal chooser (email/Google/Telegram) using Redux `auth` slice and `/users/auth/`; logout hits `/users/exit/` then reinitializes guest session.
+- Auth popups should place content directly in the popup (no extra Box wrappers that add inner shadows/backgrounds); keep buttons stacked and titles concise.

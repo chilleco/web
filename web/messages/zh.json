@@ -378,6 +378,31 @@
     "session": {
         "tokenError": "无法启动会话，请刷新页面。"
     },
+    "auth": {
+        "title": "登录您的账户",
+        "subtitle": "选择登录方式",
+        "credentialsTitle": "登录",
+        "credentialsSubtitle": "输入凭据继续",
+        "continueWithEmail": "使用邮箱继续",
+        "continueWithGoogle": "使用 Google 继续",
+        "continueWithTelegram": "使用 Telegram 继续",
+        "loginLabel": "邮箱 / 电话 / 登录名",
+        "loginPlaceholder": "you@example.com 或 +861234567890",
+        "passwordLabel": "密码",
+        "passwordPlaceholder": "输入密码",
+        "passwordTipLength": "至少 6 个字符",
+        "passwordTipStrength": "包含字母和数字",
+        "back": "返回",
+        "login": "登录",
+        "processing": "正在登录...",
+        "loginSuccess": "欢迎回来！",
+        "loginFailed": "登录失败，请检查信息。",
+        "providerUnavailable": "该方式暂不可用。"
+    },
+    "profile": {
+        "description": "管理个人信息和账号偏好。",
+        "comingSoon": "个人资料编辑即将上线。"
+    },
     "fileUpload": {
         "clickToUpload": "点击上传文件",
         "dragAndDrop": "或拖拽上传",

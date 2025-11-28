@@ -446,6 +446,31 @@
     "session": {
         "tokenError": "Не удалось создать сессию. Обновите страницу."
     },
+    "auth": {
+        "title": "Войдите в аккаунт",
+        "subtitle": "Выберите удобный способ входа",
+        "credentialsTitle": "Вход",
+        "credentialsSubtitle": "Введите данные для продолжения",
+        "continueWithEmail": "Продолжить через почту",
+        "continueWithGoogle": "Продолжить через Google",
+        "continueWithTelegram": "Продолжить через Telegram",
+        "loginLabel": "Почта / Телефон / Логин",
+        "loginPlaceholder": "you@example.com или +79991234567",
+        "passwordLabel": "Пароль",
+        "passwordPlaceholder": "Введите пароль",
+        "passwordTipLength": "Не менее 6 символов",
+        "passwordTipStrength": "Используйте буквы и цифры",
+        "back": "Назад",
+        "login": "Войти",
+        "processing": "Вход...",
+        "loginSuccess": "С возвращением!",
+        "loginFailed": "Не удалось войти. Проверьте данные.",
+        "providerUnavailable": "Метод временно недоступен."
+    },
+    "profile": {
+        "description": "Управляйте персональными данными и настройками аккаунта.",
+        "comingSoon": "Редактирование профиля скоро будет доступно."
+    },
     "fileUpload": {
         "clickToUpload": "Нажмите для загрузки файла",
         "dragAndDrop": "или перетащите файл",

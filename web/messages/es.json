@@ -378,6 +378,31 @@
     "session": {
         "tokenError": "No pudimos iniciar tu sesión. Actualiza la página."
     },
+    "auth": {
+        "title": "Inicia sesión en tu cuenta",
+        "subtitle": "Elige cómo continuar",
+        "credentialsTitle": "Iniciar sesión",
+        "credentialsSubtitle": "Ingresa tus datos para continuar",
+        "continueWithEmail": "Continuar con correo",
+        "continueWithGoogle": "Continuar con Google",
+        "continueWithTelegram": "Continuar con Telegram",
+        "loginLabel": "Correo / Teléfono / Usuario",
+        "loginPlaceholder": "tu@ejemplo.com o +34123456789",
+        "passwordLabel": "Contraseña",
+        "passwordPlaceholder": "Ingresa tu contraseña",
+        "passwordTipLength": "Al menos 6 caracteres",
+        "passwordTipStrength": "Incluye letras y números",
+        "back": "Atrás",
+        "login": "Iniciar sesión",
+        "processing": "Ingresando...",
+        "loginSuccess": "¡Bienvenido de nuevo!",
+        "loginFailed": "No se pudo iniciar sesión. Verifica tus datos.",
+        "providerUnavailable": "Este método no está disponible ahora."
+    },
+    "profile": {
+        "description": "Administra tu información personal y preferencias de cuenta.",
+        "comingSoon": "La edición de perfil estará disponible pronto."
+    },
     "fileUpload": {
         "clickToUpload": "Haga clic para cargar archivo",
         "dragAndDrop": "o arrastre y suelte",
