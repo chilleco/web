@@ -154,6 +154,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 
 ##### Box containers
 - Wrap ALL content in `Box` component from `@/shared/ui/box`
+- Do NOT wrap card grids (PostCard/ProductCard or similar card lists) in an extra `Box` because cards already provide the boxed surface
 
 ##### PageHeader
 - Use for ALL pages/sections with proper icon color system

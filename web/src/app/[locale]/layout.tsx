@@ -92,7 +92,6 @@ export const metadata: Metadata = {
         shortcut: '/icon.svg',
         apple: '/logo.svg',
     },
-    themeColor: '#708E6C',
     appleWebApp: {
         capable: true,
         statusBarStyle: 'default',
@@ -104,6 +103,7 @@ export const viewport = {
     width: 'device-width',
     initialScale: 1,
     maximumScale: 1,
+    themeColor: '#708E6C',
 };
 
 export function generateStaticParams() {

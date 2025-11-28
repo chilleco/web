@@ -1,16 +1,22 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import type { Post } from '@/entities/post';
+import type { Product } from '@/entities/product';
+import { getPosts } from '@/entities/post';
+import { getProducts } from '@/entities/product';
 import { Box } from '@/shared/ui/box';
 import { PageHeader } from '@/shared/ui/page-header';
 import { IconButton } from '@/shared/ui/icon-button';
-import { Card } from '@/shared/ui/card';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/ui/collapsible';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { PostCard } from '@/widgets/posts-list';
+import { ProductCard } from '@/widgets/product-card';
 import {
     RocketIcon,
     ShieldIcon,
@@ -30,8 +36,6 @@ import {
     BullhornIcon,
     HandshakeIcon,
     GlobeIcon,
-    TagIcon,
-    CalendarIcon,
     ChevronRightIcon
 } from '@/shared/ui/icons';
 
@@ -53,13 +57,56 @@ interface ListItem {
 
 export default function Home() {
     const t = useTranslations('landing');
+    const tAdminPosts = useTranslations('admin.posts');
+    const tAdminProducts = useTranslations('admin.products');
     const tContact = useTranslations('contact');
-    const { success } = useToastActions();
+    const { success, error: showError } = useToastActions();
+    const locale = useLocale();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         message: '',
     });
+    const [landingPosts, setLandingPosts] = useState<Post[]>([]);
+    const [postsLoading, setPostsLoading] = useState(false);
+    const [landingProducts, setLandingProducts] = useState<Product[]>([]);
+    const [productsLoading, setProductsLoading] = useState(false);
+    const postsFetchKeyRef = useRef<string | null>(null);
+    const productsFetchKeyRef = useRef<string | null>(null);
+
+    useEffect(() => {
+        const fetchKey = `${locale}-landing-posts`;
+        if (postsFetchKeyRef.current === fetchKey) return;
+        postsFetchKeyRef.current = fetchKey;
+
+        setPostsLoading(true);
+        void getPosts({ limit: 3, locale })
+            .then((response) => {
+                setLandingPosts(response.posts.slice(0, 3));
+            })
+            .catch((error) => {
+                console.error('Error loading landing posts:', error);
+                showError(tAdminPosts('loading'));
+            })
+            .finally(() => setPostsLoading(false));
+    }, [locale, showError, tAdminPosts]);
+
+    useEffect(() => {
+        const fetchKey = `${locale}-landing-products`;
+        if (productsFetchKeyRef.current === fetchKey) return;
+        productsFetchKeyRef.current = fetchKey;
+
+        setProductsLoading(true);
+        void getProducts({ limit: 3 })
+            .then((response) => {
+                setLandingProducts(response.products.slice(0, 3));
+            })
+            .catch((error) => {
+                console.error('Error loading landing products:', error);
+                showError(tAdminProducts('loading'));
+            })
+            .finally(() => setProductsLoading(false));
+    }, [locale, showError, tAdminProducts]);
 
     const heroHighlights: Array<HighlightItem & { label: string; value: string }> = useMemo(
         () =>
@@ -115,34 +162,6 @@ export default function Home() {
                 title: t(`howItWorks.steps.${step.key}.title`),
                 description: t(`howItWorks.steps.${step.key}.description`),
                 badge: t(`howItWorks.steps.${step.key}.badge`),
-            })),
-        [t]
-    );
-
-    const posts: Array<ListItem & { title: string; description: string; category: string; date: string }> =
-        useMemo(
-            () =>
-                ['first', 'second', 'third'].map((key) => ({
-                    key,
-                    title: t(`posts.items.${key}.title`),
-                    description: t(`posts.items.${key}.description`),
-                    category: t(`posts.items.${key}.category`),
-                    date: t(`posts.items.${key}.date`),
-                })),
-            [t]
-        );
-
-    const products: Array<
-        ListItem & { title: string; description: string; price: number; originalPrice: number; tag: string }
-    > = useMemo(
-        () =>
-            ['starter', 'growth', 'enterprise'].map((key) => ({
-                key,
-                title: t(`products.items.${key}.title`),
-                description: t(`products.items.${key}.description`),
-                price: Number(t(`products.items.${key}.price`)),
-                originalPrice: Number(t(`products.items.${key}.originalPrice`)),
-                tag: t(`products.items.${key}.tag`),
             })),
         [t]
     );
@@ -374,29 +393,21 @@ export default function Home() {
                             </IconButton>
                         }
                     />
-                    <Box>
+                    {postsLoading ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            {posts.map((post) => (
-                                <Card
-                                    key={post.key}
-                                    title={post.title}
-                                    description={post.description}
-                                    images={[]}
-                                    filters={[
-                                        {
-                                            icon: <TagIcon size={12} />,
-                                            value: post.category,
-                                        },
-                                        {
-                                            icon: <CalendarIcon size={12} />,
-                                            value: post.date,
-                                        },
-                                    ]}
-                                    href="/posts"
-                                />
+                            {Array.from({ length: 3 }).map((_, index) => (
+                                <div key={index} className="h-64 rounded-[1rem] bg-muted animate-pulse" />
                             ))}
                         </div>
-                    </Box>
+                    ) : landingPosts.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {landingPosts.map((post) => (
+                                <PostCard key={post.id} post={post} />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">{tAdminPosts('empty')}</p>
+                    )}
                 </section>
 
                 <section className="space-y-4">
@@ -416,40 +427,21 @@ export default function Home() {
                             </IconButton>
                         }
                     />
-                    <Box>
+                    {productsLoading ? (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {products.map((product) => (
-                                <Card
-                                    key={product.key}
-                                    title={product.title}
-                                    description={product.description}
-                                    images={[]}
-                                    tags={[
-                                        {
-                                            label: product.tag,
-                                            icon: <CheckCircleIcon size={12} />,
-                                            variant: 'primary',
-                                        },
-                                    ]}
-                                    price={product.price}
-                                    originalPrice={product.originalPrice}
-                                    currency={t('products.currency')}
-                                    variant="product"
-                                    actions={
-                                        <IconButton
-                                            asChild
-                                            size="sm"
-                                            variant="success"
-                                            icon={<ShoppingIcon size={14} />}
-                                            responsive
-                                        >
-                                            <Link href="/catalog">{t('products.cta')}</Link>
-                                        </IconButton>
-                                    }
-                                />
+                            {Array.from({ length: 3 }).map((_, index) => (
+                                <div key={index} className="h-64 rounded-[1rem] bg-muted animate-pulse" />
                             ))}
                         </div>
-                    </Box>
+                    ) : landingProducts.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {landingProducts.map((product) => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-muted-foreground">{tAdminProducts('empty')}</p>
+                    )}
                 </section>
 
                 <section className="space-y-4">
@@ -548,12 +540,6 @@ export default function Home() {
                     <Box>
                         <div className="grid lg:grid-cols-2 gap-6 items-start">
                             <div className="space-y-3">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-[0.75rem] bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center">
-                                        <HandshakeIcon size={16} />
-                                    </div>
-                                    <p className="text-sm text-muted-foreground">{t('contact.support')}</p>
-                                </div>
                                 <h3 className="text-2xl font-semibold text-foreground">
                                     {t('contact.pitch')}
                                 </h3>
@@ -691,28 +677,26 @@ export default function Home() {
                         title={t('faq.title')}
                         description={t('faq.description')}
                     />
-                    <Box>
-                        <div className="space-y-3">
-                            {faqs.map((faq, index) => (
-                                <Collapsible key={faq.key} defaultOpen={index === 0}>
-                                    <CollapsibleTrigger className="w-full flex items-center justify-between gap-3 rounded-[1rem] bg-muted/60 px-4 py-3 text-left text-sm font-semibold text-foreground shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] cursor-pointer data-[state=open]:bg-muted/80">
-                                        <div className="flex items-center gap-3 flex-1">
-                                            <div className="w-8 h-8 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center shrink-0">
-                                                <QuestionIcon size={14} />
-                                            </div>
-                                            <span className="text-left">{faq.question}</span>
+                    <div className="space-y-3">
+                        {faqs.map((faq, index) => (
+                            <Collapsible key={faq.key} defaultOpen={index === 0}>
+                                <CollapsibleTrigger className="w-full flex items-center justify-between gap-3 rounded-[1rem] bg-muted/60 px-4 py-3 text-left text-sm font-semibold text-foreground shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] cursor-pointer data-[state=open]:bg-muted/80">
+                                    <div className="flex items-center gap-3 flex-1">
+                                        <div className="w-8 h-8 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center shrink-0">
+                                            <QuestionIcon size={14} />
                                         </div>
-                                        <div className="w-8 h-8 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center shrink-0 transition-transform duration-300 data-[state=open]:rotate-180">
-                                            <ChevronDownIcon size={14} />
-                                        </div>
-                                    </CollapsibleTrigger>
-                                    <CollapsibleContent className="px-4 pb-4 pt-2 text-sm text-muted-foreground leading-relaxed">
-                                        {faq.answer}
-                                    </CollapsibleContent>
-                                </Collapsible>
-                            ))}
-                        </div>
-                    </Box>
+                                        <span className="text-left">{faq.question}</span>
+                                    </div>
+                                    <div className="w-8 h-8 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center shrink-0 transition-transform duration-300 data-[state=open]:rotate-180">
+                                        <ChevronDownIcon size={14} />
+                                    </div>
+                                </CollapsibleTrigger>
+                                <CollapsibleContent className="px-4 pb-4 pt-2 text-sm text-muted-foreground leading-relaxed">
+                                    {faq.answer}
+                                </CollapsibleContent>
+                            </Collapsible>
+                        ))}
+                    </div>
                 </section>
             </div>
         </div>
