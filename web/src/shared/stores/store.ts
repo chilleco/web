@@ -8,6 +8,7 @@ import { userSettingsSlice } from '@/features/user/stores/userSettingsSlice'
 import { toastSlice } from '@/shared/stores/toastSlice'
 import { cartSlice } from '@/features/cart/stores/cartSlice'
 import { favoritesSlice } from '@/features/favorites/stores/favoritesSlice'
+import { sessionSlice } from '@/features/session/stores/sessionSlice'
 
 // Persist configuration for counter
 const counterPersistConfig = {
@@ -33,11 +34,18 @@ const favoritesPersistConfig = {
     storage,
 }
 
+// Persist configuration for session
+const sessionPersistConfig = {
+    key: 'session',
+    storage,
+}
+
 // Create persisted reducers
 const persistedCounterReducer = persistReducer(counterPersistConfig, counterSlice.reducer)
 const persistedUserSettingsReducer = persistReducer(userSettingsPersistConfig, userSettingsSlice.reducer)
 const persistedCartReducer = persistReducer(cartPersistConfig, cartSlice.reducer)
 const persistedFavoritesReducer = persistReducer(favoritesPersistConfig, favoritesSlice.reducer)
+const persistedSessionReducer = persistReducer(sessionPersistConfig, sessionSlice.reducer)
 
 // Root reducer
 const rootReducer = combineReducers({
@@ -45,6 +53,7 @@ const rootReducer = combineReducers({
     userSettings: persistedUserSettingsReducer,
     cart: persistedCartReducer,
     favorites: persistedFavoritesReducer,
+    session: persistedSessionReducer,
     toast: toastSlice.reducer, // Toast doesn't need persistence
 })
 

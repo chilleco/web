@@ -104,14 +104,7 @@ app.add_middleware(
         "/",
         "/users/token/",
         "/posts/get/",
-        "/posts/save/",  # FIXME
-        "/posts/rm/",  # FIXME
         "/categories/get/",
-        "/categories/save/",  # FIXME
-        "/categories/rm/",  # FIXME
-        "/products/get/",
-        "/products/save/",  # FIXME
-        "/products/rm/",  # FIXME
     },
 )
 

@@ -1,4 +1,6 @@
 # Template Web App
+Modern full-stack web application with Python FastAPI backend, Next.js frontend, Telegram bot. Built with Docker containers and featuring multilingual support, and production-ready flow.
+
 ## Run
 [Before starting, you can learn how to configure the server →](https://github.com/kosyachniy/dev/blob/main/server/SERVER.md)
 

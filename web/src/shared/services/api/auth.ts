@@ -1,4 +1,5 @@
 import { api } from './client';
+import { STORAGE_KEYS } from '@/shared/constants';
 
 export interface LoginRequest {
     email: string;
@@ -33,7 +34,7 @@ export async function login(credentials: LoginRequest): Promise<LoginResponse> {
     
     // Store token in localStorage
     if (typeof window !== 'undefined' && response.token) {
-        localStorage.setItem('authToken', response.token);
+        localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.token);
     }
     
     return response;
@@ -44,7 +45,7 @@ export async function register(userData: RegisterRequest): Promise<LoginResponse
     
     // Store token in localStorage
     if (typeof window !== 'undefined' && response.token) {
-        localStorage.setItem('authToken', response.token);
+        localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.token);
     }
     
     return response;
@@ -56,7 +57,7 @@ export async function logout(): Promise<void> {
     } finally {
         // Always clear token from localStorage
         if (typeof window !== 'undefined') {
-            localStorage.removeItem('authToken');
+            localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
         }
     }
 }

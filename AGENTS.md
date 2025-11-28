@@ -208,3 +208,6 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 
 ## Git & PR Hygiene
 - Commits: short, imperative (`Fix local API requests`). Branches: `feature/*`, `bugfix/*`. PRs: summary, linked issue, commands run, screenshots/GIFs for UI changes, and env/migration updates.
+
+## Notes
+- Frontend now auto-creates a guest session on client load via `SessionInitializer` (Redux-persisted `session` slice), calling `/users/token/` and storing tokens in `localStorage` keys `authToken` / `sessionToken`.

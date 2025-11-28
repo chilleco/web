@@ -443,6 +443,9 @@
             "featured": "Featured"
         }
     },
+    "session": {
+        "tokenError": "We couldn't start your session. Please refresh the page."
+    },
     "fileUpload": {
         "clickToUpload": "Click to upload file",
         "dragAndDrop": "or drag and drop",

@@ -375,6 +375,9 @@
             "featured": "精选"
         }
     },
+    "session": {
+        "tokenError": "无法启动会话，请刷新页面。"
+    },
     "fileUpload": {
         "clickToUpload": "点击上传文件",
         "dragAndDrop": "或拖拽上传",

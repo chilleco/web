@@ -17,8 +17,9 @@ export const ROUTES = {
 // Local Storage Keys
 export const STORAGE_KEYS = {
   USER_SETTINGS: 'user-settings',
-  AUTH_TOKEN: 'auth-token',
-  REFRESH_TOKEN: 'refresh-token',
+  AUTH_TOKEN: 'authToken',
+  SESSION_TOKEN: 'sessionToken',
+  REFRESH_TOKEN: 'refreshToken',
   THEME: 'theme',
   LANGUAGE: 'language',
 } as const;
@@ -34,6 +35,7 @@ export const API_ENDPOINTS = {
   USERS: {
     ME: '/users/me/',
     UPDATE: '/users/me/',
+    TOKEN: '/users/token/',
   },
   POSTS: {
     LIST: '/posts/',

@@ -375,6 +375,9 @@
             "featured": "المميزة"
         }
     },
+    "session": {
+        "tokenError": "تعذر بدء الجلسة. يرجى إعادة تحميل الصفحة."
+    },
     "fileUpload": {
         "clickToUpload": "انقر لتحميل الملف",
         "dragAndDrop": "أو اسحب وأفلت",

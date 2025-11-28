@@ -375,6 +375,9 @@
             "featured": "Destacados"
         }
     },
+    "session": {
+        "tokenError": "No pudimos iniciar tu sesión. Actualiza la página."
+    },
     "fileUpload": {
         "clickToUpload": "Haga clic para cargar archivo",
         "dragAndDrop": "o arrastre y suelte",
