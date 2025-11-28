@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { PostsWithSearch } from '@/widgets/posts-list';
 import { SubcategoryNavigation } from '@/widgets/category';
-import { getSubcategories, getCategoryTitle, getCategoryUrl } from '@/entities/category';
+import { getSubcategories, getCategoryTitle, getCategoryUrl, type Category } from '@/entities/category';
 import { PageHeader } from '@/shared/ui/page-header';
 import { PostsIcon, PlusIcon } from '@/shared/ui/icons';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -48,9 +48,17 @@ export default async function PostsPage({ params }: PostsPageProps) {
     const { locale } = await params;
     const t = await getTranslations('navigation');
     const tPosts = await getTranslations('posts');
-    
-    // Get top-level categories (no parent)
-    const topCategories = await getSubcategories(undefined, locale);
+
+    // Get top-level categories (no parent) with error handling
+    let topCategories: Category[] = [];
+    try {
+        topCategories = await getSubcategories(undefined, locale);
+    } catch (error) {
+        // Log error for debugging but don't crash the page
+        console.error('Failed to load categories:', error);
+        // Fallback to empty array - the page will render without category navigation
+        topCategories = [];
+    }
 
     return (
         <div className="min-h-screen bg-background">
