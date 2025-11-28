@@ -80,6 +80,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Custom libs**: `consys` ORM (`docs/CONSYS_ORM_DOCUMENTATION.md`), `libdev` helpers (`docs/LIBDEV_DOCUMENTATION.md`), `userhub` (auth), `tgio` (Telegram helpers), `tgreports` (reporting). Check docs/README before changes.
 - **Authentication**: JWT tokens with FastAPI security
 - **Caching**: Redis for session storage and caching
+- **Logging & alerts**: Structured loguru logging; Telegram alerts/reporting via `tgreports` — follow `docs/TGREPORTS_GUIDE.md`.
 - **Testing**: pytest with async test support
 - **Background Tasks**: Celery with Redis broker
 - **Auth/Session flow (FE+BE)**:

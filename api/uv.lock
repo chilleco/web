@@ -161,7 +161,7 @@ requires-dist = [
     { name = "python-socketio", specifier = "==5.8.0" },
     { name = "redis", specifier = "==4.6.0" },
     { name = "slowapi", specifier = "==0.1.8" },
-    { name = "tgreports", specifier = "==0.16" },
+    { name = "tgreports", specifier = "==0.17" },
     { name = "userhub", specifier = "==0.14" },
     { name = "uvicorn", specifier = "==0.32.0" },
     { name = "websockets", specifier = "==11.0.3" },
@@ -1840,14 +1840,15 @@ wheels = [
 
 [[package]]
 name = "tgreports"
-version = "0.16"
+version = "0.17"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "loguru" },
     { name = "tgio" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b7/5d/47ec9dba76e932c9837f5f011cb45664c4a6b0b4e22683599d414945ef60/tgreports-0.16.tar.gz", hash = "sha256:d3d22ec783304ffabbe37fb4785e4a7e444a4f1983470e2503609293b475aa9e", size = 5734, upload-time = "2024-07-18T17:20:23.079Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8a/1c/04e88e5eaee8bc8441e8824b71aa448bb9d2451a7d661774035a8767cbb8/tgreports-0.17.tar.gz", hash = "sha256:fb7e9cfabc23d16e6d8a71c34d4df6723e3533536467bb07dc38cb1644c365de", size = 6049, upload-time = "2025-11-28T17:38:50.787Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/09/97/096d1712f9a391d8e5af1dff945a27234986912b69d7f3912bf2dfee6de7/tgreports-0.16-py3-none-any.whl", hash = "sha256:4f33a6a995f9e1d13d14e0e015173740587a9aba0f65d345e92ab31e08d60f8e", size = 5216, upload-time = "2024-07-18T17:20:21.747Z" },
+    { url = "https://files.pythonhosted.org/packages/8a/98/455add5ccaa512ffbe02e5308e9faeecf409a2bd026ab32427f5b23b2448/tgreports-0.17-py3-none-any.whl", hash = "sha256:3c260e4d0628d0a4d568d515fef1b3b5a7b793e1ae16ca8ed1391ff71064d440", size = 5596, upload-time = "2025-11-28T17:38:49.773Z" },
 ]
 
 [[package]]

@@ -36,7 +36,7 @@ dependencies = [
     "aiogram==2.25.1",
 
     # Reports
-    "tgreports==0.16",
+    "tgreports==0.17",
 
     # Docs
     "google-auth==2.36.0",

@@ -68,14 +68,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Copy application code
 COPY --chown=appuser:appuser /app /app
 
-# Ensure log files under /app/logs exist and expose them via the expected paths
-# FIXME
-RUN mkdir -p /app/logs && \
-    touch /app/logs/api.log /app/logs/api.err && \
-    ln -sf /app/logs/api.log /app/app.log && \
-    ln -sf /app/logs/api.err /app/app.err && \
-    chown -R appuser:appuser /app/logs
-
 # Switch to non-root user
 USER appuser
 

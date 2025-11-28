@@ -21,12 +21,13 @@ services:
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
     volumes:
+      - ../../api/scripts:/app/scripts
+      # For data
       - ${DATA_PATH}/load:/data/load
       - ${DATA_PATH}/backup:/backup
-      - ../../api/scripts:/app/scripts
       # For logs
-      # FIXME
-      - ${DATA_PATH}/logs:/app/logs
+      - ${DATA_PATH}/logs/api.log:/logs/app.log
+      - ${DATA_PATH}/logs/api.err:/logs/app.err
     depends_on:
       - mq
 
