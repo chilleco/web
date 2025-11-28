@@ -14,6 +14,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Explain the plan** (brief): research, make strategy and all steps of changing. compliance with the rules of the repository and the specifics of custom libraries and components
 - **Development**: Follow the **DevOps Principles** & **Backend Principles** & **Frontend Principles**
 - **Minimal, focused diffs**: change only what's necessary; Make minimal changes in relevant files & rows only
+- **No duplicate API calls**: guard client-side fetch effects with stable fetch keys/in-flight refs so Strict Mode doesn’t trigger the same request multiple times (one request per dataset)
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
 - **Follow FSD Architecture**: respect Feature-Sliced Design layers and import rules

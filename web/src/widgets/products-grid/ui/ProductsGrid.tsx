@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ProductCard } from '@/widgets/product-card';
 import { useToastActions } from '@/shared/hooks/useToast';
@@ -44,6 +44,9 @@ export function ProductsGrid({
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
+    const requestedKeyRef = useRef<string | null>(null);
+    const inFlightKeyRef = useRef<string | null>(null);
+    const latestKeyRef = useRef<string | null>(null);
 
     const categoryFilter = useMemo(() => {
         if (!filters) return undefined;
@@ -51,7 +54,18 @@ export function ProductsGrid({
         return typeof category === 'string' ? category : undefined;
     }, [filters]);
 
-    const loadProducts = useCallback(async () => {
+    const fetchKey = useMemo(() => `${searchQuery ?? ''}|${categoryFilter ?? 'all'}|${PRODUCTS_LIMIT}`, [categoryFilter, searchQuery]);
+
+    const loadProducts = useCallback(async (key: string, force = false) => {
+        if (!force) {
+            if (inFlightKeyRef.current === key) return;
+            if (requestedKeyRef.current === key) return;
+        }
+
+        requestedKeyRef.current = key;
+        inFlightKeyRef.current = key;
+        latestKeyRef.current = key;
+
         try {
             setLoading(true);
             setLoadError(null);
@@ -62,19 +76,27 @@ export function ProductsGrid({
                 limit: PRODUCTS_LIMIT,
             });
 
+            if (latestKeyRef.current !== key) {
+                return;
+            }
+
             setProducts(response.products);
         } catch (err) {
             const message = err instanceof Error ? err.message : tCatalog('loadError');
             setLoadError(message);
             showError(message);
         } finally {
+            if (inFlightKeyRef.current === key) {
+                inFlightKeyRef.current = null;
+            }
             setLoading(false);
         }
     }, [categoryFilter, searchQuery, showError, tCatalog]);
 
     useEffect(() => {
-        loadProducts();
-    }, [loadProducts]);
+        const currentKey = fetchKey;
+        void loadProducts(currentKey);
+    }, [fetchKey, loadProducts]);
 
     const handleAddToCart = useCallback((product: Product) => {
         success(tCatalog('addedToCartToast', { title: product.title }));
@@ -118,7 +140,7 @@ export function ProductsGrid({
                     <p className="text-lg font-semibold">{tCatalog('loadError')}</p>
                     <p className="text-sm text-muted-foreground">{loadError}</p>
                 </div>
-                <Button variant="secondary" onClick={loadProducts}>
+                <Button variant="secondary" onClick={() => loadProducts(fetchKey, true)}>
                     <LoadingIcon size={16} className="mr-2" />
                     {tCatalog('retry')}
                 </Button>

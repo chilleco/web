@@ -31,6 +31,14 @@ function findCategoryById(categories: Category[], categoryId: number): Category 
 
 // Function to enrich posts with category data
 async function enrichPostsWithCategoryData(posts: Post[]): Promise<Post[]> {
+    const needsEnrichment = posts.some(
+        (post) => Boolean(post.category) && !post.category_data
+    );
+
+    if (!needsEnrichment) {
+        return posts;
+    }
+
     const categories = await getCachedCategories();
     
     return posts.map(post => {

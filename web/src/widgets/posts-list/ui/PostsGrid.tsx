@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { PostCard } from './PostCard';
 import { Post, PostsGetRequest } from '@/entities/post';
 import { getPosts } from '@/entities/post';
@@ -34,6 +34,8 @@ export function PostsGrid({
     const [error, setError] = useState<string | null>(null);
 
     const { error: showError } = useToastActions();
+    const isExternallyManaged = Boolean(onLoadMore);
+    const lastFetchKeyRef = useRef<string | null>(null);
 
     const loadPosts = useCallback(async (params: PostsGetRequest = {}, append = false) => {
         try {
@@ -72,12 +74,29 @@ export function PostsGrid({
         onLoadMore?.();
     }, [onLoadMore]);
 
-    // Load posts when dependencies change
+    // Load posts when dependencies change (only when not managed by parent)
     useEffect(() => {
-        if (initialPosts.length === 0) {
-            loadPosts();
+        const fetchKey = `${categoryId ?? 'all'}-${locale ?? 'all'}-${searchQuery}-${limit}`;
+
+        if (isExternallyManaged || initialPosts.length !== 0) {
+            lastFetchKeyRef.current = fetchKey;
+            return;
         }
-    }, [categoryId, locale, searchQuery, initialPosts.length, loadPosts]);
+        if (lastFetchKeyRef.current === fetchKey) {
+            return;
+        }
+
+        lastFetchKeyRef.current = fetchKey;
+        loadPosts();
+    }, [categoryId, locale, searchQuery, initialPosts.length, loadPosts, isExternallyManaged, limit]);
+
+    useEffect(() => {
+        if (!isExternallyManaged) {
+            setPosts(initialPosts);
+        }
+    }, [initialPosts, isExternallyManaged]);
+
+    const postsToRender = isExternallyManaged ? initialPosts : posts;
 
     if (loading) {
         return (
@@ -91,7 +110,7 @@ export function PostsGrid({
         );
     }
 
-    if (error && posts.length === 0) {
+    if (error && postsToRender.length === 0) {
         return (
             <div className="text-center py-12">
                 <div className="text-red-500 mb-4">
@@ -106,7 +125,7 @@ export function PostsGrid({
         );
     }
 
-    if (posts.length === 0) {
+    if (postsToRender.length === 0) {
         return (
             <div className="text-center py-12">
                 <div className="text-muted-foreground">
@@ -125,7 +144,7 @@ export function PostsGrid({
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-                {posts.map((post) => (
+                {postsToRender.map((post) => (
                     <PostCard key={post.id} post={post} />
                 ))}
             </div>

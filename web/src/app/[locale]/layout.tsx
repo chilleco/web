@@ -92,6 +92,12 @@ export const metadata: Metadata = {
         shortcut: '/icon.svg',
         apple: '/logo.svg',
     },
+    themeColor: '#708E6C',
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: 'default',
+        title: 'web',
+    },
 };
 
 export const viewport = {
@@ -124,21 +130,12 @@ export default async function LocaleLayout({
 
     return (
         <>
-            <head>
-                <StructuredData />
-                <Script src="https://telegram.org/js/telegram-web-app.js" strategy="afterInteractive" />
-                <Script src="//cdn.jsdelivr.net/npm/eruda" strategy="afterInteractive" />
-                <Script id="eruda-init" strategy="afterInteractive">
-                    {`if (typeof eruda !== 'undefined') { eruda.init(); }`}
-                </Script>
-                <link rel="manifest" href="/manifest.json" />
-                <meta name="theme-color" content="#708E6C" />
-                <meta name="apple-mobile-web-app-capable" content="yes" />
-                <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-                <meta name="apple-mobile-web-app-title" content="Web" />
-                <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-                <link rel="apple-touch-icon" href="/logo.svg" />
-            </head>
+            <StructuredData />
+            <Script src="https://telegram.org/js/telegram-web-app.js" strategy="afterInteractive" />
+            <Script src="//cdn.jsdelivr.net/npm/eruda" strategy="afterInteractive" />
+            <Script id="eruda-init" strategy="afterInteractive">
+                {`if (typeof eruda !== 'undefined') { eruda.init(); }`}
+            </Script>
             <div
                 lang={locale}
                 dir={locale === 'ar' ? 'rtl' : 'ltr'}

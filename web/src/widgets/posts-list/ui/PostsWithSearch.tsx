@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Search, SearchFilters } from '@/shared/ui/search';
 import { PostsGrid } from './PostsGrid';
 import { Post } from '@/entities/post';
@@ -28,6 +28,8 @@ export function PostsWithSearch({
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [currentQuery, setCurrentQuery] = useState('');
+    const lastFetchKeyRef = useRef<string | null>(null);
+    const postsRef = useRef(initialPosts.length);
 
     const { error: showError } = useToastActions();
     const t = useTranslations('search');
@@ -40,25 +42,31 @@ export function PostsWithSearch({
                 setLoadingMore(true);
             }
 
+            const offset = append ? postsRef.current : 0;
             const response = await getPosts({
                 limit,
                 category: categoryId,
                 locale,
                 search: searchQuery || '',
-                offset: append ? posts.length : 0,
+                offset,
                 // TODO: Add sort and other filter parameters when backend API supports them
                 // sort: searchFilters.sort as string | undefined,
             });
 
             if (append) {
-                setPosts(prev => [...prev, ...response.posts]);
+                setPosts(prev => {
+                    const nextPosts = [...prev, ...response.posts];
+                    postsRef.current = nextPosts.length;
+                    return nextPosts;
+                });
             } else {
                 setPosts(response.posts);
+                postsRef.current = response.posts.length;
             }
 
             // Check if there are more posts to load
             if (response.count !== undefined) {
-                const currentOffset = append ? posts.length : 0;
+                const currentOffset = append ? offset : 0;
                 setHasMore(currentOffset + response.posts.length < response.count);
             } else {
                 setHasMore(response.posts.length === limit);
@@ -72,7 +80,7 @@ export function PostsWithSearch({
             setLoading(false);
             setLoadingMore(false);
         }
-    }, [categoryId, locale, limit, posts.length, showError]);
+    }, [categoryId, locale, limit, showError]);
 
     const handleSearch = useCallback((searchQuery: string, searchFilters: SearchFilters) => {
         setCurrentQuery(searchQuery);
@@ -87,10 +95,23 @@ export function PostsWithSearch({
 
     // Load initial posts if not provided
     useEffect(() => {
-        if (initialPosts.length === 0) {
-            loadPosts('', {}, false);
+        const fetchKey = `${categoryId ?? 'all'}-${locale ?? 'all'}-${limit}`;
+
+        if (initialPosts.length > 0) {
+            postsRef.current = initialPosts.length;
+            setPosts(initialPosts);
+            setHasMore(initialPosts.length >= limit);
+            lastFetchKeyRef.current = fetchKey;
+            return;
         }
-    }, [initialPosts.length, loadPosts]); // Run when dependencies change
+
+        if (lastFetchKeyRef.current === fetchKey) {
+            return;
+        }
+
+        lastFetchKeyRef.current = fetchKey;
+        loadPosts('', {}, false);
+    }, [categoryId, locale, limit, initialPosts, loadPosts]);
 
     return (
         <div className="space-y-6">
