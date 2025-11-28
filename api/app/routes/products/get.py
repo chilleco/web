@@ -34,7 +34,6 @@ SAMPLE_PRODUCTS = [
         "in_stock": True,
         "is_new": True,
         "is_featured": True,
-        "discount": 33,
     },
     {
         "id": 2,
@@ -81,7 +80,6 @@ SAMPLE_PRODUCTS = [
         "rating_count": 89,
         "category": "Photography",
         "in_stock": True,
-        "discount": 25,
     },
     {
         "id": 5,
@@ -113,7 +111,6 @@ SAMPLE_PRODUCTS = [
         "rating_count": 145,
         "category": "Gaming",
         "in_stock": False,
-        "discount": 19,
     },
     {
         "id": 7,
@@ -146,7 +143,6 @@ SAMPLE_PRODUCTS = [
         "rating_count": 178,
         "category": "Smart Home",
         "in_stock": True,
-        "discount": 20,
     },
     {
         "id": 9,
@@ -215,7 +211,6 @@ class ProductResponse(BaseModel):
     inStock: bool | None = None
     isNew: bool | None = None
     isFeatured: bool | None = None
-    discount: int | None = None
     url: str | None = None
 
 
@@ -274,7 +269,6 @@ async def handler(
         "in_stock",
         "is_new",
         "is_featured",
-        "discount",
         "url",
         "created",
         "updated",

@@ -18,38 +18,35 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
   const previewImage = product.images?.[0];
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-[1rem] bg-muted/50 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.08)]">
-      <div className="flex flex-col gap-2 flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-3 min-w-0">
-            {previewImage ? (
-              <div className="w-10 h-10 rounded-[0.75rem] overflow-hidden bg-muted">
-                <img
-                  src={previewImage}
-                  alt={product.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            ) : (
-              <div className="w-10 h-10 rounded-[0.75rem] bg-muted flex items-center justify-center">
-                <ImageIcon size={16} className="text-muted-foreground" />
-              </div>
-            )}
-
-            <div className="min-w-0">
-              <p className="font-semibold truncate">{product.title}</p>
-              <p className="text-sm text-muted-foreground truncate">
-                {product.category || t('noCategory')}
-              </p>
-            </div>
+    <div className="flex items-center gap-4 p-4">
+      <div className="w-12 h-12 rounded-[0.75rem] overflow-hidden bg-muted flex-shrink-0">
+        {previewImage ? (
+          <img
+            src={previewImage}
+            alt={product.title}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <ImageIcon size={16} className="text-muted-foreground" />
           </div>
+        )}
+      </div>
 
-          <div className="flex items-center gap-3 text-sm text-muted-foreground flex-shrink-0">
+      <div className="flex-1 min-w-0 space-y-1">
+        <div className="flex items-center gap-2 text-lg font-semibold truncate">
+          <span className="truncate">{product.title}</span>
+          {product.category && (
+            <span className="text-sm text-muted-foreground truncate">{product.category}</span>
+          )}
+        </div>
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground flex-wrap">
             <span className="font-semibold text-foreground">
               {product.price} {product.currency || ''}
             </span>
-            {product.originalPrice && (
+            {product.originalPrice && product.originalPrice > product.price && (
               <span className="line-through opacity-70">
                 {product.originalPrice} {product.currency || ''}
               </span>
@@ -67,12 +64,7 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
               </span>
             )}
           </div>
-        </div>
 
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <p className="text-sm text-muted-foreground flex-1 min-w-0 truncate">
-            {product.description || ''}
-          </p>
           <div className="flex flex-wrap gap-2">
             {product.inStock === false && (
               <Badge variant="destructive">{t('statusInactive')}</Badge>
@@ -82,7 +74,11 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
             )}
             {product.isNew && <Badge variant="success">{t('isNew')}</Badge>}
             {product.isFeatured && <Badge variant="warning">{t('isFeatured')}</Badge>}
-            {product.discount ? <Badge variant="default">-{product.discount}%</Badge> : null}
+            {product.originalPrice && product.originalPrice > product.price ? (
+              <Badge variant="default">
+                -{Math.round((1 - product.price / product.originalPrice) * 100)}%
+              </Badge>
+            ) : null}
           </div>
         </div>
       </div>

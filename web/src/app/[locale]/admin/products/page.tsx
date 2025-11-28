@@ -10,6 +10,7 @@ import { ProductManagement } from '@/widgets/product-management';
 
 export default function AdminProductsPage() {
   const t = useTranslations('admin.products');
+  const tSystem = useTranslations('system');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -36,7 +37,7 @@ export default function AdminProductsPage() {
               responsive
               onClick={handleAddClick}
             >
-              {t('add')}
+              {tSystem('add')}
             </IconButton>
           }
         />

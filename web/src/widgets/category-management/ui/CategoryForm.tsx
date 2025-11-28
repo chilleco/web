@@ -70,6 +70,7 @@ export function CategoryForm({
   allCategories
 }: CategoryFormProps) {
   const t = useTranslations('admin.categories');
+  const tSystem = useTranslations('system');
   const [isLoading, setIsLoading] = useState(false);
   const [categoryFileData, setCategoryFileData] = useState<FileData | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -474,7 +475,7 @@ export function CategoryForm({
           disabled={isLoading}
         >
           <CancelIcon size={16} className="mr-2" />
-          {t('form.cancel')}
+          {tSystem('cancel')}
         </Button>
         <IconButton
           type="submit"
@@ -483,7 +484,7 @@ export function CategoryForm({
           icon={<SaveIcon size={16} />}
           responsive
         >
-          {isLoading ? t('form.saving') : category ? t('form.updateCategory') : t('form.createCategory')}
+          {isLoading ? tSystem('saving') : tSystem('save')}
         </IconButton>
       </div>
     </form>

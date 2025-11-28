@@ -6,7 +6,8 @@ import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 import { Label } from '@/shared/ui/label';
 import { Button } from '@/shared/ui/button';
-import { AddIcon, LoadingIcon } from '@/shared/ui/icons';
+import { IconButton } from '@/shared/ui/icon-button';
+import { SaveIcon, LoadingIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { Product, ProductSaveRequest, saveProduct } from '@/entities/product';
 
@@ -20,7 +21,6 @@ interface ProductFormState {
   rating: string;
   ratingCount: string;
   category: string;
-  discount: string;
   inStock: boolean;
   isNew: boolean;
   isFeatured: boolean;
@@ -43,7 +43,6 @@ const defaultState: ProductFormState = {
   rating: '',
   ratingCount: '',
   category: '',
-  discount: '',
   inStock: true,
   isNew: false,
   isFeatured: false,
@@ -52,6 +51,7 @@ const defaultState: ProductFormState = {
 
 export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) {
   const t = useTranslations('admin.products');
+  const tSystem = useTranslations('system');
   const { success, error } = useToastActions();
   const [form, setForm] = useState<ProductFormState>(defaultState);
   const [saving, setSaving] = useState(false);
@@ -72,7 +72,6 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
       rating: product.rating ? String(product.rating) : '',
       ratingCount: product.ratingCount ? String(product.ratingCount) : '',
       category: product.category || '',
-      discount: product.discount ? String(product.discount) : '',
       inStock: product.inStock ?? true,
       isNew: product.isNew ?? false,
       isFeatured: product.isFeatured ?? false,
@@ -107,7 +106,6 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
       rating: form.rating ? Number(form.rating) : undefined,
       ratingCount: form.ratingCount ? Number(form.ratingCount) : undefined,
       category: form.category || undefined,
-      discount: form.discount ? Number(form.discount) : undefined,
       inStock: form.inStock,
       isNew: form.isNew,
       isFeatured: form.isFeatured,
@@ -225,19 +223,6 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
             placeholder="0"
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="discount">{t('discount')}</Label>
-          <Input
-            id="discount"
-            type="number"
-            min="0"
-            max="100"
-            step="1"
-            value={form.discount}
-            onChange={(e) => handleChange('discount', e.target.value)}
-            placeholder="10"
-          />
-        </div>
       </div>
 
       <div className="space-y-2">
@@ -294,14 +279,20 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
         />
       </div>
 
-      <div className="flex items-center justify-end gap-3 pt-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          {t('cancel')}
+      <div className="flex items-center justify-end space-x-2 pt-4 border-t">
+        <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>
+          {tSystem('cancel')}
         </Button>
-        <Button type="submit" variant="success" disabled={saving} className="w-full md:w-auto">
-          {saving ? <LoadingIcon size={16} className="animate-spin mr-2" /> : <AddIcon size={16} className="mr-2" />}
-          {saving ? t('saving') : t('save')}
-        </Button>
+        <IconButton
+          type="submit"
+          variant="default"
+          disabled={saving}
+          icon={saving ? <LoadingIcon size={16} className="animate-spin" /> : <SaveIcon size={16} />}
+          responsive
+          className="min-w-[10rem]"
+        >
+          {saving ? tSystem('saving') : tSystem('save')}
+        </IconButton>
       </div>
     </form>
   );

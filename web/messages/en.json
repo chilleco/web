@@ -75,7 +75,14 @@
         "refund": "Refund",
         "main": "Main",
         "menu": "Menu",
-        "close": "Close"
+        "close": "Close",
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "remove": "Remove",
+        "update": "Update",
+        "saving": "Saving...",
+        "cancel": "Cancel"
     },
     "brand": {
         "name": "web",

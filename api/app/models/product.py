@@ -27,7 +27,6 @@ class Product(Base):
     in_stock = Attribute(types=bool, default=True)
     is_new = Attribute(types=bool, default=False)
     is_featured = Attribute(types=bool, default=False)
-    discount = Attribute(types=int)
     url = Attribute(types=str, default=default_url)
     status = Attribute(types=int, default=1)
     token = Attribute(types=str)

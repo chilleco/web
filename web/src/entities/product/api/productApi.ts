@@ -52,7 +52,6 @@ function mapProductToApi(payload: ProductSaveRequest) {
     in_stock: payload.inStock,
     is_new: payload.isNew,
     is_featured: payload.isFeatured,
-    discount: payload.discount,
     status: payload.status,
   };
 }

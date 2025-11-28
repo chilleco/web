@@ -10,6 +10,7 @@ import { CategoryManagement } from '@/widgets/category-management';
 
 export default function AdminCategoriesPage() {
   const t = useTranslations('admin.categories');
+  const tSystem = useTranslations('system');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -41,7 +42,7 @@ export default function AdminCategoriesPage() {
               responsive
               onClick={handleAddClick}
             >
-              {t('add')}
+              {tSystem('add')}
             </IconButton>
           }
         />

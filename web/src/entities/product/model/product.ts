@@ -12,7 +12,6 @@ export interface Product {
   inStock?: boolean;
   isNew?: boolean;
   isFeatured?: boolean;
-  discount?: number;
   created?: number;
   updated?: number;
   status?: number;
@@ -46,6 +45,5 @@ export interface ProductSaveRequest {
   inStock?: boolean;
   isNew?: boolean;
   isFeatured?: boolean;
-  discount?: number;
   status?: number;
 }

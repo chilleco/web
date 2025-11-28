@@ -20,6 +20,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Never hard-code secrets** or credentials; never read or write `.env`, `secrets/`, or CI secrets
 - **Ask before destructive or external actions** (network, DB migrations, Docker, `git push`, etc.)
 - **Files & Paths Not To Touch**: `.env*`, `secrets/**`.
+- **Common i18n**: Reuse common system translations for generic actions (Add, Save, Update, Edit, Delete/Remove, Cancel, etc.) instead of creating duplicated or feature-scoped keys.
 
 ### Validation Checklist
 

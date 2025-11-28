@@ -90,13 +90,6 @@ class ProductSaveRequest(BaseModel):
         description="Marks product as featured",
         examples=[True],
     )
-    discount: int | None = Field(
-        default=None,
-        ge=0,
-        le=100,
-        description="Discount percentage",
-        examples=[20],
-    )
     status: int | None = Field(
         default=None,
         description="Product status flag",
@@ -125,7 +118,6 @@ def _serialize_product(product: Product) -> ProductResponse:
         inStock=product.in_stock,
         isNew=product.is_new,
         isFeatured=product.is_featured,
-        discount=product.discount,
         url=product.url,
     )
 
@@ -161,7 +153,6 @@ async def handler(
     product.in_stock = data.in_stock
     product.is_new = data.is_new
     product.is_featured = data.is_featured
-    product.discount = data.discount
     product.status = data.status
 
     product.save()
