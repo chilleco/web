@@ -1,93 +1,720 @@
 'use client';
 
-import { CounterDemo, UserDemo, PopupDemo, ToastDemo, MultiFileUploadDemo } from '@/features/demo';
-import { ThreeColumnLayout } from '@/widgets/three-column-layout';
-import { SectionsSidebar } from '@/widgets/sections-sidebar';
-import { FastActionsSidebar } from '@/widgets/fast-actions-sidebar';
-import { ContactFormSidebar } from '@/widgets/contact-form-sidebar';
-import { QuestionnaireSidebar } from '@/widgets/questionnaire-sidebar';
+import { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
+import { Box } from '@/shared/ui/box';
 import { PageHeader } from '@/shared/ui/page-header';
+import { IconButton } from '@/shared/ui/icon-button';
 import { Card } from '@/shared/ui/card';
-import { PostsIcon, TagIcon, CalendarIcon } from '@/shared/ui/icons';
+import { Input } from '@/shared/ui/input';
+import { Textarea } from '@/shared/ui/textarea';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/ui/collapsible';
+import { useToastActions } from '@/shared/hooks/useToast';
+import {
+    RocketIcon,
+    ShieldIcon,
+    CheckCircleIcon,
+    ClockIcon,
+    TrendingIcon,
+    PostsIcon,
+    ShoppingIcon,
+    StarIcon,
+    ReviewsIcon,
+    MailIcon,
+    SendIcon,
+    BookIcon,
+    QuestionIcon,
+    UsersIcon,
+    ChevronDownIcon,
+    BullhornIcon,
+    HandshakeIcon,
+    GlobeIcon,
+    TagIcon,
+    CalendarIcon,
+    ChevronRightIcon
+} from '@/shared/ui/icons';
+
+interface HighlightItem {
+    key: string;
+    icon: JSX.Element;
+    color: string;
+}
+
+interface StepItem {
+    key: string;
+    icon: JSX.Element;
+    color: string;
+}
+
+interface ListItem {
+    key: string;
+}
 
 export default function Home() {
-    const leftSidebar = (
-        <>
-            <SectionsSidebar />
-        </>
+    const t = useTranslations('landing');
+    const tContact = useTranslations('contact');
+    const { success } = useToastActions();
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        message: '',
+    });
+
+    const heroHighlights: Array<HighlightItem & { label: string; value: string }> = useMemo(
+        () =>
+            [
+                {
+                    key: 'uptime',
+                    icon: <ShieldIcon size={18} />,
+                    color: 'bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400',
+                },
+                {
+                    key: 'response',
+                    icon: <ClockIcon size={18} />,
+                    color: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+                },
+                {
+                    key: 'coverage',
+                    icon: <GlobeIcon size={18} />,
+                    color: 'bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400',
+                },
+            ].map((item) => ({
+                ...item,
+                label: t(`hero.stats.${item.key}.label`),
+                value: t(`hero.stats.${item.key}.value`),
+            })),
+        [t]
     );
 
-    const rightSidebar = (
-        <>
-            <FastActionsSidebar />
-            <ContactFormSidebar />
-            <QuestionnaireSidebar />
-        </>
+    const heroPoints = useMemo(
+        () => [0, 1, 2].map((index) => t(`hero.points.${index}`)),
+        [t]
     );
 
-    const mockPosts = [
-        { id: 1, title: "Introduction to React 19", category: "Technology", date: "2 days ago" },
-        { id: 2, title: "Machine Learning Basics", category: "Science", date: "1 week ago" },
-        { id: 3, title: "Business Strategies 2024", category: "Business", date: "3 days ago" },
-        { id: 4, title: "Design Systems Guide", category: "Design", date: "5 days ago" },
-        { id: 5, title: "Web Performance Tips", category: "Technology", date: "1 day ago" },
-        { id: 6, title: "Data Analysis Methods", category: "Science", date: "4 days ago" }
-    ];
+    const steps: Array<StepItem & { title: string; description: string; badge: string }> = useMemo(
+        () =>
+            [
+                {
+                    key: 'discover',
+                    icon: <BookIcon size={18} />,
+                    color: 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
+                },
+                {
+                    key: 'decide',
+                    icon: <TrendingIcon size={18} />,
+                    color: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+                },
+                {
+                    key: 'act',
+                    icon: <CheckCircleIcon size={18} />,
+                    color: 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+                },
+            ].map((step) => ({
+                ...step,
+                title: t(`howItWorks.steps.${step.key}.title`),
+                description: t(`howItWorks.steps.${step.key}.description`),
+                badge: t(`howItWorks.steps.${step.key}.badge`),
+            })),
+        [t]
+    );
+
+    const posts: Array<ListItem & { title: string; description: string; category: string; date: string }> =
+        useMemo(
+            () =>
+                ['first', 'second', 'third'].map((key) => ({
+                    key,
+                    title: t(`posts.items.${key}.title`),
+                    description: t(`posts.items.${key}.description`),
+                    category: t(`posts.items.${key}.category`),
+                    date: t(`posts.items.${key}.date`),
+                })),
+            [t]
+        );
+
+    const products: Array<
+        ListItem & { title: string; description: string; price: number; originalPrice: number; tag: string }
+    > = useMemo(
+        () =>
+            ['starter', 'growth', 'enterprise'].map((key) => ({
+                key,
+                title: t(`products.items.${key}.title`),
+                description: t(`products.items.${key}.description`),
+                price: Number(t(`products.items.${key}.price`)),
+                originalPrice: Number(t(`products.items.${key}.originalPrice`)),
+                tag: t(`products.items.${key}.tag`),
+            })),
+        [t]
+    );
+
+    const advantages: Array<ListItem & { title: string; description: string; icon: JSX.Element; color: string }> =
+        useMemo(
+            () =>
+                [
+                    {
+                        key: 'performance',
+                        icon: <RocketIcon size={18} />,
+                        color: 'bg-sky-500/15 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
+                    },
+                    {
+                        key: 'design',
+                        icon: <ShieldIcon size={18} />,
+                        color: 'bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400',
+                    },
+                    {
+                        key: 'automation',
+                        icon: <BullhornIcon size={18} />,
+                        color: 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+                    },
+                    {
+                        key: 'support',
+                        icon: <HandshakeIcon size={18} />,
+                        color: 'bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400',
+                    },
+                ].map((item) => ({
+                    ...item,
+                    title: t(`advantages.items.${item.key}.title`),
+                    description: t(`advantages.items.${item.key}.description`),
+                })),
+            [t]
+        );
+
+    const reviews: Array<ListItem & { name: string; text: string }> = useMemo(
+        () =>
+            ['first', 'second', 'third'].map((key) => ({
+                key,
+                name: t(`reviews.items.${key}.name`),
+                text: t(`reviews.items.${key}.text`),
+            })),
+        [t]
+    );
+
+    const faqs: Array<ListItem & { question: string; answer: string }> = useMemo(
+        () =>
+            ['coverage', 'deployment', 'integrations', 'analytics'].map((key) => ({
+                key,
+                question: t(`faq.items.${key}.question`),
+                answer: t(`faq.items.${key}.answer`),
+            })),
+        [t]
+    );
+
+    const ratingScore = useMemo(() => Number(t('reviews.score')), [t]);
+    const ratingCount = useMemo(() => t('reviews.total'), [t]);
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (!formData.name || !formData.email || !formData.message) {
+            return;
+        }
+
+        success(t('contact.success'));
+        setFormData({
+            name: '',
+            email: '',
+            message: '',
+        });
+    };
 
     return (
-        <ThreeColumnLayout 
-            leftSidebar={leftSidebar} 
-            rightSidebar={rightSidebar}
-            rightSidebarSticky={false}
-        >
-            <div className="space-y-12">
-                {/* Demo Components */}
-                <div className="space-y-8">
-                    <div className="max-w-2xl mx-auto space-y-8">
-                        <CounterDemo />
-                        <UserDemo />
-                        <PopupDemo />
-                        <ToastDemo />
-                    </div>
-                    <MultiFileUploadDemo />
-                </div>
+        <div className="min-h-screen bg-background">
+            <div className="container mx-auto px-4 py-10 space-y-14">
+                <section className="space-y-4">
+                    <PageHeader
+                        icon={<RocketIcon size={24} />}
+                        iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
+                        title={t('hero.title')}
+                        description={t('hero.subtitle')}
+                        actions={
+                            <div className="flex flex-wrap gap-2">
+                                <IconButton
+                                    asChild
+                                    variant="success"
+                                    icon={<RocketIcon size={16} />}
+                                    responsive
+                                >
+                                    <Link href="/catalog">{t('hero.primaryCta')}</Link>
+                                </IconButton>
+                                <IconButton
+                                    asChild
+                                    variant="outline"
+                                    icon={<BookIcon size={16} />}
+                                    responsive
+                                >
+                                    <Link href="/posts">{t('hero.secondaryCta')}</Link>
+                                </IconButton>
+                            </div>
+                        }
+                    />
+                    <Box className="bg-gradient-to-br from-primary/10 via-background to-background">
+                        <div className="grid lg:grid-cols-2 gap-10 items-center">
+                            <div className="space-y-6">
+                                <div className="inline-flex items-center gap-2 rounded-[0.75rem] bg-green-500/15 text-green-700 dark:text-green-300 dark:bg-green-500/20 px-3 py-1 text-xs font-semibold w-fit">
+                                    <CheckCircleIcon size={14} />
+                                    {t('hero.badge')}
+                                </div>
+                                <div className="space-y-3">
+                                    <h2 className="text-3xl sm:text-4xl font-bold leading-tight text-foreground">
+                                        {t('hero.heading')}
+                                    </h2>
+                                    <p className="text-muted-foreground text-base sm:text-lg">
+                                        {t('hero.body')}
+                                    </p>
+                                </div>
+                                <div className="grid sm:grid-cols-2 gap-3">
+                                    {heroPoints.map((bullet) => (
+                                        <div
+                                            key={bullet}
+                                            className="flex items-start gap-3 rounded-[1rem] bg-muted/50 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]"
+                                        >
+                                            <div className="w-10 h-10 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center shrink-0">
+                                                <ChevronRightIcon size={14} />
+                                            </div>
+                                            <p className="text-sm text-foreground leading-relaxed">{bullet}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <Box variant="muted" className="space-y-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-12 h-12 rounded-[0.75rem] bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center">
+                                                <BullhornIcon size={18} />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-muted-foreground">{t('hero.snapshot.title')}</p>
+                                                <p className="text-lg font-semibold text-foreground">
+                                                    {t('hero.snapshot.value')}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <IconButton asChild variant="ghost" size="sm" icon={<TrendingIcon size={14} />} responsive>
+                                            <Link href="/hub">{t('hero.snapshot.cta')}</Link>
+                                        </IconButton>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        {heroHighlights.map((item) => (
+                                            <div
+                                                key={item.key}
+                                                className="rounded-[1rem] bg-background/80 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-2"
+                                            >
+                                                <div className={`w-10 h-10 rounded-[0.75rem] flex items-center justify-center ${item.color}`}>
+                                                    {item.icon}
+                                                </div>
+                                                <p className="text-xs text-muted-foreground">{item.label}</p>
+                                                <p className="text-lg font-semibold text-foreground">{item.value}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Box>
+                            </div>
+                        </div>
+                    </Box>
+                </section>
 
-                {/* Posts Section */}
-                <div className="space-y-6">
+                <section className="space-y-4">
+                    <PageHeader
+                        icon={<BookIcon size={24} />}
+                        iconClassName="bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400"
+                        title={t('howItWorks.title')}
+                        description={t('howItWorks.description')}
+                        actions={
+                            <IconButton
+                                asChild
+                                variant="outline"
+                                icon={<ChevronRightIcon size={14} />}
+                                responsive
+                            >
+                                <Link href="/space">{t('howItWorks.cta')}</Link>
+                            </IconButton>
+                        }
+                    />
+                    <Box>
+                        <div className="grid md:grid-cols-3 gap-4">
+                            {steps.map((step) => (
+                                <Box
+                                    key={step.key}
+                                    variant="muted"
+                                    className="space-y-3 hover:scale-[1.01] transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-10 h-10 rounded-[0.75rem] flex items-center justify-center ${step.color}`}>
+                                            {step.icon}
+                                        </div>
+                                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                                            {step.badge}
+                                        </span>
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-foreground">{step.title}</h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                        {step.description}
+                                    </p>
+                                </Box>
+                            ))}
+                        </div>
+                    </Box>
+                </section>
+
+                <section className="space-y-4">
                     <PageHeader
                         icon={<PostsIcon size={24} />}
                         iconClassName="bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400"
-                        title="Posts (3-Column Demo)"
-                        description="Example of how the posts page would look with sidebar blocks"
+                        title={t('posts.title')}
+                        description={t('posts.description')}
+                        actions={
+                            <IconButton
+                                asChild
+                                variant="outline"
+                                icon={<ChevronRightIcon size={14} />}
+                                responsive
+                            >
+                                <Link href="/posts">{t('posts.viewAll')}</Link>
+                            </IconButton>
+                        }
                     />
+                    <Box>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {posts.map((post) => (
+                                <Card
+                                    key={post.key}
+                                    title={post.title}
+                                    description={post.description}
+                                    images={[]}
+                                    filters={[
+                                        {
+                                            icon: <TagIcon size={12} />,
+                                            value: post.category,
+                                        },
+                                        {
+                                            icon: <CalendarIcon size={12} />,
+                                            value: post.date,
+                                        },
+                                    ]}
+                                    href="/posts"
+                                />
+                            ))}
+                        </div>
+                    </Box>
+                </section>
 
-                    {/* Mock Posts Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {mockPosts.map((post) => (
-                            <Card 
-                                key={post.id}
-                                title={post.title}
-                                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt..."
-                                images={[]}
-                                filters={[
-                                    {
-                                        icon: <TagIcon size={12} />,
-                                        value: post.category
-                                    },
-                                    {
-                                        icon: <CalendarIcon size={12} />,
-                                        value: post.date
+                <section className="space-y-4">
+                    <PageHeader
+                        icon={<ShoppingIcon size={24} />}
+                        iconClassName="bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400"
+                        title={t('products.title')}
+                        description={t('products.description')}
+                        actions={
+                            <IconButton
+                                asChild
+                                variant="outline"
+                                icon={<ChevronRightIcon size={14} />}
+                                responsive
+                            >
+                                <Link href="/catalog">{t('products.viewAll')}</Link>
+                            </IconButton>
+                        }
+                    />
+                    <Box>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {products.map((product) => (
+                                <Card
+                                    key={product.key}
+                                    title={product.title}
+                                    description={product.description}
+                                    images={[]}
+                                    tags={[
+                                        {
+                                            label: product.tag,
+                                            icon: <CheckCircleIcon size={12} />,
+                                            variant: 'primary',
+                                        },
+                                    ]}
+                                    price={product.price}
+                                    originalPrice={product.originalPrice}
+                                    currency={t('products.currency')}
+                                    variant="product"
+                                    actions={
+                                        <IconButton
+                                            asChild
+                                            size="sm"
+                                            variant="success"
+                                            icon={<ShoppingIcon size={14} />}
+                                            responsive
+                                        >
+                                            <Link href="/catalog">{t('products.cta')}</Link>
+                                        </IconButton>
                                     }
-                                ]}
-                                variant="default"
-                                onClick={() => {
-                                    console.log('Post clicked:', post.title);
-                                }}
-                            />
-                        ))}
-                    </div>
-                </div>
+                                />
+                            ))}
+                        </div>
+                    </Box>
+                </section>
+
+                <section className="space-y-4">
+                    <PageHeader
+                        icon={<ShieldIcon size={24} />}
+                        iconClassName="bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400"
+                        title={t('advantages.title')}
+                        description={t('advantages.description')}
+                    />
+                    <Box>
+                        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+                            {advantages.map((advantage) => (
+                                <Box
+                                    key={advantage.key}
+                                    variant="muted"
+                                    className="space-y-3 hover:scale-[1.01] transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]"
+                                >
+                                    <div className={`w-10 h-10 rounded-[0.75rem] flex items-center justify-center ${advantage.color}`}>
+                                        {advantage.icon}
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-foreground">
+                                        {advantage.title}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                        {advantage.description}
+                                    </p>
+                                </Box>
+                            ))}
+                        </div>
+                    </Box>
+                </section>
+
+                <section className="space-y-4">
+                    <PageHeader
+                        icon={<ReviewsIcon size={24} />}
+                        iconClassName="bg-pink-500/15 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400"
+                        title={t('reviews.title')}
+                        description={t('reviews.description')}
+                    />
+                    <Box>
+                        <div className="grid lg:grid-cols-3 gap-6 items-center">
+                            <div className="lg:col-span-1 space-y-3 rounded-[1rem] bg-muted/50 p-5 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 rounded-[0.75rem] bg-pink-500/15 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400 flex items-center justify-center">
+                                        <StarIcon size={18} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">{t('reviews.highlight')}</p>
+                                        <p className="text-3xl font-bold text-foreground">{ratingScore.toFixed(1)}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    {Array.from({ length: 5 }).map((_, index) => (
+                                        <StarIcon
+                                            key={index}
+                                            size={16}
+                                            className={index < Math.round(ratingScore) ? 'text-yellow-500' : 'text-muted-foreground'}
+                                        />
+                                    ))}
+                                    <span className="text-sm text-muted-foreground">{ratingCount}</span>
+                                </div>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {t('reviews.body')}
+                                </p>
+                            </div>
+                            <div className="lg:col-span-2 grid gap-4">
+                                {reviews.map((review) => (
+                                    <div
+                                        key={review.key}
+                                        className="rounded-[1rem] bg-background p-5 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] hover:scale-[1.01] transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)]"
+                                    >
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="w-10 h-10 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center">
+                                                <UsersIcon size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-foreground">{review.name}</p>
+                                                <p className="text-xs text-muted-foreground">{t('reviews.role')}</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">{review.text}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </Box>
+                </section>
+
+                <section className="space-y-4">
+                    <PageHeader
+                        icon={<MailIcon size={24} />}
+                        iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
+                        title={t('contact.title')}
+                        description={t('contact.description')}
+                    />
+                    <Box>
+                        <div className="grid lg:grid-cols-2 gap-6 items-start">
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-[0.75rem] bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center">
+                                        <HandshakeIcon size={16} />
+                                    </div>
+                                    <p className="text-sm text-muted-foreground">{t('contact.support')}</p>
+                                </div>
+                                <h3 className="text-2xl font-semibold text-foreground">
+                                    {t('contact.pitch')}
+                                </h3>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {t('contact.hint')}
+                                </p>
+                                <div className="grid sm:grid-cols-2 gap-3">
+                                    <div className="rounded-[1rem] bg-muted/50 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-2">
+                                        <div className="w-10 h-10 rounded-[0.75rem] bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400 flex items-center justify-center">
+                                            <ShieldIcon size={16} />
+                                        </div>
+                                        <p className="text-sm text-foreground font-semibold">{t('contact.cards.first.title')}</p>
+                                        <p className="text-xs text-muted-foreground">{t('contact.cards.first.text')}</p>
+                                    </div>
+                                    <div className="rounded-[1rem] bg-muted/50 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-2">
+                                        <div className="w-10 h-10 rounded-[0.75rem] bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 flex items-center justify-center">
+                                            <ClockIcon size={16} />
+                                        </div>
+                                        <p className="text-sm text-foreground font-semibold">{t('contact.cards.second.title')}</p>
+                                        <p className="text-xs text-muted-foreground">{t('contact.cards.second.text')}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <Box variant="muted" className="w-full">
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    <div className="space-y-2">
+                                        <label htmlFor="landing-name" className="text-sm font-medium text-foreground">
+                                            {t('contact.fields.name')}
+                                        </label>
+                                        <Input
+                                            id="landing-name"
+                                            placeholder={t('contact.fields.namePlaceholder')}
+                                            value={formData.name}
+                                            onChange={(event) =>
+                                                setFormData((prev) => ({ ...prev, name: event.target.value }))
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label htmlFor="landing-email" className="text-sm font-medium text-foreground">
+                                            {tContact('email')}
+                                        </label>
+                                        <Input
+                                            id="landing-email"
+                                            type="email"
+                                            placeholder={t('contact.fields.emailPlaceholder')}
+                                            value={formData.email}
+                                            onChange={(event) =>
+                                                setFormData((prev) => ({ ...prev, email: event.target.value }))
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label htmlFor="landing-message" className="text-sm font-medium text-foreground">
+                                            {tContact('message')}
+                                        </label>
+                                        <Textarea
+                                            id="landing-message"
+                                            placeholder={t('contact.fields.messagePlaceholder')}
+                                            value={formData.message}
+                                            onChange={(event) =>
+                                                setFormData((prev) => ({ ...prev, message: event.target.value }))
+                                            }
+                                            rows={4}
+                                            required
+                                        />
+                                    </div>
+                                    <IconButton
+                                        type="submit"
+                                        icon={<SendIcon size={16} />}
+                                        variant="success"
+                                        className="w-full"
+                                        responsive
+                                    >
+                                        {t('contact.cta')}
+                                    </IconButton>
+                                </form>
+                            </Box>
+                        </div>
+                    </Box>
+                </section>
+
+                <section className="space-y-4">
+                    <PageHeader
+                        icon={<QuestionIcon size={24} />}
+                        iconClassName="bg-teal-500/15 text-teal-600 dark:bg-teal-500/20 dark:text-teal-400"
+                        title={t('about.title')}
+                        description={t('about.description')}
+                    />
+                    <Box>
+                        <div className="grid lg:grid-cols-3 gap-6">
+                            <div className="lg:col-span-2 space-y-3">
+                                <h3 className="text-xl font-semibold text-foreground">{t('about.heading')}</h3>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {t('about.body')}
+                                </p>
+                                <div className="grid sm:grid-cols-2 gap-3">
+                                    <div className="rounded-[1rem] bg-muted/50 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-2">
+                                        <div className="w-10 h-10 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center">
+                                            <RocketIcon size={16} />
+                                        </div>
+                                        <p className="text-sm text-foreground font-semibold">{t('about.cards.delivery')}</p>
+                                        <p className="text-xs text-muted-foreground">{t('about.cards.deliveryText')}</p>
+                                    </div>
+                                    <div className="rounded-[1rem] bg-muted/50 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-2">
+                                        <div className="w-10 h-10 rounded-[0.75rem] bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400 flex items-center justify-center">
+                                            <HandshakeIcon size={16} />
+                                        </div>
+                                        <p className="text-sm text-foreground font-semibold">{t('about.cards.partners')}</p>
+                                        <p className="text-xs text-muted-foreground">{t('about.cards.partnersText')}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-1 rounded-[1rem] bg-muted/50 p-5 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-[0.75rem] bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center">
+                                        <ShieldIcon size={16} />
+                                    </div>
+                                    <p className="text-sm font-semibold text-foreground">{t('about.mission.title')}</p>
+                                </div>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {t('about.mission.text')}
+                                </p>
+                            </div>
+                        </div>
+                    </Box>
+                </section>
+
+                <section className="space-y-4">
+                    <PageHeader
+                        icon={<QuestionIcon size={24} />}
+                        iconClassName="bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400"
+                        title={t('faq.title')}
+                        description={t('faq.description')}
+                    />
+                    <Box>
+                        <div className="space-y-3">
+                            {faqs.map((faq, index) => (
+                                <Collapsible key={faq.key} defaultOpen={index === 0}>
+                                    <CollapsibleTrigger className="w-full flex items-center justify-between gap-3 rounded-[1rem] bg-muted/60 px-4 py-3 text-left text-sm font-semibold text-foreground shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] cursor-pointer data-[state=open]:bg-muted/80">
+                                        <div className="flex items-center gap-3 flex-1">
+                                            <div className="w-8 h-8 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center shrink-0">
+                                                <QuestionIcon size={14} />
+                                            </div>
+                                            <span className="text-left">{faq.question}</span>
+                                        </div>
+                                        <div className="w-8 h-8 rounded-[0.75rem] bg-primary/15 text-primary flex items-center justify-center shrink-0 transition-transform duration-300 data-[state=open]:rotate-180">
+                                            <ChevronDownIcon size={14} />
+                                        </div>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent className="px-4 pb-4 pt-2 text-sm text-muted-foreground leading-relaxed">
+                                        {faq.answer}
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            ))}
+                        </div>
+                    </Box>
+                </section>
             </div>
-        </ThreeColumnLayout>
+        </div>
     );
 }

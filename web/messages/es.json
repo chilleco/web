@@ -35,6 +35,226 @@
         "home": "Inicio",
         "sections": "Secciones"
     },
+    "landing": {
+        "hero": {
+            "title": "Crea un landing que convierta desde el primer día",
+            "subtitle": "FastAPI, Next.js 15 y Telegram unificados con bloques adaptativos y llamadas API tipadas.",
+            "primaryCta": "Abrir catálogo",
+            "secondaryCta": "Leer posts",
+            "badge": "Starter full-stack",
+            "heading": "Lanza más rápido con un landing adaptativo y multilenguaje",
+            "body": "Cuenta la historia con hero, prueba social, catálogo y onboarding ya conectados a tu API y mensajería.",
+            "points": [
+                "Maquetado FSD listo para temas claro y oscuro",
+                "Datos estructurados, metadatos SEO y eventos listos para analítica",
+                "CTAs, toasts y hooks de Telegram listos para usar"
+            ],
+            "snapshot": {
+                "title": "Lanzamientos este mes",
+                "value": "37 proyectos entregados",
+                "cta": "Ver casos"
+            },
+            "stats": {
+                "uptime": {
+                    "label": "SLA de uptime",
+                    "value": "99.9%"
+                },
+                "response": {
+                    "label": "Respuesta media",
+                    "value": "180 ms"
+                },
+                "coverage": {
+                    "label": "Regiones",
+                    "value": "80+"
+                }
+            }
+        },
+        "howItWorks": {
+            "title": "Cómo funciona",
+            "description": "Guía al visitante de la primera impresión a la activación en tres pasos.",
+            "cta": "Ver recorrido",
+            "steps": {
+                "discover": {
+                    "title": "Descubrir",
+                    "description": "Hero, navegación y pruebas se adaptan al idioma y tema.",
+                    "badge": "Paso 01"
+                },
+                "decide": {
+                    "title": "Decidir",
+                    "description": "Posts y catálogo resaltan resultados, precios y etiquetas.",
+                    "badge": "Paso 02"
+                },
+                "act": {
+                    "title": "Actuar",
+                    "description": "Formularios, toasts y avisos en Telegram capturan la intención al instante.",
+                    "badge": "Paso 03"
+                }
+            }
+        },
+        "posts": {
+            "title": "Últimos posts",
+            "description": "Muestra ideas que refuercen la historia de tu producto.",
+            "viewAll": "Todos los posts",
+            "items": {
+                "first": {
+                    "title": "Diseñar embudos adaptativos",
+                    "description": "Une señales de marketing y producto con bloques reutilizables.",
+                    "category": "Producto",
+                    "date": "02.03.2024"
+                },
+                "second": {
+                    "title": "APIs tipadas para escalar",
+                    "description": "Mantén contratos FastAPI y esquemas generados en sincronía entre equipos.",
+                    "category": "Ingeniería",
+                    "date": "15.03.2024"
+                },
+                "third": {
+                    "title": "Playbooks de lanzamiento",
+                    "description": "Usa flujos listos para adquisición, onboarding y retención.",
+                    "category": "Crecimiento",
+                    "date": "22.03.2024"
+                }
+            }
+        },
+        "products": {
+            "title": "Productos destacados",
+            "description": "Muestra ofertas directo en el landing con valor y precio claros.",
+            "viewAll": "Abrir catálogo",
+            "currency": "$",
+            "cta": "Ver detalles",
+            "items": {
+                "starter": {
+                    "title": "Espacio Starter",
+                    "description": "Secciones esenciales con SEO, analítica y captación listas.",
+                    "price": "29",
+                    "originalPrice": "39",
+                    "tag": "Listo para lanzar"
+                },
+                "growth": {
+                    "title": "Stack de crecimiento",
+                    "description": "Catálogo, posts y automatización con conectores API tipados.",
+                    "price": "59",
+                    "originalPrice": "79",
+                    "tag": "Automatización"
+                },
+                "enterprise": {
+                    "title": "Suite Enterprise",
+                    "description": "Localización avanzada, control de acceso y observabilidad integrados.",
+                    "price": "99",
+                    "originalPrice": "129",
+                    "tag": "Enterprise"
+                }
+            }
+        },
+        "advantages": {
+            "title": "Nuestras ventajas",
+            "description": "Motores de valor claros para visitantes y decisores.",
+            "items": {
+                "performance": {
+                    "title": "Rendimiento",
+                    "description": "SSR, caché en edge y assets listos para CDN mantienen la velocidad."
+                },
+                "design": {
+                    "title": "Sistema de diseño",
+                    "description": "Capas FSD, espaciados consistentes y componentes sensibles al tema."
+                },
+                "automation": {
+                    "title": "Listo para automatizar",
+                    "description": "Worker de Telegram, hooks tipados y toasts unen las señales al instante."
+                },
+                "support": {
+                    "title": "Fiabilidad",
+                    "description": "Logs estructurados, monitoreo y releases fáciles de revertir."
+                }
+            }
+        },
+        "reviews": {
+            "title": "Reseñas y rating",
+            "description": "Pruebas de equipos que ya usan este stack.",
+            "score": "4.9",
+            "total": "1.2k+",
+            "highlight": "Valorado por equipos de producto, growth y plataforma.",
+            "body": "Analítica integrada, esquemas tipados y hooks de Telegram hacen los lanzamientos predecibles.",
+            "role": "Reseña verificada",
+            "items": {
+                "first": {
+                    "name": "Olivia — Líder de Producto",
+                    "text": "Entregamos una semana de lanzamiento multilenguaje en días sin rediseños."
+                },
+                "second": {
+                    "name": "Mason — CTO",
+                    "text": "Helpers tipados y contratos FastAPI hacen las entregas sin dolor."
+                },
+                "third": {
+                    "name": "Lena — Growth",
+                    "text": "Landing, posts y catálogo nos dan experimentos sin reprocesos."
+                }
+            }
+        },
+        "contact": {
+            "title": "Enviar solicitud",
+            "description": "Cuéntanos de tu producto y armamos el playbook de lanzamiento.",
+            "support": "Acompañamiento práctico de discovery a iteración.",
+            "pitch": "Comparte contexto, plazos e integraciones.",
+            "hint": "Respondemos en un día laboral con un plan acotado.",
+            "cards": {
+                "first": {
+                    "title": "Seguro y compliant",
+                    "text": "JWT, logs aptos para auditoría y privacidad por defecto."
+                },
+                "second": {
+                    "title": "Ciclo rápido",
+                    "text": "Plantillas, esquemas y scripts listos para CI aceleran la salida."
+                }
+            },
+            "fields": {
+                "name": "Nombre completo",
+                "namePlaceholder": "Tu nombre",
+                "emailPlaceholder": "you@company.com",
+                "messagePlaceholder": "Objetivos, plazos y métricas de éxito"
+            },
+            "cta": "Enviar solicitud",
+            "success": "Solicitud enviada. Te responderemos pronto."
+        },
+        "about": {
+            "title": "Sobre nosotros",
+            "description": "Equipo full-stack enfocado en lanzamientos previsibles.",
+            "heading": "Constructores API-first con flujos listos para Telegram",
+            "body": "Combinamos FastAPI, Next.js 15 y automatización en Telegram en un solo flujo. Cada bloque trae localización, metadatos para analítica y tipado estricto para lanzar sin retrabajo.",
+            "cards": {
+                "delivery": "Cultura de entrega",
+                "deliveryText": "Defaults opinados, revisiones en pareja y checklists medibles de release.",
+                "partners": "Alianzas",
+                "partnersText": "Nos alineamos con líderes de growth, producto y plataforma para mantener prioridades visibles."
+            },
+            "mission": {
+                "title": "Nuestra misión",
+                "text": "Entregar experiencias fiables con telemetría honesta, contratos claros e iteración rápida."
+            }
+        },
+        "faq": {
+            "title": "FAQ",
+            "description": "Respuestas para stakeholders y aprobadores.",
+            "items": {
+                "coverage": {
+                    "question": "¿Soportan varios idiomas?",
+                    "answer": "Sí. El enrutado por locale y los bundles de mensajes mantienen el contenido consistente."
+                },
+                "deployment": {
+                    "question": "¿Cómo funcionan los deploys?",
+                    "answer": "Docker, overlays de Compose y configs de NGINX listos para local, staging y producción."
+                },
+                "integrations": {
+                    "question": "¿Podemos usar nuestras APIs?",
+                    "answer": "Helpers tipados gestionan auth, caché y toasts para conectar endpoints sin código extra."
+                },
+                "analytics": {
+                    "question": "¿Y la analítica y el SEO?",
+                    "answer": "Datos estructurados, metadatos SEO y hooks de eventos vienen por defecto para tu stack de analítica."
+                }
+            }
+        }
+    },
     "system": {
         "locale": "Idioma",
         "worldwide": "En todo el mundo",

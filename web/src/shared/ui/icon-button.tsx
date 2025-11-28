@@ -1,4 +1,5 @@
 import * as React from "react"
+import { cloneElement, isValidElement } from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -63,6 +64,21 @@ function IconButton({
   ...props
 }: IconButtonProps) {
   const Comp = asChild ? Slot : "button"
+
+  if (asChild && isValidElement(children)) {
+    const childContent = (children as React.ReactElement).props?.children
+
+    return cloneElement(children as React.ReactElement, {
+      className: cn(iconButtonVariants({ variant, size, responsive, className }), (children as React.ReactElement).props.className),
+      ...props,
+      children: (
+        <>
+          {icon && <span className="shrink-0">{icon}</span>}
+          {childContent && <span className={responsive ? "button-text" : ""}>{childContent}</span>}
+        </>
+      )
+    })
+  }
 
   return (
     <Comp

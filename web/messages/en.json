@@ -36,6 +36,226 @@
         "home": "Home",
         "sections": "Sections"
     },
+    "landing": {
+        "hero": {
+            "title": "Build a landing that converts on day one",
+            "subtitle": "Unified FastAPI, Next.js 15, and Telegram toolkit with adaptive UI blocks and typed API calls.",
+            "primaryCta": "Open catalog",
+            "secondaryCta": "Read posts",
+            "badge": "Full-stack starter",
+            "heading": "Launch faster with an adaptive, multilingual landing template",
+            "body": "Ship a confident story with hero, proof, catalog, and onboarding flows connected to your API and messaging stack.",
+            "points": [
+                "FSD-driven layout with light & dark themes ready",
+                "Structured data, SEO metadata, and analytics-ready events",
+                "CTA buttons, toast feedback, and Telegram hooks out of the box"
+            ],
+            "snapshot": {
+                "title": "Live launches this month",
+                "value": "37 projects shipped",
+                "cta": "See stories"
+            },
+            "stats": {
+                "uptime": {
+                    "label": "Uptime SLA",
+                    "value": "99.9%"
+                },
+                "response": {
+                    "label": "Median response",
+                    "value": "180 ms"
+                },
+                "coverage": {
+                    "label": "Global regions",
+                    "value": "80+"
+                }
+            }
+        },
+        "howItWorks": {
+            "title": "How it works",
+            "description": "Guide visitors from first impression to activation with three focused steps.",
+            "cta": "View the journey",
+            "steps": {
+                "discover": {
+                    "title": "Discover",
+                    "description": "Hero banner, navigation, and proof points adapt to locale and theme.",
+                    "badge": "Step 01"
+                },
+                "decide": {
+                    "title": "Decide",
+                    "description": "Posts and catalog blocks spotlight outcomes, pricing, and tags.",
+                    "badge": "Step 02"
+                },
+                "act": {
+                    "title": "Act",
+                    "description": "Lead forms, toasts, and Telegram notifications capture intent immediately.",
+                    "badge": "Step 03"
+                }
+            }
+        },
+        "posts": {
+            "title": "Latest posts",
+            "description": "Showcase insights that reinforce your product story.",
+            "viewAll": "All posts",
+            "items": {
+                "first": {
+                    "title": "Designing adaptive funnels",
+                    "description": "Blend marketing and product signals with reusable UI primitives.",
+                    "category": "Product",
+                    "date": "02.03.2024"
+                },
+                "second": {
+                    "title": "Typed APIs for scale",
+                    "description": "Keep FastAPI contracts and generated schemas in sync across teams.",
+                    "category": "Engineering",
+                    "date": "15.03.2024"
+                },
+                "third": {
+                    "title": "Launch playbooks",
+                    "description": "Use ready-made flows for acquisition, onboarding, and retention.",
+                    "category": "Growth",
+                    "date": "22.03.2024"
+                }
+            }
+        },
+        "products": {
+            "title": "Featured products",
+            "description": "Surface offers directly on the landing with clear value and pricing.",
+            "viewAll": "Open catalog",
+            "currency": "$",
+            "cta": "See details",
+            "items": {
+                "starter": {
+                    "title": "Starter workspace",
+                    "description": "Essential sections with SEO, analytics, and contact capture ready.",
+                    "price": "29",
+                    "originalPrice": "39",
+                    "tag": "Launch ready"
+                },
+                "growth": {
+                    "title": "Growth stack",
+                    "description": "Catalog, posts, and automation blocks with typed API connectors.",
+                    "price": "59",
+                    "originalPrice": "79",
+                    "tag": "Automation"
+                },
+                "enterprise": {
+                    "title": "Enterprise suite",
+                    "description": "Advanced localization, access control, and observability baked in.",
+                    "price": "99",
+                    "originalPrice": "129",
+                    "tag": "Enterprise"
+                }
+            }
+        },
+        "advantages": {
+            "title": "Our advantages",
+            "description": "Clear value drivers for visitors and stakeholders.",
+            "items": {
+                "performance": {
+                    "title": "Performance-first",
+                    "description": "SSR, edge caching, and CDN-ready assets keep pages fast."
+                },
+                "design": {
+                    "title": "Design system",
+                    "description": "FSD layout, consistent spacing, and theme-aware components."
+                },
+                "automation": {
+                    "title": "Automation ready",
+                    "description": "Telegram worker, typed hooks, and toasts connect signals instantly."
+                },
+                "support": {
+                    "title": "Reliability",
+                    "description": "Structured logging, monitoring, and rollback-friendly releases."
+                }
+            }
+        },
+        "reviews": {
+            "title": "Reviews & rating",
+            "description": "Proof from teams using this stack today.",
+            "score": "4.9",
+            "total": "1.2k+",
+            "highlight": "Rated by product, growth, and platform teams.",
+            "body": "Built-in analytics, typed schemas, and Telegram hooks keep launches predictable.",
+            "role": "Verified review",
+            "items": {
+                "first": {
+                    "name": "Olivia — Product Lead",
+                    "text": "We shipped a multilingual launch week in days with zero redesigns."
+                },
+                "second": {
+                    "name": "Mason — CTO",
+                    "text": "Typed API helpers and FastAPI contracts make handoffs painless."
+                },
+                "third": {
+                    "name": "Lena — Growth",
+                    "text": "Landing, posts, and catalog blocks give us experiments without rework."
+                }
+            }
+        },
+        "contact": {
+            "title": "Submit an application",
+            "description": "Tell us about your product and we will shape the launch playbook.",
+            "support": "Hands-on delivery from discovery to iteration.",
+            "pitch": "Share context, timelines, and integrations.",
+            "hint": "We reply within one business day with a scoped plan.",
+            "cards": {
+                "first": {
+                    "title": "Secure & compliant",
+                    "text": "JWT auth, audit-friendly logging, and privacy-safe defaults."
+                },
+                "second": {
+                    "title": "Fast turnaround",
+                    "text": "Templates, schemas, and CI-ready scripts accelerate rollout."
+                }
+            },
+            "fields": {
+                "name": "Full name",
+                "namePlaceholder": "Your name",
+                "emailPlaceholder": "you@company.com",
+                "messagePlaceholder": "Goals, timelines, and success metrics"
+            },
+            "cta": "Send application",
+            "success": "Application submitted. We will reply shortly."
+        },
+        "about": {
+            "title": "About us",
+            "description": "Full-stack team focused on predictable releases.",
+            "heading": "API-first builders with Telegram-ready flows",
+            "body": "We combine FastAPI, Next.js 15, and Telegram automation into one workflow. Every block ships with localization, analytics metadata, and strict typing so teams can launch without rewrites.",
+            "cards": {
+                "delivery": "Delivery culture",
+                "deliveryText": "Opinionated defaults, paired reviews, and measurable release checklists.",
+                "partners": "Partnerships",
+                "partnersText": "We align with growth, product, and platform leads to keep priorities visible."
+            },
+            "mission": {
+                "title": "Our mission",
+                "text": "Ship reliable experiences with honest telemetry, clear contracts, and fast iteration."
+            }
+        },
+        "faq": {
+            "title": "FAQ",
+            "description": "Answers for stakeholders and approvers.",
+            "items": {
+                "coverage": {
+                    "question": "Do you support multiple locales?",
+                    "answer": "Yes. Locale-aware routing and message bundles keep copy consistent across regions."
+                },
+                "deployment": {
+                    "question": "How do deployments work?",
+                    "answer": "Docker, Compose overlays, and NGINX configs are ready for local, staging, and production."
+                },
+                "integrations": {
+                    "question": "Can we use our existing APIs?",
+                    "answer": "Typed helpers handle auth, caching, and toasts so you can drop in endpoints without extra glue."
+                },
+                "analytics": {
+                    "question": "What about analytics and SEO?",
+                    "answer": "Structured data, SEO metadata, and event hooks ship by default for your analytics stack."
+                }
+            }
+        }
+    },
     "system": {
         "locale": "Locale",
         "worldwide": "Worldwide",

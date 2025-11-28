@@ -35,6 +35,226 @@
         "home": "首页",
         "sections": "版块"
     },
+    "landing": {
+        "hero": {
+            "title": "在第一天就能转化的落地页",
+            "subtitle": "统一的 FastAPI、Next.js 15 和 Telegram 工具，提供自适应区块与类型化 API 调用。",
+            "primaryCta": "打开目录",
+            "secondaryCta": "阅读文章",
+            "badge": "全栈起步",
+            "heading": "用自适应多语言落地页更快上线",
+            "body": "通过已接入 API 和消息的 Hero、证明、目录与引导流程传递清晰故事。",
+            "points": [
+                "FSD 布局，支持明暗主题",
+                "结构化数据、SEO 元数据与分析事件",
+                "CTA、toast 与 Telegram hook 开箱即用"
+            ],
+            "snapshot": {
+                "title": "本月上线",
+                "value": "已交付 37 个项目",
+                "cta": "查看案例"
+            },
+            "stats": {
+                "uptime": {
+                    "label": "可用性 SLA",
+                    "value": "99.9%"
+                },
+                "response": {
+                    "label": "中位响应",
+                    "value": "180 ms"
+                },
+                "coverage": {
+                    "label": "覆盖区域",
+                    "value": "80+"
+                }
+            }
+        },
+        "howItWorks": {
+            "title": "工作原理",
+            "description": "三步把访客从第一眼引导到激活。",
+            "cta": "查看路径",
+            "steps": {
+                "discover": {
+                    "title": "发现",
+                    "description": "Hero、导航和证明随语言与主题自适应。",
+                    "badge": "步骤 01"
+                },
+                "decide": {
+                    "title": "决策",
+                    "description": "文章和目录突出成果、定价与标签。",
+                    "badge": "步骤 02"
+                },
+                "act": {
+                    "title": "行动",
+                    "description": "线索表单、toast 和 Telegram 通知立即捕获意图。",
+                    "badge": "步骤 03"
+                }
+            }
+        },
+        "posts": {
+            "title": "最新文章",
+            "description": "展示支撑产品故事的洞见。",
+            "viewAll": "全部文章",
+            "items": {
+                "first": {
+                    "title": "设计自适应漏斗",
+                    "description": "用可复用组件融合市场与产品信号。",
+                    "category": "产品",
+                    "date": "02.03.2024"
+                },
+                "second": {
+                    "title": "可扩展的类型化 API",
+                    "description": "让 FastAPI 合约与生成的 schema 在团队间保持一致。",
+                    "category": "工程",
+                    "date": "15.03.2024"
+                },
+                "third": {
+                    "title": "发布手册",
+                    "description": "现成流程用于获客、引导与留存。",
+                    "category": "增长",
+                    "date": "22.03.2024"
+                }
+            }
+        },
+        "products": {
+            "title": "精选产品",
+            "description": "在落地页直接呈现价值与定价。",
+            "viewAll": "打开目录",
+            "currency": "$",
+            "cta": "查看详情",
+            "items": {
+                "starter": {
+                    "title": "Starter 工作区",
+                    "description": "基础区块，内置 SEO、分析与联系捕获。",
+                    "price": "29",
+                    "originalPrice": "39",
+                    "tag": "准备上线"
+                },
+                "growth": {
+                    "title": "增长套件",
+                    "description": "目录、文章与自动化区块，带类型化 API 连接器。",
+                    "price": "59",
+                    "originalPrice": "79",
+                    "tag": "自动化"
+                },
+                "enterprise": {
+                    "title": "企业套件",
+                    "description": "高级本地化、访问控制与可观测性内置。",
+                    "price": "99",
+                    "originalPrice": "129",
+                    "tag": "Enterprise"
+                }
+            }
+        },
+        "advantages": {
+            "title": "我们的优势",
+            "description": "为访客和决策者提供明确价值。",
+            "items": {
+                "performance": {
+                    "title": "性能优先",
+                    "description": "SSR、边缘缓存和 CDN 资源保证速度。"
+                },
+                "design": {
+                    "title": "设计系统",
+                    "description": "FSD 结构、一致间距、支持主题的组件。"
+                },
+                "automation": {
+                    "title": "自动化",
+                    "description": "Telegram worker、类型化 hook 与 toast 即刻联通信号。"
+                },
+                "support": {
+                    "title": "可靠性",
+                    "description": "结构化日志、监控以及可回滚发布。"
+                }
+            }
+        },
+        "reviews": {
+            "title": "评价与评分",
+            "description": "来自当前使用该技术栈的团队的证明。",
+            "score": "4.9",
+            "total": "1.2k+",
+            "highlight": "由产品、增长与平台团队评分。",
+            "body": "内建分析、类型化 schema 与 Telegram hook 让发布可预测。",
+            "role": "已验证评价",
+            "items": {
+                "first": {
+                    "name": "Olivia — 产品负责人",
+                    "text": "我们几天内完成多语言上线，没有任何返工设计。"
+                },
+                "second": {
+                    "name": "Mason — CTO",
+                    "text": "类型化 API 辅助与 FastAPI 合约让交接毫无痛点。"
+                },
+                "third": {
+                    "name": "Lena — 增长",
+                    "text": "落地页、文章与目录让我们可以无重工地做实验。"
+                }
+            }
+        },
+        "contact": {
+            "title": "提交申请",
+            "description": "告诉我们你的产品，我们会制定发布方案。",
+            "support": "从调研到迭代的实操支持。",
+            "pitch": "分享背景、时间线和集成。",
+            "hint": "一个工作日内回复范围计划。",
+            "cards": {
+                "first": {
+                    "title": "安全合规",
+                    "text": "JWT 认证、便于审计的日志与默认隐私保护。"
+                },
+                "second": {
+                    "title": "快速交付",
+                    "text": "模板、schema 与 CI 脚本加速上线。"
+                }
+            },
+            "fields": {
+                "name": "姓名",
+                "namePlaceholder": "你的名字",
+                "emailPlaceholder": "you@company.com",
+                "messagePlaceholder": "目标、时间线与成功指标"
+            },
+            "cta": "发送申请",
+            "success": "申请已提交，我们会尽快回复。"
+        },
+        "about": {
+            "title": "关于我们",
+            "description": "专注可预测交付的全栈团队。",
+            "heading": "API-first，内建 Telegram 流程",
+            "body": "我们将 FastAPI、Next.js 15 和 Telegram 自动化融为一体。每个区块都带本地化、分析元数据和严格类型，帮助团队无重写上线。",
+            "cards": {
+                "delivery": "交付文化",
+                "deliveryText": "有主见的默认值、双人评审和可量化的发布清单。",
+                "partners": "合作",
+                "partnersText": "与增长、产品和平台负责人对齐，让优先级透明。"
+            },
+            "mission": {
+                "title": "我们的使命",
+                "text": "以真实遥测、清晰合约和快速迭代交付可靠体验。"
+            }
+        },
+        "faq": {
+            "title": "FAQ",
+            "description": "给决策者与审批人的解答。",
+            "items": {
+                "coverage": {
+                    "question": "是否支持多语言？",
+                    "answer": "支持。基于 locale 的路由和消息包保持各地区文案一致。"
+                },
+                "deployment": {
+                    "question": "部署如何进行？",
+                    "answer": "Docker、Compose 叠加和 NGINX 配置已为本地、预发和生产就绪。"
+                },
+                "integrations": {
+                    "question": "能用现有 API 吗？",
+                    "answer": "类型化辅助处理认证、缓存和 toast，可直接接入端点，无需额外胶水代码。"
+                },
+                "analytics": {
+                    "question": "分析和 SEO 如何？",
+                    "answer": "结构化数据、SEO 元数据和事件 hook 默认提供，适配你的分析栈。"
+                }
+            }
+        }
+    },
     "system": {
         "locale": "区域设置",
         "worldwide": "全球",
