@@ -456,7 +456,20 @@
         "empty": "Пусто",
         "comments": "Комментарии",
         "reply": "Ответить",
-        "add": "Добавить"
+        "add": "Добавить",
+        "detail": {
+            "meta": "Информация о посте",
+            "publishedAt": "Опубликовано",
+            "updatedAt": "Обновлено",
+            "views": "Просмотры",
+            "readTime": "{minutes} мин чтения",
+            "author": "Автор",
+            "category": "Категория",
+            "related": "Похожие записи",
+            "actions": {
+                "hide": "Скрыть"
+            }
+        }
     },
     "categories": {
         "popup": {

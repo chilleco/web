@@ -456,7 +456,20 @@
         "empty": "Empty",
         "comments": "Comments",
         "reply": "Reply",
-        "add": "Add"
+        "add": "Add",
+        "detail": {
+            "meta": "Post info",
+            "publishedAt": "Published",
+            "updatedAt": "Updated",
+            "views": "Views",
+            "readTime": "{minutes} min read",
+            "author": "Author",
+            "category": "Category",
+            "related": "Related posts",
+            "actions": {
+                "hide": "Hide"
+            }
+        }
     },
     "categories": {
         "popup": {

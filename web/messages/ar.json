@@ -399,7 +399,20 @@
         "empty": "فارغ",
         "comments": "التعليقات",
         "reply": "الرد",
-        "add": "إضافة"
+        "add": "إضافة",
+        "detail": {
+            "meta": "معلومات المنشور",
+            "publishedAt": "تاريخ النشر",
+            "updatedAt": "تم التحديث",
+            "views": "المشاهدات",
+            "readTime": "{minutes} دقيقة قراءة",
+            "author": "الكاتب",
+            "category": "الفئة",
+            "related": "منشورات ذات صلة",
+            "actions": {
+                "hide": "إخفاء"
+            }
+        }
     },
     "categories": {
         "popup": {

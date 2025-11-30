@@ -399,7 +399,20 @@
         "empty": "Vacío",
         "comments": "Comentarios",
         "reply": "Responder",
-        "add": "Añadir"
+        "add": "Añadir",
+        "detail": {
+            "meta": "Información",
+            "publishedAt": "Publicado",
+            "updatedAt": "Actualizado",
+            "views": "Vistas",
+            "readTime": "{minutes} min de lectura",
+            "author": "Autor",
+            "category": "Categoría",
+            "related": "Publicaciones relacionadas",
+            "actions": {
+                "hide": "Ocultar"
+            }
+        }
     },
     "categories": {
         "popup": {

@@ -47,6 +47,7 @@ import {
   FaFile,
   FaSpinner,
   FaEye,
+  FaEyeSlash,
   FaUsers,
   FaTriangleExclamation,
   FaCheck,
@@ -136,6 +137,10 @@ export function EditIcon({ size = 16, ...props }: IconProps) {
 
 export function DeleteIcon({ size = 16, ...props }: IconProps) {
   return <FaTrash size={size} {...props} />
+}
+
+export function HideIcon({ size = 16, ...props }: IconProps) {
+  return <FaEyeSlash size={size} {...props} />
 }
 
 export function SaveIcon({ size = 16, ...props }: IconProps) {

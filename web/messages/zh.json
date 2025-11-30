@@ -399,7 +399,20 @@
         "empty": "空",
         "comments": "评论",
         "reply": "回复",
-        "add": "添加"
+        "add": "添加",
+        "detail": {
+            "meta": "文章信息",
+            "publishedAt": "发布时间",
+            "updatedAt": "更新于",
+            "views": "浏览",
+            "readTime": "{minutes} 分钟阅读",
+            "author": "作者",
+            "category": "分类",
+            "related": "相关文章",
+            "actions": {
+                "hide": "隐藏"
+            }
+        }
     },
     "categories": {
         "popup": {
