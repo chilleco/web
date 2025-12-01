@@ -288,6 +288,7 @@ export function FileUpload({
   const hasFile = Boolean(value || fileData);
   const useFullHeight = width.includes('h-full');
   const containerHeight = useFullHeight ? 'h-full' : `h-[${height}px]`;
+  const isImage = fileData?.type === 'image' || (!fileData && value && fileTypes === 'images');
   const accept = getAcceptAttribute(fileTypes);
 
   return (
@@ -333,7 +334,7 @@ export function FileUpload({
           {hasFile ? (
             // File Preview
             <div className="relative w-full h-full">
-              {fileData?.type === 'image' && (value || fileData?.preview) ? (
+              {isImage && (value || fileData?.preview) ? (
                 // Image Preview
                 <>
                   <Image

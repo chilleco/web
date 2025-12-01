@@ -205,6 +205,8 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - Picker/input styling: Selects/inputs used in edit mode must share the same muted background style as textareas/main inputs, without borders, and show a pointer cursor on hover.
 - Picker font rule: Picker inputs must use the same font weight/size/color styling as other inputs and place the key label inline with the value; hover must show pointer.
 - FileUpload usage: pass `fileData` with `type: 'image'` or provide an image URL in `value`; set `width=\"w-full h-full\"` when you need full-height containers alongside form columns.
+- File uploads: On selecting an image, call `/upload/` via the API, use the returned URL in form state, and keep previews in sync for post and profile editors.
+
 
 ## Development Workflow
 1. **Make plan of changing**: Explain the plan (brief)

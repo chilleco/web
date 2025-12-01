@@ -29,6 +29,7 @@ import { formatDate, formatDateTime } from '@/shared/lib/date';
 import { getCategories } from '@/entities/category/api/categoryApi';
 import type { Category } from '@/entities/category/model/category';
 import { Post, updatePost } from '@/entities/post';
+import { uploadFile } from '@/shared/services/api/upload';
 import {
   PostsIcon,
   CalendarIcon,
@@ -102,6 +103,7 @@ export function PostDetailClient({
   const [content, setContent] = useState(post.data);
   const [image, setImage] = useState(post.image || '');
   const [fileData, setFileData] = useState<FileData | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [postLocale, setPostLocale] = useState<string>(post.locale || locale);
   const [category, setCategory] = useState<string>(post.category ? String(post.category) : 'none');
   const [categories, setCategories] = useState<Category[]>([]);
@@ -130,8 +132,26 @@ export function PostDetailClient({
   }, [locale, showError, tSystem]);
 
   const handleFileChange = (file: File | null, preview: string | null, data: FileData | null) => {
+    if (!file) {
+      setFileData(null);
+      setImage('');
+      return;
+    }
+
+    setUploadingImage(true);
     setFileData(data);
-    setImage(preview || '');
+    setImage(preview || imageValue);
+
+    uploadFile(file)
+      .then((url) => {
+        setImage(url);
+        setFileData(data ? { ...data, preview: url, type: 'image' } : null);
+      })
+      .catch((err) => {
+        const message = err instanceof Error ? err.message : tSystem('error');
+        showError(message);
+      })
+      .finally(() => setUploadingImage(false));
   };
 
   const handleFileRemove = () => {
