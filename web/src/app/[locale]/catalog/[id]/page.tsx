@@ -153,7 +153,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               <button
                 key={thumb + index}
                 type="button"
-                className={`relative aspect-[3/4] rounded-[1rem] overflow-hidden border-2 ${
+                className={`relative aspect-[3/4] rounded-[1rem] overflow-hidden border-2 cursor-pointer ${
                   index === selectedImageIndex ? 'border-primary' : 'border-transparent'
                 }`}
                 onClick={() => handleSelectImage(index)}

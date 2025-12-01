@@ -14,9 +14,11 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Explain the plan** (brief): research, make strategy and all steps of changing. compliance with the rules of the repository and the specifics of custom libraries and components
 - **Development**: Follow the **DevOps Principles** & **Backend Principles** & **Frontend Principles**
 - **Minimal, focused diffs**: change only what's necessary; Make minimal changes in relevant files & rows only
+- **Cursor pointer everywhere**: All clickable elements/blocks/links/pickers/sliders must explicitly set `cursor-pointer` for clear affordance
 - **No duplicate API calls**: guard client-side fetch effects with stable fetch keys/in-flight refs so Strict Mode doesn’t trigger the same request multiple times (one request per dataset)
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
+- **Reuse cards/items**: Always reuse existing card/item components for repeated contexts (landing listings, related/recommended blocks, similar products, etc.)—e.g., use the shared PostCard for any post teasers (landing, related posts) and the shared product card for similar products instead of creating new variants.
 - **Follow FSD Architecture**: respect Feature-Sliced Design layers and import rules
 - **Never hard-code secrets** or credentials; never read or write `.env`, `secrets/`, or CI secrets
 - **Ask before destructive or external actions** (network, DB migrations, Docker, `git push`, etc.)

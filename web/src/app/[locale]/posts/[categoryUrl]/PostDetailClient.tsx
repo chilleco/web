@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/shared/ui/page-header';
 import { BreadcrumbDescription } from '@/shared/ui/breadcrumb-description';
 import { ThreeColumnLayout } from '@/widgets/three-column-layout';
+import { PostCard } from '@/widgets/posts-list';
 import { Box } from '@/shared/ui/box';
 import { SidebarCard } from '@/shared/ui/sidebar-card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
@@ -26,7 +27,7 @@ import {
 } from '@/shared/ui/select';
 import { IconButton } from '@/shared/ui/icon-button';
 import { useToastActions } from '@/shared/hooks/useToast';
-import { formatDate, formatDateTime } from '@/shared/lib/date';
+import { formatDateTime } from '@/shared/lib/date';
 import { getCategories } from '@/entities/category/api/categoryApi';
 import type { Category } from '@/entities/category/model/category';
 import { Post, updatePost, createPost } from '@/entities/post';
@@ -292,99 +293,65 @@ export function PostDetailClient({
                 )}
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-1 min-w-0 items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
                       <CalendarIcon size={16} />
                     </div>
-                    <div className="text-sm text-muted-foreground">{tPosts('detail.publishedAt')}</div>
+                    <div className="text-sm text-muted-foreground truncate">{tPosts('detail.publishedAt')}</div>
                   </div>
-                  <div className="text-sm font-semibold text-foreground">{publishedAt}</div>
+                  <div className="text-sm font-semibold text-foreground text-right whitespace-nowrap ml-auto">{publishedAt}</div>
                 </div>
 
                 {showUpdated && (
                   <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-1 min-w-0 items-center gap-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-slate-500/15 text-slate-600 dark:bg-slate-500/20 dark:text-slate-300">
                         <RefreshIcon size={16} />
                       </div>
-                      <div className="text-sm text-muted-foreground">{tPosts('detail.updatedAt')}</div>
+                      <div className="text-sm text-muted-foreground truncate">{tPosts('detail.updatedAt')}</div>
                     </div>
-                    <div className="text-sm font-semibold text-foreground">{updatedAtFormatted}</div>
+                    <div className="text-sm font-semibold text-foreground text-right whitespace-nowrap ml-auto">{updatedAtFormatted}</div>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-1 min-w-0 items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-300">
                       <ClockIcon size={16} />
                     </div>
-                    <div className="text-sm text-muted-foreground">{readTimeLabel}</div>
+                    <div className="text-sm text-muted-foreground truncate">{readTimeLabel}</div>
                   </div>
-                  <div className="text-sm font-semibold text-foreground">{readTimeValue}</div>
+                  <div className="text-sm font-semibold text-foreground text-right whitespace-nowrap ml-auto">{readTimeValue}</div>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-1 min-w-0 items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
                       <EyeIcon size={16} />
                     </div>
-                    <div className="text-sm text-muted-foreground">{tPosts('detail.views')}</div>
+                    <div className="text-sm text-muted-foreground truncate">{tPosts('detail.views')}</div>
                   </div>
-                  <div className="text-sm font-semibold text-foreground">{formattedViews}</div>
+                  <div className="text-sm font-semibold text-foreground text-right whitespace-nowrap ml-auto">{formattedViews}</div>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-1 min-w-0 items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-300">
                       <MessageIcon size={16} />
                     </div>
-                    <div className="text-sm text-muted-foreground">{tPosts('comments')}</div>
+                    <div className="text-sm text-muted-foreground truncate">{tPosts('comments')}</div>
                   </div>
-                  <div className="text-sm font-semibold text-foreground">{commentsCount}</div>
+                  <div className="text-sm font-semibold text-foreground text-right whitespace-nowrap ml-auto">{commentsCount}</div>
                 </div>
               </div>
             </SidebarCard>
 
             {relatedPosts.length > 0 && (
-              <SidebarCard
-                title={tPosts('detail.related')}
-                icon={
-                  <div className="flex h-10 w-10 items-center justify-center rounded-[0.75rem] bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400">
-                    <PostsIcon size={20} />
-                  </div>
-                }
-                contentSpacing="sm"
-              >
-                <div className="space-y-3">
-                  {relatedPosts.map((related) => (
-                    <Link
-                      key={related.id}
-                      href={`/posts/${related.url}`}
-                      className="flex gap-3 rounded-[0.75rem] bg-muted/60 p-3 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:scale-[1.01]"
-                    >
-                      {related.image && (
-                        <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-[0.75rem]">
-                          <Image
-                            src={related.image}
-                            alt={related.title}
-                            fill
-                            className="object-cover"
-                            sizes="64px"
-                          />
-                        </div>
-                      )}
-                      <div className="min-w-0 flex-1 space-y-1">
-                        <div className="text-sm font-semibold leading-snug text-foreground line-clamp-2">
-                          {related.title}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {formatDate(related.updated ?? related.created ?? createdAt)}
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </SidebarCard>
+              <div className="space-y-4">
+                {relatedPosts.map((related) => (
+                  <PostCard key={related.id} post={related} />
+                ))}
+              </div>
             )}
           </>
         }
