@@ -207,6 +207,8 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - Picker font rule: Picker inputs must use the same font weight/size/color styling as other inputs and place the key label inline with the value; hover must show pointer.
 - FileUpload usage: pass `fileData` with `type: 'image'` or provide an image URL in `value`; set `width=\"w-full h-full\"` when you need full-height containers alongside form columns.
 - File uploads: On selecting an image, call `/upload/` via the API, use the returned URL in form state, and keep previews in sync for post and profile editors.
+- Inline label rows: For compact inputs (e.g., category, price, login, phone), place the label text inside the input row (left prefix) with the same muted background as the input (bootstrap-style inline add-on, no alternate color), a subtle divider if needed, borderless controls, and pointer-only on interactive elements.
+
 
 
 ## Development Workflow

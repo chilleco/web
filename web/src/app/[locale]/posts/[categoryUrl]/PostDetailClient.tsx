@@ -300,22 +300,22 @@ export function PostDetailClient({
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
-                      <EyeIcon size={16} />
-                    </div>
-                    <div className="text-sm text-muted-foreground">{tPosts('detail.views')}</div>
-                  </div>
-                  <div className="text-sm font-semibold text-foreground">{formattedViews}</div>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
-                  <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-300">
                       <ClockIcon size={16} />
                     </div>
                     <div className="text-sm text-muted-foreground">{readTimeLabel}</div>
                   </div>
                   <div className="text-sm font-semibold text-foreground">{readTimeValue}</div>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+                      <EyeIcon size={16} />
+                    </div>
+                    <div className="text-sm text-muted-foreground">{tPosts('detail.views')}</div>
+                  </div>
+                  <div className="text-sm font-semibold text-foreground">{formattedViews}</div>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">

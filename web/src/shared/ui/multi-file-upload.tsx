@@ -291,7 +291,7 @@ export function MultiFileUpload({
       >
         {/* Existing Files */}
         {value.map((fileData, index) => (
-          <div key={`${fileData.file.name}_${index}`} className="relative group aspect-square">
+          <div key={`${fileData.preview || fileData.file?.name || index}_${index}`} className="relative group aspect-square">
             <FileUpload
               value={fileData.preview || null}
               fileData={fileData}
