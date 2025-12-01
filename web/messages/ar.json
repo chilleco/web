@@ -456,7 +456,23 @@
             "delete": "حذف",
             "deleteConfirm": "حذف \"{title}\"؟",
             "ratingLabel": "التقييم",
-            "ratingCountLabel": "عدد التقييمات"
+            "ratingCountLabel": "عدد التقييمات",
+            "optionsTitle": "الخيارات",
+            "addOption": "إضافة خيار",
+            "optionsEmpty": "لا توجد خيارات بعد",
+            "optionUntitled": "خيار بدون اسم",
+            "optionName": "اسم الخيار",
+            "optionPrice": "سعر الخيار",
+            "optionImages": "صور الخيار (روابط مفصولة بفواصل)",
+            "optionInStock": "متوفر",
+            "optionAttributesTitle": "السمات",
+            "optionAttributesEmpty": "لا توجد سمات",
+            "optionFeaturesTitle": "ميزات الخيار",
+            "optionFeaturesEmpty": "لا توجد ميزات للخيار",
+            "optionsLabel": "الخيارات: {count}",
+            "optionsRequired": "أضف خياراً واحداً على الأقل",
+            "priceFromLabel": "السعر من",
+            "priceFromPreview": "السعر الأساسي من: {value} {currency}"
         }
     },
     "posts": {
@@ -647,7 +663,8 @@
             "unavailable": "غير متوفر",
             "inCart": "في السلة",
             "valueYes": "نعم",
-            "valueNo": "لا"
+            "valueNo": "لا",
+            "priceFrom": "من"
         }
     },
     "search": {

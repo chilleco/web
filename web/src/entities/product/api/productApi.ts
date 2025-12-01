@@ -1,5 +1,5 @@
 import { api } from '@/shared/services/api/client';
-import { Product, ProductFeature, ProductSaveRequest, ProductsGetRequest, ProductsGetResponse } from '../model/product';
+import { Product, ProductFeature, ProductOption, ProductSaveRequest, ProductsGetRequest, ProductsGetResponse } from '../model/product';
 
 interface ProductSaveResponse {
   id: number;
@@ -7,7 +7,7 @@ interface ProductSaveResponse {
   product: Product;
 }
 
-function calculateFinalPrice(price: number, discountType?: Product['discountType'], discountValue?: number) {
+function calculateFinalPrice(price: number, discountType?: ProductOption['discountType'], discountValue?: number) {
   const basePrice = price || 0;
   const value = discountValue || 0;
 
@@ -46,23 +46,49 @@ function normalizeFeatures(features?: ProductFeature[]): ProductFeature[] {
     .sort((a, b) => a.key.localeCompare(b.key));
 }
 
-function normalizeProduct(product: Product): Product {
-  const basePrice = product.price || 0;
-  const discountType = product.discountType;
-  const discountValue = product.discountValue;
-  const finalPrice = typeof product.finalPrice === 'number'
-    ? product.finalPrice
-    : calculateFinalPrice(basePrice, discountType, discountValue);
+function normalizeOption(option: ProductOption): ProductOption {
+  const price = option.price || 0;
+  const discountType = option.discountType;
+  const discountValue = option.discountValue;
+  const finalPrice = typeof option.finalPrice === 'number'
+    ? option.finalPrice
+    : calculateFinalPrice(price, discountType, discountValue);
 
   return {
-    images: [],
-    ...product,
-    price: basePrice,
+    ...option,
+    price,
     finalPrice,
     discountType: discountType || undefined,
     discountValue: typeof discountValue === 'number' ? discountValue : undefined,
+    images: option.images || [],
+    attributes: normalizeFeatures(option.attributes),
+    features: normalizeFeatures(option.features),
+  };
+}
+
+function normalizeProduct(product: Product): Product {
+  const options = (product.options || []).map(normalizeOption);
+  const priceFrom = typeof product.priceFrom === 'number'
+    ? product.priceFrom
+    : Math.min(...options.map((option) => option.price || 0), product.price || 0, 0);
+  const finalPriceFrom = typeof product.finalPriceFrom === 'number'
+    ? product.finalPriceFrom
+    : Math.min(...options.map((option) => option.finalPrice || option.price || 0), priceFrom);
+
+  return {
+    ...product,
+    priceFrom,
+    finalPriceFrom,
     images: product.images || [],
     features: normalizeFeatures(product.features),
+    options: options.length ? options : [{
+      name: 'Default',
+      price: priceFrom,
+      finalPrice: finalPriceFrom,
+      images: product.images || [],
+      attributes: [],
+      features: [],
+    }],
   };
 }
 
@@ -97,20 +123,46 @@ function mapProductToApi(payload: ProductSaveRequest) {
       value_type: feature.valueType || 'string',
     }));
 
+  const options = (payload.options || []).map((option) => {
+    const optionFeatures = (option.features || [])
+      .filter((feature) => feature.key && feature.key.trim().length > 0)
+      .map((feature) => ({
+        key: feature.key.trim(),
+        value: feature.value,
+        value_type: feature.valueType || 'string',
+      }));
+
+    const attributes = (option.attributes || [])
+      .filter((feature) => feature.key && feature.key.trim().length > 0)
+      .map((feature) => ({
+        key: feature.key.trim(),
+        value: feature.value,
+        value_type: feature.valueType || 'string',
+      }));
+
+    return {
+      name: option.name,
+      price: option.price,
+      discount_type: option.discountType,
+      discount_value: option.discountValue,
+      images: option.images ?? [],
+      rating: option.rating,
+      rating_count: option.ratingCount,
+      in_stock: option.inStock,
+      attributes,
+      features: optionFeatures,
+    };
+  });
+
   return {
     id: payload.id,
     title: payload.title,
     description: payload.description,
     images: payload.images ?? [],
-    price: payload.price,
-    discount_type: payload.discountType,
-    discount_value: payload.discountValue,
     features,
+    options,
     currency: payload.currency,
-    rating: payload.rating,
-    rating_count: payload.ratingCount,
     category: payload.category,
-    in_stock: payload.inStock,
     is_new: payload.isNew,
     is_featured: payload.isFeatured,
     status: payload.status,

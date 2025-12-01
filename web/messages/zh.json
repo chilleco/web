@@ -456,7 +456,23 @@
             "delete": "删除",
             "deleteConfirm": "删除\"{title}\"?",
             "ratingLabel": "评分",
-            "ratingCountLabel": "评分数量"
+            "ratingCountLabel": "评分数量",
+            "optionsTitle": "选项",
+            "addOption": "添加选项",
+            "optionsEmpty": "暂无选项",
+            "optionUntitled": "未命名选项",
+            "optionName": "选项名称",
+            "optionPrice": "选项价格",
+            "optionImages": "选项图片（URL，逗号分隔）",
+            "optionInStock": "有货",
+            "optionAttributesTitle": "属性",
+            "optionAttributesEmpty": "暂无属性",
+            "optionFeaturesTitle": "选项特性",
+            "optionFeaturesEmpty": "暂无特性",
+            "optionsLabel": "选项：{count}",
+            "optionsRequired": "请添加至少一个选项",
+            "priceFromLabel": "起价",
+            "priceFromPreview": "基础价格：{value} {currency}"
         }
     },
     "posts": {
@@ -647,7 +663,8 @@
             "unavailable": "不可用",
             "inCart": "已在购物车中",
             "valueYes": "是",
-            "valueNo": "否"
+            "valueNo": "否",
+            "priceFrom": "从"
         }
     },
     "search": {

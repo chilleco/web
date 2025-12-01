@@ -468,7 +468,23 @@
             "featureTypeBoolean": "Булево",
             "valueYes": "Да",
             "valueNo": "Нет",
-            "featuresLabel": "Характеристики: {count}"
+            "featuresLabel": "Характеристики: {count}",
+            "optionsTitle": "Опции",
+            "addOption": "Добавить опцию",
+            "optionsEmpty": "Опций пока нет",
+            "optionUntitled": "Без названия",
+            "optionName": "Название опции",
+            "optionPrice": "Цена опции",
+            "optionImages": "Изображения опции (URL через запятую)",
+            "optionInStock": "В наличии",
+            "optionAttributesTitle": "Параметры",
+            "optionAttributesEmpty": "Параметры не добавлены",
+            "optionFeaturesTitle": "Особенности опции",
+            "optionFeaturesEmpty": "Особенности не добавлены",
+            "optionsLabel": "Опций: {count}",
+            "optionsRequired": "Добавьте хотя бы одну опцию",
+            "priceFromLabel": "Цена от",
+            "priceFromPreview": "База от: {value} {currency}"
         }
     },
     "posts": {
@@ -669,7 +685,8 @@
             "addedToCartToast": "«{title}» добавлен в корзину",
             "favoriteToggledToast": "Избранное обновлено для {title}",
             "valueYes": "Да",
-            "valueNo": "Нет"
+            "valueNo": "Нет",
+            "priceFrom": "От"
         }
     },
     "search": {

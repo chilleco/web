@@ -4,7 +4,7 @@ The creating and editing method of the product object of the API
 
 from typing import Any, Literal
 
-from fastapi import APIRouter, Body, Request
+from fastapi import APIRouter, Body, HTTPException, Request
 from pydantic import BaseModel, Field, ConfigDict
 from libdev.lang import to_url
 from consys.errors import ErrorAccess
@@ -41,27 +41,14 @@ class ProductSaveRequest(BaseModel):
         description="Image URLs for the product gallery",
         examples=[["https://example.com/image.webp"]],
     )
-    price: float = Field(
-        default=0.0,
-        ge=0,
-        description="Base price before discounts",
-        examples=[299.99],
-    )
-    discount_type: Literal["percent", "fixed"] | None = Field(
-        default=None,
-        description="Discount type applied to the base price",
-        examples=["percent"],
-    )
-    discount_value: float | None = Field(
-        default=None,
-        ge=0,
-        description="Discount value matched to type (percent or fixed amount)",
-        examples=[25, 30.5],
-    )
     features: list[ProductFeature] = Field(
         default_factory=list,
         description="List of key/value specifications for the product",
         examples=[[{"key": "Battery life", "value": "32h", "valueType": "string"}]],
+    )
+    options: list["ProductOptionPayload"] = Field(
+        default_factory=list,
+        description="List of product modifications with their own pricing and availability",
     )
     currency: str | None = Field(
         default="$",
@@ -69,28 +56,10 @@ class ProductSaveRequest(BaseModel):
         examples=["$"],
         max_length=8,
     )
-    rating: float | None = Field(
-        default=None,
-        ge=0,
-        le=5,
-        description="Average rating",
-        examples=[4.8],
-    )
-    rating_count: int | None = Field(
-        default=None,
-        ge=0,
-        description="Number of ratings",
-        examples=[234],
-    )
     category: str | None = Field(
         default=None,
         description="Category label",
         examples=["Electronics"],
-    )
-    in_stock: bool = Field(
-        default=True,
-        description="Is the product available for purchase",
-        examples=[True],
     )
     is_new: bool = Field(
         default=False,
@@ -107,6 +76,67 @@ class ProductSaveRequest(BaseModel):
         description="Product status flag",
         examples=[1],
     )
+
+
+class ProductOptionPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(
+        ...,
+        description="Readable option name (e.g., size or color)",
+        examples=["Red / Large"],
+    )
+    price: float = Field(
+        ...,
+        ge=0,
+        description="Base price before discounts",
+        examples=[199.99],
+    )
+    discount_type: Literal["percent", "fixed"] | None = Field(
+        default=None,
+        description="Discount type applied to the base price",
+        examples=["percent"],
+    )
+    discount_value: float | None = Field(
+        default=None,
+        ge=0,
+        description="Discount value matched to type (percent or fixed amount)",
+        examples=[25, 30.5],
+    )
+    images: list[str] = Field(
+        default_factory=list,
+        description="Image URLs specific to the option",
+        examples=[["https://example.com/variant.webp"]],
+    )
+    rating: float | None = Field(
+        default=None,
+        ge=0,
+        le=5,
+        description="Average rating for this option",
+        examples=[4.8],
+    )
+    rating_count: int | None = Field(
+        default=None,
+        ge=0,
+        description="Number of ratings for this option",
+        examples=[234],
+    )
+    in_stock: bool = Field(
+        default=True,
+        description="Is the option available for purchase",
+        examples=[True],
+    )
+    attributes: list[ProductFeature] = Field(
+        default_factory=list,
+        description="Key/value attributes for the option (size, color, etc.)",
+    )
+    features: list[ProductFeature] = Field(
+        default_factory=list,
+        description="Extra features specific to the option",
+    )
+
+
+ProductSaveRequest.model_rebuild()
 
 
 class ProductSaveResponse(BaseModel):
@@ -146,6 +176,28 @@ def _prepare_features_for_storage(features: list[ProductFeature]) -> list[dict[s
     return sorted(prepared, key=lambda item: item["key"].lower())
 
 
+def _prepare_option_for_storage(option: ProductOptionPayload) -> dict[str, Any]:
+    """Normalize option payload for persistence."""
+
+    discount_type = (
+        option.discount_type if option.discount_type and (option.discount_value or 0) > 0 else None
+    )
+    discount_value = float(option.discount_value or 0) if discount_type else 0.0
+
+    return {
+        "name": option.name.strip() or "Option",
+        "price": float(option.price or 0),
+        "discount_type": discount_type,
+        "discount_value": discount_value,
+        "images": option.images or [],
+        "rating": option.rating,
+        "rating_count": option.rating_count,
+        "in_stock": option.in_stock,
+        "attributes": _prepare_features_for_storage(option.attributes),
+        "features": _prepare_features_for_storage(option.features),
+    }
+
+
 @router.post("/save/", response_model=ProductSaveResponse, tags=["products"])
 async def handler(
     request: Request,
@@ -164,23 +216,42 @@ async def handler(
             token=request.state.token,
         )
         new = True
-    discount_type = data.discount_type if data.discount_type and (data.discount_value or 0) > 0 else None
-    discount_value = float(data.discount_value or 0) if discount_type else 0.0
+
+    prepared_options = [_prepare_option_for_storage(option) for option in data.options]
+    if not prepared_options:
+        raise HTTPException(status_code=400, detail="options_required")
+
+    price_from = min(option["price"] for option in prepared_options) if prepared_options else 0.0
+
+    # Aggregate ratings across options (weighted by rating_count when available)
+    rating_sum = 0.0
+    rating_total = 0
+    for option in prepared_options:
+        rating = option.get("rating")
+        rating_count = option.get("rating_count")
+        if rating is not None and rating_count:
+            rating_sum += float(rating) * int(rating_count)
+            rating_total += int(rating_count)
+
+    aggregated_rating = rating_sum / rating_total if rating_total else None
+    aggregated_rating_count = rating_total if rating_total else None
+    aggregated_in_stock = any(option.get("in_stock") for option in prepared_options)
 
     product.title = data.title
     product.description = data.description
     product.images = data.images or []
-    product.price = data.price
-    product.discount_type = discount_type
-    product.discount_value = discount_value
+    product.price = price_from
+    product.discount_type = None
+    product.discount_value = 0.0
     product.currency = data.currency
-    product.rating = data.rating
-    product.rating_count = data.rating_count
+    product.rating = aggregated_rating
+    product.rating_count = aggregated_rating_count
     product.category = data.category
-    product.in_stock = data.in_stock
+    product.in_stock = aggregated_in_stock
     product.is_new = data.is_new
     product.is_featured = data.is_featured
     product.features = _prepare_features_for_storage(data.features)
+    product.options = prepared_options
     product.status = data.status
 
     product.save()

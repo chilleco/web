@@ -3,10 +3,10 @@ export interface Product {
   title: string;
   description?: string;
   images: string[];
-  price: number;
-  finalPrice?: number;
-  discountType?: 'percent' | 'fixed';
-  discountValue?: number;
+  priceFrom: number;
+  finalPriceFrom?: number;
+  price?: number;
+  options: ProductOption[];
   features?: ProductFeature[];
   currency?: string;
   rating?: number;
@@ -19,6 +19,28 @@ export interface Product {
   updated?: number;
   status?: number;
   url?: string;
+}
+
+export type ProductFeatureValueType = 'string' | 'number' | 'boolean';
+
+export interface ProductFeature {
+  key: string;
+  value: string | number | boolean;
+  valueType: ProductFeatureValueType;
+}
+
+export interface ProductOption {
+  name: string;
+  price: number;
+  finalPrice?: number;
+  discountType?: 'percent' | 'fixed';
+  discountValue?: number;
+  images: string[];
+  rating?: number;
+  ratingCount?: number;
+  inStock?: boolean;
+  attributes?: ProductFeature[];
+  features?: ProductFeature[];
 }
 
 export interface ProductsGetRequest {
@@ -34,28 +56,26 @@ export interface ProductsGetResponse {
   count?: number;
 }
 
-export type ProductFeatureValueType = 'string' | 'number' | 'boolean';
-
-export interface ProductFeature {
-  key: string;
-  value: string | number | boolean;
-  valueType: ProductFeatureValueType;
-}
-
 export interface ProductSaveRequest {
   id?: number;
   title: string;
   description?: string;
   images?: string[];
-  price: number;
-  discountType?: 'percent' | 'fixed';
-  discountValue?: number;
   features?: ProductFeature[];
+  options: Array<{
+    name: string;
+    price: number;
+    discountType?: 'percent' | 'fixed';
+    discountValue?: number;
+    images?: string[];
+    rating?: number;
+    ratingCount?: number;
+    inStock?: boolean;
+    attributes?: ProductFeature[];
+    features?: ProductFeature[];
+  }>;
   currency?: string;
-  rating?: number;
-  ratingCount?: number;
   category?: string;
-  inStock?: boolean;
   isNew?: boolean;
   isFeatured?: boolean;
   status?: number;

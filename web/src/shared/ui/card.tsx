@@ -173,13 +173,15 @@ interface PricingProps {
   basePrice?: number;
   currency?: string;
   className?: string;
+  pricePrefix?: string;
 }
 
-function Pricing({ price, basePrice, currency = '$', className }: PricingProps) {
+function Pricing({ price, basePrice, currency = '$', className, pricePrefix }: PricingProps) {
   const hasDiscount = typeof basePrice === 'number' && basePrice > price;
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
+      {pricePrefix && <span className="text-sm text-muted-foreground">{pricePrefix}</span>}
       <span className="text-lg font-bold">
         {currency}{price.toFixed(2)}
       </span>
@@ -219,6 +221,7 @@ interface CardProps extends VariantProps<typeof cardVariants> {
   price?: number;
   basePrice?: number;
   currency?: string;
+  pricePrefix?: string;
 
   // Metadata (author, date, views, etc.)
   metadata?: Array<{
@@ -251,6 +254,7 @@ function Card({
   tags = [],
   price,
   basePrice,
+  pricePrefix,
   currency = '$',
   metadata = [],
   actions,
@@ -334,6 +338,7 @@ function Card({
               price={price}
               basePrice={basePrice}
               currency={currency}
+              pricePrefix={pricePrefix}
             />
           </div>
         )}

@@ -16,13 +16,15 @@ interface ProductListItemProps {
 
 export function ProductListItem({ product, onEdit, onDelete }: ProductListItemProps) {
   const t = useTranslations('admin.products');
-  const previewImage = product.images?.[0];
-  const basePrice = product.price || 0;
-  const finalPrice = product.finalPrice ?? basePrice;
+  const previewImage = (product.images?.[0]) || product.options?.[0]?.images?.[0];
+  const basePrice = typeof product.priceFrom === 'number' ? product.priceFrom : product.price || 0;
+  const finalPrice = typeof product.finalPriceFrom === 'number' ? product.finalPriceFrom : basePrice;
   const hasDiscount = basePrice > 0 && finalPrice < basePrice;
   const discountPercent = hasDiscount ? Math.round(((basePrice - finalPrice) / basePrice) * 100) : null;
-  const featuresCount = product.features?.length ?? 0;
+  const featuresCount = (product.features?.length ?? 0) + (product.options?.[0]?.features?.length ?? 0);
+  const optionsCount = product.options?.length ?? 0;
   const currency = product.currency || '';
+  const inStock = product.inStock ?? product.options?.some((option) => option.inStock !== false) ?? true;
 
   return (
     <EntityRow
@@ -46,7 +48,7 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
         </div>
       }
       badges={[
-        product.inStock === false ? <Badge key="stock" variant="destructive">{t('statusInactive')}</Badge> : <Badge key="stock" variant="secondary">{t('inStock')}</Badge>,
+        inStock === false ? <Badge key="stock" variant="destructive">{t('statusInactive')}</Badge> : <Badge key="stock" variant="secondary">{t('inStock')}</Badge>,
         product.isNew ? <Badge key="new" variant="success">{t('isNew')}</Badge> : null,
         product.isFeatured ? <Badge key="featured" variant="warning">{t('isFeatured')}</Badge> : null,
         hasDiscount && discountPercent ? (
@@ -55,6 +57,7 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
           </Badge>
         ) : null,
         featuresCount ? <Badge key="features" variant="outline">{t('featuresLabel', { count: featuresCount })}</Badge> : null,
+        optionsCount ? <Badge key="options" variant="secondary">{t('optionsLabel', { count: optionsCount })}</Badge> : null,
       ].filter(Boolean)}
       secondRowItems={(() => {
         const items: React.ReactNode[] = [];
@@ -74,15 +77,9 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
             </span>
           );
         }
-        items.push(`${t('finalPriceLabel')}: ${finalPrice} ${currency}`.trim());
+        items.push(`${t('priceFromLabel')}: ${finalPrice} ${currency}`.trim());
         if (hasDiscount) {
           items.push(`${t('basePriceLabel')}: ${basePrice} ${currency}`.trim());
-          if (product.discountType === 'percent' && product.discountValue) {
-            items.push(`${t('discountValueLabel')}: -${product.discountValue}%`);
-          }
-          if (product.discountType === 'fixed' && product.discountValue) {
-            items.push(`${t('discountValueLabel')}: -${product.discountValue} ${currency}`.trim());
-          }
         }
         if (product.category) {
           items.push(`${t('categoryLabel')}: ${product.category}`);

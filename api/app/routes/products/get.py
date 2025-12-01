@@ -267,15 +267,29 @@ class ProductFeature(BaseModel):
     )
 
 
+class ProductOptionResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    price: float
+    finalPrice: float
+    discountType: Literal["percent", "fixed"] | None = None
+    discountValue: float | None = None
+    images: list[str] = Field(default_factory=list)
+    rating: float | None = None
+    ratingCount: int | None = None
+    inStock: bool = True
+    attributes: list[ProductFeature] = Field(default_factory=list)
+    features: list[ProductFeature] = Field(default_factory=list)
+
+
 class ProductResponse(BaseModel):
     id: int
     title: str
     description: str | None = None
     images: list[str] = Field(default_factory=list)
-    price: float
-    finalPrice: float
-    discountType: Literal["percent", "fixed"] | None = None
-    discountValue: float | None = None
+    priceFrom: float
+    finalPriceFrom: float
     currency: str | None = None
     rating: float | None = None
     ratingCount: int | None = None
@@ -284,6 +298,7 @@ class ProductResponse(BaseModel):
     isNew: bool | None = None
     isFeatured: bool | None = None
     features: list[ProductFeature] = Field(default_factory=list)
+    options: list[ProductOptionResponse] = Field(default_factory=list)
     url: str | None = None
 
 
@@ -374,23 +389,115 @@ def _normalize_features_output(raw_features: list[Any] | None) -> list[ProductFe
     return sorted(features, key=lambda item: item.key.lower())
 
 
+def _serialize_option(
+    option: Any,
+    currency: str | None,
+    fallback_images: list[str],
+) -> ProductOptionResponse:
+    """Normalize option structure with prices and features."""
+
+    getter = option.get if isinstance(option, dict) else lambda key, default=None: getattr(option, key, default)
+
+    name = getter("name") or "Default"
+    price = float(getter("price") or 0)
+
+    discount_type = getter("discount_type") or getter("discountType")
+    if discount_type not in {"percent", "fixed"}:
+        discount_type = None
+
+    raw_discount_value = getter("discount_value") or getter("discountValue")
+    discount_value = float(raw_discount_value) if raw_discount_value is not None else None
+
+    images = getter("images") or []
+    if not images:
+        images = fallback_images
+
+    rating = getter("rating")
+    rating_count = getter("rating_count") or getter("ratingCount")
+    in_stock = getter("in_stock") if getter("in_stock") is not None else getter("inStock")
+    if in_stock is None:
+        in_stock = True
+
+    attributes = _normalize_features_output(
+        getter("attributes")
+        or getter("attrs")
+        or []
+    )
+    features = _normalize_features_output(getter("features") or [])
+
+    final_price = calculate_final_price(price, discount_type, discount_value)
+
+    return ProductOptionResponse(
+        name=name,
+        price=price,
+        finalPrice=final_price,
+        discountType=discount_type,
+        discountValue=discount_value,
+        images=images,
+        rating=rating,
+        ratingCount=rating_count,
+        inStock=bool(in_stock),
+        attributes=attributes,
+        features=features,
+    )
+
+
 def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
     """Unify product output shape for API consumers."""
 
     getter = product.get if isinstance(product, dict) else lambda key, default=None: getattr(product, key, default)
 
-    raw_price = getter("price") or 0
-    price = float(raw_price)
-
-    discount_type = getter("discount_type")
-    if discount_type not in {"percent", "fixed"}:
-        discount_type = None
-
-    raw_discount_value = getter("discount_value")
-    discount_value = float(raw_discount_value) if raw_discount_value is not None else None
-
+    currency = getter("currency")
     features = _normalize_features_output(getter("features") or [])
-    final_price = calculate_final_price(price, discount_type, discount_value)
+    fallback_images = getter("images") or []
+    raw_options = getter("options") or []
+
+    if not raw_options:
+        raw_options = [
+            {
+                "name": getter("title") or "Default",
+                "price": getter("price") or 0,
+                "discount_type": getter("discount_type"),
+                "discount_value": getter("discount_value"),
+                "images": fallback_images,
+                "rating": getter("rating"),
+                "rating_count": getter("rating_count"),
+                "in_stock": getter("in_stock"),
+                "features": getter("features") or [],
+            }
+        ]
+
+    options = [
+        _serialize_option(option, currency=currency, fallback_images=fallback_images)
+        for option in raw_options
+    ]
+
+    if not options:
+        options = [
+            ProductOptionResponse(
+                name="Default",
+                price=0,
+                finalPrice=0,
+                images=fallback_images,
+            )
+        ]
+
+    price_from = min((option.price for option in options), default=0.0)
+    final_price_from = min((option.finalPrice for option in options), default=price_from)
+
+    rating_sum = 0.0
+    rating_total = 0
+    for option in options:
+        if option.rating is not None and option.ratingCount:
+            rating_sum += float(option.rating) * int(option.ratingCount)
+            rating_total += int(option.ratingCount)
+
+    aggregated_rating = None
+    if rating_total:
+        aggregated_rating = rating_sum / rating_total
+
+    aggregated_rating_count = rating_total if rating_total else None
+    aggregated_in_stock = any(option.inStock for option in options)
 
     product_id = getter("id")
 
@@ -399,19 +506,18 @@ def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
         title=getter("title") or "",
         description=getter("description"),
         images=getter("images") or [],
-        price=price,
-        finalPrice=final_price,
-        discountType=discount_type,
-        discountValue=discount_value,
-        currency=getter("currency"),
-        rating=getter("rating"),
-        ratingCount=getter("rating_count"),
+        priceFrom=price_from,
+        finalPriceFrom=final_price_from,
+        currency=currency,
+        rating=aggregated_rating,
+        ratingCount=aggregated_rating_count,
         category=getter("category"),
-        inStock=getter("in_stock"),
+        inStock=aggregated_in_stock,
         isNew=getter("is_new"),
         isFeatured=getter("is_featured"),
         url=getter("url"),
         features=features,
+        options=options,
     )
 
 
@@ -467,6 +573,7 @@ async def handler(
         "is_new",
         "is_featured",
         "features",
+        "options",
         "url",
         "created",
         "updated",

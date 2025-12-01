@@ -17,8 +17,14 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart = false, isInFavorites = false }: ProductCardProps) {
     const t = useTranslations('catalog.product');
-    const basePrice = product.price || 0;
-    const finalPrice = product.finalPrice ?? basePrice;
+    const priceFrom = typeof product.priceFrom === 'number' ? product.priceFrom : product.price || 0;
+    const finalPrice = typeof product.finalPriceFrom === 'number' ? product.finalPriceFrom : priceFrom;
+    const primaryOption = product.options?.[0];
+    const pricePrefix = product.options?.length ? t('priceFrom') : undefined;
+    const inStock = typeof product.inStock === 'boolean' ? product.inStock : (product.options?.some((option) => option.inStock !== false) ?? true);
+    const productImages = (product.images && product.images.length > 0)
+        ? product.images
+        : (primaryOption?.images || []);
     
     // Like functionality - in production this would come from props or global state
     const [isLiked, setIsLiked] = useState(isInFavorites);
@@ -74,7 +80,13 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
         return String(feature.value);
     };
 
-    const featureMetadata = (product.features || [])
+    const combinedFeatures = [
+        ...(product.features || []),
+        ...(primaryOption?.attributes || []),
+        ...(primaryOption?.features || []),
+    ];
+
+    const featureMetadata = combinedFeatures
         .slice(0, 3)
         .map((feature) => ({
             label: feature.key,
@@ -100,7 +112,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
         });
     }
     
-    if (!product.inStock) {
+    if (!inStock) {
         tags.push({
             label: t('tagOutOfStock'),
             variant: 'destructive' as const
@@ -110,9 +122,9 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
     // Prepare actions - single button only
     const actions = onAddToCart ? (
         <Button
-            variant={!product.inStock ? "outline" : isInCart ? "secondary" : "default"}
+            variant={!inStock ? "outline" : isInCart ? "secondary" : "default"}
             size="sm"
-            disabled={!product.inStock}
+            disabled={!inStock}
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -121,7 +133,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             className="w-full"
         >
             <ShoppingIcon size={12} />
-            {!product.inStock ? t('unavailable') : isInCart ? t('inCart') : t('addToCart')}
+            {!inStock ? t('unavailable') : isInCart ? t('inCart') : t('addToCart')}
         </Button>
     ) : null;
 
@@ -129,11 +141,12 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
         <Card
             title={product.title}
             description={product.description}
-            images={product.images}
+            images={productImages}
             filters={filters}
             tags={tags}
             price={finalPrice}
-            basePrice={basePrice}
+            basePrice={priceFrom}
+            pricePrefix={pricePrefix}
             currency={product.currency}
             metadata={featureMetadata}
             actions={actions}

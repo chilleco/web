@@ -456,7 +456,23 @@
             "delete": "Eliminar",
             "deleteConfirm": "¿Eliminar \"{title}\"?",
             "ratingLabel": "Valoración",
-            "ratingCountLabel": "Número de valoraciones"
+            "ratingCountLabel": "Número de valoraciones",
+            "optionsTitle": "Opciones",
+            "addOption": "Agregar opción",
+            "optionsEmpty": "Aún no hay opciones",
+            "optionUntitled": "Opción sin nombre",
+            "optionName": "Nombre de opción",
+            "optionPrice": "Precio de opción",
+            "optionImages": "Imágenes de opción (URLs separadas por comas)",
+            "optionInStock": "Disponible",
+            "optionAttributesTitle": "Atributos",
+            "optionAttributesEmpty": "Sin atributos",
+            "optionFeaturesTitle": "Características de opción",
+            "optionFeaturesEmpty": "Sin características de opción",
+            "optionsLabel": "Opciones: {count}",
+            "optionsRequired": "Agrega al menos una opción",
+            "priceFromLabel": "Precio desde",
+            "priceFromPreview": "Base desde: {value} {currency}"
         }
     },
     "posts": {
@@ -647,7 +663,8 @@
             "unavailable": "No Disponible",
             "inCart": "En el Carrito",
             "valueYes": "Sí",
-            "valueNo": "No"
+            "valueNo": "No",
+            "priceFrom": "Desde"
         }
     },
     "search": {

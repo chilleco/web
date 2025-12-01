@@ -29,6 +29,7 @@ class Product(Base):
     is_new = Attribute(types=bool, default=False)
     is_featured = Attribute(types=bool, default=False)
     features = Attribute(types=list)
+    options = Attribute(types=list)
     url = Attribute(types=str, default=default_url)
     status = Attribute(types=int, default=1)
     token = Attribute(types=str)
