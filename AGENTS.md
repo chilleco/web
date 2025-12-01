@@ -249,3 +249,4 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - Auth flow restored with modal chooser (email/Google/Telegram) using Redux `auth` slice and `/users/auth/`; logout hits `/users/exit/` then reinitializes guest session.
 - Auth popups should place content directly in the popup (no extra Box wrappers that add inner shadows/backgrounds); keep buttons stacked and titles concise.
  - Product pricing now lives inside `options` (each option has `price`, `discount_type`/`discount_value`, `in_stock`, `rating`, `images`, and extra `features`/`attributes`); product-level `priceFrom/finalPriceFrom` aggregate the cheapest option; base specs stay in sorted `features` list with `{key, value, value_type}` items.
+- Spaces: new `Space` model/routes `/spaces/get|save|rm` (link via `encrypt(id, 5)`), attachments stored in `UserLocal.spaces`, shared edit form at `/spaces/<link>` + admin list/selector.

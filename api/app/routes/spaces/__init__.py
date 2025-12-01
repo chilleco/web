@@ -1,0 +1,3 @@
+"""
+Spaces routes package.
+"""

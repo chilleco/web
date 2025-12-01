@@ -58,6 +58,11 @@ export const API_ENDPOINTS = {
     UPDATE: (id: number) => '/categories/save/',
     DELETE: '/categories/rm/',
   },
+  SPACES: {
+    GET: '/spaces/get/',
+    SAVE: '/spaces/save/',
+    DELETE: '/spaces/rm/',
+  },
 } as const;
 
 // Status Codes

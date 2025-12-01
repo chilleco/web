@@ -22,6 +22,7 @@ export interface User {
   referrer?: number | null;
   frens?: number[] | null;
   social?: number | null;
+  spaces?: number[] | null;
 }
 
 export interface UserSettings {

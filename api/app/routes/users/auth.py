@@ -55,10 +55,14 @@ def get_user(global_user, **kwargs):
             balance=DEFAULT_BALANCE,
             social=social.get("id"),
             locale=kwargs.get("locale"),
+            spaces=[],
         )
         user.save()
         new = True
     else:
+        if user.spaces is None:
+            user.spaces = []
+            user.save()
         if user.locale and kwargs.get("locale") and user.locale != kwargs["locale"]:
             user.locale = kwargs["locale"]
             user.save()
@@ -115,6 +119,9 @@ async def wrap_auth(*args, **kwargs):
     local_user, new_local = get_user(user, **kwargs)
     user["status"] = local_user["status"]
     user["roles"] = local_user.roles
+    for key, value in local_user.json().items():
+        if value is not None:
+            user[key] = value
 
     global_referrer = None
     if kwargs.get("utm"):

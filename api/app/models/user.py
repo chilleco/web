@@ -28,6 +28,8 @@ class UserLocal(Base):
     mailing = Attribute(types=bool, default=False)
     wallet = Attribute(types=str)
 
+    spaces = Attribute(types=list, default=list)
+
     # Referral
     referrer = Attribute(types=int)
     frens = Attribute(types=list)

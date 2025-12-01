@@ -1,0 +1,107 @@
+'use client';
+
+import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
+import { Badge } from '@/shared/ui/badge';
+import { IconButton } from '@/shared/ui/icon-button';
+import { ButtonGroup } from '@/shared/ui/button-group';
+import { EntityRow } from '@/shared/ui/entity-management';
+import { Link } from '@/i18n/routing';
+import { Space } from '@/entities/space';
+import {
+  BuildingIcon,
+  EditIcon,
+  DeleteIcon,
+  PhoneIcon,
+  MailIcon
+} from '@/shared/ui/icons';
+
+interface SpaceListItemProps {
+  space: Space;
+  onDelete: (space: Space) => void;
+}
+
+const formatMargin = (margin?: number | null) => {
+  const parsed = typeof margin === 'number' ? margin : 0;
+  return `${parsed.toFixed(1)}%`;
+};
+
+export function SpaceListItem({ space, onDelete }: SpaceListItemProps) {
+  const t = useTranslations('admin.spaces');
+  const entityLabels = useMemo(
+    () => ({
+      ooo: t('entities.ooo'),
+      ip: t('entities.ip'),
+      fl: t('entities.fl'),
+      smz: t('entities.smz')
+    }),
+    [t]
+  );
+  const marginBadge = (
+    <Badge key="margin" variant="outline" className="bg-amber-500/10 text-amber-700 dark:text-amber-300">
+      {t('fields.marginBadge', { value: formatMargin(space.margin) })}
+    </Badge>
+  );
+
+  const entity = space.entity
+    ? entityLabels[space.entity as keyof typeof entityLabels] || space.entity
+    : null;
+
+  const secondRowItems = [
+    entity,
+    space.phone ? (
+      <span className="inline-flex items-center gap-1">
+        <PhoneIcon size={12} />
+        {space.phone}
+      </span>
+    ) : null,
+    space.mail ? (
+      <span className="inline-flex items-center gap-1">
+        <MailIcon size={12} />
+        {space.mail}
+      </span>
+    ) : null
+  ].filter(Boolean);
+
+  return (
+    <EntityRow
+      id={space.id}
+      title={space.title}
+      url={`spaces/${space.link}`}
+      badges={[marginBadge]}
+      secondRowItems={secondRowItems as React.ReactNode[]}
+      leftSlot={
+        <div className="w-12 h-12 rounded-[0.75rem] bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
+          {space.logo ? (
+            <img
+              src={space.logo}
+              alt={space.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <BuildingIcon size={16} className="text-muted-foreground" />
+          )}
+        </div>
+      }
+      rightActions={
+        <ButtonGroup>
+          <IconButton asChild variant="outline" size="sm" icon={<EditIcon size={12} />} responsive>
+            <Link href={`/spaces/${space.link}?edit=1`}>
+              {t('actions.edit')}
+            </Link>
+          </IconButton>
+          <IconButton
+            variant="destructive"
+            size="sm"
+            icon={<DeleteIcon size={12} />}
+            onClick={() => onDelete(space)}
+            responsive
+          >
+            {t('actions.delete')}
+          </IconButton>
+        </ButtonGroup>
+      }
+    />
+  );
+}

@@ -25,6 +25,7 @@ import { IconButton } from '@/shared/ui/icon-button';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { AuthModal, logout, selectAuthUser, selectIsAuthenticated } from '@/features/auth';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { SpacesSelector } from '@/features/spaces';
 
 interface UserProfileDropdownProps {
     className?: string;
@@ -132,6 +133,10 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
                                 </p>
                             )}
                         </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <div className="px-2 py-2">
+                        <SpacesSelector userId={user?.id} />
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleProfileClick} className="cursor-pointer">

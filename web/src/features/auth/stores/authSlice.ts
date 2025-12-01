@@ -14,6 +14,7 @@ export interface AuthProfile {
     image?: string | null;
     status?: number;
     new?: boolean;
+    spaces?: number[] | null;
 }
 
 type AuthStatus = 'idle' | 'loading' | 'succeeded' | 'failed';

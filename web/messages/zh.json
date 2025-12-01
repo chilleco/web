@@ -277,6 +277,7 @@
         "analytics": "分析",
         "billing": "账单",
         "categories": "分类",
+        "spaces": "Spaces",
         "users": "用户",
         "success": "成功",
         "error": "错误",
@@ -302,6 +303,7 @@
         "delete": "删除",
         "remove": "移除",
         "update": "更新",
+        "loading": "加载中",
         "saving": "保存中...",
         "cancel": "取消",
         "none": "无",
@@ -352,6 +354,61 @@
         "userAgreement": "用户协议",
         "refund": "退款政策",
         "rates": "价格"
+    },
+    "spaces": {
+        "form": {
+            "titlePlaceholder": "Space title",
+            "logo": "Logo",
+            "logoPlaceholder": "Upload a logo",
+            "entity": "Entity",
+            "entityPlaceholder": "Select entity type",
+            "director": "Director",
+            "directorPlaceholder": "Director full name",
+            "inn": "INN",
+            "innPlaceholder": "Tax ID",
+            "margin": "Margin, %",
+            "marginPlaceholder": "Enter margin percentage",
+            "descriptionPlaceholder": "Description for partners",
+            "phonePlaceholder": "Phone",
+            "mailPlaceholder": "Email",
+            "telegramPlaceholder": "Telegram link",
+            "countryPlaceholder": "Country",
+            "region": "Region",
+            "regionPlaceholder": "Region / State",
+            "city": "City",
+            "cityPlaceholder": "City",
+            "logoUploaded": "Logo uploaded",
+            "saved": "Space saved",
+            "entities": {
+                "ooo": "ООО",
+                "ip": "ИП",
+                "fl": "ФЛ",
+                "smz": "СМЗ"
+            }
+        },
+        "selector": {
+            "title": "Spaces",
+            "refresh": "Refresh",
+            "create": "Create space",
+            "defaultTitle": "New space",
+            "loading": "Loading spaces...",
+            "placeholder": "Select space",
+            "empty": "No attached spaces yet",
+            "created": "\"{title}\" created",
+            "entities": {
+                "ooo": "ООО",
+                "ip": "ИП",
+                "fl": "ФЛ",
+                "smz": "СМЗ"
+            }
+        },
+        "page": {
+            "title": "Space",
+            "description": "Manage company info, contacts, and pricing margin.",
+            "loading": "Loading space...",
+            "refresh": "Refresh",
+            "notFound": "Space not found"
+        }
     },
     "admin": {
         "categories": {
@@ -475,6 +532,33 @@
             "optionsRequired": "请添加至少一个选项",
             "priceFromLabel": "起价",
             "priceFromPreview": "基础价格：{value} {currency}"
+        },
+        "spaces": {
+            "title": "Spaces",
+            "description": "Manage partner spaces, invites, and contact details",
+            "defaultTitle": "New space",
+            "loading": "Loading spaces...",
+            "empty": "No spaces yet",
+            "entities": {
+                "ooo": "ООО",
+                "ip": "ИП",
+                "fl": "ФЛ",
+                "smz": "СМЗ"
+            },
+            "fields": {
+                "marginBadge": "+{value} margin"
+            },
+            "actions": {
+                "edit": "Edit",
+                "delete": "Delete",
+                "createSuccess": "\"{title}\" created",
+                "deleteConfirm": "Delete \"{title}\"?",
+                "deleteSuccess": "\"{title}\" deleted"
+            },
+            "errors": {
+                "load": "Failed to load spaces",
+                "delete": "Failed to delete space"
+            }
         }
     },
     "posts": {

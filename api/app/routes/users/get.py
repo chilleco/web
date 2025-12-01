@@ -79,6 +79,7 @@ async def handler(
         user_local = UserLocal(
             id=user_id,
             balance=DEFAULT_BALANCE,
+            spaces=[],
             # TODO: social
         )
         user_local.save()
@@ -87,9 +88,13 @@ async def handler(
     users_local = {user["id"]: user for user in users_local}
 
     if isinstance(users, dict):
+        if users_local[users["id"]].get("spaces") is None:
+            users_local[users["id"]]["spaces"] = []
         merge_local_data(users, users_local[users["id"]])
     else:
         for user in users:
+            if users_local[user["id"]].get("spaces") is None:
+                users_local[user["id"]]["spaces"] = []
             merge_local_data(user, users_local[user["id"]])
 
     # Response
