@@ -20,7 +20,7 @@ interface PostsGridProps {
 }
 
 export function PostsGrid({
-    initialPosts = [],
+    initialPosts,
     searchQuery = '',
     categoryId,
     locale,
@@ -29,7 +29,7 @@ export function PostsGrid({
     hasMore = false,
     loadingMore = false
 }: PostsGridProps) {
-    const [posts, setPosts] = useState<Post[]>(initialPosts);
+    const [posts, setPosts] = useState<Post[]>(initialPosts ?? []);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -78,7 +78,7 @@ export function PostsGrid({
     useEffect(() => {
         const fetchKey = `${categoryId ?? 'all'}-${locale ?? 'all'}-${searchQuery}-${limit}`;
 
-        if (isExternallyManaged || initialPosts.length !== 0) {
+        if (isExternallyManaged || (initialPosts && initialPosts.length !== 0)) {
             lastFetchKeyRef.current = fetchKey;
             return;
         }
@@ -88,10 +88,10 @@ export function PostsGrid({
 
         lastFetchKeyRef.current = fetchKey;
         loadPosts();
-    }, [categoryId, locale, searchQuery, initialPosts.length, loadPosts, isExternallyManaged, limit]);
+    }, [categoryId, locale, searchQuery, initialPosts?.length, loadPosts, isExternallyManaged, limit]);
 
     useEffect(() => {
-        if (!isExternallyManaged) {
+        if (!isExternallyManaged && initialPosts) {
             setPosts(initialPosts);
         }
     }, [initialPosts, isExternallyManaged]);

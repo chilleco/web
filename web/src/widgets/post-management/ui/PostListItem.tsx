@@ -7,14 +7,14 @@ import { ButtonGroup } from '@/shared/ui/button-group';
 import { EditIcon, DeleteIcon, ImageIcon } from '@/shared/ui/icons';
 import { EntityRow } from '@/shared/ui/entity-management';
 import { Post } from '@/entities/post';
+import { Link } from '@/i18n/routing';
 
 interface PostListItemProps {
   post: Post;
-  onEdit: (post: Post) => void;
   onDelete: (post: Post) => void;
 }
 
-export function PostListItem({ post, onEdit, onDelete }: PostListItemProps) {
+export function PostListItem({ post, onDelete }: PostListItemProps) {
   const tSystem = useTranslations('system');
   const tAdmin = useTranslations('admin.posts');
 
@@ -22,14 +22,14 @@ export function PostListItem({ post, onEdit, onDelete }: PostListItemProps) {
     <EntityRow
       id={post.id}
       title={post.title}
-      url={post.url}
+      url={`posts/${post.url}`}
       badges={
         post.status !== undefined
           ? [
-              <Badge key="status" variant={post.status === 1 ? 'success' : 'secondary'}>
-                {post.status === 1 ? tSystem('saved') : tSystem('blocked')}
-              </Badge>,
-            ]
+            <Badge key="status" variant={post.status === 1 ? 'success' : 'secondary'}>
+              {post.status === 1 ? tSystem('saved') : tSystem('blocked')}
+            </Badge>,
+          ]
           : []
       }
       secondRowItems={[post.category || null].filter(Boolean)}
@@ -49,14 +49,10 @@ export function PostListItem({ post, onEdit, onDelete }: PostListItemProps) {
       }
       rightActions={
         <ButtonGroup>
-          <IconButton
-            variant="outline"
-            size="sm"
-            icon={<EditIcon size={12} />}
-            onClick={() => onEdit(post)}
-            responsive
-          >
-            {tSystem('edit')}
+          <IconButton asChild variant="outline" size="sm" icon={<EditIcon size={12} />} responsive>
+            <Link href={`/posts/${post.url}?edit=1`}>
+              {tSystem('edit')}
+            </Link>
           </IconButton>
           <IconButton
             variant="destructive"

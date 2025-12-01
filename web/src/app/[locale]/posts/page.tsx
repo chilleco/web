@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Link } from '@/i18n/routing';
 import { getTranslations } from 'next-intl/server';
 import { PostsWithSearch } from '@/widgets/posts-list';
 import { SubcategoryNavigation } from '@/widgets/category';
@@ -63,12 +64,15 @@ export default async function PostsPage({ params }: PostsPageProps) {
                         description="Browse and discover posts organized by categories. Find content that interests you most."
                         actions={
                             <ButtonGroup>
-                                <IconButton 
-                                    icon={<PlusIcon size={16} />} 
-                                    variant="success" 
+                                <IconButton
+                                    asChild
+                                    icon={<PlusIcon size={16} />}
+                                    variant="success"
                                     responsive
                                 >
-                                    {tPosts('add')}
+                                    <Link href="/posts/create">
+                                        {tPosts('add')}
+                                    </Link>
                                 </IconButton>
                             </ButtonGroup>
                         }

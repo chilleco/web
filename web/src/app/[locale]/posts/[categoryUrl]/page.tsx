@@ -17,6 +17,7 @@ import {
 } from '@/entities/category';
 import { getPosts, getPost, Post } from '@/entities/post';
 import { PostsIcon } from '@/shared/ui/icons';
+import { BreadcrumbDescription } from '@/shared/ui/breadcrumb-description';
 import { PostDetailClient } from './PostDetailClient';
 
 const DEFAULT_SITE_NAME = process.env.NEXT_PUBLIC_NAME || 'web';
@@ -35,6 +36,7 @@ interface CategoryPageProps {
   }>;
   searchParams: Promise<{
     page?: string;
+    edit?: string;
   }>;
 }
 
@@ -322,8 +324,9 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   }
 }
 
-export default async function CategoryOrPostPage({ params }: CategoryPageProps) {
+export default async function CategoryOrPostPage({ params, searchParams }: CategoryPageProps) {
   const { locale, categoryUrl } = await params;
+  const search = await searchParams;
   const [tNavigation, tPosts] = await Promise.all([
     getTranslations('navigation'),
     getTranslations('posts')
@@ -364,6 +367,7 @@ export default async function CategoryOrPostPage({ params }: CategoryPageProps) 
   const summary = post.description || stripHtml(post.data).slice(0, 160);
   const createdAt = post.created ?? Math.floor(Date.now() / 1000);
   const updatedAt = post.updated ?? createdAt;
+  const startEditing = search?.edit === '1';
 
   return (
     <>
@@ -375,6 +379,7 @@ export default async function CategoryOrPostPage({ params }: CategoryPageProps) 
         summary={summary}
         createdAt={createdAt}
         updatedAt={updatedAt}
+        startEditing={startEditing}
       />
       <script
         type="application/ld+json"

@@ -201,6 +201,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Reuse**: Products, posts, categories admin lists must reuse EntityRow instead of custom row markup.
 
 ##### Edit mode layout rule
+- Component reuse: use the same form component for create/edit modes and the view variation for display/preview in those modes to avoid divergence.
 - Post editing screens must follow the in-place layout: full-width title input (placeholder shows the field name), then a row with image upload on the left and locale + category pickers plus description on the right (picker labels inline with values), and a large WYSIWYG/text area beneath. Inputs should present labels inline with values as in the reference design.
 - Picker/input styling: Selects/inputs used in edit mode must share the same muted background style as textareas/main inputs, without borders, and show a pointer cursor on hover.
 - Picker font rule: Picker inputs must use the same font weight/size/color styling as other inputs and place the key label inline with the value; hover must show pointer.

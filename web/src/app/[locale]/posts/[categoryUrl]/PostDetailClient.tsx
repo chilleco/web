@@ -28,7 +28,7 @@ import { useToastActions } from '@/shared/hooks/useToast';
 import { formatDate, formatDateTime } from '@/shared/lib/date';
 import { getCategories } from '@/entities/category/api/categoryApi';
 import type { Category } from '@/entities/category/model/category';
-import { Post, updatePost } from '@/entities/post';
+import { Post, updatePost, createPost } from '@/entities/post';
 import { uploadFile } from '@/shared/services/api/upload';
 import {
   PostsIcon,
@@ -60,6 +60,8 @@ interface PostDetailClientProps {
   summary: string;
   createdAt: number;
   updatedAt: number;
+  isNew?: boolean;
+  startEditing?: boolean;
 }
 
 const locales: string[] = ['en', 'ru', 'zh', 'es', 'ar'];
@@ -90,14 +92,16 @@ export function PostDetailClient({
   locale,
   summary,
   createdAt,
-  updatedAt
+  updatedAt,
+  isNew = false,
+  startEditing = false
 }: PostDetailClientProps) {
   const router = useRouter();
   const tPosts = useTranslations('posts');
   const tSystem = useTranslations('system');
   const { success, error: showError } = useToastActions();
 
-  const [isEditing, setEditing] = useState(false);
+  const [isEditing, setEditing] = useState(isNew || startEditing);
   const [title, setTitle] = useState(post.title);
   const [description, setDescription] = useState(post.description || summary);
   const [content, setContent] = useState(post.data);
@@ -172,6 +176,23 @@ export function PostDetailClient({
   const handleSave = async () => {
     setSaving(true);
     try {
+      if (isNew) {
+        const created = await createPost({
+          title,
+          description,
+          data: content,
+          image,
+          locale: postLocale,
+          category: category !== 'none' ? Number(category) : undefined
+        });
+        success(tSystem('saved'));
+        startTransition(() => {
+          router.push(locale ? `/${locale}/posts/${created.url}` : `/posts/${created.url}`);
+          router.refresh();
+        });
+        return;
+      }
+
       await updatePost(post.id, {
         title,
         description,
@@ -199,22 +220,25 @@ export function PostDetailClient({
   const categoryLink = post.category_data ? `/posts/${post.category_data.url}` : undefined;
   const imageValue = image || post.image || '';
   const imageFileData = imageValue ? { ...fileData, type: 'image' as const } : fileData;
+  const pageTitle = post.title || tPosts('add');
 
-  const headerActions = (
-    <PostActions
-      post={post}
-      locale={locale}
-      isEditing={isEditing}
-      onToggleEdit={() => {
-        if (isEditing) {
-          setEditing(false);
-        } else {
-          resetForm();
-          setEditing(true);
-        }
-      }}
-    />
-  );
+  const headerActions = isNew
+    ? null
+    : (
+      <PostActions
+        post={post}
+        locale={locale}
+        isEditing={isEditing}
+        onToggleEdit={() => {
+          if (isEditing) {
+            setEditing(false);
+          } else {
+            resetForm();
+            setEditing(true);
+          }
+        }}
+      />
+    );
 
   return (
     <div className="min-h-screen bg-background">
@@ -222,7 +246,7 @@ export function PostDetailClient({
         <PageHeader
           icon={<PostsIcon size={24} />}
           iconClassName="bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400"
-          title={post.title}
+          title={pageTitle}
           description={<BreadcrumbDescription breadcrumbs={breadcrumbs} />}
           actions={headerActions}
         />
@@ -461,22 +485,22 @@ export function PostDetailClient({
                 </IconButton>
                 <IconButton
                   icon={
-                    saving ? <LoadingIcon size={16} className="animate-spin" /> : <SaveIcon size={16} />
+                    saving || uploadingImage ? <LoadingIcon size={16} className="animate-spin" /> : <SaveIcon size={16} />
                   }
                   variant="default"
                   responsive
                   type="button"
                   onClick={handleSave}
-                  disabled={saving || isRefreshing}
+                  disabled={saving || isRefreshing || uploadingImage}
                 >
-                  {saving ? tSystem('saving') : tSystem('save')}
+                  {saving || uploadingImage ? tSystem('saving') : tSystem('save')}
                 </IconButton>
               </div>
             </Box>
           ) : (
-            <Box className="space-y-6">
+            <Box className="overflow-hidden p-0">
               {post.image && (
-                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-[1rem]">
+                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-[1rem]">
                   <Image
                     src={post.image}
                     alt={post.title}
@@ -488,22 +512,24 @@ export function PostDetailClient({
                 </div>
               )}
 
-              {categoryLink && post.category_data && (
-                <Link
-                  href={categoryLink}
-                  className="inline-flex items-center gap-2 rounded-[0.75rem] bg-muted/60 px-3 py-2 transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:scale-[1.01]"
-                >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-[0.75rem] bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300">
-                    <TagIcon size={14} />
-                  </div>
-                  <span className="font-medium text-foreground">{post.category_data.title}</span>
-                </Link>
-              )}
+              <div className="space-y-6 px-6 pb-6 pt-4">
+                {categoryLink && post.category_data && (
+                  <Link
+                    href={categoryLink}
+                    className="inline-flex items-center gap-2 rounded-[0.75rem] bg-muted/60 px-3 py-2 transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:scale-[1.01]"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-[0.75rem] bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300">
+                      <TagIcon size={14} />
+                    </div>
+                    <span className="font-medium text-foreground">{post.category_data.title}</span>
+                  </Link>
+                )}
 
-              {summary && <p className="text-lg font-semibold leading-relaxed text-foreground">{summary}</p>}
+                {summary && <p className="text-lg font-semibold leading-relaxed text-foreground">{summary}</p>}
 
-              <div className="space-y-4 text-base leading-relaxed text-foreground [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:font-semibold [&_a]:text-primary [&_a]:underline [&_img]:rounded-[1rem] [&_img]:shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
-                <div dangerouslySetInnerHTML={{ __html: post.data }} />
+                <div className="space-y-4 text-base leading-relaxed text-foreground [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_strong]:font-semibold [&_a]:text-primary [&_a]:underline [&_img]:rounded-[1rem] [&_img]:shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
+                  <div dangerouslySetInnerHTML={{ __html: post.data }} />
+                </div>
               </div>
             </Box>
           )}
