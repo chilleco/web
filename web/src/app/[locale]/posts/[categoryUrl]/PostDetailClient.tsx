@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { FileUpload, FileData } from '@/shared/ui/file-upload';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
+import { Editor } from '@/shared/ui/editor';
 import { Label } from '@/shared/ui/label';
 import {
   Select,
@@ -463,13 +464,11 @@ export function PostDetailClient({
                 </div>
               </div>
 
-              <Textarea
-                id="post-content"
+              <Editor
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={setContent}
                 placeholder={tPosts('detail.actions.editDescription')}
-                rows={16}
-                className="min-h-[24rem] bg-muted border-0 text-base"
+                className="min-h-[24rem]"
               />
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t">
