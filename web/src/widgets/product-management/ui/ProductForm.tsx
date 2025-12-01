@@ -530,8 +530,8 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                         value={feature.value}
                         onChange={(e) => handleFeatureChange(index, 'value', e.target.value)}
                       >
-                        <option value="true">{t('valueYes')}</option>
-                        <option value="false">{t('valueNo')}</option>
+                        <option value="true">{tSystem('yes')}</option>
+                        <option value="false">{tSystem('no')}</option>
                       </select>
                     ) : (
                       <Input
@@ -740,15 +740,15 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                           <div className={inlineRowClass}>
                             <span className={inlineLabelClass}>{t('featureValue')}</span>
                             {feature.valueType === 'boolean' ? (
-                              <select
-                                className={inlineSelectClass}
-                                value={feature.value}
-                                onChange={(e) => handleOptionFeatureChange(option.id, 'attributes', index, 'value', e.target.value)}
-                              >
-                                <option value="true">{t('valueYes')}</option>
-                                <option value="false">{t('valueNo')}</option>
-                              </select>
-                            ) : (
+                      <select
+                        className={inlineSelectClass}
+                        value={feature.value}
+                        onChange={(e) => handleOptionFeatureChange(option.id, 'attributes', index, 'value', e.target.value)}
+                      >
+                        <option value="true">{tSystem('yes')}</option>
+                        <option value="false">{tSystem('no')}</option>
+                      </select>
+                    ) : (
                               <Input
                                 placeholder={t('featureValue')}
                                 type={feature.valueType === 'number' ? 'number' : 'text'}
@@ -827,8 +827,8 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                                 value={feature.value}
                                 onChange={(e) => handleOptionFeatureChange(option.id, 'features', index, 'value', e.target.value)}
                               >
-                                <option value="true">{t('valueYes')}</option>
-                                <option value="false">{t('valueNo')}</option>
+                                <option value="true">{tSystem('yes')}</option>
+                                <option value="false">{tSystem('no')}</option>
                               </select>
                             ) : (
                               <Input

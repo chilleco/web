@@ -22,6 +22,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Ask before destructive or external actions** (network, DB migrations, Docker, `git push`, etc.)
 - **Files & Paths Not To Touch**: `.env*`, `secrets/**`.
 - **Common i18n**: Reuse common system translations for generic actions (Add, Save, Update, Edit, Delete/Remove, Cancel, etc.) instead of creating duplicated or feature-scoped keys.
+- Common choices (Yes/No and similar simple words) must use the shared `system` locale keys (`system.yes`, `system.no`) instead of feature-scoped duplicates.
 - **API routing objects**: When calling backend routes, use the existing typed API helpers and common endpoints (`/posts/get|save|rm`, `/categories/get|save|rm`, `/products/get|save|rm`, etc.) instead of ad-hoc URLs or duplicated schemas.
 
 ### Validation Checklist

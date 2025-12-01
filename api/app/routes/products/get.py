@@ -314,8 +314,15 @@ def calculate_final_price(
 ) -> float:
     """Calculate final price applying either percentage or fixed discount."""
 
-    base_price = float(price or 0)
-    value = float(discount_value or 0)
+    try:
+        base_price = float(price or 0)
+    except (TypeError, ValueError):
+        base_price = 0.0
+
+    try:
+        value = float(discount_value or 0)
+    except (TypeError, ValueError):
+        value = 0.0
 
     if not discount_type or value <= 0:
         return base_price
@@ -327,6 +334,27 @@ def calculate_final_price(
         return max(base_price - value, 0)
 
     return base_price
+
+
+def _to_str(value: Any, default: str = "") -> str:
+    """Coerce arbitrary value to string safely."""
+
+    if isinstance(value, str):
+        return value
+
+    if value is None:
+        return default
+
+    if callable(value):
+        return default
+
+    try:
+        text = str(value)
+        if text.startswith("<built-in method"):
+            return default
+        return text
+    except Exception:
+        return default
 
 
 def _normalize_features_output(raw_features: list[Any] | None) -> list[ProductFeature]:
@@ -396,10 +424,21 @@ def _serialize_option(
 ) -> ProductOptionResponse:
     """Normalize option structure with prices and features."""
 
+    if not isinstance(option, (dict, ProductOptionResponse)):
+        return ProductOptionResponse(
+            name="Default",
+            price=0.0,
+            finalPrice=0.0,
+            images=fallback_images,
+        )
+
     getter = option.get if isinstance(option, dict) else lambda key, default=None: getattr(option, key, default)
 
-    name = getter("name") or "Default"
-    price = float(getter("price") or 0)
+    name = _to_str(getter("name"), "Default")
+    try:
+        price = float(getter("price") or 0)
+    except (TypeError, ValueError):
+        price = 0.0
 
     discount_type = getter("discount_type") or getter("discountType")
     if discount_type not in {"percent", "fixed"}:
@@ -445,17 +484,22 @@ def _serialize_option(
 def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
     """Unify product output shape for API consumers."""
 
+    if isinstance(product, (str, int, float, bool)) or product is None:
+        return None  # type: ignore[return-value]
+
     getter = product.get if isinstance(product, dict) else lambda key, default=None: getattr(product, key, default)
 
     currency = getter("currency")
     features = _normalize_features_output(getter("features") or [])
     fallback_images = getter("images") or []
     raw_options = getter("options") or []
+    if not isinstance(raw_options, list):
+        raw_options = []
 
     if not raw_options:
         raw_options = [
             {
-                "name": getter("title") or "Default",
+                "name": _to_str(getter("title"), "Default"),
                 "price": getter("price") or 0,
                 "discount_type": getter("discount_type"),
                 "discount_value": getter("discount_value"),
@@ -467,10 +511,13 @@ def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
             }
         ]
 
-    options = [
-        _serialize_option(option, currency=currency, fallback_images=fallback_images)
-        for option in raw_options
-    ]
+    options: list[ProductOptionResponse] = []
+    for option in raw_options:
+        try:
+            normalized = _serialize_option(option, currency=currency, fallback_images=fallback_images)
+            options.append(normalized)
+        except Exception:
+            continue
 
     if not options:
         options = [
@@ -499,12 +546,12 @@ def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
     aggregated_rating_count = rating_total if rating_total else None
     aggregated_in_stock = any(option.inStock for option in options)
 
-    product_id = getter("id")
+    product_id = getter("id") or getter("_id")
 
     return ProductResponse(
-        id=int(product_id) if product_id is not None else 0,
-        title=getter("title") or "",
-        description=getter("description"),
+        id=int(product_id) if product_id not in {None, ""} else 0,
+        title=_to_str(getter("title"), ""),
+        description=_to_str(getter("description"), None) if getter("description") is not None else None,
         images=getter("images") or [],
         priceFrom=price_from,
         finalPriceFrom=final_price_from,
@@ -584,19 +631,28 @@ async def handler(
     params = dict(
         # FIXME: status={"$exists": False} if request.state.status < 5 else None,
     )
-    products = Product.complex(
-        ids=data.id,
-        limit=data.limit,
-        offset=data.offset,
-        **params,
-        fields=fields,
-    )
-    products = [serialize_product(product) for product in products]
 
-    # Count
+    products: list[ProductResponse] = []
     count = None
-    if not data.id:
-        count = Product.count(**params)
+
+    if isinstance(data.id, int):
+        product_obj = Product.get(data.id)
+        serialized = serialize_product(product_obj)
+        if serialized:
+            products = [serialized]
+        count = 1 if products else 0
+    else:
+        products_raw = Product.complex(
+            ids=data.id,
+            limit=data.limit,
+            offset=data.offset,
+            **params,
+            fields=fields,
+        )
+        products = [p for p in (serialize_product(product) for product in products_raw) if p]
+
+        if not data.id:
+            count = Product.count(**params)
 
     return {
         "products": products,

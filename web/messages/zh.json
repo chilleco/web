@@ -304,7 +304,11 @@
         "update": "更新",
         "saving": "保存中...",
         "cancel": "取消",
-        "none": "无"
+        "none": "无",
+        "yes": "是",
+        "no": "否",
+        "share": "分享",
+        "shareUnavailable": "此设备不支持分享"
     },
     "brand": {
         "name": "web",
@@ -437,8 +441,6 @@
             "featureTypeString": "文本",
             "featureTypeNumber": "数字",
             "featureTypeBoolean": "布尔值",
-            "valueYes": "是",
-            "valueNo": "否",
             "featuresLabel": "规格：{count}",
             "status": "状态",
             "statusActive": "显示",
@@ -662,9 +664,17 @@
             "cart": "购物车",
             "unavailable": "不可用",
             "inCart": "已在购物车中",
-            "valueYes": "是",
-            "valueNo": "否",
-            "priceFrom": "从"
+            "priceFrom": "从",
+            "loading": "正在加载商品...",
+            "optionsTitle": "选项",
+            "descriptionTitle": "描述",
+            "featuresTitle": "规格",
+            "featuresEmpty": "暂无规格",
+            "optionFeaturesTitle": "选项详情",
+            "shareCopied": "链接已复制",
+            "optionAttributesTitle": "选项属性",
+            "optionAttributesEmpty": "暂无选项属性",
+            "optionFeaturesEmpty": "暂无选项特性"
         }
     },
     "search": {

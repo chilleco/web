@@ -304,7 +304,11 @@
         "update": "تحديث",
         "saving": "جارٍ الحفظ...",
         "cancel": "إلغاء",
-        "none": "لا يوجد"
+        "none": "لا يوجد",
+        "yes": "نعم",
+        "no": "لا",
+        "share": "مشاركة",
+        "shareUnavailable": "المشاركة غير متاحة على هذا الجهاز"
     },
     "brand": {
         "name": "web",
@@ -437,8 +441,6 @@
             "featureTypeString": "نص",
             "featureTypeNumber": "رقم",
             "featureTypeBoolean": "قيمة منطقية",
-            "valueYes": "نعم",
-            "valueNo": "لا",
             "featuresLabel": "المواصفات: {count}",
             "status": "الحالة",
             "statusActive": "نشط",
@@ -662,9 +664,17 @@
             "cart": "سلة التسوق",
             "unavailable": "غير متوفر",
             "inCart": "في السلة",
-            "valueYes": "نعم",
-            "valueNo": "لا",
-            "priceFrom": "من"
+            "priceFrom": "من",
+            "loading": "جارٍ تحميل المنتج...",
+            "optionsTitle": "الخيارات",
+            "descriptionTitle": "الوصف",
+            "featuresTitle": "المواصفات",
+            "featuresEmpty": "لا توجد مواصفات بعد",
+            "optionFeaturesTitle": "تفاصيل الخيار",
+            "shareCopied": "تم نسخ الرابط",
+            "optionAttributesTitle": "سمات الخيار",
+            "optionAttributesEmpty": "لا سمات للخيار",
+            "optionFeaturesEmpty": "لا ميزات للخيار"
         }
     },
     "search": {

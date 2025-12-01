@@ -305,7 +305,11 @@
         "update": "Обновить",
         "saving": "Сохраняем...",
         "cancel": "Отмена",
-        "none": "Нет"
+        "none": "Нет",
+        "yes": "Да",
+        "no": "Нет",
+        "share": "Поделиться",
+        "shareUnavailable": "Поделиться недоступно на этом устройстве"
     },
     "brand": {
         "name": "web",
@@ -466,8 +470,6 @@
             "featureTypeString": "Текст",
             "featureTypeNumber": "Число",
             "featureTypeBoolean": "Булево",
-            "valueYes": "Да",
-            "valueNo": "Нет",
             "featuresLabel": "Характеристики: {count}",
             "optionsTitle": "Опции",
             "addOption": "Добавить опцию",
@@ -684,9 +686,17 @@
             "emptyHint": "Измените фильтры или запрос, чтобы увидеть больше результатов",
             "addedToCartToast": "«{title}» добавлен в корзину",
             "favoriteToggledToast": "Избранное обновлено для {title}",
-            "valueYes": "Да",
-            "valueNo": "Нет",
-            "priceFrom": "От"
+            "priceFrom": "От",
+            "loading": "Загружаем товар...",
+            "optionsTitle": "Опции",
+            "descriptionTitle": "Описание",
+            "featuresTitle": "Характеристики",
+            "featuresEmpty": "Характеристики не указаны",
+            "optionFeaturesTitle": "Особенности опции",
+            "shareCopied": "Ссылка скопирована",
+            "optionAttributesTitle": "Параметры опции",
+            "optionAttributesEmpty": "Нет параметров опции",
+            "optionFeaturesEmpty": "Особенности опции не указаны"
         }
     },
     "search": {

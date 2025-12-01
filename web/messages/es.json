@@ -304,7 +304,11 @@
         "update": "Actualizar",
         "saving": "Guardando...",
         "cancel": "Cancelar",
-        "none": "Ninguna"
+        "none": "Ninguna",
+        "yes": "Sí",
+        "no": "No",
+        "share": "Compartir",
+        "shareUnavailable": "El compartir no está disponible en este dispositivo"
     },
     "brand": {
         "name": "web",
@@ -437,8 +441,6 @@
             "featureTypeString": "Texto",
             "featureTypeNumber": "Número",
             "featureTypeBoolean": "Booleano",
-            "valueYes": "Sí",
-            "valueNo": "No",
             "featuresLabel": "Características: {count}",
             "status": "Estado",
             "statusActive": "Activo",
@@ -662,9 +664,17 @@
             "cart": "Carrito",
             "unavailable": "No Disponible",
             "inCart": "En el Carrito",
-            "valueYes": "Sí",
-            "valueNo": "No",
-            "priceFrom": "Desde"
+            "priceFrom": "Desde",
+            "loading": "Cargando producto...",
+            "optionsTitle": "Opciones",
+            "descriptionTitle": "Descripción",
+            "featuresTitle": "Especificaciones",
+            "featuresEmpty": "Sin especificaciones aún",
+            "optionFeaturesTitle": "Detalles de la opción",
+            "shareCopied": "Enlace copiado",
+            "optionAttributesTitle": "Atributos de opción",
+            "optionAttributesEmpty": "Sin atributos de opción",
+            "optionFeaturesEmpty": "Sin características de opción"
         }
     },
     "search": {

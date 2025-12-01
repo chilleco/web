@@ -17,6 +17,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart = false, isInFavorites = false }: ProductCardProps) {
     const t = useTranslations('catalog.product');
+    const tSystem = useTranslations('system');
     const priceFrom = typeof product.priceFrom === 'number' ? product.priceFrom : product.price || 0;
     const finalPrice = typeof product.finalPriceFrom === 'number' ? product.finalPriceFrom : priceFrom;
     const primaryOption = product.options?.[0];
@@ -25,7 +26,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
     const productImages = (product.images && product.images.length > 0)
         ? product.images
         : (primaryOption?.images || []);
-    
+
     // Like functionality - in production this would come from props or global state
     const [isLiked, setIsLiked] = useState(isInFavorites);
 
@@ -37,12 +38,12 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
         // In production, this would call an API to like/unlike the product
         console.log('Like clicked for product:', id);
         setIsLiked(prev => !prev);
-        
+
         // Call the prop callback if provided
         if (onToggleFavorite) {
             onToggleFavorite(product);
         }
-        
+
         // TODO: Integrate with API
         // Example:
         // await toggleProductLike(product.id);
@@ -50,7 +51,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
 
     // Prepare filters (category, rating and reviews in filters row)
     const filters = [];
-    
+
     // Add category to filters if available
     if (product.category) {
         filters.push({
@@ -58,14 +59,14 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             value: product.category
         });
     }
-    
+
     if (product.rating) {
         filters.push({
             icon: <StarIcon size={12} />,
             value: product.rating
         });
     }
-    
+
     if (product.ratingCount) {
         filters.push({
             icon: <ReviewsIcon size={12} />,
@@ -75,7 +76,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
 
     const formatFeatureValue = (feature: ProductFeature) => {
         if (feature.valueType === 'boolean') {
-            return feature.value ? t('valueYes') : t('valueNo');
+            return feature.value ? tSystem('yes') : tSystem('no');
         }
         return String(feature.value);
     };
@@ -86,16 +87,9 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
         ...(primaryOption?.features || []),
     ];
 
-    const featureMetadata = combinedFeatures
-        .slice(0, 3)
-        .map((feature) => ({
-            label: feature.key,
-            value: formatFeatureValue(feature),
-        }));
-
     // Prepare tags (below description)
     const tags = [];
-    
+
     if (product.isNew) {
         tags.push({
             icon: <TagIcon size={10} />,
@@ -103,7 +97,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             variant: 'success' as const
         });
     }
-    
+
     if (product.isFeatured) {
         tags.push({
             icon: <TrendingIcon size={10} />,
@@ -111,7 +105,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             variant: 'warning' as const
         });
     }
-    
+
     if (!inStock) {
         tags.push({
             label: t('tagOutOfStock'),
@@ -137,6 +131,8 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
         </Button>
     ) : null;
 
+    const productLink = `/catalog/${product.url || product.id}`;
+
     return (
         <Card
             title={product.title}
@@ -148,17 +144,13 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             basePrice={priceFrom}
             pricePrefix={pricePrefix}
             currency={product.currency}
-            metadata={featureMetadata}
             actions={actions}
             variant="product"
             showLikeButton={true}
             isLiked={isLiked}
             onLikeClick={handleLikeClick}
             id={product.id}
-            onClick={() => {
-                // Handle product click - could navigate to product detail page
-                console.log('Product clicked:', product.title);
-            }}
+            href={productLink}
         />
     );
 }
