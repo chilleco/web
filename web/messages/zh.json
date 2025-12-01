@@ -126,23 +126,26 @@
                 "starter": {
                     "title": "Starter 工作区",
                     "description": "基础区块，内置 SEO、分析与联系捕获。",
-                    "price": "29",
-                    "originalPrice": "39",
-                    "tag": "准备上线"
+                    "price": "39",
+                    "tag": "准备上线",
+                    "discountType": "percent",
+                    "discountValue": "25"
                 },
                 "growth": {
                     "title": "增长套件",
                     "description": "目录、文章与自动化区块，带类型化 API 连接器。",
-                    "price": "59",
-                    "originalPrice": "79",
-                    "tag": "自动化"
+                    "price": "79",
+                    "tag": "自动化",
+                    "discountType": "percent",
+                    "discountValue": "25"
                 },
                 "enterprise": {
                     "title": "企业套件",
                     "description": "高级本地化、访问控制与可观测性内置。",
-                    "price": "99",
-                    "originalPrice": "129",
-                    "tag": "Enterprise"
+                    "price": "129",
+                    "tag": "Enterprise",
+                    "discountType": "fixed",
+                    "discountValue": "30"
                 }
             }
         },
@@ -399,6 +402,61 @@
                 "createCategory": "创建分类",
                 "updateCategory": "更新分类"
             }
+        },
+        "products": {
+            "title": "产品",
+            "description": "创建和管理目录中的产品",
+            "add": "保存产品",
+            "name": "标题",
+            "descriptionLabel": "描述",
+            "price": "基础价格",
+            "priceLabel": "基础价格",
+            "discountType": "折扣类型",
+            "discountTypePercent": "百分比",
+            "discountTypeFixed": "固定金额",
+            "discountValue": "折扣数值",
+            "discountValueLabel": "折扣",
+            "finalPriceLabel": "最终价格",
+            "basePriceLabel": "基础价格",
+            "finalPricePreview": "最终价格：{value} {currency}",
+            "currency": "货币",
+            "category": "分类",
+            "categoryLabel": "分类",
+            "images": "图片（用逗号分隔的 URL）",
+            "rating": "评分",
+            "ratingCount": "评分数量",
+            "discount": "折扣",
+            "inStock": "有货",
+            "isNew": "新品",
+            "isFeatured": "精选",
+            "featuresTitle": "规格参数",
+            "featuresEmpty": "暂无规格",
+            "featureKey": "键",
+            "featureValue": "值",
+            "featureType": "类型",
+            "featureTypeString": "文本",
+            "featureTypeNumber": "数字",
+            "featureTypeBoolean": "布尔值",
+            "valueYes": "是",
+            "valueNo": "否",
+            "featuresLabel": "规格：{count}",
+            "status": "状态",
+            "statusActive": "显示",
+            "statusInactive": "隐藏",
+            "save": "保存产品",
+            "saving": "保存中...",
+            "saved": "产品已保存",
+            "error": "无法保存产品",
+            "loading": "加载产品中...",
+            "empty": "暂无产品",
+            "edit": "编辑",
+            "editTitle": "编辑产品：{title}",
+            "cancel": "取消",
+            "noCategory": "无分类",
+            "delete": "删除",
+            "deleteConfirm": "删除\"{title}\"?",
+            "ratingLabel": "评分",
+            "ratingCountLabel": "评分数量"
         }
     },
     "posts": {
@@ -587,7 +645,9 @@
             "favorite": "收藏夹",
             "cart": "购物车",
             "unavailable": "不可用",
-            "inCart": "已在购物车中"
+            "inCart": "已在购物车中",
+            "valueYes": "是",
+            "valueNo": "否"
         }
     },
     "search": {

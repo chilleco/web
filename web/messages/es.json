@@ -126,23 +126,26 @@
                 "starter": {
                     "title": "Espacio Starter",
                     "description": "Secciones esenciales con SEO, analítica y captación listas.",
-                    "price": "29",
-                    "originalPrice": "39",
-                    "tag": "Listo para lanzar"
+                    "price": "39",
+                    "tag": "Listo para lanzar",
+                    "discountType": "percent",
+                    "discountValue": "25"
                 },
                 "growth": {
                     "title": "Stack de crecimiento",
                     "description": "Catálogo, posts y automatización con conectores API tipados.",
-                    "price": "59",
-                    "originalPrice": "79",
-                    "tag": "Automatización"
+                    "price": "79",
+                    "tag": "Automatización",
+                    "discountType": "percent",
+                    "discountValue": "25"
                 },
                 "enterprise": {
                     "title": "Suite Enterprise",
                     "description": "Localización avanzada, control de acceso y observabilidad integrados.",
-                    "price": "99",
-                    "originalPrice": "129",
-                    "tag": "Enterprise"
+                    "price": "129",
+                    "tag": "Enterprise",
+                    "discountType": "fixed",
+                    "discountValue": "30"
                 }
             }
         },
@@ -399,6 +402,61 @@
                 "createCategory": "Crear categoría",
                 "updateCategory": "Actualizar categoría"
             }
+        },
+        "products": {
+            "title": "Productos",
+            "description": "Crea y gestiona productos del catálogo",
+            "add": "Guardar producto",
+            "name": "Título",
+            "descriptionLabel": "Descripción",
+            "price": "Precio base",
+            "priceLabel": "Precio base",
+            "discountType": "Tipo de descuento",
+            "discountTypePercent": "Porcentaje",
+            "discountTypeFixed": "Importe fijo",
+            "discountValue": "Valor del descuento",
+            "discountValueLabel": "Descuento",
+            "finalPriceLabel": "Precio final",
+            "basePriceLabel": "Precio base",
+            "finalPricePreview": "Precio final: {value} {currency}",
+            "currency": "Moneda",
+            "category": "Categoría",
+            "categoryLabel": "Categoría",
+            "images": "Imágenes (URLs separadas por comas)",
+            "rating": "Valoración",
+            "ratingCount": "Número de valoraciones",
+            "discount": "Descuento",
+            "inStock": "En stock",
+            "isNew": "Nuevo",
+            "isFeatured": "Destacado",
+            "featuresTitle": "Características",
+            "featuresEmpty": "Sin características aún",
+            "featureKey": "Clave",
+            "featureValue": "Valor",
+            "featureType": "Tipo",
+            "featureTypeString": "Texto",
+            "featureTypeNumber": "Número",
+            "featureTypeBoolean": "Booleano",
+            "valueYes": "Sí",
+            "valueNo": "No",
+            "featuresLabel": "Características: {count}",
+            "status": "Estado",
+            "statusActive": "Activo",
+            "statusInactive": "Oculto",
+            "save": "Guardar producto",
+            "saving": "Guardando...",
+            "saved": "Producto guardado",
+            "error": "No se pudo guardar el producto",
+            "loading": "Cargando productos...",
+            "empty": "Aún no hay productos",
+            "edit": "Editar",
+            "editTitle": "Editar producto: {title}",
+            "cancel": "Cancelar",
+            "noCategory": "Sin categoría",
+            "delete": "Eliminar",
+            "deleteConfirm": "¿Eliminar \"{title}\"?",
+            "ratingLabel": "Valoración",
+            "ratingCountLabel": "Número de valoraciones"
         }
     },
     "posts": {
@@ -587,7 +645,9 @@
             "favorite": "Favoritos",
             "cart": "Carrito",
             "unavailable": "No Disponible",
-            "inCart": "En el Carrito"
+            "inCart": "En el Carrito",
+            "valueYes": "Sí",
+            "valueNo": "No"
         }
     },
     "search": {

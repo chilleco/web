@@ -238,3 +238,4 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - Frontend now auto-creates a guest session on client load via `SessionInitializer` (Redux-persisted `session` slice), calling `/users/token/` and storing tokens in `localStorage` keys `authToken` / `sessionToken`.
 - Auth flow restored with modal chooser (email/Google/Telegram) using Redux `auth` slice and `/users/auth/`; logout hits `/users/exit/` then reinitializes guest session.
 - Auth popups should place content directly in the popup (no extra Box wrappers that add inner shadows/backgrounds); keep buttons stacked and titles concise.
+- Product pricing uses a single base `price` with `discount_type` (`percent`/`fixed`) + `discount_value` to derive `finalPrice`; specs live in sorted `features` list with `{key, value, value_type}` items.

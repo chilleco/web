@@ -4,7 +4,10 @@ export interface Product {
   description?: string;
   images: string[];
   price: number;
-  originalPrice?: number;
+  finalPrice?: number;
+  discountType?: 'percent' | 'fixed';
+  discountValue?: number;
+  features?: ProductFeature[];
   currency?: string;
   rating?: number;
   ratingCount?: number;
@@ -31,13 +34,23 @@ export interface ProductsGetResponse {
   count?: number;
 }
 
+export type ProductFeatureValueType = 'string' | 'number' | 'boolean';
+
+export interface ProductFeature {
+  key: string;
+  value: string | number | boolean;
+  valueType: ProductFeatureValueType;
+}
+
 export interface ProductSaveRequest {
   id?: number;
   title: string;
   description?: string;
   images?: string[];
   price: number;
-  originalPrice?: number;
+  discountType?: 'percent' | 'fixed';
+  discountValue?: number;
+  features?: ProductFeature[];
   currency?: string;
   rating?: number;
   ratingCount?: number;

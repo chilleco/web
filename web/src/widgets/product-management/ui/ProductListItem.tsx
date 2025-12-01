@@ -17,6 +17,12 @@ interface ProductListItemProps {
 export function ProductListItem({ product, onEdit, onDelete }: ProductListItemProps) {
   const t = useTranslations('admin.products');
   const previewImage = product.images?.[0];
+  const basePrice = product.price || 0;
+  const finalPrice = product.finalPrice ?? basePrice;
+  const hasDiscount = basePrice > 0 && finalPrice < basePrice;
+  const discountPercent = hasDiscount ? Math.round(((basePrice - finalPrice) / basePrice) * 100) : null;
+  const featuresCount = product.features?.length ?? 0;
+  const currency = product.currency || '';
 
   return (
     <EntityRow
@@ -43,11 +49,12 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
         product.inStock === false ? <Badge key="stock" variant="destructive">{t('statusInactive')}</Badge> : <Badge key="stock" variant="secondary">{t('inStock')}</Badge>,
         product.isNew ? <Badge key="new" variant="success">{t('isNew')}</Badge> : null,
         product.isFeatured ? <Badge key="featured" variant="warning">{t('isFeatured')}</Badge> : null,
-        product.originalPrice && product.originalPrice > product.price ? (
+        hasDiscount && discountPercent ? (
           <Badge key="discount" variant="default">
-            -{Math.round((1 - product.price / product.originalPrice) * 100)}%
+            -{discountPercent}%
           </Badge>
         ) : null,
+        featuresCount ? <Badge key="features" variant="outline">{t('featuresLabel', { count: featuresCount })}</Badge> : null,
       ].filter(Boolean)}
       secondRowItems={(() => {
         const items: React.ReactNode[] = [];
@@ -59,7 +66,7 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
             </span>
           );
         }
-        if (product.ratingCount) {
+        if (product.ratingCount && product.ratingCount > 0) {
           items.push(
             <span className="inline-flex items-center gap-1" key="ratingCount">
               <TagIcon size={12} />
@@ -67,9 +74,15 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
             </span>
           );
         }
-        items.push(`${t('priceLabel')}: ${product.price} ${product.currency || ''}`.trim());
-        if (product.originalPrice && product.originalPrice > product.price) {
-          items.push(`${t('originalPriceLabel')}: ${product.originalPrice} ${product.currency || ''}`.trim());
+        items.push(`${t('finalPriceLabel')}: ${finalPrice} ${currency}`.trim());
+        if (hasDiscount) {
+          items.push(`${t('basePriceLabel')}: ${basePrice} ${currency}`.trim());
+          if (product.discountType === 'percent' && product.discountValue) {
+            items.push(`${t('discountValueLabel')}: -${product.discountValue}%`);
+          }
+          if (product.discountType === 'fixed' && product.discountValue) {
+            items.push(`${t('discountValueLabel')}: -${product.discountValue} ${currency}`.trim());
+          }
         }
         if (product.category) {
           items.push(`${t('categoryLabel')}: ${product.category}`);

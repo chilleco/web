@@ -2,13 +2,15 @@
 The creating and editing method of the product object of the API
 """
 
+from typing import Any, Literal
+
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel, Field, ConfigDict
 from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
 from models.product import Product
-from .get import ProductResponse
+from .get import ProductResponse, ProductFeature, serialize_product
 
 
 router = APIRouter()
@@ -42,14 +44,24 @@ class ProductSaveRequest(BaseModel):
     price: float = Field(
         default=0.0,
         ge=0,
-        description="Current price",
-        examples=[199.99],
+        description="Base price before discounts",
+        examples=[299.99],
     )
-    original_price: float | None = Field(
+    discount_type: Literal["percent", "fixed"] | None = Field(
+        default=None,
+        description="Discount type applied to the base price",
+        examples=["percent"],
+    )
+    discount_value: float | None = Field(
         default=None,
         ge=0,
-        description="Original price before discount",
-        examples=[299.99],
+        description="Discount value matched to type (percent or fixed amount)",
+        examples=[25, 30.5],
+    )
+    features: list[ProductFeature] = Field(
+        default_factory=list,
+        description="List of key/value specifications for the product",
+        examples=[[{"key": "Battery life", "value": "32h", "valueType": "string"}]],
     )
     currency: str | None = Field(
         default="$",
@@ -103,23 +115,35 @@ class ProductSaveResponse(BaseModel):
     product: ProductResponse
 
 
-def _serialize_product(product: Product) -> ProductResponse:
-    return ProductResponse(
-        id=product.id,
-        title=product.title or "",
-        description=product.description,
-        images=product.images or [],
-        price=float(product.price or 0),
-        originalPrice=product.original_price,
-        currency=product.currency,
-        rating=product.rating,
-        ratingCount=product.rating_count,
-        category=product.category,
-        inStock=product.in_stock,
-        isNew=product.is_new,
-        isFeatured=product.is_featured,
-        url=product.url,
-    )
+def _prepare_features_for_storage(features: list[ProductFeature]) -> list[dict[str, Any]]:
+    """Convert feature payloads into a persisted structure."""
+
+    prepared: list[dict[str, Any]] = []
+
+    for feature in features:
+        key = feature.key.strip()
+        if not key:
+            continue
+
+        value_type = feature.valueType
+        value: Any = feature.value
+
+        if value_type == "number":
+            value = float(value)
+        elif value_type == "boolean":
+            value = bool(value)
+        else:
+            value = "" if value is None else str(value)
+
+        prepared.append(
+            {
+                "key": key,
+                "value": value,
+                "value_type": value_type,
+            }
+        )
+
+    return sorted(prepared, key=lambda item: item["key"].lower())
 
 
 @router.post("/save/", response_model=ProductSaveResponse, tags=["products"])
@@ -140,12 +164,15 @@ async def handler(
             token=request.state.token,
         )
         new = True
+    discount_type = data.discount_type if data.discount_type and (data.discount_value or 0) > 0 else None
+    discount_value = float(data.discount_value or 0) if discount_type else 0.0
 
     product.title = data.title
     product.description = data.description
     product.images = data.images or []
     product.price = data.price
-    product.original_price = data.original_price
+    product.discount_type = discount_type
+    product.discount_value = discount_value
     product.currency = data.currency
     product.rating = data.rating
     product.rating_count = data.rating_count
@@ -153,6 +180,7 @@ async def handler(
     product.in_stock = data.in_stock
     product.is_new = data.is_new
     product.is_featured = data.is_featured
+    product.features = _prepare_features_for_storage(data.features)
     product.status = data.status
 
     product.save()
@@ -167,5 +195,5 @@ async def handler(
     return {
         "id": product.id,
         "new": new,
-        "product": _serialize_product(product),
+        "product": serialize_product(product),
     }

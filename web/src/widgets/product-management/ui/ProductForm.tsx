@@ -5,18 +5,25 @@ import { useTranslations } from 'next-intl';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 import { IconButton } from '@/shared/ui/icon-button';
-import { SaveIcon, LoadingIcon } from '@/shared/ui/icons';
+import { SaveIcon, LoadingIcon, PlusIcon, TrashIcon, CloseIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { Product, ProductSaveRequest, saveProduct } from '@/entities/product';
 import { MultiFileUpload, FileData } from '@/shared/ui/multi-file-upload';
 import { uploadFile } from '@/shared/services/api/upload';
+
+interface FeatureField {
+  key: string;
+  value: string;
+  valueType: 'string' | 'number' | 'boolean';
+}
 
 interface ProductFormState {
   title: string;
   description: string;
   images: string[];
   price: string;
-  originalPrice: string;
+  discountType: 'none' | 'percent' | 'fixed';
+  discountValue: string;
   currency: string;
   rating: string;
   ratingCount: string;
@@ -25,6 +32,7 @@ interface ProductFormState {
   isNew: boolean;
   isFeatured: boolean;
   status: string;
+  features: FeatureField[];
 }
 
 interface ProductFormProps {
@@ -38,7 +46,8 @@ const defaultState: ProductFormState = {
   description: '',
   images: [],
   price: '',
-  originalPrice: '',
+  discountType: 'none',
+  discountValue: '',
   currency: '$',
   rating: '',
   ratingCount: '',
@@ -47,6 +56,7 @@ const defaultState: ProductFormState = {
   isNew: false,
   isFeatured: false,
   status: '1',
+  features: [],
 };
 
 export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) {
@@ -61,6 +71,20 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
   const inlineLabelClass = 'h-full px-3 flex items-center justify-center border-r border-border/60';
   const inlineInputClass = 'bg-muted border-0 text-base text-foreground rounded-l-none shadow-none focus:ring-0 focus:outline-none h-full';
   const inlineSelectClass = 'bg-muted border-0 text-base text-foreground rounded-l-none rounded-r-[0.75rem] h-full px-3 w-full cursor-pointer focus:outline-none focus:ring-0';
+
+  const calculateFinalPrice = (basePrice: number, discountType: ProductFormState['discountType'], discountValue: number) => {
+    if (discountType === 'none' || discountValue <= 0) return basePrice;
+    if (discountType === 'percent') {
+      return Math.max(basePrice - (basePrice * discountValue) / 100, 0);
+    }
+    return Math.max(basePrice - discountValue, 0);
+  };
+
+  const toFeatureField = (feature: Product['features'][number] | FeatureField): FeatureField => ({
+    key: feature.key || '',
+    value: feature.valueType === 'boolean' ? String(feature.value) : String(feature.value ?? ''),
+    valueType: feature.valueType || 'string',
+  });
 
   useEffect(() => {
     if (!product) {
@@ -81,7 +105,8 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
       description: product.description || '',
       images: product.images || [],
       price: product.price ? String(product.price) : '',
-      originalPrice: product.originalPrice ? String(product.originalPrice) : '',
+      discountType: product.discountType || 'none',
+      discountValue: product.discountValue ? String(product.discountValue) : '',
       currency: product.currency || '$',
       rating: product.rating ? String(product.rating) : '',
       ratingCount: product.ratingCount ? String(product.ratingCount) : '',
@@ -90,14 +115,50 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
       isNew: product.isNew ?? false,
       isFeatured: product.isFeatured ?? false,
       status: product.status ? String(product.status) : '1',
+      features: (product.features || []).map(toFeatureField),
     });
     setFiles(initialFiles);
   }, [product]);
 
-  const handleChange = (field: keyof ProductFormState, value: string | boolean) => {
+  const handleChange = (field: Exclude<keyof ProductFormState, 'features'>, value: string | boolean) => {
     setForm((prev) => ({
       ...prev,
       [field]: value,
+    }));
+  };
+
+  const handleFeatureChange = (index: number, field: keyof FeatureField, value: string) => {
+    setForm((prev) => {
+      const updated = [...prev.features];
+      const current = updated[index];
+      const nextFeature: FeatureField = {
+        ...current,
+        [field]: value,
+      };
+
+      if (field === 'valueType') {
+        nextFeature.valueType = value as FeatureField['valueType'];
+        if (nextFeature.valueType === 'boolean') {
+          nextFeature.value = nextFeature.value === 'false' ? 'false' : 'true';
+        }
+      }
+
+      updated[index] = nextFeature;
+      return { ...prev, features: updated };
+    });
+  };
+
+  const handleAddFeature = () => {
+    setForm((prev) => ({
+      ...prev,
+      features: [...prev.features, { key: '', value: '', valueType: 'string' }],
+    }));
+  };
+
+  const handleRemoveFeature = (index: number) => {
+    setForm((prev) => ({
+      ...prev,
+      features: prev.features.filter((_, idx) => idx !== index),
     }));
   };
 
@@ -105,13 +166,36 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
     event.preventDefault();
     setSaving(true);
 
+    const discountType = form.discountType === 'none' ? undefined : form.discountType;
+    const discountValue = discountType ? Number(form.discountValue) || 0 : undefined;
+    const features = form.features
+      .filter((feature) => feature.key.trim().length > 0)
+      .map((feature) => {
+        const valueType = feature.valueType || 'string';
+        let value: string | number | boolean = feature.value;
+
+        if (valueType === 'number') {
+          value = Number(feature.value) || 0;
+        } else if (valueType === 'boolean') {
+          value = ['true', '1', 'yes', 'on'].includes(String(feature.value).toLowerCase());
+        }
+
+        return {
+          key: feature.key.trim(),
+          value,
+          valueType,
+        };
+      });
+
     const payload: ProductSaveRequest = {
       id: product?.id,
       title: form.title,
       description: form.description || undefined,
       images: form.images,
       price: Number(form.price) || 0,
-      originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined,
+      discountType,
+      discountValue,
+      features,
       currency: form.currency || undefined,
       rating: form.rating ? Number(form.rating) : undefined,
       ratingCount: form.ratingCount ? Number(form.ratingCount) : undefined,
@@ -162,6 +246,8 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
     }
   };
 
+  const finalPricePreview = calculateFinalPrice(Number(form.price) || 0, form.discountType, Number(form.discountValue) || 0);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-3">
@@ -211,16 +297,34 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
           </div>
 
           <div className={inlineRowClass}>
-            <span className={inlineLabelClass}>{t('originalPrice')}</span>
+            <span className={inlineLabelClass}>{t('discountType')}</span>
+            <select
+              className={inlineSelectClass}
+              value={form.discountType}
+              onChange={(e) => handleChange('discountType', e.target.value as ProductFormState['discountType'])}
+            >
+              <option value="none">{tSystem('none')}</option>
+              <option value="percent">{t('discountTypePercent')}</option>
+              <option value="fixed">{t('discountTypeFixed')}</option>
+            </select>
+          </div>
+
+          <div className={inlineRowClass}>
+            <span className={inlineLabelClass}>{t('discountValue')}</span>
             <Input
-              placeholder={t('originalPrice')}
+              placeholder={t('discountValue')}
               type="number"
               min="0"
               step="0.01"
-              value={form.originalPrice}
-              onChange={(e) => handleChange('originalPrice', e.target.value)}
+              value={form.discountValue}
+              disabled={form.discountType === 'none'}
+              onChange={(e) => handleChange('discountValue', e.target.value)}
               className={inlineInputClass}
             />
+          </div>
+
+          <div className="px-2 text-sm text-muted-foreground">
+            {t('finalPricePreview', { value: finalPricePreview.toFixed(2), currency: form.currency || '' }).trim()}
           </div>
 
           <div className={inlineRowClass}>
@@ -252,11 +356,94 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
 
       <Textarea
         placeholder={t('descriptionLabel')}
-        value={form.description}
-        onChange={(e) => handleChange('description', e.target.value)}
-        rows={5}
-        className="bg-muted border-0 text-base text-foreground"
-      />
+      value={form.description}
+      onChange={(e) => handleChange('description', e.target.value)}
+      rows={5}
+      className="bg-muted border-0 text-base text-foreground"
+    />
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-base font-semibold">{t('featuresTitle')}</span>
+          <IconButton
+            type="button"
+            variant="outline"
+            size="sm"
+            icon={<PlusIcon size={14} />}
+            onClick={handleAddFeature}
+            responsive
+          >
+            {tSystem('add')}
+          </IconButton>
+        </div>
+
+        <div className="space-y-2">
+          {form.features.length === 0 ? (
+            <div className="text-sm text-muted-foreground px-2">{t('featuresEmpty')}</div>
+          ) : (
+            form.features.map((feature, index) => (
+              <div key={`${feature.key}-${index}`} className="rounded-[1rem] bg-muted/50 p-3 space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                  <div className={inlineRowClass}>
+                    <span className={inlineLabelClass}>{t('featureKey')}</span>
+                    <Input
+                      placeholder={t('featureKey')}
+                      value={feature.key}
+                      onChange={(e) => handleFeatureChange(index, 'key', e.target.value)}
+                      className={inlineInputClass}
+                    />
+                  </div>
+                  <div className={inlineRowClass}>
+                    <span className={inlineLabelClass}>{t('featureType')}</span>
+                    <select
+                      className={inlineSelectClass}
+                      value={feature.valueType}
+                      onChange={(e) => handleFeatureChange(index, 'valueType', e.target.value)}
+                    >
+                      <option value="string">{t('featureTypeString')}</option>
+                      <option value="number">{t('featureTypeNumber')}</option>
+                      <option value="boolean">{t('featureTypeBoolean')}</option>
+                    </select>
+                  </div>
+                  <div className={inlineRowClass}>
+                    <span className={inlineLabelClass}>{t('featureValue')}</span>
+                    {feature.valueType === 'boolean' ? (
+                      <select
+                        className={inlineSelectClass}
+                        value={feature.value}
+                        onChange={(e) => handleFeatureChange(index, 'value', e.target.value)}
+                      >
+                        <option value="true">{t('valueYes')}</option>
+                        <option value="false">{t('valueNo')}</option>
+                      </select>
+                    ) : (
+                      <Input
+                        placeholder={t('featureValue')}
+                        type={feature.valueType === 'number' ? 'number' : 'text'}
+                        value={feature.value}
+                        onChange={(e) => handleFeatureChange(index, 'value', e.target.value)}
+                        className={inlineInputClass}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="flex justify-end">
+                  <IconButton
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    icon={<TrashIcon size={12} />}
+                    onClick={() => handleRemoveFeature(index)}
+                    responsive
+                  >
+                    {tSystem('remove')}
+                  </IconButton>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
 
       <div className="space-y-2">
         <div className="h-12 rounded-[0.75rem] bg-muted flex items-center px-4 gap-3 cursor-pointer">
@@ -294,6 +481,8 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
           variant="outline"
           onClick={onCancel}
           disabled={saving || uploading}
+          icon={<CloseIcon size={16} />}
+          responsive
         >
           {tSystem('cancel')}
         </IconButton>

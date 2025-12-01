@@ -127,23 +127,26 @@
                 "starter": {
                     "title": "Базовый рабочий стол",
                     "description": "Базовые секции с готовыми SEO, аналитикой и формой контакта.",
-                    "price": "29",
-                    "originalPrice": "39",
-                    "tag": "Готов к запуску"
+                    "price": "39",
+                    "tag": "Готов к запуску",
+                    "discountType": "percent",
+                    "discountValue": "25"
                 },
                 "growth": {
                     "title": "Стек роста",
                     "description": "Каталог, посты и блоки автоматизации с типизированными коннекторами.",
-                    "price": "59",
-                    "originalPrice": "79",
-                    "tag": "Автоматизация"
+                    "price": "79",
+                    "tag": "Автоматизация",
+                    "discountType": "percent",
+                    "discountValue": "25"
                 },
                 "enterprise": {
                     "title": "Enterprise-пакет",
                     "description": "Расширенная локализация, контроль доступа и наблюдаемость из коробки.",
-                    "price": "99",
-                    "originalPrice": "129",
-                    "tag": "Enterprise"
+                    "price": "129",
+                    "tag": "Enterprise",
+                    "discountType": "fixed",
+                    "discountValue": "30"
                 }
             }
         },
@@ -418,17 +421,15 @@
             "add": "Сохранить товар",
             "name": "Название",
             "descriptionLabel": "Описание",
-            "price": "Цена",
-            "priceLabel": "Цена",
-            "originalPrice": "Старая цена",
-            "originalPriceLabel": "Старая цена",
+            "price": "Базовая цена",
+            "priceLabel": "Базовая цена",
             "currency": "Валюта",
             "category": "Категория",
             "categoryLabel": "Категория",
             "images": "Изображения (URL через запятую)",
             "rating": "Рейтинг",
             "ratingCount": "Кол-во оценок",
-            "discount": "Скидка (%)",
+            "discount": "Скидка",
             "inStock": "В наличии",
             "isNew": "Новинка",
             "isFeatured": "Рекомендуемое",
@@ -448,7 +449,26 @@
             "delete": "Удалить",
             "deleteConfirm": "Удалить «{title}»?",
             "ratingLabel": "Рейтинг",
-            "ratingCountLabel": "Кол-во оценок"
+            "ratingCountLabel": "Кол-во оценок",
+            "discountType": "Тип скидки",
+            "discountTypePercent": "Процент",
+            "discountTypeFixed": "Фиксированная сумма",
+            "discountValue": "Размер скидки",
+            "discountValueLabel": "Скидка",
+            "finalPriceLabel": "Итоговая цена",
+            "basePriceLabel": "Базовая цена",
+            "finalPricePreview": "Итоговая цена: {value} {currency}",
+            "featuresTitle": "Характеристики",
+            "featuresEmpty": "Характеристики не добавлены",
+            "featureKey": "Параметр",
+            "featureValue": "Значение",
+            "featureType": "Тип",
+            "featureTypeString": "Текст",
+            "featureTypeNumber": "Число",
+            "featureTypeBoolean": "Булево",
+            "valueYes": "Да",
+            "valueNo": "Нет",
+            "featuresLabel": "Характеристики: {count}"
         }
     },
     "posts": {
@@ -647,7 +667,9 @@
             "empty": "Товары не найдены",
             "emptyHint": "Измените фильтры или запрос, чтобы увидеть больше результатов",
             "addedToCartToast": "«{title}» добавлен в корзину",
-            "favoriteToggledToast": "Избранное обновлено для {title}"
+            "favoriteToggledToast": "Избранное обновлено для {title}",
+            "valueYes": "Да",
+            "valueNo": "Нет"
         }
     },
     "search": {

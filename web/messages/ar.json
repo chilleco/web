@@ -126,23 +126,26 @@
                 "starter": {
                     "title": "مساحة البداية",
                     "description": "أقسام أساسية مع SEO وتحليلات ونموذج تواصل جاهزة.",
-                    "price": "29",
-                    "originalPrice": "39",
-                    "tag": "جاهز للإطلاق"
+                    "price": "39",
+                    "tag": "جاهز للإطلاق",
+                    "discountType": "percent",
+                    "discountValue": "25"
                 },
                 "growth": {
                     "title": "حزمة النمو",
                     "description": "كتالوج ومقالات وكتل أتمتة مع موصلات API مطبعة.",
-                    "price": "59",
-                    "originalPrice": "79",
-                    "tag": "أتمتة"
+                    "price": "79",
+                    "tag": "أتمتة",
+                    "discountType": "percent",
+                    "discountValue": "25"
                 },
                 "enterprise": {
                     "title": "حزمة المؤسسات",
                     "description": "توطين متقدم، تحكم في الصلاحيات ورصد مدمج.",
-                    "price": "99",
-                    "originalPrice": "129",
-                    "tag": "Enterprise"
+                    "price": "129",
+                    "tag": "Enterprise",
+                    "discountType": "fixed",
+                    "discountValue": "30"
                 }
             }
         },
@@ -399,6 +402,61 @@
                 "createCategory": "إنشاء فئة",
                 "updateCategory": "تحديث فئة"
             }
+        },
+        "products": {
+            "title": "المنتجات",
+            "description": "إنشاء وإدارة منتجات الكتالوج",
+            "add": "حفظ المنتج",
+            "name": "العنوان",
+            "descriptionLabel": "الوصف",
+            "price": "السعر الأساسي",
+            "priceLabel": "السعر الأساسي",
+            "discountType": "نوع الخصم",
+            "discountTypePercent": "نسبة مئوية",
+            "discountTypeFixed": "مبلغ ثابت",
+            "discountValue": "قيمة الخصم",
+            "discountValueLabel": "الخصم",
+            "finalPriceLabel": "السعر النهائي",
+            "basePriceLabel": "السعر الأساسي",
+            "finalPricePreview": "السعر النهائي: {value} {currency}",
+            "currency": "العملة",
+            "category": "الفئة",
+            "categoryLabel": "الفئة",
+            "images": "الصور (روابط مفصولة بفواصل)",
+            "rating": "التقييم",
+            "ratingCount": "عدد التقييمات",
+            "discount": "خصم",
+            "inStock": "متوفر",
+            "isNew": "جديد",
+            "isFeatured": "مميز",
+            "featuresTitle": "المواصفات",
+            "featuresEmpty": "لا توجد مواصفات بعد",
+            "featureKey": "المفتاح",
+            "featureValue": "القيمة",
+            "featureType": "النوع",
+            "featureTypeString": "نص",
+            "featureTypeNumber": "رقم",
+            "featureTypeBoolean": "قيمة منطقية",
+            "valueYes": "نعم",
+            "valueNo": "لا",
+            "featuresLabel": "المواصفات: {count}",
+            "status": "الحالة",
+            "statusActive": "نشط",
+            "statusInactive": "مخفي",
+            "save": "حفظ المنتج",
+            "saving": "جارٍ الحفظ...",
+            "saved": "تم حفظ المنتج",
+            "error": "فشل حفظ المنتج",
+            "loading": "جارٍ تحميل المنتجات...",
+            "empty": "لا توجد منتجات بعد",
+            "edit": "تعديل",
+            "editTitle": "تعديل المنتج: {title}",
+            "cancel": "إلغاء",
+            "noCategory": "بدون فئة",
+            "delete": "حذف",
+            "deleteConfirm": "حذف \"{title}\"؟",
+            "ratingLabel": "التقييم",
+            "ratingCountLabel": "عدد التقييمات"
         }
     },
     "posts": {
@@ -587,7 +645,9 @@
             "favorite": "مفضلة",
             "cart": "سلة التسوق",
             "unavailable": "غير متوفر",
-            "inCart": "في السلة"
+            "inCart": "في السلة",
+            "valueYes": "نعم",
+            "valueNo": "لا"
         }
     },
     "search": {

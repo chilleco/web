@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Card } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
 import { ShoppingIcon, TagIcon, TrendingIcon, StarIcon, ReviewsIcon } from '@/shared/ui/icons';
-import { Product } from '@/entities/product';
+import { Product, ProductFeature } from '@/entities/product';
 
 interface ProductCardProps {
     product: Product;
@@ -17,6 +17,8 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart = false, isInFavorites = false }: ProductCardProps) {
     const t = useTranslations('catalog.product');
+    const basePrice = product.price || 0;
+    const finalPrice = product.finalPrice ?? basePrice;
     
     // Like functionality - in production this would come from props or global state
     const [isLiked, setIsLiked] = useState(isInFavorites);
@@ -64,6 +66,20 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             value: product.ratingCount
         });
     }
+
+    const formatFeatureValue = (feature: ProductFeature) => {
+        if (feature.valueType === 'boolean') {
+            return feature.value ? t('valueYes') : t('valueNo');
+        }
+        return String(feature.value);
+    };
+
+    const featureMetadata = (product.features || [])
+        .slice(0, 3)
+        .map((feature) => ({
+            label: feature.key,
+            value: formatFeatureValue(feature),
+        }));
 
     // Prepare tags (below description)
     const tags = [];
@@ -116,9 +132,10 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             images={product.images}
             filters={filters}
             tags={tags}
-            price={product.price}
-            originalPrice={product.originalPrice}
+            price={finalPrice}
+            basePrice={basePrice}
             currency={product.currency}
+            metadata={featureMetadata}
             actions={actions}
             variant="product"
             showLikeButton={true}

@@ -2,13 +2,12 @@
 The getting method of the product object of the API
 """
 
-from typing import Iterable
+from typing import Any, Literal
 
 from fastapi import APIRouter, Body, Request
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import AliasChoices, BaseModel, Field, ConfigDict
 from consys.errors import ErrorAccess
 
-from lib import log
 from models.product import Product
 
 
@@ -25,8 +24,9 @@ SAMPLE_PRODUCTS = [
             "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400",
             "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=400",
         ],
-        "price": 199.99,
-        "original_price": 299.99,
+        "price": 299.99,
+        "discount_type": "percent",
+        "discount_value": 33,
         "currency": "$",
         "rating": 4.8,
         "rating_count": 234,
@@ -34,6 +34,11 @@ SAMPLE_PRODUCTS = [
         "in_stock": True,
         "is_new": True,
         "is_featured": True,
+        "features": [
+            {"key": "Battery life", "value": "32h", "value_type": "string"},
+            {"key": "Connectivity", "value": "Bluetooth 5.3", "value_type": "string"},
+            {"key": "Weight", "value": 240, "value_type": "number"},
+        ],
     },
     {
         "id": 2,
@@ -43,13 +48,20 @@ SAMPLE_PRODUCTS = [
             "https://images.unsplash.com/photo-1557935728-e6d1eaabe558?w=400",
             "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400",
         ],
-        "price": 149.99,
+        "price": 179.99,
+        "discount_type": "fixed",
+        "discount_value": 30,
         "currency": "$",
         "rating": 4.5,
         "rating_count": 189,
         "category": "Sports",
         "in_stock": True,
         "is_featured": True,
+        "features": [
+            {"key": "GPS", "value": True, "value_type": "boolean"},
+            {"key": "Battery life", "value": "7 days", "value_type": "string"},
+            {"key": "Waterproof", "value": True, "value_type": "boolean"},
+        ],
     },
     {
         "id": 3,
@@ -63,6 +75,11 @@ SAMPLE_PRODUCTS = [
         "category": "Food & Beverage",
         "in_stock": True,
         "is_new": True,
+        "features": [
+            {"key": "Roast", "value": "Medium", "value_type": "string"},
+            {"key": "Origin", "value": "Colombia", "value_type": "string"},
+            {"key": "Weight", "value": 500, "value_type": "number"},
+        ],
     },
     {
         "id": 4,
@@ -73,13 +90,19 @@ SAMPLE_PRODUCTS = [
             "https://images.unsplash.com/photo-1481447709470-dfd6f0d2c802?w=400",
             "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400",
         ],
-        "price": 899.99,
-        "original_price": 1199.99,
+        "price": 1199.99,
+        "discount_type": "percent",
+        "discount_value": 25,
         "currency": "$",
         "rating": 4.7,
         "rating_count": 89,
         "category": "Photography",
         "in_stock": True,
+        "features": [
+            {"key": "Focal length", "value": "85mm", "value_type": "string"},
+            {"key": "Aperture", "value": "f/1.4", "value_type": "string"},
+            {"key": "Mount", "value": "Sony E", "value_type": "string"},
+        ],
     },
     {
         "id": 5,
@@ -95,6 +118,11 @@ SAMPLE_PRODUCTS = [
         "category": "Lifestyle",
         "in_stock": True,
         "is_new": True,
+        "features": [
+            {"key": "Volume", "value": "750ml", "value_type": "string"},
+            {"key": "Insulation", "value": True, "value_type": "boolean"},
+            {"key": "Material", "value": "Stainless steel", "value_type": "string"},
+        ],
     },
     {
         "id": 6,
@@ -104,13 +132,19 @@ SAMPLE_PRODUCTS = [
             "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400",
             "https://images.unsplash.com/photo-1595044426077-d36d9236d54a?w=400",
         ],
-        "price": 129.99,
-        "original_price": 159.99,
+        "price": 159.99,
+        "discount_type": "fixed",
+        "discount_value": 30,
         "currency": "$",
         "rating": 4.4,
         "rating_count": 145,
         "category": "Gaming",
         "in_stock": False,
+        "features": [
+            {"key": "Switches", "value": "Cherry MX Red", "value_type": "string"},
+            {"key": "Layout", "value": "TKL", "value_type": "string"},
+            {"key": "Lighting", "value": True, "value_type": "boolean"},
+        ],
     },
     {
         "id": 7,
@@ -128,6 +162,11 @@ SAMPLE_PRODUCTS = [
         "category": "Beauty",
         "in_stock": True,
         "is_featured": True,
+        "features": [
+            {"key": "Skin type", "value": "All", "value_type": "string"},
+            {"key": "Cruelty free", "value": True, "value_type": "boolean"},
+            {"key": "SPF", "value": 30, "value_type": "number"},
+        ],
     },
     {
         "id": 8,
@@ -136,13 +175,18 @@ SAMPLE_PRODUCTS = [
         "images": [
             "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400"
         ],
-        "price": 79.99,
-        "original_price": 99.99,
+        "price": 109.99,
+        "discount_type": "percent",
+        "discount_value": 27,
         "currency": "$",
         "rating": 4.3,
         "rating_count": 178,
         "category": "Smart Home",
         "in_stock": True,
+        "features": [
+            {"key": "Protocols", "value": "Wi-Fi, Zigbee, Thread", "value_type": "string"},
+            {"key": "Voice assistants", "value": True, "value_type": "boolean"},
+        ],
     },
     {
         "id": 9,
@@ -160,6 +204,11 @@ SAMPLE_PRODUCTS = [
         "in_stock": True,
         "is_new": True,
         "is_featured": True,
+        "features": [
+            {"key": "Frame", "value": "Titanium", "value_type": "string"},
+            {"key": "Lens", "value": "Polarized", "value_type": "string"},
+            {"key": "UV protection", "value": True, "value_type": "boolean"},
+        ],
     },
 ]
 
@@ -197,13 +246,36 @@ class ProductsGetRequest(BaseModel):
     )
 
 
+class ProductFeature(BaseModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+
+    key: str = Field(
+        ...,
+        description="Feature key",
+        examples=["Battery life"],
+    )
+    value: str | int | float | bool = Field(
+        ...,
+        description="Feature value",
+        examples=["32h"],
+    )
+    valueType: Literal["string", "number", "boolean"] = Field(
+        default="string",
+        description="Type of feature value",
+        examples=["string"],
+        validation_alias=AliasChoices("valueType", "value_type"),
+    )
+
+
 class ProductResponse(BaseModel):
     id: int
     title: str
     description: str | None = None
     images: list[str] = Field(default_factory=list)
     price: float
-    originalPrice: float | None = None
+    finalPrice: float
+    discountType: Literal["percent", "fixed"] | None = None
+    discountValue: float | None = None
     currency: str | None = None
     rating: float | None = None
     ratingCount: int | None = None
@@ -211,12 +283,136 @@ class ProductResponse(BaseModel):
     inStock: bool | None = None
     isNew: bool | None = None
     isFeatured: bool | None = None
+    features: list[ProductFeature] = Field(default_factory=list)
     url: str | None = None
 
 
 class ProductsGetResponse(BaseModel):
     products: list[ProductResponse]
-    count: int
+    count: int | None = None
+
+
+def calculate_final_price(
+    price: float,
+    discount_type: str | None,
+    discount_value: float | None,
+) -> float:
+    """Calculate final price applying either percentage or fixed discount."""
+
+    base_price = float(price or 0)
+    value = float(discount_value or 0)
+
+    if not discount_type or value <= 0:
+        return base_price
+
+    if discount_type == "percent":
+        return max(base_price - base_price * value / 100, 0)
+
+    if discount_type == "fixed":
+        return max(base_price - value, 0)
+
+    return base_price
+
+
+def _normalize_features_output(raw_features: list[Any] | None) -> list[ProductFeature]:
+    """Prepare features list for API response with stable ordering."""
+
+    if not raw_features:
+        return []
+
+    features: list[ProductFeature] = []
+
+    for feature in raw_features:
+        if isinstance(feature, ProductFeature):
+            normalized = feature
+        else:
+            key = ""
+            value: Any = None
+            value_type = "string"
+
+            if isinstance(feature, dict):
+                key = str(feature.get("key", "")).strip()
+                value = feature.get("value")
+                value_type = (
+                    str(feature.get("value_type") or feature.get("valueType") or "string")
+                    .lower()
+                    .strip()
+                )
+            else:
+                key = str(getattr(feature, "key", "")).strip()
+                value = getattr(feature, "value", None)
+                value_type = str(
+                    getattr(feature, "value_type", None)
+                    or getattr(feature, "valueType", None)
+                    or "string"
+                ).lower()
+
+            if not key:
+                continue
+
+            if value_type not in {"string", "number", "boolean"}:
+                value_type = "string"
+
+            if value_type == "number":
+                try:
+                    value = float(value)
+                except (TypeError, ValueError):
+                    value = 0.0
+            elif value_type == "boolean":
+                value = bool(value)
+            else:
+                value = "" if value is None else str(value)
+
+            normalized = ProductFeature(
+                key=key,
+                value=value,
+                valueType=value_type,
+            )
+
+        features.append(normalized)
+
+    return sorted(features, key=lambda item: item.key.lower())
+
+
+def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
+    """Unify product output shape for API consumers."""
+
+    getter = product.get if isinstance(product, dict) else lambda key, default=None: getattr(product, key, default)
+
+    raw_price = getter("price") or 0
+    price = float(raw_price)
+
+    discount_type = getter("discount_type")
+    if discount_type not in {"percent", "fixed"}:
+        discount_type = None
+
+    raw_discount_value = getter("discount_value")
+    discount_value = float(raw_discount_value) if raw_discount_value is not None else None
+
+    features = _normalize_features_output(getter("features") or [])
+    final_price = calculate_final_price(price, discount_type, discount_value)
+
+    product_id = getter("id")
+
+    return ProductResponse(
+        id=int(product_id) if product_id is not None else 0,
+        title=getter("title") or "",
+        description=getter("description"),
+        images=getter("images") or [],
+        price=price,
+        finalPrice=final_price,
+        discountType=discount_type,
+        discountValue=discount_value,
+        currency=getter("currency"),
+        rating=getter("rating"),
+        ratingCount=getter("rating_count"),
+        category=getter("category"),
+        inStock=getter("in_stock"),
+        isNew=getter("is_new"),
+        isFeatured=getter("is_featured"),
+        url=getter("url"),
+        features=features,
+    )
 
 
 def _filter_products(products: list[dict], params: ProductsGetRequest) -> list[dict]:
@@ -261,7 +457,8 @@ async def handler(
         "description",
         "images",
         "price",
-        "original_price",
+        "discount_type",
+        "discount_value",
         "currency",
         "rating",
         "rating_count",
@@ -269,6 +466,7 @@ async def handler(
         "in_stock",
         "is_new",
         "is_featured",
+        "features",
         "url",
         "created",
         "updated",
@@ -286,6 +484,7 @@ async def handler(
         **params,
         fields=fields,
     )
+    products = [serialize_product(product) for product in products]
 
     # Count
     count = None

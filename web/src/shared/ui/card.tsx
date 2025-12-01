@@ -170,13 +170,13 @@ function InfoBadge({ icon, label, count, variant = 'default' }: InfoBadgeProps) 
 // Pricing component
 interface PricingProps {
   price: number;
-  originalPrice?: number;
+  basePrice?: number;
   currency?: string;
   className?: string;
 }
 
-function Pricing({ price, originalPrice, currency = '$', className }: PricingProps) {
-  const hasDiscount = originalPrice && originalPrice > price;
+function Pricing({ price, basePrice, currency = '$', className }: PricingProps) {
+  const hasDiscount = typeof basePrice === 'number' && basePrice > price;
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
@@ -185,7 +185,7 @@ function Pricing({ price, originalPrice, currency = '$', className }: PricingPro
       </span>
       {hasDiscount && (
         <span className="text-sm text-muted-foreground line-through">
-          {currency}{originalPrice.toFixed(2)}
+          {currency}{basePrice?.toFixed(2)}
         </span>
       )}
     </div>
@@ -217,7 +217,7 @@ interface CardProps extends VariantProps<typeof cardVariants> {
 
   // Pricing (for products)
   price?: number;
-  originalPrice?: number;
+  basePrice?: number;
   currency?: string;
 
   // Metadata (author, date, views, etc.)
@@ -250,7 +250,7 @@ function Card({
   filters = [],
   tags = [],
   price,
-  originalPrice,
+  basePrice,
   currency = '$',
   metadata = [],
   actions,
@@ -266,7 +266,9 @@ function Card({
 }: CardProps) {
   const hasImages = images.length > 0;
   const hasPricing = typeof price === 'number';
-  const discountPercent = originalPrice && price ? Math.round(((originalPrice - price) / originalPrice) * 100) : undefined;
+  const discountPercent = basePrice && typeof price === 'number' && basePrice > price
+    ? Math.round(((basePrice - price) / basePrice) * 100)
+    : undefined;
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -330,7 +332,7 @@ function Card({
           <div className="mt-2">
             <Pricing
               price={price}
-              originalPrice={originalPrice}
+              basePrice={basePrice}
               currency={currency}
             />
           </div>
