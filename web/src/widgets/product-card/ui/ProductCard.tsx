@@ -22,7 +22,9 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
     const finalPrice = typeof product.finalPriceFrom === 'number' ? product.finalPriceFrom : priceFrom;
     const primaryOption = product.options?.[0];
     const pricePrefix = product.options?.length ? t('priceFrom') : undefined;
-    const inStock = typeof product.inStock === 'boolean' ? product.inStock : (product.options?.some((option) => option.inStock !== false) ?? true);
+    const inStock = typeof product.inStock === 'boolean'
+        ? product.inStock
+        : (product.options?.some((option) => (option.stockCount ?? 0) > 0) ?? true);
     const productImages = (product.images && product.images.length > 0)
         ? product.images
         : (primaryOption?.images || []);

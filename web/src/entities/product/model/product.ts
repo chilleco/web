@@ -38,7 +38,7 @@ export interface ProductOption {
   images: string[];
   rating?: number;
   ratingCount?: number;
-  inStock?: boolean;
+  stockCount?: number;
   attributes?: ProductFeature[];
   features?: ProductFeature[];
 }
@@ -70,7 +70,7 @@ export interface ProductSaveRequest {
     images?: string[];
     rating?: number;
     ratingCount?: number;
-    inStock?: boolean;
+    stockCount?: number;
     attributes?: ProductFeature[];
     features?: ProductFeature[];
   }>;

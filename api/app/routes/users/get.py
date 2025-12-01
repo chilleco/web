@@ -2,6 +2,8 @@
 The getting method of the user object of the API
 """
 
+from typing import Any
+
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess, ErrorInvalid
@@ -29,6 +31,11 @@ def online_back(user_id):
 
     # return int(time.time() - user.last_online)
     return 0
+
+
+def merge_local_data(user: dict[str, Any], local_data: dict[str, Any]):
+    """Apply only meaningful local values on top of the global user payload."""
+    user.update({key: value for key, value in local_data.items() if value is not None})
 
 
 class Type(BaseModel):
@@ -80,10 +87,10 @@ async def handler(
     users_local = {user["id"]: user for user in users_local}
 
     if isinstance(users, dict):
-        users.update(users_local[users["id"]])
+        merge_local_data(users, users_local[users["id"]])
     else:
         for user in users:
-            user.update(users_local[user["id"]])
+            merge_local_data(user, users_local[user["id"]])
 
     # Response
     return {

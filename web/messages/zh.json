@@ -466,7 +466,7 @@
             "optionName": "选项名称",
             "optionPrice": "选项价格",
             "optionImages": "选项图片（URL，逗号分隔）",
-            "optionInStock": "有货",
+            "optionStockCount": "库存数量",
             "optionAttributesTitle": "属性",
             "optionAttributesEmpty": "暂无属性",
             "optionFeaturesTitle": "选项特性",
@@ -748,6 +748,9 @@
         "loading": "加载中",
         "loaded": "已加载",
         "loadError": "加载个人资料失败。",
+        "noChanges": "没有可保存的更改。",
+        "saveSuccess": "资料已保存。",
+        "saveError": "保存资料失败。",
         "locked": "资料暂不可编辑"
     },
     "fileUpload": {

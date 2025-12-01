@@ -278,7 +278,11 @@ class ProductOptionResponse(BaseModel):
     images: list[str] = Field(default_factory=list)
     rating: float | None = None
     ratingCount: int | None = None
-    inStock: bool = True
+    stockCount: int = Field(
+        default=0,
+        ge=0,
+        description="Available stock count for the option",
+    )
     attributes: list[ProductFeature] = Field(default_factory=list)
     features: list[ProductFeature] = Field(default_factory=list)
 
@@ -421,6 +425,7 @@ def _serialize_option(
     option: Any,
     currency: str | None,
     fallback_images: list[str],
+    fallback_to_product_images: bool = True,
 ) -> ProductOptionResponse:
     """Normalize option structure with prices and features."""
 
@@ -448,14 +453,26 @@ def _serialize_option(
     discount_value = float(raw_discount_value) if raw_discount_value is not None else None
 
     images = getter("images") or []
-    if not images:
+    if fallback_to_product_images and not images:
         images = fallback_images
 
     rating = getter("rating")
     rating_count = getter("rating_count") or getter("ratingCount")
-    in_stock = getter("in_stock") if getter("in_stock") is not None else getter("inStock")
-    if in_stock is None:
-        in_stock = True
+    raw_stock = getter("stock_count") if getter("stock_count") is not None else getter("stockCount")
+    if raw_stock is None:
+        legacy_in_stock = getter("in_stock") if getter("in_stock") is not None else getter("inStock")
+        if legacy_in_stock is None:
+            raw_stock = 1
+        else:
+            raw_stock = 1 if legacy_in_stock else 0
+
+    try:
+        stock_count = int(raw_stock)
+    except (TypeError, ValueError):
+        stock_count = 0
+
+    if stock_count < 0:
+        stock_count = 0
 
     attributes = _normalize_features_output(
         getter("attributes")
@@ -475,7 +492,7 @@ def _serialize_option(
         images=images,
         rating=rating,
         ratingCount=rating_count,
-        inStock=bool(in_stock),
+        stockCount=stock_count,
         attributes=attributes,
         features=features,
     )
@@ -506,7 +523,7 @@ def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
                 "images": fallback_images,
                 "rating": getter("rating"),
                 "rating_count": getter("rating_count"),
-                "in_stock": getter("in_stock"),
+                "stock_count": 1 if getter("in_stock") is not False else 0,
                 "features": getter("features") or [],
             }
         ]
@@ -514,7 +531,12 @@ def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
     options: list[ProductOptionResponse] = []
     for option in raw_options:
         try:
-            normalized = _serialize_option(option, currency=currency, fallback_images=fallback_images)
+            normalized = _serialize_option(
+                option,
+                currency=currency,
+                fallback_images=fallback_images,
+                fallback_to_product_images=False,
+            )
             options.append(normalized)
         except Exception:
             continue
@@ -544,7 +566,7 @@ def serialize_product(product: Product | dict[str, Any]) -> ProductResponse:
         aggregated_rating = rating_sum / rating_total
 
     aggregated_rating_count = rating_total if rating_total else None
-    aggregated_in_stock = any(option.inStock for option in options)
+    aggregated_in_stock = any(option.stockCount > 0 for option in options)
 
     product_id = getter("id") or getter("_id")
 

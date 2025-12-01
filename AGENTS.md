@@ -209,6 +209,13 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - FileUpload usage: pass `fileData` with `type: 'image'` or provide an image URL in `value`; set `width=\"w-full h-full\"` when you need full-height containers alongside form columns.
 - File uploads: On selecting an image, call `/upload/` via the API, use the returned URL in form state, and keep previews in sync for post and profile editors.
 - Inline label rows: For compact inputs (e.g., category, price, login, phone), place the label text inside the input row (left prefix) with the same muted background as the input (bootstrap-style inline add-on, no alternate color), a subtle divider if needed, borderless controls, and pointer-only on interactive elements.
+- **Form components (use these first)**:
+  - Inputs/Textareas: `@/shared/ui/input`, `@/shared/ui/textarea`. Both use muted backgrounds (light/dark) and no borders/shadows; do not wrap with extra borders. Keep placeholders localized. For inline rows keep label + control in the same muted surface.
+  - Selects/Pickers: `@/shared/ui/select` (Radix) with our trigger styling; avoid native `<select>` except inside `InlineSelect` wrappers that mirror the same muted background and custom chevron (as used in product form).
+  - File uploads: `@/shared/ui/file-upload` for single image/avatar; `@/shared/ui/multi-file-upload` for multiple images (products, galleries). Always upload via `/upload/` and store returned URLs in form state.
+  - Rich text: `@/shared/ui/editor` (CKEditor lazy-load wrapper) for WYSIWYG fields; keep placeholders/i18n and honor the light edit surface it applies.
+  - Inline rows: follow the product/profile pattern—muted row, left label segment with divider, borderless controls, pointer cursor on interactive selects/toggles.
+  - Toggles/checkboxes: prefer row-level click targets (as in product form) with 20px checkboxes, rounded corners, and full-row cursor-pointer/hover.
 
 
 

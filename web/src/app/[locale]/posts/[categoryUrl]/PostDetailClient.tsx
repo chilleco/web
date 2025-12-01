@@ -276,6 +276,21 @@ export function PostDetailClient({
                   </div>
                 </div>
 
+                {post.category_data && (
+                  <Link
+                    href={`/posts/${post.category_data.url}`}
+                    className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2 transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:scale-[1.01]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300">
+                        <TagIcon size={16} />
+                      </div>
+                      <div className="text-sm text-muted-foreground">{tPosts('detail.category')}</div>
+                    </div>
+                    <div className="text-sm font-semibold text-foreground">{post.category_data.title}</div>
+                  </Link>
+                )}
+
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
@@ -327,21 +342,6 @@ export function PostDetailClient({
                   </div>
                   <div className="text-sm font-semibold text-foreground">{commentsCount}</div>
                 </div>
-
-                {post.category_data && (
-                  <Link
-                    href={`/posts/${post.category_data.url}`}
-                    className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2 transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:scale-[1.01]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300">
-                        <TagIcon size={16} />
-                      </div>
-                      <div className="text-sm text-muted-foreground">{tPosts('detail.category')}</div>
-                    </div>
-                    <div className="text-sm font-semibold text-foreground">{post.category_data.title}</div>
-                  </Link>
-                )}
               </div>
             </SidebarCard>
 

@@ -478,7 +478,7 @@
             "optionName": "Название опции",
             "optionPrice": "Цена опции",
             "optionImages": "Изображения опции (URL через запятую)",
-            "optionInStock": "В наличии",
+            "optionStockCount": "Количество на складе",
             "optionAttributesTitle": "Параметры",
             "optionAttributesEmpty": "Параметры не добавлены",
             "optionFeaturesTitle": "Особенности опции",
@@ -771,6 +771,9 @@
         "loading": "Загрузка",
         "loaded": "Загружено",
         "loadError": "Не удалось загрузить профиль.",
+        "noChanges": "Нет изменений для сохранения.",
+        "saveSuccess": "Профиль сохранён.",
+        "saveError": "Не удалось сохранить профиль.",
         "locked": "Профиль недоступен для редактирования"
     },
     "fileUpload": {

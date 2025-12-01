@@ -20,11 +20,11 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
   const basePrice = typeof product.priceFrom === 'number' ? product.priceFrom : product.price || 0;
   const finalPrice = typeof product.finalPriceFrom === 'number' ? product.finalPriceFrom : basePrice;
   const hasDiscount = basePrice > 0 && finalPrice < basePrice;
-  const discountPercent = hasDiscount ? Math.round(((basePrice - finalPrice) / basePrice) * 100) : null;
-  const featuresCount = (product.features?.length ?? 0) + (product.options?.[0]?.features?.length ?? 0);
   const optionsCount = product.options?.length ?? 0;
   const currency = product.currency || '';
-  const inStock = product.inStock ?? product.options?.some((option) => option.inStock !== false) ?? true;
+  const inStock = typeof product.inStock === 'boolean'
+    ? product.inStock
+    : (product.options?.some((option) => (option.stockCount ?? 0) > 0) ?? true);
 
   return (
     <EntityRow
@@ -51,12 +51,6 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
         inStock === false ? <Badge key="stock" variant="destructive">{t('statusInactive')}</Badge> : <Badge key="stock" variant="secondary">{t('inStock')}</Badge>,
         product.isNew ? <Badge key="new" variant="success">{t('isNew')}</Badge> : null,
         product.isFeatured ? <Badge key="featured" variant="warning">{t('isFeatured')}</Badge> : null,
-        hasDiscount && discountPercent ? (
-          <Badge key="discount" variant="default">
-            -{discountPercent}%
-          </Badge>
-        ) : null,
-        featuresCount ? <Badge key="features" variant="outline">{t('featuresLabel', { count: featuresCount })}</Badge> : null,
         optionsCount ? <Badge key="options" variant="secondary">{t('optionsLabel', { count: optionsCount })}</Badge> : null,
       ].filter(Boolean)}
       secondRowItems={(() => {
@@ -78,9 +72,6 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
           );
         }
         items.push(`${t('priceFromLabel')}: ${finalPrice} ${currency}`.trim());
-        if (hasDiscount) {
-          items.push(`${t('basePriceLabel')}: ${basePrice} ${currency}`.trim());
-        }
         if (product.category) {
           items.push(`${t('categoryLabel')}: ${product.category}`);
         }

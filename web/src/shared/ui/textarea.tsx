@@ -17,7 +17,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<"tex
       <textarea
         data-slot="textarea"
         className={cn(
-          "placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground bg-muted/50 dark:bg-input/30 flex w-full min-w-0 rounded-[0.75rem] px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus:outline-none active:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-[60px] resize-y",
+          "placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground bg-muted dark:bg-muted flex w-full min-w-0 rounded-[0.75rem] px-3 py-2 text-base shadow-none transition-[color,box-shadow] outline-none focus:outline-none active:outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-[60px] resize-y",
           "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
           className
         )}

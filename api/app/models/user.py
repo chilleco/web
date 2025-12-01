@@ -12,6 +12,13 @@ DEFAULT_BALANCE = 1000
 class UserLocal(Base):
     _name = "users"
 
+    login = Attribute(types=str)
+    name = Attribute(types=str)
+    surname = Attribute(types=str)
+    phone = Attribute(types=int)
+    mail = Attribute(types=str)
+    image = Attribute(types=str)
+
     roles = Attribute(types=list)
 
     step = Attribute(types=int, default=0)

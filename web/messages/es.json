@@ -466,7 +466,7 @@
             "optionName": "Nombre de opción",
             "optionPrice": "Precio de opción",
             "optionImages": "Imágenes de opción (URLs separadas por comas)",
-            "optionInStock": "Disponible",
+            "optionStockCount": "Cantidad en stock",
             "optionAttributesTitle": "Atributos",
             "optionAttributesEmpty": "Sin atributos",
             "optionFeaturesTitle": "Características de opción",
@@ -748,6 +748,9 @@
         "loading": "Cargando",
         "loaded": "Cargado",
         "loadError": "No se pudo cargar el perfil.",
+        "noChanges": "No hay cambios para guardar.",
+        "saveSuccess": "Perfil guardado correctamente.",
+        "saveError": "No se pudo guardar el perfil.",
         "locked": "Perfil bloqueado para edición"
     },
     "fileUpload": {

@@ -53,6 +53,16 @@ function normalizeOption(option: ProductOption): ProductOption {
   const finalPrice = typeof option.finalPrice === 'number'
     ? option.finalPrice
     : calculateFinalPrice(price, discountType, discountValue);
+  const rawStock = (option as any).stockCount ?? (option as any).inStock;
+  let stockCount: number;
+  if (typeof rawStock === 'number') {
+    stockCount = rawStock;
+  } else if (rawStock === false) {
+    stockCount = 0;
+  } else {
+    stockCount = 1;
+  }
+  stockCount = Number.isFinite(stockCount) ? Math.max(0, Math.floor(stockCount)) : 0;
 
   return {
     ...option,
@@ -63,17 +73,33 @@ function normalizeOption(option: ProductOption): ProductOption {
     images: option.images || [],
     attributes: normalizeFeatures(option.attributes),
     features: normalizeFeatures(option.features),
+    stockCount,
   };
 }
 
 function normalizeProduct(product: Product): Product {
   const options = (product.options || []).map(normalizeOption);
+  const fallbackPrice = Math.min(...options.map((option) => option.price || 0), product.price || 0, 0);
   const priceFrom = typeof product.priceFrom === 'number'
     ? product.priceFrom
-    : Math.min(...options.map((option) => option.price || 0), product.price || 0, 0);
+    : fallbackPrice;
   const finalPriceFrom = typeof product.finalPriceFrom === 'number'
     ? product.finalPriceFrom
     : Math.min(...options.map((option) => option.finalPrice || option.price || 0), priceFrom);
+
+  const normalizedOptions = options.length ? options : [{
+    name: 'Default',
+    price: priceFrom,
+    finalPrice: finalPriceFrom,
+    images: product.images || [],
+    attributes: [],
+    features: [],
+    stockCount: 1,
+  }];
+
+  const inStock = typeof product.inStock === 'boolean'
+    ? product.inStock
+    : normalizedOptions.some((option) => (option.stockCount ?? 0) > 0);
 
   return {
     ...product,
@@ -81,14 +107,8 @@ function normalizeProduct(product: Product): Product {
     finalPriceFrom,
     images: product.images || [],
     features: normalizeFeatures(product.features),
-    options: options.length ? options : [{
-      name: 'Default',
-      price: priceFrom,
-      finalPrice: finalPriceFrom,
-      images: product.images || [],
-      attributes: [],
-      features: [],
-    }],
+    options: normalizedOptions,
+    inStock,
   };
 }
 
@@ -148,7 +168,7 @@ function mapProductToApi(payload: ProductSaveRequest) {
       images: option.images ?? [],
       rating: option.rating,
       rating_count: option.ratingCount,
-      in_stock: option.inStock,
+      stock_count: Math.max(0, Math.floor(option.stockCount ?? 0)),
       attributes,
       features: optionFeatures,
     };

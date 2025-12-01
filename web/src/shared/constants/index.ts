@@ -33,8 +33,10 @@ export const API_ENDPOINTS = {
     LOGOUT: '/auth/logout/',
   },
   USERS: {
-    ME: '/users/me/',
-    UPDATE: '/users/me/',
+    GET: '/users/get/',
+    ME: '/users/get/',
+    UPDATE: '/users/save/',
+    SAVE: '/users/save/',
     TOKEN: '/users/token/',
     AUTH: '/users/auth/',
     EXIT: '/users/exit/',

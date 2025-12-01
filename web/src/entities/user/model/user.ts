@@ -1,15 +1,27 @@
 // User entity types and interfaces
 export interface User {
   id: number;
-  login: string;
-  name?: string;
-  surname?: string;
-  title?: string;
-  email?: string;
-  image?: string;
+  login?: string | null;
+  name?: string | null;
+  surname?: string | null;
+  title?: string | null;
+  phone?: string | number | null;
+  mail?: string | null;
+  email?: string | null;
+  image?: string | null;
   created?: number;
   updated?: number;
   status?: number;
+  balance?: number;
+  premium?: boolean;
+  mailing?: boolean;
+  wallet?: string | null;
+  locale?: string | null;
+  roles?: number[] | null;
+  utm?: string | null;
+  referrer?: number | null;
+  frens?: number[] | null;
+  social?: number | null;
 }
 
 export interface UserSettings {
@@ -44,8 +56,13 @@ export interface RegisterRequest {
 }
 
 export interface UpdateProfileRequest {
-  name?: string;
-  surname?: string;
-  email?: string;
-  image?: string;
+  login?: string | null;
+  name?: string | null;
+  surname?: string | null;
+  phone?: string | number | null;
+  mail?: string | null;
+  image?: string | null;
+  locale?: string | null;
+  mailing?: boolean | null;
+  wallet?: string | null;
 }

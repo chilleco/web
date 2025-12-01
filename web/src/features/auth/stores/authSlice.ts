@@ -9,7 +9,7 @@ export interface AuthProfile {
     name?: string | null;
     surname?: string | null;
     title?: string | null;
-    phone?: string | null;
+    phone?: string | number | null;
     mail?: string | null;
     image?: string | null;
     status?: number;

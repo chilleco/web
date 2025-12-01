@@ -478,7 +478,7 @@
             "optionName": "Option name",
             "optionPrice": "Option price",
             "optionImages": "Option images (comma-separated URLs)",
-            "optionInStock": "In stock",
+            "optionStockCount": "Stock count",
             "optionAttributesTitle": "Attributes",
             "optionAttributesEmpty": "No attributes yet",
             "optionFeaturesTitle": "Option features",
@@ -771,6 +771,9 @@
         "loading": "Loading",
         "loaded": "Loaded",
         "loadError": "Failed to load profile data.",
+        "noChanges": "Nothing to save yet.",
+        "saveSuccess": "Profile saved successfully.",
+        "saveError": "Failed to save profile.",
         "locked": "Profile locked"
     },
     "fileUpload": {

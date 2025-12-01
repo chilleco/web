@@ -466,7 +466,7 @@
             "optionName": "اسم الخيار",
             "optionPrice": "سعر الخيار",
             "optionImages": "صور الخيار (روابط مفصولة بفواصل)",
-            "optionInStock": "متوفر",
+            "optionStockCount": "الكمية في المخزون",
             "optionAttributesTitle": "السمات",
             "optionAttributesEmpty": "لا توجد سمات",
             "optionFeaturesTitle": "ميزات الخيار",
@@ -748,6 +748,9 @@
         "loading": "جارٍ التحميل",
         "loaded": "تم التحميل",
         "loadError": "فشل تحميل الملف الشخصي.",
+        "noChanges": "لا توجد تغييرات للحفظ.",
+        "saveSuccess": "تم حفظ الملف الشخصي بنجاح.",
+        "saveError": "فشل حفظ الملف الشخصي.",
         "locked": "الملف الشخصي غير قابل للتعديل حاليًا"
     },
     "fileUpload": {

@@ -1,88 +1,160 @@
-# from copy import deepcopy
+"""
+Update editable user profile fields stored in the local overlay.
+"""
 
-# from fastapi import APIRouter, Body, Request, Depends
-# from pydantic import BaseModel
-# from consys.errors import ErrorAccess
+from typing import Any
 
-# from models.track import Track
-# from services.auth import sign
+from fastapi import APIRouter, Body, Request
+from pydantic import BaseModel, ConfigDict, Field
+from consys.errors import ErrorAccess, ErrorInvalid, ErrorWrong
 
-
-# router = APIRouter()
-
-
-# class Type(BaseModel):
-#     login: str = None
-#     password: str = None
-#     image: str = None
-#     name: str = None
-#     surname: str = None
-#     phone: str = None
-#     mail: str = None
-#     social: list[dict] = None
-#     description: str = None
-#     locale: str = None
-#     mailing: dict = None
+from models.user import DEFAULT_BALANCE, User, UserLocal
 
 
-# @router.post("/save/")
-# async def handler(
-#     request: Request,
-#     data: Type = Body(...),
-#     user=Depends(sign),
-# ):
-#     """Save personal information"""
+router = APIRouter()
 
-#     # No access
-#     if user.status < 3:
-#         raise ErrorAccess("save")
 
-#     # Change fields
-#     # TODO: Fix exceptions on bad fields
+class SaveUserRequest(BaseModel):
+    login: str | None = Field(
+        None,
+        description="Preferred login/username",
+        examples=["jdoe"],
+    )
+    name: str | None = Field(
+        None,
+        description="First name",
+        examples=["John"],
+    )
+    surname: str | None = Field(
+        None,
+        description="Last name",
+        examples=["Doe"],
+    )
+    phone: int | str | None = Field(
+        None,
+        description="Phone number in international format (digits only)",
+        examples=["79998887766"],
+    )
+    mail: str | None = Field(
+        None,
+        description="Email address",
+        examples=["user@example.com"],
+    )
+    image: str | None = Field(
+        None,
+        description="Avatar image URL",
+        examples=["https://cdn.example.com/avatar.png"],
+    )
+    locale: str | None = Field(
+        None,
+        description="Preferred locale code",
+        examples=["en"],
+    )
+    mailing: bool | None = Field(
+        None,
+        description="Marketing mailing opt-in flag",
+        examples=[True],
+    )
+    wallet: str | None = Field(
+        None,
+        description="Wallet identifier",
+        examples=["0x123"],
+    )
 
-#     user.login = data.login
-#     user.password = data.password
-#     user.image = data.image
-#     user.name = data.name
-#     user.surname = data.surname
 
-#     phone_old = deepcopy(user.phone)
-#     user.phone = data.phone
-#     if phone_old != user.phone:
-#         user.phone_verified = False
+class UserPayload(BaseModel):
+    model_config = ConfigDict(extra="allow")
 
-#     user.mail = data.mail
-#     user.social = data.social  # TODO: checking
-#     user.description = data.description
-#     user.locale = data.locale
+    id: int
+    login: str | None = None
+    name: str | None = None
+    surname: str | None = None
+    phone: int | None = None
+    mail: str | None = None
+    image: str | None = None
+    locale: str | None = None
+    mailing: bool | None = None
+    wallet: str | None = None
+    status: int | None = None
+    balance: int | None = None
+    premium: bool | None = None
+    roles: list[int] | None = None
 
-#     user.mailing = data.mailing
 
-#     # Action tracking
-#     Track(
-#         title="acc_save",
-#         data={"fields": [k for k, v in data.dict().items() if v is not None]},
-#         user=user.id,
-#         token=request.state.token,
-#         ip=request.state.ip,
-#     ).save()
+class SaveUserResponse(BaseModel):
+    user: UserPayload
 
-#     # Save
-#     user.save()
 
-#     # Processing
-#     ## Avatar
-#     image = None
-#     if data.image != user.image:
-#         image = user.image
+def _merge_local_data(base: dict[str, Any], local: dict[str, Any]) -> dict[str, Any]:
+    """Apply non-empty local fields over the base user payload."""
+    filtered_local = {key: value for key, value in local.items() if value is not None}
+    return {**base, **filtered_local}
 
-#     ## Phone
-#     phone = None
-#     if phone_old != user.phone:
-#         phone = user.phone
 
-#     # Response
-#     return {
-#         "image": image,
-#         "phone": phone,
-#     }
+def _normalize_phone(phone: str | int | None) -> int | None:
+    """Keep only digits; return None for empty input, raise for invalid."""
+    if phone is None:
+        return None
+
+    phone_str = str(phone)
+    digits = "".join(ch for ch in phone_str if ch.isdigit())
+    if not digits:
+        raise ErrorInvalid("phone")
+
+    return int(digits)
+
+
+@router.post("/save/", response_model=SaveUserResponse)
+async def handler(
+    request: Request,
+    data: SaveUserRequest = Body(...),
+):
+    """Persist profile fields to the UserLocal overlay."""
+
+    if request.state.status < 3 or not request.state.user:
+        raise ErrorAccess("save")
+
+    try:
+        user_local = UserLocal.get(request.state.user)
+        created = False
+    except ErrorWrong:
+        user_local = UserLocal(
+            id=request.state.user,
+            balance=DEFAULT_BALANCE,
+        )
+        created = True
+
+    payload = data.model_dump(exclude_unset=True)
+
+    if "phone" in payload:
+        phone_raw = payload["phone"]
+        if isinstance(phone_raw, str) and phone_raw.strip() == "":
+            payload["phone"] = None
+        else:
+            payload["phone"] = _normalize_phone(phone_raw)
+
+    for field, value in payload.items():
+        setattr(user_local, field, value)
+
+    if created or payload:
+        user_local.save()
+
+    user_data = await User.complex(
+        token=request.state.token,
+        id=request.state.user,
+    )
+
+    if isinstance(user_data, str):
+        raise ErrorInvalid("user")
+
+    if isinstance(user_data, list):
+        user_data = user_data[0] if user_data else {}
+
+    if not isinstance(user_data, dict):
+        raise ErrorInvalid("user")
+
+    merged_user = _merge_local_data(user_data, user_local.json())
+
+    return {
+        "user": merged_user,
+    }

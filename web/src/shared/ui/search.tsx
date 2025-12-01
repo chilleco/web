@@ -182,9 +182,9 @@ export function Search({
       <div 
         className={cn(
           // Unified container with 1rem border-radius, no borders
-          'bg-background rounded-[1rem]',
+          'bg-card text-card-foreground rounded-[1rem]',
           // Card-style shadow and hover effects
-          'shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]',
+          'shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] dark:shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.25)]',
           'transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)]',
           'hover:scale-[1.01]',
           'flex items-center overflow-hidden', // Remove individual borders between elements
@@ -202,7 +202,7 @@ export function Search({
             onKeyPress={handleKeyPress}
             placeholder={placeholder || t('placeholder')}
             className={cn(
-              'border-0 bg-transparent shadow-none pl-4 pr-10 focus:ring-0 focus:ring-offset-0 rounded-none h-full',
+              'border-0 bg-transparent dark:bg-transparent shadow-none pl-4 pr-10 focus:ring-0 focus:ring-offset-0 rounded-none h-full',
               'focus:outline-none focus:ring-0'
             )}
             disabled={loading}

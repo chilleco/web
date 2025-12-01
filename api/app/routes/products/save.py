@@ -5,7 +5,7 @@ The creating and editing method of the product object of the API
 from typing import Any, Literal
 
 from fastapi import APIRouter, Body, HTTPException, Request
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, AliasChoices
 from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
@@ -121,10 +121,12 @@ class ProductOptionPayload(BaseModel):
         description="Number of ratings for this option",
         examples=[234],
     )
-    in_stock: bool = Field(
-        default=True,
-        description="Is the option available for purchase",
-        examples=[True],
+    stock_count: int = Field(
+        default=0,
+        ge=0,
+        description="Available stock count for the option",
+        examples=[10],
+        validation_alias=AliasChoices("stock_count", "stockCount"),
     )
     attributes: list[ProductFeature] = Field(
         default_factory=list,
@@ -192,7 +194,7 @@ def _prepare_option_for_storage(option: ProductOptionPayload) -> dict[str, Any]:
         "images": option.images or [],
         "rating": option.rating,
         "rating_count": option.rating_count,
-        "in_stock": option.in_stock,
+        "stock_count": max(int(option.stock_count or 0), 0),
         "attributes": _prepare_features_for_storage(option.attributes),
         "features": _prepare_features_for_storage(option.features),
     }
@@ -235,7 +237,7 @@ async def handler(
 
     aggregated_rating = rating_sum / rating_total if rating_total else None
     aggregated_rating_count = rating_total if rating_total else None
-    aggregated_in_stock = any(option.get("in_stock") for option in prepared_options)
+    aggregated_in_stock = any((option.get("stock_count") or 0) > 0 for option in prepared_options)
 
     product.title = data.title
     product.description = data.description
