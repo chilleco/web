@@ -301,7 +301,8 @@
         "remove": "Удалить",
         "update": "Обновить",
         "saving": "Сохраняем...",
-        "cancel": "Отмена"
+        "cancel": "Отмена",
+        "none": "Нет"
     },
     "brand": {
         "name": "web",
@@ -462,13 +463,18 @@
             "publishedAt": "Опубликовано",
             "updatedAt": "Обновлено",
             "views": "Просмотры",
+            "readTimeLabel": "Время чтения",
+            "readTimeValue": "{minutes} мин",
             "readTime": "{minutes} мин чтения",
             "author": "Автор",
             "category": "Категория",
             "related": "Похожие записи",
             "actions": {
-                "hide": "Скрыть"
-            }
+                "hide": "Скрыть",
+                "editDescription": "Обновите содержимое поста и сохраните изменения.",
+                "deleteConfirm": "Удалить «{title}»?"
+            },
+            "view": "Просмотр"
         }
     },
     "categories": {

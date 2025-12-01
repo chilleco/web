@@ -200,6 +200,12 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Second-row items**: Pass an array of React nodes/strings; they auto-join with dots (same pattern as categories admin).
 - **Reuse**: Products, posts, categories admin lists must reuse EntityRow instead of custom row markup.
 
+##### Edit mode layout rule
+- Post editing screens must follow the in-place layout: full-width title input (placeholder shows the field name), then a row with image upload on the left and locale + category pickers plus description on the right (picker labels inline with values), and a large WYSIWYG/text area beneath. Inputs should present labels inline with values as in the reference design.
+- Picker/input styling: Selects/inputs used in edit mode must share the same muted background style as textareas/main inputs, without borders, and show a pointer cursor on hover.
+- Picker font rule: Picker inputs must use the same font weight/size/color styling as other inputs and place the key label inline with the value; hover must show pointer.
+- FileUpload usage: pass `fileData` with `type: 'image'` or provide an image URL in `value`; set `width=\"w-full h-full\"` when you need full-height containers alongside form columns.
+
 ## Development Workflow
 1. **Make plan of changing**: Explain the plan (brief)
 2. **Update objects**: Define models + DB migrations.

@@ -293,7 +293,15 @@
         "refund": "Reembolso",
         "main": "Principal",
         "menu": "Menú",
-        "close": "Cerrar"
+        "close": "Cerrar",
+        "add": "Añadir",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "remove": "Eliminar",
+        "update": "Actualizar",
+        "saving": "Guardando...",
+        "cancel": "Cancelar",
+        "none": "Ninguna"
     },
     "brand": {
         "name": "web",
@@ -405,13 +413,18 @@
             "publishedAt": "Publicado",
             "updatedAt": "Actualizado",
             "views": "Vistas",
+            "readTimeLabel": "Tiempo de lectura",
+            "readTimeValue": "{minutes} min",
             "readTime": "{minutes} min de lectura",
             "author": "Autor",
             "category": "Categoría",
             "related": "Publicaciones relacionadas",
             "actions": {
-                "hide": "Ocultar"
-            }
+                "hide": "Ocultar",
+                "editDescription": "Actualiza el contenido de la publicación y guarda los cambios.",
+                "deleteConfirm": "¿Eliminar \"{title}\"?"
+            },
+            "view": "Vista previa"
         }
     },
     "categories": {

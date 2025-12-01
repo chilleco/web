@@ -301,7 +301,8 @@
         "remove": "Remove",
         "update": "Update",
         "saving": "Saving...",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "none": "None"
     },
     "brand": {
         "name": "web",
@@ -462,13 +463,18 @@
             "publishedAt": "Published",
             "updatedAt": "Updated",
             "views": "Views",
+            "readTimeLabel": "Reading time",
+            "readTimeValue": "{minutes} min",
             "readTime": "{minutes} min read",
             "author": "Author",
             "category": "Category",
             "related": "Related posts",
             "actions": {
-                "hide": "Hide"
-            }
+                "hide": "Hide",
+                "editDescription": "Update post content and save changes.",
+                "deleteConfirm": "Delete \"{title}\"?"
+            },
+            "view": "View"
         }
     },
     "categories": {

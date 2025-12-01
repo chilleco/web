@@ -287,11 +287,11 @@ export function FileUpload({
 
   const hasFile = Boolean(value || fileData);
   const useFullHeight = width.includes('h-full');
-  const containerHeight = useFullHeight ? '' : `h-[${height}px]`;
+  const containerHeight = useFullHeight ? 'h-full' : `h-[${height}px]`;
   const accept = getAcceptAttribute(fileTypes);
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('space-y-2 h-full', className)}>
       {/* Label */}
       {label && <Label>{label}</Label>}
 

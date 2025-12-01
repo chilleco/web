@@ -293,7 +293,15 @@
         "refund": "退款",
         "main": "主要",
         "menu": "菜单",
-        "close": "关闭"
+        "close": "关闭",
+        "add": "添加",
+        "edit": "编辑",
+        "delete": "删除",
+        "remove": "移除",
+        "update": "更新",
+        "saving": "保存中...",
+        "cancel": "取消",
+        "none": "无"
     },
     "brand": {
         "name": "web",
@@ -405,13 +413,18 @@
             "publishedAt": "发布时间",
             "updatedAt": "更新于",
             "views": "浏览",
+            "readTimeLabel": "阅读时间",
+            "readTimeValue": "{minutes} 分钟",
             "readTime": "{minutes} 分钟阅读",
             "author": "作者",
             "category": "分类",
             "related": "相关文章",
             "actions": {
-                "hide": "隐藏"
-            }
+                "hide": "隐藏",
+                "editDescription": "更新文章内容并保存更改。",
+                "deleteConfirm": "删除“{title}”？"
+            },
+            "view": "预览"
         }
     },
     "categories": {

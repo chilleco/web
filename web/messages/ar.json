@@ -293,7 +293,15 @@
         "refund": "استرداد الأموال",
         "main": "الرئيسية",
         "menu": "القائمة",
-        "close": "إغلاق"
+        "close": "إغلاق",
+        "add": "إضافة",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "remove": "إزالة",
+        "update": "تحديث",
+        "saving": "جارٍ الحفظ...",
+        "cancel": "إلغاء",
+        "none": "لا يوجد"
     },
     "brand": {
         "name": "web",
@@ -405,13 +413,18 @@
             "publishedAt": "تاريخ النشر",
             "updatedAt": "تم التحديث",
             "views": "المشاهدات",
+            "readTimeLabel": "وقت القراءة",
+            "readTimeValue": "{minutes} دقيقة",
             "readTime": "{minutes} دقيقة قراءة",
             "author": "الكاتب",
             "category": "الفئة",
             "related": "منشورات ذات صلة",
             "actions": {
-                "hide": "إخفاء"
-            }
+                "hide": "إخفاء",
+                "editDescription": "قم بتحديث محتوى المنشور وحفظ التغييرات.",
+                "deleteConfirm": "حذف \"{title}\"؟"
+            },
+            "view": "عرض"
         }
     },
     "categories": {
