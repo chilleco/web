@@ -1,25 +1,10 @@
 # ========================================
-# Dependencies Stage - Install packages
+# Builder Stage - Build the application
 # ========================================
-FROM node:24.6-alpine AS deps
+FROM node:24-alpine AS builder
 
 # Install system dependencies for node-gyp
 RUN apk add --no-cache libc6-compat
-
-# Set working directory
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install production dependencies using lock file
-RUN npm ci --omit=dev --no-audit --no-fund && \
-    npm cache clean --force
-
-# ========================================
-# Builder Stage - Build the application
-# ========================================
-FROM node:24.6-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -28,8 +13,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install ALL dependencies for building (including dev dependencies)
-RUN npm ci --no-audit --no-fund && \
-    npm cache clean --force
+RUN npm ci --no-audit --no-fund
 
 # Copy source code
 COPY . .
@@ -38,13 +22,13 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-# Build the application
-RUN npm run build
+# Build the application and strip dev dependencies for runtime
+RUN npm run build && npm prune --omit=dev
 
 # ========================================
 # Development Stage - Development runtime with hot reload
 # ========================================
-FROM node:24.6-alpine AS development
+FROM node:24-alpine AS development
 
 # Install system dependencies
 RUN apk add --no-cache libc6-compat
@@ -71,7 +55,7 @@ CMD ["npm", "run", "dev"]
 # ========================================
 # Runner Stage - Production runtime
 # ========================================
-FROM node:24.6-alpine AS runner
+FROM node:24-alpine AS runner
 
 # Install runtime dependencies
 RUN apk add --no-cache \
@@ -90,7 +74,7 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000
 
 # Copy production dependencies only
-COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Copy built application from builder
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./

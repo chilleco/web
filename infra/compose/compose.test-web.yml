@@ -1,6 +1,6 @@
 services:
   test:
-    image: node:20.15.0
+    image: node:24
     build: ../../web
     volumes:
       - ../../web:/app

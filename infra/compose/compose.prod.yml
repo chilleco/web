@@ -55,4 +55,4 @@ services:
       target: runner
     ports:
       - ${WEB_PORT}:3000
-    command: bash -c "npm run build && npm start"
+    command: ["npm", "start"]
