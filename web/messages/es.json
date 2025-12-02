@@ -281,6 +281,8 @@
         "users": "Usuarios",
         "success": "Éxito",
         "error": "Error",
+        "server_error": "Error del servidor",
+        "server_error_description": "Ocurrió un problema en el servidor. Intenta nuevamente o actualiza la página.",
         "now": "ahora mismo",
         "no_access": "Sin acceso",
         "saved": "Guardado",

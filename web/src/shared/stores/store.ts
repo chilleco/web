@@ -48,12 +48,6 @@ const authPersistConfig = {
     storage,
 }
 
-// Persist configuration for space selection
-const spaceSelectionPersistConfig = {
-    key: 'spaceSelection',
-    storage,
-}
-
 // Create persisted reducers
 const persistedCounterReducer = persistReducer(counterPersistConfig, counterSlice.reducer)
 const persistedUserSettingsReducer = persistReducer(userSettingsPersistConfig, userSettingsSlice.reducer)
@@ -61,7 +55,6 @@ const persistedCartReducer = persistReducer(cartPersistConfig, cartSlice.reducer
 const persistedFavoritesReducer = persistReducer(favoritesPersistConfig, favoritesSlice.reducer)
 const persistedSessionReducer = persistReducer(sessionPersistConfig, sessionSlice.reducer)
 const persistedAuthReducer = persistReducer(authPersistConfig, authSlice.reducer)
-const persistedSpaceSelectionReducer = persistReducer(spaceSelectionPersistConfig, spaceSelectionSlice.reducer)
 
 // Root reducer
 const rootReducer = combineReducers({
@@ -71,7 +64,8 @@ const rootReducer = combineReducers({
     favorites: persistedFavoritesReducer,
     session: persistedSessionReducer,
     auth: persistedAuthReducer,
-    spaceSelection: persistedSpaceSelectionReducer,
+    // spaceSelection uses its own localStorage handling inside the slice
+    spaceSelection: spaceSelectionSlice.reducer,
     toast: toastSlice.reducer, // Toast doesn't need persistence
 })
 

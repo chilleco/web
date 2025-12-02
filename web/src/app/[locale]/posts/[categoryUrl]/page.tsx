@@ -16,6 +16,7 @@ import {
   generateBreadcrumbStructuredData
 } from '@/entities/category';
 import { getPosts, getPost, Post } from '@/entities/post';
+import { ApiError } from '@/shared/services/api/client';
 import { PostsIcon } from '@/shared/ui/icons';
 import { BreadcrumbDescription } from '@/shared/ui/breadcrumb-description';
 import { PostDetailClient } from './PostDetailClient';
@@ -299,7 +300,10 @@ function CategoryContent({
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { locale, categoryUrl } = await params;
-  const tNavigation = await getTranslations('navigation');
+  const [tNavigation, tSystem] = await Promise.all([
+    getTranslations('navigation'),
+    getTranslations('system')
+  ]);
 
   const category = await getCategoryByUrlCached(categoryUrl, locale);
   if (category) {
@@ -309,7 +313,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   const postId = extractPostIdFromSlug(categoryUrl);
   if (!postId) {
     return {
-      title: 'Post Not Found'
+      title: tSystem('server_error')
     };
   }
 
@@ -317,10 +321,12 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     const post = await getPostCached(postId);
     return buildPostMetadata(post, locale);
   } catch (error) {
-    console.error('Failed to build post metadata', error);
-    return {
-      title: 'Post Not Found'
-    };
+    if (error instanceof ApiError && error.status === 404) {
+      return {
+        title: tSystem('server_error')
+      };
+    }
+    throw error;
   }
 }
 
@@ -353,13 +359,15 @@ export default async function CategoryOrPostPage({ params, searchParams }: Categ
     notFound();
   }
 
-  const post = await getPostCached(postId).catch((error) => {
-    console.error('Failed to load post', error);
-    return null;
-  });
+  let post: Post | null = null;
 
-  if (!post) {
-    notFound();
+  try {
+    post = await getPostCached(postId);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      notFound();
+    }
+    throw error;
   }
 
   const relatedPosts = await loadRelatedPosts(post, locale);

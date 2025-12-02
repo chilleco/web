@@ -24,15 +24,19 @@ export function SpacesSelector({ userId, onCreated, onSelect }: SpacesSelectorPr
   const pathname = usePathname();
   const { success, error: showError } = useToastActions();
   const dispatch = useAppDispatch();
+  const activeSpaceLink = useMemo(() => {
+    const match = pathname?.match(/\/spaces\/([^/?]+)/);
+    const link = match ? match[1] : null;
+    if (link && (link.includes('[') || link.includes(']'))) {
+      return null;
+    }
+    return link;
+  }, [pathname]);
   const selectedState = useAppSelector(selectSelectedSpace);
-  const selectedLink = selectedState?.link ?? '__none__';
+  const selectedLink = selectedState?.link ?? activeSpaceLink ?? '__none__';
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
-  const activeSpaceLink = useMemo(() => {
-    const match = pathname?.match(/\/spaces\/([^/?]+)/);
-    return match ? match[1] : null;
-  }, [pathname]);
   const fetchKeyRef = useRef<string | null>(null);
 
   const loadSpaces = useCallback(async () => {
@@ -56,6 +60,23 @@ export function SpacesSelector({ userId, onCreated, onSelect }: SpacesSelectorPr
     fetchKeyRef.current = fetchKey;
     void loadSpaces();
   }, [loadSpaces, userId]);
+
+  useEffect(() => {
+    if (!selectedState?.link || !spaces.length) return;
+    const matchingSpace = spaces.find((item) => item.link === selectedState.link);
+    if (!matchingSpace) return;
+
+    const normalizedMargin =
+      typeof matchingSpace.margin === 'number'
+        ? matchingSpace.margin
+        : matchingSpace.margin === null
+          ? null
+          : undefined;
+
+    if (selectedState.margin !== normalizedMargin) {
+      dispatch(setSelectedSpace({ link: selectedState.link, margin: normalizedMargin }));
+    }
+  }, [dispatch, selectedState?.link, selectedState?.margin, spaces]);
 
   useEffect(() => {
     if (activeSpaceLink && activeSpaceLink !== selectedState?.link) {

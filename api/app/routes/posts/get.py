@@ -82,15 +82,18 @@ async def handler(
         def handle(post):
             # Add category info
             if post.get("category"):
-                category_ids = get("category_ids")
-                post["category_data"] = category_ids.get(post["category"]).json(
-                    fields={"id", "url", "title"},
-                )
-                post["category_data"]["parents"] = [
-                    category_ids[parent].json(fields={"id", "url", "title"})
-                    for parent in get("category_parents", {}).get(post["category"], [])
-                    if parent in category_ids
-                ]
+                category_ids = get("category_ids") or {}
+                category = category_ids.get(post["category"])
+                if category:
+                    post["category_data"] = category.json(
+                        fields={"id", "url", "title"},
+                    )
+                    parents_map = get("category_parents") or {}
+                    post["category_data"]["parents"] = [
+                        category_ids[parent].json(fields={"id", "url", "title"})
+                        for parent in parents_map.get(post["category"], [])
+                        if parent in category_ids
+                    ]
 
             # Author
             # FIXME: get via core API
