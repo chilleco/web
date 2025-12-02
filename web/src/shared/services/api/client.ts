@@ -11,9 +11,7 @@ const getApiBaseUrl = () => {
     // Server-side rendering (SSR) - use internal Docker network without /api/ prefix
     // (nginx strips /api/ prefix when forwarding to backend)
     if (typeof window === 'undefined') {
-        return process.env.API_BASE_URL
-            || process.env.NEXT_PUBLIC_API
-            || 'http://api:5000/';
+        return process.env.NEXT_PUBLIC_API || 'http://api:5000/';
     }
     // Client-side rendering (CSR) - use public URL through nginx proxy
     const envBaseUrl = process.env.NEXT_PUBLIC_API;
@@ -30,7 +28,7 @@ const getApiBaseUrl = () => {
     return 'http://localhost/api/';
 };
 
-export const API_BASE_URL = getApiBaseUrl();
+const apiBaseUrl = getApiBaseUrl();
 
 export class ApiError extends Error {
     constructor(
@@ -78,7 +76,7 @@ export async function apiClient<T = unknown>(
     } = options;
 
     // Build URL with query parameters for GET requests
-    let url = `${API_BASE_URL.replace(/\/$/, '')}${endpoint}`;
+    let url = `${apiBaseUrl.replace(/\/$/, '')}${endpoint}`;
     if (params && method === 'GET') {
         const searchParams = new URLSearchParams();
         Object.entries(params).forEach(([key, value]) => {

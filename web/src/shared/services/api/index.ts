@@ -4,7 +4,7 @@
  */
 
 // Export the main API client
-export { api, apiClient, ApiError, API_BASE_URL } from './client';
+export { api, apiClient, ApiError } from './client';
 export type { ApiRequestOptions, ApiResponse } from './client';
 
 // Export authentication functions

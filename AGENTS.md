@@ -9,6 +9,8 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 
 ## Environments
 - `.env` defines `MODE`: LOCAL / TEST / DEV / PRE / PROD; loaded in `api/`, `web/`, and `tg/` containers. Copy `base.env` → `.env`; merge `prod.env` values for production.
+- Use `NEXT_PUBLIC_API` for all API base URLs (SSR/CSR); do not add separate `API_BASE_URL` variables.
+- Detect environment via `NEXT_PUBLIC_MODE` (mirrors `MODE`).
 - Web stack builds use Node 24 (Docker + compose test) and Next 16/React 19; keep local runtime and `@types/node` aligned when bumping.
 
 ## Golden Rules of coding & editing
