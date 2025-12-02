@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run frontend lint autofix before commit
+npm --prefix web run lint:fix

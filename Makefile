@@ -105,6 +105,12 @@ lint:
 		--rcfile=tests/.pylintrc \
 		--msg-template='{path}:{line}:{column}: [{symbol}] {msg}'
 
+lint-web:
+	cd web && npm run lint
+
+lint-web-fix:
+	cd web && npm run lint:fix
+
 unit-test:
 	pytest -s tests/
 

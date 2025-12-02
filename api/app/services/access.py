@@ -2,12 +2,24 @@
 Check access by token
 """
 
+from typing import Any
+
 import jwt
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from consys.errors import ErrorInvalid
 
 from lib import report
+
+
+def _normalize_status(raw_status: Any) -> int:
+    """Return a safe integer status, defaulting to authorized user level."""
+    if raw_status is None:
+        return 3
+    try:
+        return int(raw_status)
+    except (TypeError, ValueError):
+        return 3
 
 
 async def jwt_auth(jwt_secret, token):
@@ -19,7 +31,7 @@ async def jwt_auth(jwt_secret, token):
     return (
         token["token"],
         token.get("user", 0),
-        token.get("status", 3),
+        _normalize_status(token.get("status", 3)),
         token.get("network", 0),
     )
 

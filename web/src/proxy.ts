@@ -5,7 +5,7 @@ import { routing } from './i18n/routing';
 const authRequiredPaths = ['/profile', '/billing', '/settings'];
 const moderatorPaths = ['/admin', '/analytics'];
 
-const intlMiddleware = createMiddleware({
+const intlProxy = createMiddleware({
     ...routing,
     localeDetection: true,
     alternateLinks: false,
@@ -40,8 +40,8 @@ function getStatusFromJwt(token?: string | null): number | null {
     }
 }
 
-export function middleware(request: NextRequest) {
-    const response = intlMiddleware(request);
+export default function proxy(request: NextRequest) {
+    const response = intlProxy(request);
     const pathname = stripLocale(request.nextUrl.pathname);
 
     const authCookie = request.cookies.get('Authorization')?.value || request.cookies.get('authToken')?.value;

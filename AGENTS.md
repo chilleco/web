@@ -239,9 +239,12 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 6. **Frontend Implementation**: Build frontend components/pages; verify styling/locales/themes/access/mobile.
 7. **Frontend Tests**: Add frontend tests.
 8. **Run tests and linters**: Avoid extra layers unless justified.
+9. **Frontend prod parity**: Before merging, rerun frontend lint/build and fix all prod build errors (typed routes, lint violations). Ensure `npm run build` (or CI web-check job) passes without errors.
 
 ## Commands
 - Frontend (`web/`): `npm install`; `npm run dev`; `npm run build`; `npm run start`; `npm run lint`.
+- New lint helpers: `make lint-web` (check) and `make lint-web-fix` (auto-fix) run from repo root.
+- Pre-commit hook: husky runs `npm --prefix web run lint:fix`; run `npm install` in `web/` (or `npm run prepare`) to ensure hooks are installed if missing.
 - Stack (repo root): `make up` / `make up-dev` / `make down`; logs via `make logs-local`.
 - Tests: `make test` for API + web in compose; `make test-api` or `make test-web` individually.
 

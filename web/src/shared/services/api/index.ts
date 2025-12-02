@@ -4,15 +4,13 @@
  */
 
 // Export the main API client
-export { api, apiClient, ApiError } from './client';
+export { api, apiClient, ApiError, API_BASE_URL } from './client';
 export type { ApiRequestOptions, ApiResponse } from './client';
 
 // Export authentication functions
 export * from './auth';
 
 // Common API utilities
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API || 'http://api:5000/';
-
 /**
  * Health check endpoint
  */
