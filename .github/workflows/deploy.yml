@@ -32,6 +32,7 @@ jobs:
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH }}
+          command_timeout: 30m
           script: |
             echo "Pulling new version"
             if [ -d ~/web ];
