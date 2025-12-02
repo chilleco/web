@@ -4,44 +4,44 @@ version = "1.0.0"
 requires-python = ">=3.10,<3.15"
 dependencies = [
     # App
-    "libdev==0.95",
-    "fastapi==0.121.3",
-    "httptools==0.6.0",  # NOTE: for routing
-    "uvicorn==0.32.0",
-    "PyJWT==2.8.0",
-    "python-multipart==0.0.6",  # NOTE: for file upload
-    "slowapi==0.1.8",
+    "libdev==0.97",
+    "fastapi==0.123.0",
+    "httptools==0.7.1",  # NOTE: for routing
+    "uvicorn==0.38.0",
+    "PyJWT==2.10.1",
+    "python-multipart==0.0.20",  # NOTE: for file upload
+    "slowapi==0.1.9",
 
     # Jobs
-    "dramatiq==1.17.1",
-    "APScheduler==3.11.0",
+    "dramatiq==2.0.0",
+    "APScheduler==3.11.1",
 
     # Users
-    "userhub==0.14",
+    "userhub==0.15",
 
     # DB
-    "consys==0.43",
+    "consys==0.44",
 
     # MQ
-    "redis==4.6.0",
+    "redis==7.1.0",
 
     # Sockets
-    "python-socketio==5.8.0",
-    "websockets==11.0.3",  # NOTE: for Socket.IO
+    "python-socketio==5.15.0",
+    "websockets==15.0.1",  # NOTE: for Socket.IO
 
     # Monitoring
-    "prometheus_fastapi_instrumentator==6.1.0",
+    "prometheus_fastapi_instrumentator==7.1.0",
 
     # Telegram
-    "aiogram==2.25.1",
+    "aiogram==3.22.0",
 
     # Reports
-    "tgreports==0.17",
+    "tgreports==0.19.0",
 
     # Docs
-    "google-auth==2.36.0",
+    "google-auth==2.43.0",
     "pygsheets==2.0.6",
-    "pandas==2.2.3",
+    "pandas==2.3.3",
 
     # # SMS
     # "smsc==0.1.1",

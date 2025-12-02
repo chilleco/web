@@ -18,7 +18,13 @@ Copy this file into `docs/` of any project that integrates the `userhub` PyPI pa
 ```bash
 pip install userhub
 ```
-Requires Python 3.7–3.11. Runtime dependencies: `libdev` and `consys` (pulled automatically).
+Requires Python 3.8+ (ready for 3.14). Runtime dependencies: `libdev` and `consys` (pulled automatically).
+
+### Development setup
+```bash
+pip install -e .[dev]
+```
+Uses `pyproject.toml` (PEP 621) for all metadata and dependencies; no `requirements.txt`.
 
 ## Core Endpoints Used
 - `POST https://chill.services/api/account/proj/` – authenticate a user and mint/refresh a token.

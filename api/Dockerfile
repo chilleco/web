@@ -1,7 +1,7 @@
 # ========================================
 # Builder Stage - Install dependencies
 # ========================================
-FROM python:3.11-slim AS builder
+FROM python:3.13-slim AS builder
 
 # Install system dependencies needed for building
 RUN apt-get update && apt-get install -y \
@@ -39,7 +39,7 @@ RUN if [ -f uv.lock ]; then \
 # ========================================
 # Final Stage - Runtime image
 # ========================================
-FROM python:3.11-slim AS final
+FROM python:3.13-slim AS final
 
 # Install only runtime dependencies
 RUN apt-get update && apt-get install -y \

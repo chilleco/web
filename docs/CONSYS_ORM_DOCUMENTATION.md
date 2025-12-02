@@ -12,9 +12,18 @@ This document explains how to use the `consys` package as the base object model 
 pip install consys
 ```
 
+- Requires Python 3.10+ (tested through 3.13; ready for 3.14).
 - Requires a reachable MongoDB instance (default port `27017`).
 - The ORM talks directly to MongoDB via `pymongo`. Create your collections manually or let MongoDB create them on first write; migrations are not part of ConSys.
 - Keep one `Base = make_base(...)` per database; subclasses of that `Base` map to collections.
+
+Local development (from a cloned repo):
+
+```bash
+python -m pip install -e .[dev]
+```
+
+That installs the runtime package plus lint/test/release tooling via the `dev` extra; packaging is done with `python -m build`.
 
 ## Creating the Base Class
 
