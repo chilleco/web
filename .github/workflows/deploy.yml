@@ -63,4 +63,4 @@ jobs:
             cp ~/.secrets/web.env ~/web/.env
 
             echo "Starting new version"
-            make run
+            make up-prod
