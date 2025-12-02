@@ -305,12 +305,19 @@
         "update": "تحديث",
         "loading": "جارٍ التحميل",
         "saving": "جارٍ الحفظ...",
+        "refresh": "تحديث",
         "cancel": "إلغاء",
         "none": "لا يوجد",
         "yes": "نعم",
         "no": "لا",
         "share": "مشاركة",
         "shareUnavailable": "المشاركة غير متاحة على هذا الجهاز"
+    },
+    "entities": {
+        "ooo": "شركة ذات مسؤولية محدودة",
+        "ip": "مالك منفرد",
+        "fl": "فرد",
+        "smz": "عمل حر"
     },
     "brand": {
         "name": "web",
@@ -357,57 +364,43 @@
     },
     "spaces": {
         "form": {
-            "titlePlaceholder": "Space title",
-            "logo": "Logo",
-            "logoPlaceholder": "Upload a logo",
-            "entity": "Entity",
-            "entityPlaceholder": "Select entity type",
-            "director": "Director",
-            "directorPlaceholder": "Director full name",
-            "inn": "INN",
-            "innPlaceholder": "Tax ID",
-            "margin": "Margin, %",
-            "marginPlaceholder": "Enter margin percentage",
-            "descriptionPlaceholder": "Description for partners",
-            "phonePlaceholder": "Phone",
-            "mailPlaceholder": "Email",
-            "telegramPlaceholder": "Telegram link",
-            "countryPlaceholder": "Country",
-            "region": "Region",
-            "regionPlaceholder": "Region / State",
-            "city": "City",
-            "cityPlaceholder": "City",
-            "logoUploaded": "Logo uploaded",
-            "saved": "Space saved",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            }
+            "titlePlaceholder": "اسم المساحة",
+            "logo": "الشعار",
+            "logoPlaceholder": "ارفع الشعار",
+            "entity": "الكيان",
+            "entityPlaceholder": "اختر نوع الكيان",
+            "director": "المدير",
+            "directorPlaceholder": "اسم المدير الكامل",
+            "inn": "الرقم الضريبي",
+            "innPlaceholder": "الرقم الضريبي",
+            "margin": "هامش",
+            "marginPlaceholder": "أدخل نسبة الهامش",
+            "descriptionPlaceholder": "وصف للشركاء",
+            "contactTitle": "بيانات التواصل",
+            "phonePlaceholder": "هاتف",
+            "mailPlaceholder": "بريد إلكتروني",
+            "telegramPlaceholder": "رابط تيليغرام",
+            "countryPlaceholder": "الدولة",
+            "region": "المنطقة",
+            "regionPlaceholder": "المنطقة / الولاية",
+            "city": "المدينة",
+            "cityPlaceholder": "المدينة",
+            "logoUploaded": "تم رفع الشعار",
+            "saved": "تم حفظ المساحة"
         },
         "selector": {
-            "title": "Spaces",
-            "refresh": "Refresh",
-            "create": "Create space",
-            "defaultTitle": "New space",
-            "loading": "Loading spaces...",
-            "placeholder": "Select space",
-            "empty": "No attached spaces yet",
-            "created": "\"{title}\" created",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            }
+            "title": "مساحات",
+            "create": "إنشاء مساحة",
+            "defaultTitle": "مساحة جديدة",
+            "noSpace": "بدون مساحة",
+            "placeholder": "اختر مساحة",
+            "empty": "لا توجد مساحات مرتبطة بعد",
+            "created": "\"{title}\" تم إنشاؤها"
         },
         "page": {
-            "title": "Space",
-            "description": "Manage company info, contacts, and pricing margin.",
-            "loading": "Loading space...",
-            "refresh": "Refresh",
-            "notFound": "Space not found"
+            "title": "مساحة",
+            "description": "إدارة بيانات الشركة ووسائل التواصل والهامش.",
+            "notFound": "المساحة غير موجودة"
         }
     },
     "admin": {
@@ -534,30 +527,24 @@
             "priceFromPreview": "السعر الأساسي من: {value} {currency}"
         },
         "spaces": {
-            "title": "Spaces",
-            "description": "Manage partner spaces, invites, and contact details",
-            "defaultTitle": "New space",
-            "loading": "Loading spaces...",
-            "empty": "No spaces yet",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            },
+            "title": "مساحات",
+            "description": "إدارة مساحات الشركاء والدعوات وبيانات التواصل",
+            "defaultTitle": "مساحة جديدة",
+            "loading": "جارٍ تحميل المساحات...",
+            "empty": "لا توجد مساحات بعد",
             "fields": {
-                "marginBadge": "+{value} margin"
+                "marginBadge": "+{value} هامش"
             },
             "actions": {
-                "edit": "Edit",
-                "delete": "Delete",
-                "createSuccess": "\"{title}\" created",
-                "deleteConfirm": "Delete \"{title}\"?",
-                "deleteSuccess": "\"{title}\" deleted"
+                "edit": "تعديل",
+                "delete": "حذف",
+                "createSuccess": "\"{title}\" تم إنشاؤه",
+                "deleteConfirm": "حذف \"{title}\"؟",
+                "deleteSuccess": "\"{title}\" تم حذفه"
             },
             "errors": {
-                "load": "Failed to load spaces",
-                "delete": "Failed to delete space"
+                "load": "فشل تحميل المساحات",
+                "delete": "فشل حذف المساحة"
             }
         }
     },

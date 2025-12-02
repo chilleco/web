@@ -20,6 +20,8 @@ class SpaceSaveRequest(BaseModel):
 
     id: int | None = Field(None, description="Space id for updating", example=3)
     link: str | None = Field(None, description="Space link for updating", example="a1b2c")
+    # Allow passing id when only link is known on the FE
+    space_id: int | None = Field(None, description="Space id alias", example=3)
     title: str | None = Field(None, description="Space title", example="Partner network")
     logo: str | None = Field(None, description="Logo URL", example="https://example.com/logo.png")
     description: str | None = Field(None, description="Description", example="Regional partners")
@@ -56,8 +58,9 @@ class SpaceSaveResponse(BaseModel):
 
 
 def _get_space_for_update(data: SpaceSaveRequest) -> Space:
-    if data.id:
-        return Space.get(data.id)
+    target_id = data.id or data.space_id
+    if target_id:
+        return Space.get(target_id)
     if data.link:
         return Space.get(link=data.link)
     raise ErrorWrong("space")

@@ -306,12 +306,19 @@
         "update": "Update",
         "loading": "Loading",
         "saving": "Saving...",
+        "refresh": "Refresh",
         "cancel": "Cancel",
         "none": "None",
         "yes": "Yes",
         "no": "No",
         "share": "Share",
         "shareUnavailable": "Sharing is not available on this device"
+    },
+    "entities": {
+        "ooo": "LLC",
+        "ip": "Sole proprietor",
+        "fl": "Individual",
+        "smz": "Self-employed"
     },
     "brand": {
         "name": "web",
@@ -367,9 +374,10 @@
             "directorPlaceholder": "Director full name",
             "inn": "INN",
             "innPlaceholder": "Tax ID",
-            "margin": "Margin, %",
+            "margin": "Margin",
             "marginPlaceholder": "Enter margin percentage",
             "descriptionPlaceholder": "Description for partners",
+            "contactTitle": "Contacts",
             "phonePlaceholder": "Phone",
             "mailPlaceholder": "Email",
             "telegramPlaceholder": "Telegram link",
@@ -379,35 +387,20 @@
             "city": "City",
             "cityPlaceholder": "City",
             "logoUploaded": "Logo uploaded",
-            "saved": "Space saved",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            }
+            "saved": "Space saved"
         },
         "selector": {
             "title": "Spaces",
-            "refresh": "Refresh",
             "create": "Create space",
             "defaultTitle": "New space",
-            "loading": "Loading spaces...",
+            "noSpace": "No space",
             "placeholder": "Select space",
             "empty": "No attached spaces yet",
-            "created": "\"{title}\" created",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            }
+            "created": "\"{title}\" created"
         },
         "page": {
             "title": "Space",
             "description": "Manage company info, contacts, and pricing margin.",
-            "loading": "Loading space...",
-            "refresh": "Refresh",
             "notFound": "Space not found"
         }
     },

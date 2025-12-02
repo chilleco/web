@@ -306,12 +306,19 @@
         "update": "Обновить",
         "loading": "Загрузка",
         "saving": "Сохраняем...",
+        "refresh": "Обновить",
         "cancel": "Отмена",
         "none": "Нет",
         "yes": "Да",
         "no": "Нет",
         "share": "Поделиться",
         "shareUnavailable": "Поделиться недоступно на этом устройстве"
+    },
+    "entities": {
+        "ooo": "ООО",
+        "ip": "ИП",
+        "fl": "ФЛ",
+        "smz": "Самозанятый"
     },
     "brand": {
         "name": "web",
@@ -367,9 +374,10 @@
             "directorPlaceholder": "ФИО директора",
             "inn": "ИНН",
             "innPlaceholder": "ИНН",
-            "margin": "Наценка, %",
+            "margin": "Наценка",
             "marginPlaceholder": "Введите наценку",
             "descriptionPlaceholder": "Описание для партнеров",
+            "contactTitle": "Контакты",
             "phonePlaceholder": "Телефон",
             "mailPlaceholder": "Email",
             "telegramPlaceholder": "Ссылка на Telegram",
@@ -379,35 +387,20 @@
             "city": "Город",
             "cityPlaceholder": "Город",
             "logoUploaded": "Логотип загружен",
-            "saved": "Пространство сохранено",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            }
+            "saved": "Пространство сохранено"
         },
         "selector": {
             "title": "Пространства",
-            "refresh": "Обновить",
             "create": "Создать пространство",
             "defaultTitle": "Новое пространство",
-            "loading": "Загрузка пространств...",
+            "noSpace": "Без пространства",
             "placeholder": "Выберите пространство",
             "empty": "Пока нет пространств",
-            "created": "\"{title}\" создано",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            }
+            "created": "\"{title}\" создано"
         },
         "page": {
             "title": "Пространство",
             "description": "Управляйте данными компании и наценкой.",
-            "loading": "Загрузка пространства...",
-            "refresh": "Обновить",
             "notFound": "Пространство не найдено"
         }
     },

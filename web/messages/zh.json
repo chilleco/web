@@ -305,12 +305,19 @@
         "update": "更新",
         "loading": "加载中",
         "saving": "保存中...",
+        "refresh": "刷新",
         "cancel": "取消",
         "none": "无",
         "yes": "是",
         "no": "否",
         "share": "分享",
         "shareUnavailable": "此设备不支持分享"
+    },
+    "entities": {
+        "ooo": "有限责任公司",
+        "ip": "个体工商户",
+        "fl": "个人",
+        "smz": "自由职业"
     },
     "brand": {
         "name": "web",
@@ -357,57 +364,43 @@
     },
     "spaces": {
         "form": {
-            "titlePlaceholder": "Space title",
+            "titlePlaceholder": "空间名称",
             "logo": "Logo",
-            "logoPlaceholder": "Upload a logo",
-            "entity": "Entity",
-            "entityPlaceholder": "Select entity type",
-            "director": "Director",
-            "directorPlaceholder": "Director full name",
-            "inn": "INN",
-            "innPlaceholder": "Tax ID",
-            "margin": "Margin, %",
-            "marginPlaceholder": "Enter margin percentage",
-            "descriptionPlaceholder": "Description for partners",
-            "phonePlaceholder": "Phone",
-            "mailPlaceholder": "Email",
-            "telegramPlaceholder": "Telegram link",
-            "countryPlaceholder": "Country",
-            "region": "Region",
-            "regionPlaceholder": "Region / State",
-            "city": "City",
-            "cityPlaceholder": "City",
-            "logoUploaded": "Logo uploaded",
-            "saved": "Space saved",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            }
+            "logoPlaceholder": "上传 Logo",
+            "entity": "公司类型",
+            "entityPlaceholder": "选择公司类型",
+            "director": "负责人",
+            "directorPlaceholder": "负责人全名",
+            "inn": "纳税人号",
+            "innPlaceholder": "纳税号",
+            "margin": "加价",
+            "marginPlaceholder": "输入加价百分比",
+            "descriptionPlaceholder": "给合作伙伴的描述",
+            "contactTitle": "联系方式",
+            "phonePlaceholder": "电话",
+            "mailPlaceholder": "邮箱",
+            "telegramPlaceholder": "Telegram 链接",
+            "countryPlaceholder": "国家",
+            "region": "地区",
+            "regionPlaceholder": "地区 / 省份",
+            "city": "城市",
+            "cityPlaceholder": "城市",
+            "logoUploaded": "Logo 已上传",
+            "saved": "空间已保存"
         },
         "selector": {
-            "title": "Spaces",
-            "refresh": "Refresh",
-            "create": "Create space",
-            "defaultTitle": "New space",
-            "loading": "Loading spaces...",
-            "placeholder": "Select space",
-            "empty": "No attached spaces yet",
-            "created": "\"{title}\" created",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            }
+            "title": "空间",
+            "create": "创建空间",
+            "defaultTitle": "新空间",
+            "noSpace": "不选择空间",
+            "placeholder": "选择空间",
+            "empty": "暂无关联空间",
+            "created": "\"{title}\" 已创建"
         },
         "page": {
-            "title": "Space",
-            "description": "Manage company info, contacts, and pricing margin.",
-            "loading": "Loading space...",
-            "refresh": "Refresh",
-            "notFound": "Space not found"
+            "title": "空间",
+            "description": "管理公司信息、联系方式和加价。",
+            "notFound": "未找到空间"
         }
     },
     "admin": {
@@ -534,30 +527,24 @@
             "priceFromPreview": "基础价格：{value} {currency}"
         },
         "spaces": {
-            "title": "Spaces",
-            "description": "Manage partner spaces, invites, and contact details",
-            "defaultTitle": "New space",
-            "loading": "Loading spaces...",
-            "empty": "No spaces yet",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            },
+            "title": "空间",
+            "description": "管理合作空间、邀请和联系方式",
+            "defaultTitle": "新空间",
+            "loading": "正在加载空间...",
+            "empty": "暂无空间",
             "fields": {
-                "marginBadge": "+{value} margin"
+                "marginBadge": "+{value} 加价"
             },
             "actions": {
-                "edit": "Edit",
-                "delete": "Delete",
-                "createSuccess": "\"{title}\" created",
-                "deleteConfirm": "Delete \"{title}\"?",
-                "deleteSuccess": "\"{title}\" deleted"
+                "edit": "编辑",
+                "delete": "删除",
+                "createSuccess": "\"{title}\" 已创建",
+                "deleteConfirm": "删除“{title}”？",
+                "deleteSuccess": "\"{title}\" 已删除"
             },
             "errors": {
-                "load": "Failed to load spaces",
-                "delete": "Failed to delete space"
+                "load": "加载空间失败",
+                "delete": "删除空间失败"
             }
         }
     },

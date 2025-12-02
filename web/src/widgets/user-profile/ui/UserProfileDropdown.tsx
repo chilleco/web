@@ -39,6 +39,7 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const user = useAppSelector(selectAuthUser);
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const userName = useMemo(() => {
         if (!user) return t('guest');
@@ -104,7 +105,7 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
 
     return (
         <>
-            <DropdownMenu>
+            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="outline"
@@ -136,7 +137,10 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
                     </div>
                     <DropdownMenuSeparator />
                     <div className="px-2 py-2">
-                        <SpacesSelector userId={user?.id} />
+                        <SpacesSelector
+                            userId={user?.id}
+                            onSelect={() => setMenuOpen(false)}
+                        />
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleProfileClick} className="cursor-pointer">

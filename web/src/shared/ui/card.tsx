@@ -183,11 +183,11 @@ function Pricing({ price, basePrice, currency = '$', className, pricePrefix }: P
     <div className={cn('flex items-center gap-2', className)}>
       {pricePrefix && <span className="text-sm text-muted-foreground">{pricePrefix}</span>}
       <span className="text-lg font-bold">
-        {currency}{price.toFixed(2)}
+        {currency}{Math.round(price)}
       </span>
       {hasDiscount && (
         <span className="text-sm text-muted-foreground line-through">
-          {currency}{basePrice?.toFixed(2)}
+          {currency}{basePrice !== undefined ? Math.round(basePrice) : ''}
         </span>
       )}
     </div>

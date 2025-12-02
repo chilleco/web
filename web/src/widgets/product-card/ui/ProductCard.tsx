@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
 import { ShoppingIcon, TagIcon, TrendingIcon, StarIcon, ReviewsIcon } from '@/shared/ui/icons';
 import { Product, ProductFeature } from '@/entities/product';
+import { useAppSelector } from '@/shared/stores/store';
+import { selectSelectedSpace } from '@/features/spaces/stores/spaceSelectionSlice';
 
 interface ProductCardProps {
     product: Product;
@@ -18,8 +20,16 @@ interface ProductCardProps {
 export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart = false, isInFavorites = false }: ProductCardProps) {
     const t = useTranslations('catalog.product');
     const tSystem = useTranslations('system');
-    const priceFrom = typeof product.priceFrom === 'number' ? product.priceFrom : product.price || 0;
-    const finalPrice = typeof product.finalPriceFrom === 'number' ? product.finalPriceFrom : priceFrom;
+    const selectedSpace = useAppSelector(selectSelectedSpace);
+    const rawPriceFrom = typeof product.priceFrom === 'number' ? product.priceFrom : product.price || 0;
+    const rawFinalPrice = typeof product.finalPriceFrom === 'number' ? product.finalPriceFrom : rawPriceFrom;
+    const marginFactor = useMemo(() => {
+        const margin = selectedSpace?.margin ?? 0;
+        return 1 + Math.max(0, margin) / 100;
+    }, [selectedSpace?.margin]);
+    const priceFrom = Math.round(rawPriceFrom * marginFactor);
+    const discountFactor = rawPriceFrom > 0 ? rawFinalPrice / rawPriceFrom : 1;
+    const finalPrice = Math.round(priceFrom * discountFactor);
     const primaryOption = product.options?.[0];
     const pricePrefix = product.options?.length ? t('priceFrom') : undefined;
     const inStock = typeof product.inStock === 'boolean'

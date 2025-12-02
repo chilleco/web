@@ -5,9 +5,10 @@ import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/shared/ui/page-header';
 import { Box } from '@/shared/ui/box';
 import { IconButton } from '@/shared/ui/icon-button';
-import { BuildingIcon, RefreshIcon } from '@/shared/ui/icons';
+import { ButtonGroup } from '@/shared/ui/button-group';
+import { BuildingIcon, RefreshIcon, DeleteIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
-import { getSpaceByLink, type Space } from '@/entities/space';
+import { deleteSpace, getSpaceByLink, type Space } from '@/entities/space';
 import { SpaceForm } from '@/features/spaces';
 
 interface SpacePageClientProps {
@@ -17,9 +18,10 @@ interface SpacePageClientProps {
 export function SpacePageClient({ link }: SpacePageClientProps) {
   const t = useTranslations('spaces.page');
   const tSystem = useTranslations('system');
-  const { error: showError } = useToastActions();
+  const { error: showError, success: showSuccess } = useToastActions();
   const [space, setSpace] = useState<Space | null>(null);
   const [loading, setLoading] = useState(true);
+  const [removing, setRemoving] = useState(false);
   const fetchKeyRef = useRef<string | null>(null);
 
   const loadSpace = useCallback(async () => {
@@ -51,21 +53,46 @@ export function SpacePageClient({ link }: SpacePageClientProps) {
         title={space?.title || t('title')}
         description={t('description')}
         actions={
-          <IconButton
-            icon={<RefreshIcon size={14} />}
-            variant="ghost"
-            onClick={loadSpace}
-            responsive
-          >
-            {t('refresh')}
-          </IconButton>
+          <ButtonGroup>
+            <IconButton
+              icon={<RefreshIcon size={14} />}
+              variant="ghost"
+              onClick={loadSpace}
+              responsive
+            >
+              {tSystem('refresh')}
+            </IconButton>
+            {space ? (
+              <IconButton
+                icon={<DeleteIcon size={14} />}
+                variant="destructive"
+                onClick={async () => {
+                  if (removing) return;
+                  setRemoving(true);
+                  try {
+                    await deleteSpace(space.id);
+                    setSpace(null);
+                    showSuccess(tSystem('deleted'));
+                  } catch (err) {
+                    const message = err instanceof Error ? err.message : tSystem('error');
+                    showError(message);
+                  } finally {
+                    setRemoving(false);
+                  }
+                }}
+                responsive
+              >
+                {tSystem('delete')}
+              </IconButton>
+            ) : null}
+          </ButtonGroup>
         }
       />
 
       <Box>
         {loading ? (
           <div className="flex items-center justify-center py-10 text-muted-foreground">
-            {t('loading')}
+            {tSystem('loading')}
           </div>
         ) : space ? (
           <SpaceForm space={space} onSaved={setSpace} />

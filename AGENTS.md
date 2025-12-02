@@ -17,14 +17,20 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Cursor pointer everywhere**: All clickable elements/blocks/links/pickers/sliders must explicitly set `cursor-pointer` for clear affordance
 - **No duplicate API calls**: guard client-side fetch effects with stable fetch keys/in-flight refs so Strict Mode doesn’t trigger the same request multiple times (one request per dataset)
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
+- **Shared translations first**: Use existing `system.*` translation keys for shared labels (loading, refresh, common actions) instead of introducing feature-specific duplicates; migrate simple words from feature scopes to `system.*` when touching those areas.
+  - When adding new locale strings, ensure non-English locales are translated (avoid copy-pasting English into `ru`/`es`/`ar`/`zh`).
+- **Unit suffixes**: Show measurement units using right-side labels/suffix segments on inputs (e.g., %, kg, cm); keep left labels clean.
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
 - **Reuse cards/items**: Always reuse existing card/item components for repeated contexts (landing listings, related/recommended blocks, similar products, etc.)—e.g., use the shared PostCard for any post teasers (landing, related posts) and the shared product card for similar products instead of creating new variants.
 - **Follow FSD Architecture**: respect Feature-Sliced Design layers and import rules
 - **Never hard-code secrets** or credentials; never read or write `.env`, `secrets/`, or CI secrets
 - **Ask before destructive or external actions** (network, DB migrations, Docker, `git push`, etc.)
 - **Files & Paths Not To Touch**: `.env*`, `secrets/**`.
-- **Common i18n**: Reuse common system translations for generic actions (Add, Save, Update, Edit, Delete/Remove, Cancel, etc.) instead of creating duplicated or feature-scoped keys.
-- Common choices (Yes/No and similar simple words) must use the shared `system` locale keys (`system.yes`, `system.no`) instead of feature-scoped duplicates.
+- **Translation rules**:
+  - Reuse common system translations for generic actions (Add, Save, Update, Edit, Delete/Remove, Cancel, Refresh, Loading, etc.) instead of creating duplicated or feature-scoped keys.
+  - Common choices (Yes/No and similar simple words) must use the shared `system` locale keys (`system.yes`, `system.no`) instead of feature-scoped duplicates.
+  - Non-English locales must be properly translated (no English copy/paste for `ru`/`es`/`ar`/`zh`); add missing keys to all locales together.
+  - Centralize reusable option labels (e.g., entity forms/types) under shared namespaces rather than duplicating in feature scopes.
 - **API routing objects**: When calling backend routes, use the existing typed API helpers and common endpoints (`/posts/get|save|rm`, `/categories/get|save|rm`, `/products/get|save|rm`, etc.) instead of ad-hoc URLs or duplicated schemas.
 
 ### Validation Checklist
@@ -217,6 +223,8 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
   - File uploads: `@/shared/ui/file-upload` for single image/avatar; `@/shared/ui/multi-file-upload` for multiple images (products, galleries). Always upload via `/upload/` and store returned URLs in form state.
   - Rich text: `@/shared/ui/editor` (CKEditor lazy-load wrapper) for WYSIWYG fields; keep placeholders/i18n and honor the light edit surface it applies.
   - Inline rows: follow the product/profile pattern—muted row, left label segment with divider, borderless controls, pointer cursor on interactive selects/toggles.
+  - Units: keep measurement units (%, kg, cm, etc.) as right-side suffixes inside the input row; do not mix units into the left labels.
+  - Grouped fields: when fields are tightly related (e.g., name+surname, country+region+city), group them into a single inline row on desktop with shared muted background/dividers and stack vertically on mobile.
   - Toggles/checkboxes: prefer row-level click targets (as in product form) with 20px checkboxes, rounded corners, and full-row cursor-pointer/hover.
 
 

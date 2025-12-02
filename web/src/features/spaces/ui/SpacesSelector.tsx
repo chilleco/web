@@ -2,26 +2,37 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/routing';
+import { usePathname, useRouter } from '@/i18n/routing';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
-import { BuildingIcon } from '@/shared/ui/icons';
+import { BuildingIcon, AddIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { getSpaces, saveSpace, type Space } from '@/entities/space';
+import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
+import { selectSelectedSpace, setSelectedSpace } from '../stores/spaceSelectionSlice';
 
 interface SpacesSelectorProps {
   userId?: number;
   onCreated?: (space: Space) => void;
+  onSelect?: () => void;
 }
 
-export function SpacesSelector({ userId, onCreated }: SpacesSelectorProps) {
+export function SpacesSelector({ userId, onCreated, onSelect }: SpacesSelectorProps) {
   const t = useTranslations('spaces.selector');
   const tSystem = useTranslations('system');
+  const tEntities = useTranslations('entities');
   const router = useRouter();
+  const pathname = usePathname();
   const { success, error: showError } = useToastActions();
+  const dispatch = useAppDispatch();
+  const selectedState = useAppSelector(selectSelectedSpace);
+  const selectedLink = selectedState?.link ?? '__none__';
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
-  const [selectedLink, setSelectedLink] = useState<string>('');
+  const activeSpaceLink = useMemo(() => {
+    const match = pathname?.match(/\/spaces\/([^/?]+)/);
+    return match ? match[1] : null;
+  }, [pathname]);
   const fetchKeyRef = useRef<string | null>(null);
 
   const loadSpaces = useCallback(async () => {
@@ -30,16 +41,13 @@ export function SpacesSelector({ userId, onCreated }: SpacesSelectorProps) {
     try {
       const response = await getSpaces({ attached: true });
       setSpaces(response.spaces);
-      if (response.spaces.length && !selectedLink) {
-        setSelectedLink(response.spaces[0].link);
-      }
     } catch (err) {
       const message = err instanceof Error ? err.message : tSystem('error');
       showError(message);
     } finally {
       setLoading(false);
     }
-  }, [selectedLink, showError, tSystem, userId]);
+  }, [showError, tSystem, userId]);
 
   useEffect(() => {
     if (!userId) return;
@@ -49,14 +57,20 @@ export function SpacesSelector({ userId, onCreated }: SpacesSelectorProps) {
     void loadSpaces();
   }, [loadSpaces, userId]);
 
+  useEffect(() => {
+    if (activeSpaceLink && activeSpaceLink !== selectedState?.link) {
+      dispatch(setSelectedSpace({ link: activeSpaceLink }));
+    }
+  }, [activeSpaceLink, dispatch, selectedState?.link]);
+
   const entityLabels = useMemo(
     () => ({
-      ooo: t('entities.ooo'),
-      ip: t('entities.ip'),
-      fl: t('entities.fl'),
-      smz: t('entities.smz')
+      ooo: tEntities('ooo'),
+      ip: tEntities('ip'),
+      fl: tEntities('fl'),
+      smz: tEntities('smz'),
     }),
-    [t]
+    [tEntities]
   );
 
   const handleCreateSpace = async () => {
@@ -66,10 +80,11 @@ export function SpacesSelector({ userId, onCreated }: SpacesSelectorProps) {
       const response = await saveSpace({ title: t('defaultTitle') });
       const newSpace = response.space;
       setSpaces((prev) => [newSpace, ...prev]);
-      setSelectedLink(newSpace.link);
+      dispatch(setSelectedSpace({ link: newSpace.link, margin: newSpace.margin }));
       success(t('created', { title: newSpace.title }));
       onCreated?.(newSpace);
       router.push(`/spaces/${newSpace.link}?edit=1`);
+      onSelect?.();
     } catch (err) {
       const message = err instanceof Error ? err.message : tSystem('error');
       showError(message);
@@ -83,8 +98,18 @@ export function SpacesSelector({ userId, onCreated }: SpacesSelectorProps) {
       void handleCreateSpace();
       return;
     }
-    setSelectedLink(link);
-    router.push(`/spaces/${link}`);
+    if (link === '__none__') {
+      dispatch(setSelectedSpace(null));
+      onSelect?.();
+      return;
+    }
+
+    const pickedSpace = spaces.find((item) => item.link === link);
+    dispatch(setSelectedSpace({ link, margin: pickedSpace?.margin }));
+    if (link) {
+      router.push(`/spaces/${link}`);
+      onSelect?.();
+    }
   };
 
   if (!userId) return null;
@@ -103,17 +128,20 @@ export function SpacesSelector({ userId, onCreated }: SpacesSelectorProps) {
       <div className="flex items-center gap-3">
         <div className="flex-1">
           <Select
-            value={selectedLink || undefined}
+            value={selectedLink}
             onValueChange={handleSelectSpace}
             disabled={loading}
           >
             <SelectTrigger className="h-11 rounded-[0.75rem] bg-muted border-0 px-3 cursor-pointer focus:ring-0 focus:outline-none">
-              <SelectValue placeholder={loading ? t('loading') : t('placeholder')} />
+              <SelectValue placeholder={loading ? tSystem('loading') : t('placeholder')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__create__" className="cursor-pointer">
-                {t('create')}
+              <SelectItem value="__none__" className="cursor-pointer">
+                {t('noSpace')}
               </SelectItem>
+              <div role="separator" className="px-2 py-1">
+                <div className="h-px w-full bg-border" />
+              </div>
               {spaces.map((space) => (
                 <SelectItem
                   key={space.id}
@@ -130,6 +158,17 @@ export function SpacesSelector({ userId, onCreated }: SpacesSelectorProps) {
                   </div>
                 </SelectItem>
               ))}
+              <div role="separator" className="px-2 py-1">
+                <div className="h-px w-full bg-border" />
+              </div>
+              <SelectItem value="__create__" className="cursor-pointer pl-8">
+                <div className="relative flex items-center gap-2">
+                  <span className="absolute left-[-22px] flex items-center justify-center">
+                    <AddIcon size={14} />
+                  </span>
+                  <span className="pl-3">{t('create')}</span>
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

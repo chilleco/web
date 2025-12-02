@@ -17,8 +17,8 @@ class Product(Base):
 
     title = Attribute(types=str)
     description = Attribute(types=str, default="")
-    images = Attribute(types=list, default=list)
-    price = Attribute(types=float, default=0.0)
+    images = Attribute(types=list)
+    price = Attribute(types=float)
     discount_type = Attribute(types=str)
     discount_value = Attribute(types=float)
     currency = Attribute(types=str, default="$")

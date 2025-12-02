@@ -25,6 +25,8 @@ const inlineRowClass =
   'flex h-12 items-center rounded-[0.75rem] bg-muted text-base text-foreground overflow-hidden';
 const inlineLabelClass =
   'h-full px-3 flex items-center justify-center border-r border-border/60 bg-muted text-muted-foreground';
+const inlineSuffixClass =
+  'h-full px-3 flex items-center justify-center border-l border-border/60 bg-muted text-muted-foreground';
 const inlineInputClass =
   'bg-muted border-0 text-base text-foreground rounded-none shadow-none focus:ring-0 focus:outline-none h-full w-full placeholder:text-muted-foreground';
 
@@ -109,14 +111,15 @@ export function SpaceForm({ space, onSaved, onCancel }: SpaceFormProps) {
     );
   }, [space]);
 
+  const tEntities = useTranslations('entities');
   const entityOptions = useMemo(
     () => [
-      { value: 'ooo', label: t('entities.ooo') },
-      { value: 'ip', label: t('entities.ip') },
-      { value: 'fl', label: t('entities.fl') },
-      { value: 'smz', label: t('entities.smz') }
+      { value: 'ooo', label: tEntities('ooo') },
+      { value: 'ip', label: tEntities('ip') },
+      { value: 'fl', label: tEntities('fl') },
+      { value: 'smz', label: tEntities('smz') }
     ],
-    [t]
+    [tEntities]
   );
 
   const handleChange = <K extends keyof SpaceFormState>(key: K, value: SpaceFormState[K]) => {
@@ -184,9 +187,6 @@ export function SpaceForm({ space, onSaved, onCancel }: SpaceFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className={inlineRowClass}>
-        <span className={inlineLabelClass}>
-          <BuildingIcon size={14} className="text-muted-foreground" />
-        </span>
         <Input
           value={form.title}
           onChange={(event) => handleChange('title', event.target.value)}
@@ -263,14 +263,19 @@ export function SpaceForm({ space, onSaved, onCancel }: SpaceFormProps) {
           <div className={inlineRowClass}>
             <span className={inlineLabelClass}>{t('margin')}</span>
             <Input
-              type="number"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               min={0}
-              step="0.1"
               value={form.margin}
-              onChange={(event) => handleChange('margin', event.target.value)}
+              onChange={(event) => {
+                const next = event.target.value.replace(/[^0-9]/g, '');
+                handleChange('margin', next);
+              }}
               placeholder={t('marginPlaceholder')}
               className={inlineInputClass}
             />
+            <span className={inlineSuffixClass}>%</span>
           </div>
 
           <Textarea
@@ -282,70 +287,75 @@ export function SpaceForm({ space, onSaved, onCancel }: SpaceFormProps) {
         </div>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-        <div className={inlineRowClass}>
-          <span className={inlineLabelClass}>
-            <PhoneIcon size={14} className="text-muted-foreground" />
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <span className="flex h-8 w-8 items-center justify-center rounded-[0.75rem] bg-muted">
+            <MailIcon size={14} />
           </span>
-          <Input
-            value={form.phone}
-            onChange={(event) => handleChange('phone', event.target.value)}
-            placeholder={t('phonePlaceholder')}
-            className={inlineInputClass}
-          />
+          <span>{t('contactTitle')}</span>
         </div>
-        <div className={inlineRowClass}>
-          <span className={inlineLabelClass}>
-            <MailIcon size={14} className="text-muted-foreground" />
-          </span>
-          <Input
-            value={form.mail}
-            onChange={(event) => handleChange('mail', event.target.value)}
-            placeholder={t('mailPlaceholder')}
-            className={inlineInputClass}
-          />
-        </div>
-        <div className={inlineRowClass}>
-          <span className={inlineLabelClass}>
-            <TelegramIcon size={14} className="text-muted-foreground" />
-          </span>
-          <Input
-            value={form.telegram}
-            onChange={(event) => handleChange('telegram', event.target.value)}
-            placeholder={t('telegramPlaceholder')}
-            className={inlineInputClass}
-          />
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <div className={inlineRowClass}>
+            <span className={inlineLabelClass}>
+              <PhoneIcon size={14} className="text-muted-foreground" />
+            </span>
+            <Input
+              value={form.phone}
+              onChange={(event) => handleChange('phone', event.target.value)}
+              placeholder={t('phonePlaceholder')}
+              className={inlineInputClass}
+            />
+          </div>
+          <div className={inlineRowClass}>
+            <span className={inlineLabelClass}>
+              <MailIcon size={14} className="text-muted-foreground" />
+            </span>
+            <Input
+              value={form.mail}
+              onChange={(event) => handleChange('mail', event.target.value)}
+              placeholder={t('mailPlaceholder')}
+              className={inlineInputClass}
+            />
+          </div>
+          <div className={inlineRowClass}>
+            <span className={inlineLabelClass}>
+              <TelegramIcon size={14} className="text-muted-foreground" />
+            </span>
+            <Input
+              value={form.telegram}
+              onChange={(event) => handleChange('telegram', event.target.value)}
+              placeholder={t('telegramPlaceholder')}
+              className={inlineInputClass}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <div className={inlineRowClass}>
-          <span className={inlineLabelClass}>
-            <LocationIcon size={14} className="text-muted-foreground" />
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <span className="flex h-8 w-8 items-center justify-center rounded-[0.75rem] bg-muted">
+            <LocationIcon size={14} />
           </span>
+          <span>{t('region')}</span>
+        </div>
+        <div className="flex flex-col gap-2 md:flex-row md:gap-0 md:h-12 md:items-stretch md:rounded-[0.75rem] md:bg-muted md:overflow-hidden">
           <Input
             value={form.country}
             onChange={(event) => handleChange('country', event.target.value)}
             placeholder={t('countryPlaceholder')}
-            className={inlineInputClass}
+            className="bg-muted border-0 rounded-[0.75rem] shadow-none focus:ring-0 focus:outline-none h-12 md:h-full md:rounded-none md:placeholder:text-muted-foreground md:border-r md:border-border/60"
           />
-        </div>
-        <div className={inlineRowClass}>
-          <span className={inlineLabelClass}>{t('region')}</span>
           <Input
             value={form.region}
             onChange={(event) => handleChange('region', event.target.value)}
             placeholder={t('regionPlaceholder')}
-            className={inlineInputClass}
+            className="bg-muted border-0 rounded-[0.75rem] shadow-none focus:ring-0 focus:outline-none h-12 md:h-full md:rounded-none md:placeholder:text-muted-foreground md:border-r md:border-border/60"
           />
-        </div>
-        <div className={inlineRowClass}>
-          <span className={inlineLabelClass}>{t('city')}</span>
           <Input
             value={form.city}
             onChange={(event) => handleChange('city', event.target.value)}
             placeholder={t('cityPlaceholder')}
-            className={inlineInputClass}
+            className="bg-muted border-0 rounded-[0.75rem] shadow-none focus:ring-0 focus:outline-none h-12 md:h-full md:rounded-none md:placeholder:text-muted-foreground"
           />
         </div>
       </div>
