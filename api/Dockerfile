@@ -26,7 +26,8 @@ COPY pyproject.toml uv.lock* ./
 # Configure uv for optimal builds
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
-    UV_PYTHON_DOWNLOADS=never
+    UV_PYTHON_DOWNLOADS=never \
+    UV_HTTP_TIMEOUT=120
 
 # Install dependencies in virtual environment
 RUN if [ -f uv.lock ]; then \
