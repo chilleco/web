@@ -13,19 +13,6 @@ interface ThemeAwareContentProps {
 export default function ThemeAwareContent({ children }: ThemeAwareContentProps) {
     const { isInitialized } = useTheme();
 
-    useEffect(() => {
-        const handleWheel = (event: WheelEvent) => {
-            const target = event.target;
-            if (target instanceof HTMLInputElement && target.type === 'number') {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-        };
-
-        window.addEventListener('wheel', handleWheel, { passive: false });
-        return () => window.removeEventListener('wheel', handleWheel);
-    }, []);
-
     return (
         <LoadingScreen isLoading={!isInitialized}>
             <Header />

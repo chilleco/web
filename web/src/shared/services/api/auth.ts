@@ -31,23 +31,23 @@ export interface User {
 
 export async function login(credentials: LoginRequest): Promise<LoginResponse> {
     const response = await api.post<LoginResponse>('/auth/login/', credentials);
-    
+
     // Store token in localStorage
     if (typeof window !== 'undefined' && response.token) {
         localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.token);
     }
-    
+
     return response;
 }
 
 export async function register(userData: RegisterRequest): Promise<LoginResponse> {
     const response = await api.post<LoginResponse>('/auth/register/', userData);
-    
+
     // Store token in localStorage
     if (typeof window !== 'undefined' && response.token) {
         localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, response.token);
     }
-    
+
     return response;
 }
 

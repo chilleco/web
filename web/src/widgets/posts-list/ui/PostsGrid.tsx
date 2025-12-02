@@ -36,6 +36,7 @@ export function PostsGrid({
     const { error: showError } = useToastActions();
     const isExternallyManaged = Boolean(onLoadMore);
     const lastFetchKeyRef = useRef<string | null>(null);
+    const hasInitialPosts = Boolean(initialPosts?.length);
 
     const loadPosts = useCallback(async (params: PostsGetRequest = {}, append = false) => {
         try {
@@ -78,7 +79,7 @@ export function PostsGrid({
     useEffect(() => {
         const fetchKey = `${categoryId ?? 'all'}-${locale ?? 'all'}-${searchQuery}-${limit}`;
 
-        if (isExternallyManaged || (initialPosts && initialPosts.length !== 0)) {
+        if (isExternallyManaged || hasInitialPosts) {
             lastFetchKeyRef.current = fetchKey;
             return;
         }
@@ -88,7 +89,7 @@ export function PostsGrid({
 
         lastFetchKeyRef.current = fetchKey;
         loadPosts();
-    }, [categoryId, locale, searchQuery, initialPosts?.length, loadPosts, isExternallyManaged, limit]);
+    }, [categoryId, locale, searchQuery, hasInitialPosts, loadPosts, isExternallyManaged, limit]);
 
     useEffect(() => {
         if (!isExternallyManaged && initialPosts) {

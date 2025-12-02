@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/shared/ui/badge';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -32,13 +33,14 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
       title={product.title}
       url={`catalog/${product.url}`}
       leftSlot={
-        <div className="w-12 h-12 rounded-[0.75rem] overflow-hidden bg-muted flex-shrink-0">
+        <div className="relative w-12 h-12 rounded-[0.75rem] overflow-hidden bg-muted flex-shrink-0">
           {previewImage ? (
-            <img
+            <Image
               src={previewImage}
               alt={product.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
+              fill
+              sizes="48px"
+              className="object-cover"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">

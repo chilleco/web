@@ -11,7 +11,7 @@ const getApiBaseUrl = () => {
     // Server-side rendering (SSR) - use internal Docker network without /api/ prefix
     // (nginx strips /api/ prefix when forwarding to backend)
     if (typeof window === 'undefined') {
-        return process.env.NEXT_PUBLIC_API || 'http://api:5000/';
+        return 'http://api:5000/';
     }
     // Client-side rendering (CSR) - use public URL through nginx proxy
     const envBaseUrl = process.env.NEXT_PUBLIC_API;
@@ -76,7 +76,10 @@ export async function apiClient<T = unknown>(
     } = options;
 
     // Build URL with query parameters for GET requests
-    let url = `${apiBaseUrl.replace(/\/$/, '')}${endpoint}`;
+    const baseUrl = isBrowser
+        ? process.env.NEXT_PUBLIC_API || apiBaseUrl
+        : 'http://api:5000/';
+    let url = `${baseUrl.replace(/\/$/, '')}${endpoint}`;
     if (params && method === 'GET') {
         const searchParams = new URLSearchParams();
         Object.entries(params).forEach(([key, value]) => {
@@ -124,6 +127,7 @@ export async function apiClient<T = unknown>(
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
     try {
+        console.log('Fetching URL:', url);
         const response = await fetch(url, {
             method,
             headers: {

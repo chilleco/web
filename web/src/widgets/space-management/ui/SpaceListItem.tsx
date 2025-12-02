@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/shared/ui/badge';
@@ -71,13 +72,14 @@ export function SpaceListItem({ space, onDelete }: SpaceListItemProps) {
       badges={[marginBadge]}
       secondRowItems={secondRowItems as React.ReactNode[]}
       leftSlot={
-        <div className="w-12 h-12 rounded-[0.75rem] bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <div className="relative w-12 h-12 rounded-[0.75rem] bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
           {space.logo ? (
-            <img
+            <Image
               src={space.logo}
               alt={space.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
+              fill
+              sizes="48px"
+              className="object-cover"
             />
           ) : (
             <BuildingIcon size={16} className="text-muted-foreground" />

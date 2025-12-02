@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Badge } from '@/shared/ui/badge';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -34,35 +35,36 @@ export function PostListItem({ post, onDelete }: PostListItemProps) {
       }
       secondRowItems={[post.category || null].filter(Boolean)}
       leftSlot={
-        <div className="w-12 h-12 rounded-[0.75rem] bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <div className="relative w-12 h-12 rounded-[0.75rem] bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
           {post.image ? (
-            <img
+            <Image
               src={post.image}
               alt={post.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
+              fill
+              sizes="48px"
+              className="object-cover"
             />
           ) : (
             <ImageIcon size={16} className="text-muted-foreground" />
           )}
         </div>
       }
-        rightActions={
-          <ButtonGroup>
-            <IconButton asChild variant="outline" size="sm" icon={<EditIcon size={12} />} responsive>
-              <Link
-                href={{
-                  pathname: '/posts/[categoryUrl]',
-                  params: { categoryUrl: post.url },
-                  query: { edit: '1' }
-                }}
-              >
-                {tSystem('edit')}
-              </Link>
-            </IconButton>
-            <IconButton
-              variant="destructive"
-              size="sm"
+      rightActions={
+        <ButtonGroup>
+          <IconButton asChild variant="outline" size="sm" icon={<EditIcon size={12} />} responsive>
+            <Link
+              href={{
+                pathname: '/posts/[categoryUrl]',
+                params: { categoryUrl: post.url },
+                query: { edit: '1' }
+              }}
+            >
+              {tSystem('edit')}
+            </Link>
+          </IconButton>
+          <IconButton
+            variant="destructive"
+            size="sm"
             icon={<DeleteIcon size={12} />}
             onClick={() => onDelete(post)}
             responsive

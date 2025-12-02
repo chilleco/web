@@ -17,6 +17,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       if (event.currentTarget.type === "number") {
         event.preventDefault();
         event.stopPropagation();
+        event.currentTarget.blur();
       }
       onWheel?.(event);
     };
@@ -32,7 +33,6 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
         )}
         ref={ref}
         onWheel={handleWheel}
-        onWheelCapture={handleWheel}
         {...props}
         {...(isControlledRef.current && { value: value ?? '' })}
       />
