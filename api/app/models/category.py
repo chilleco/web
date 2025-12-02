@@ -51,4 +51,13 @@ class Category(Base):
     @classmethod
     def get_childs(cls, parent):
         """Get childs of category"""
-        return get("category_childs").get(parent, []) + [parent]
+        childs_cache = get("category_childs") or {}
+
+        if not childs_cache:
+            # Build a fallback map when cache is empty or unavailable
+            from services.cache import get_childs as build_childs, get_parents
+
+            categories_tree = cls.get_tree(cls.get())
+            childs_cache = build_childs(get_parents(categories_tree))
+
+        return childs_cache.get(parent, []) + [parent]

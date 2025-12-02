@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale } from 'next-intl';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { Button } from '@/shared/ui/button';
 import {
@@ -29,6 +30,8 @@ export default function LanguageSwitcher({ className }: LanguageSwitcherProps = 
     const locale = useLocale();
     const router = useRouter();
     const pathname = usePathname();
+    const params = useParams();
+    const searchParams = useSearchParams();
     const dispatch = useAppDispatch();
 
     // Get current language from Redux store
@@ -40,8 +43,18 @@ export default function LanguageSwitcher({ className }: LanguageSwitcherProps = 
         // Update Redux store
         dispatch(setLanguage(newLocale));
 
-        // Update URL and next-intl routing
-        router.replace(pathname as Parameters<typeof router.replace>[0], { locale: newLocale });
+        // Build localized URL while preserving dynamic params and query string
+        const { locale: _localeParam, ...routeParams } = (params || {}) as Record<string, string | string[]>;
+        const hasParams = Object.keys(routeParams).length > 0;
+        const queryEntries = searchParams ? Object.fromEntries(searchParams.entries()) : undefined;
+
+        const href = {
+            pathname,
+            ...(hasParams ? { params: routeParams } : {}),
+            ...(queryEntries && Object.keys(queryEntries).length > 0 ? { query: queryEntries } : {})
+        };
+
+        router.replace(href as Parameters<typeof router.replace>[0], { locale: newLocale });
     };
 
     return (

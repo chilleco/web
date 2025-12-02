@@ -66,6 +66,7 @@ export async function apiClient<T = unknown>(
     endpoint: string,
     options: ApiRequestOptions = {}
 ): Promise<T> {
+    const isBrowser = typeof window !== 'undefined';
     const {
         body,
         params,
@@ -96,7 +97,7 @@ export async function apiClient<T = unknown>(
     };
 
     // Add authentication headers if available
-    if (typeof window !== 'undefined') {
+    if (isBrowser) {
         const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
         if (token) {
             defaultHeaders.Authorization = `Bearer ${token}`;
@@ -159,7 +160,7 @@ export async function apiClient<T = unknown>(
             );
 
             // Use global error handler unless suppressed
-            if (!suppressGlobalErrorHandler) {
+            if (!suppressGlobalErrorHandler && isBrowser) {
                 handleGlobalApiError(apiError, endpoint);
             } else {
                 throw apiError;
@@ -183,7 +184,7 @@ export async function apiClient<T = unknown>(
         }
 
         // Use global error handler unless suppressed
-        if (!suppressGlobalErrorHandler) {
+        if (!suppressGlobalErrorHandler && isBrowser) {
             handleGlobalApiError(finalError, endpoint);
         } else {
             throw finalError;

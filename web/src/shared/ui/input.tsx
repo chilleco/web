@@ -4,7 +4,7 @@ import { cn } from "@/shared/lib/utils"
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   (allProps, ref) => {
-    const { className, type, value, ...props } = allProps;
+    const { className, type, value, onWheel, ...props } = allProps;
     const hasValueProp = Object.prototype.hasOwnProperty.call(allProps, 'value');
     const isControlledRef = React.useRef(hasValueProp);
 
@@ -12,6 +12,14 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
     if (hasValueProp) {
       isControlledRef.current = true;
     }
+
+    const handleWheel = (event: React.WheelEvent<HTMLInputElement>) => {
+      if (event.currentTarget.type === "number") {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      onWheel?.(event);
+    };
 
     return (
       <input
@@ -23,6 +31,8 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           className
         )}
         ref={ref}
+        onWheel={handleWheel}
+        onWheelCapture={handleWheel}
         {...props}
         {...(isControlledRef.current && { value: value ?? '' })}
       />

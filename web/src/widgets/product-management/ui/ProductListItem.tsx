@@ -30,7 +30,7 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
     <EntityRow
       id={product.id}
       title={product.title}
-      url={product.url}
+      url={`catalog/${product.url}`}
       leftSlot={
         <div className="w-12 h-12 rounded-[0.75rem] overflow-hidden bg-muted flex-shrink-0">
           {previewImage ? (

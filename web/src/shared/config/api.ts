@@ -69,6 +69,9 @@
  * the backend isn't available, while maintaining proper error handling in production.
  */
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+const mockFallbackEnv = process.env.NEXT_PUBLIC_USE_MOCK_FALLBACK;
+
 // Environment-based configuration
 export const API_CONFIG = {
   // Base URL for API requests
@@ -78,10 +81,11 @@ export const API_CONFIG = {
   timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000', 10),
   
   // Whether to use mock data as fallback when API fails
-  useMockFallback: process.env.NEXT_PUBLIC_USE_MOCK_FALLBACK === 'true',
+  // Default to true in development unless explicitly disabled
+  useMockFallback: mockFallbackEnv === 'true' || (isDevelopment && mockFallbackEnv !== 'false'),
   
   // Whether to show API warnings in console
-  showApiWarnings: process.env.NODE_ENV === 'development',
+  showApiWarnings: isDevelopment,
   
   // Mock data configuration
   mock: {

@@ -21,6 +21,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Shared translations first**: Use existing `system.*` translation keys for shared labels (loading, refresh, common actions) instead of introducing feature-specific duplicates; migrate simple words from feature scopes to `system.*` when touching those areas.
   - When adding new locale strings, ensure non-English locales are translated (avoid copy-pasting English into `ru`/`es`/`ar`/`zh`).
 - **Unit suffixes**: Show measurement units using right-side labels/suffix segments on inputs (e.g., %, kg, cm); keep left labels clean.
+- **Number inputs**: Hide browser stepper arrows and prevent scroll-wheel value changes; use shared Input defaults or equivalent handlers for any custom number fields.
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
 - **Reuse cards/items**: Always reuse existing card/item components for repeated contexts (landing listings, related/recommended blocks, similar products, etc.)—e.g., use the shared PostCard for any post teasers (landing, related posts) and the shared product card for similar products instead of creating new variants.
 - **Follow FSD Architecture**: respect Feature-Sliced Design layers and import rules
