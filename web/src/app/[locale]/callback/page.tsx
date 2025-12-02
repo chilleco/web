@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter, usePathname, useSearchParams } from '@/i18n/routing';
+import { useRouter, usePathname } from '@/i18n/routing';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { loginWithSocial, selectIsAuthenticated } from '@/features/auth';
@@ -45,7 +46,11 @@ export default function CallbackPage() {
             .then(() => {
                 success(tAuth('loginSuccess'));
                 const prev = typeof window !== 'undefined' ? localStorage.getItem('previousPath') : null;
-                router.push(prev || '/profile');
+                if (prev) {
+                    router.push(prev as Parameters<typeof router.push>[0]);
+                } else {
+                    router.push('/profile');
+                }
             })
             .catch((err) => {
                 const message = err instanceof Error ? err.message : tAuth('loginFailed');

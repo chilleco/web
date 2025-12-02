@@ -83,7 +83,11 @@ export function SpacesSelector({ userId, onCreated, onSelect }: SpacesSelectorPr
       dispatch(setSelectedSpace({ link: newSpace.link, margin: newSpace.margin }));
       success(t('created', { title: newSpace.title }));
       onCreated?.(newSpace);
-      router.push(`/spaces/${newSpace.link}?edit=1`);
+      router.push({
+        pathname: '/spaces/[link]',
+        params: { link: newSpace.link },
+        query: { edit: '1' }
+      });
       onSelect?.();
     } catch (err) {
       const message = err instanceof Error ? err.message : tSystem('error');
@@ -107,7 +111,7 @@ export function SpacesSelector({ userId, onCreated, onSelect }: SpacesSelectorPr
     const pickedSpace = spaces.find((item) => item.link === link);
     dispatch(setSelectedSpace({ link, margin: pickedSpace?.margin }));
     if (link) {
-      router.push(`/spaces/${link}`);
+      router.push({ pathname: '/spaces/[link]', params: { link } });
       onSelect?.();
     }
   };

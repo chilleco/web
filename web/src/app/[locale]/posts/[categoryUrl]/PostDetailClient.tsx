@@ -221,7 +221,9 @@ export function PostDetailClient({
 
   const categoryLink = post.category_data ? `/posts/${post.category_data.url}` : undefined;
   const imageValue = image || post.image || '';
-  const imageFileData = imageValue ? { ...fileData, type: 'image' as const } : fileData;
+  const imageFileData = imageValue && fileData
+    ? { ...fileData, type: 'image' as const }
+    : fileData;
   const pageTitle = post.title || tPosts('add');
 
   const headerActions = isNew

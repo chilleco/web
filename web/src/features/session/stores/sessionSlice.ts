@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from '@/shared/stores/store';
 import { STORAGE_KEYS } from '@/shared/constants';
 import { createSessionToken } from '../api/sessionApi';
 
@@ -42,7 +43,7 @@ const generateClientToken = () => {
 export const initializeSession = createAsyncThunk<
     InitializeSessionResult,
     InitializeSessionArgs | undefined,
-    { state: { session: SessionState } }
+    { state: RootState }
 >(
     'session/initialize',
     async (args, { getState, rejectWithValue }) => {

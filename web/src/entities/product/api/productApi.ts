@@ -46,6 +46,8 @@ function normalizeFeatures(features?: ProductFeature[]): ProductFeature[] {
     .sort((a, b) => a.key.localeCompare(b.key));
 }
 
+type OptionStockLike = ProductOption & { inStock?: boolean | number };
+
 function normalizeOption(option: ProductOption): ProductOption {
   const price = option.price || 0;
   const discountType = option.discountType;
@@ -53,7 +55,7 @@ function normalizeOption(option: ProductOption): ProductOption {
   const finalPrice = typeof option.finalPrice === 'number'
     ? option.finalPrice
     : calculateFinalPrice(price, discountType, discountValue);
-  const rawStock = (option as any).stockCount ?? (option as any).inStock;
+  const rawStock = (option as OptionStockLike).stockCount ?? (option as OptionStockLike).inStock;
   let stockCount: number;
   if (typeof rawStock === 'number') {
     stockCount = rawStock;

@@ -24,7 +24,11 @@ export default function AdminSpacesPage() {
       const response = await saveSpace({ title: t('defaultTitle') });
       success(t('actions.createSuccess', { title: response.space.title }));
       setRefreshTrigger((prev) => prev + 1);
-      router.push(`/spaces/${response.space.link}?edit=1`);
+      router.push({
+        pathname: '/spaces/[link]',
+        params: { link: response.space.link },
+        query: { edit: '1' }
+      });
     } catch (err) {
       const message = err instanceof Error ? err.message : tSystem('error');
       showError(message);

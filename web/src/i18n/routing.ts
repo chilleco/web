@@ -14,15 +14,25 @@ export const routing = defineRouting({
     pathnames: {
         '/': '/',
         '/posts': '/posts',
+        '/posts/[categoryUrl]': '/posts/[categoryUrl]',
+        '/catalog/[id]': '/catalog/[id]',
         '/space': '/space', 
         '/hub': '/hub',
         '/catalog': '/catalog',
+        '/spaces': '/spaces',
+        '/spaces/[link]': '/spaces/[link]',
         '/admin': '/admin',
         '/admin/categories': '/admin/categories',
         '/admin/posts': '/admin/posts',
+        '/admin/products': '/admin/products',
+        '/admin/spaces': '/admin/spaces',
         '/admin/users': '/admin/users',
         '/profile': '/profile',
-        '/callback': '/callback'
+        '/callback': '/callback',
+        '/posts/create': '/posts/create',
+        '/settings': '/settings',
+        '/billing': '/billing',
+        '/analytics': '/analytics'
         // You can add more custom pathnames here if needed
     },
 

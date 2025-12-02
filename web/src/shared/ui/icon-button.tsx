@@ -66,10 +66,11 @@ function IconButton({
   const Comp = asChild ? Slot : "button"
 
   if (asChild && isValidElement(children)) {
-    const childContent = (children as React.ReactElement).props?.children
+    const childElement = children as React.ReactElement<{ className?: string; children?: React.ReactNode }>
+    const childContent = childElement.props?.children
 
-    return cloneElement(children as React.ReactElement, {
-      className: cn(iconButtonVariants({ variant, size, responsive, className }), (children as React.ReactElement).props.className),
+    return cloneElement(childElement, {
+      className: cn(iconButtonVariants({ variant, size, responsive, className }), childElement.props.className),
       ...props,
       children: (
         <>

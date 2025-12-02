@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { type ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
@@ -41,13 +41,13 @@ import {
 
 interface HighlightItem {
     key: string;
-    icon: JSX.Element;
+    icon: ReactElement;
     color: string;
 }
 
 interface StepItem {
     key: string;
-    icon: JSX.Element;
+    icon: ReactElement;
     color: string;
 }
 
@@ -166,7 +166,7 @@ export default function Home() {
         [t]
     );
 
-    const advantages: Array<ListItem & { title: string; description: string; icon: JSX.Element; color: string }> =
+    const advantages: Array<ListItem & { title: string; description: string; icon: ReactElement; color: string }> =
         useMemo(
             () =>
                 [

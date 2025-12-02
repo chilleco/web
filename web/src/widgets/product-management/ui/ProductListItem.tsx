@@ -50,7 +50,7 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
       badges={[
         inStock === false ? <Badge key="stock" variant="destructive">{t('statusInactive')}</Badge> : <Badge key="stock" variant="secondary">{t('inStock')}</Badge>,
         product.isNew ? <Badge key="new" variant="success">{t('isNew')}</Badge> : null,
-        product.isFeatured ? <Badge key="featured" variant="warning">{t('isFeatured')}</Badge> : null,
+        product.isFeatured ? <Badge key="featured" variant="secondary">{t('isFeatured')}</Badge> : null,
         optionsCount ? <Badge key="options" variant="secondary">{t('optionsLabel', { count: optionsCount })}</Badge> : null,
       ].filter(Boolean)}
       secondRowItems={(() => {

@@ -87,7 +87,13 @@ export function SpaceListItem({ space, onDelete }: SpaceListItemProps) {
       rightActions={
         <ButtonGroup>
           <IconButton asChild variant="outline" size="sm" icon={<EditIcon size={12} />} responsive>
-            <Link href={`/spaces/${space.link}?edit=1`}>
+            <Link
+              href={{
+                pathname: '/spaces/[link]',
+                params: { link: space.link },
+                query: { edit: '1' }
+              }}
+            >
               {t('actions.edit')}
             </Link>
           </IconButton>

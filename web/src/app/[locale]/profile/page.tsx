@@ -172,17 +172,19 @@ export default function ProfilePage() {
     const handleSave = async () => {
         if (!initialData) return;
 
-        const payload = Object.entries(formData).reduce<UpdateProfileRequest>((acc, [key, value]) => {
+        const payload: UpdateProfileRequest = {};
+        const payloadDraft = payload as Record<string, string | number | boolean | null>;
+
+        Object.entries(formData).forEach(([key, value]) => {
             const typedKey = key as keyof ProfileFormState;
             if (initialData[typedKey] !== value) {
                 if (typedKey === 'phone') {
-                    acc.phone = value ? value.replace(/\D/g, '') : null;
+                    payload.phone = value ? value.replace(/\D/g, '') : null;
                 } else {
-                    acc[typedKey as keyof UpdateProfileRequest] = value;
+                    payloadDraft[typedKey] = value || null;
                 }
             }
-            return acc;
-        }, {});
+        });
 
         if (Object.keys(payload).length === 0) {
             showInfo(tProfile('noChanges'));

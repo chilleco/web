@@ -25,7 +25,7 @@ import { cn } from '@/shared/lib/utils';
 export type FileTypeFilter = 'any' | 'images' | 'documents' | 'media' | 'archives' | string[];
 
 export interface FileData {
-  file: File;
+  file?: File;
   preview?: string;
   type: 'image' | 'pdf' | 'document' | 'excel' | 'powerpoint' | 'video' | 'audio' | 'archive' | 'code' | 'other';
   icon: React.ReactNode;
@@ -338,7 +338,7 @@ export function FileUpload({
                 // Image Preview
                 <>
                   <Image
-                    src={value || fileData.preview!}
+                    src={value || fileData?.preview || ''}
                     alt={t('preview')}
                     width={400}
                     height={useFullHeight ? 400 : height}
@@ -360,10 +360,10 @@ export function FileUpload({
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-foreground truncate w-20">
-                      {fileData?.file.name || 'Unknown file'}
+                      {fileData?.file?.name || 'Unknown file'}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {fileData?.file.size ? formatFileSize(fileData.file.size) : ''}
+                      {fileData?.file?.size ? formatFileSize(fileData.file.size) : ''}
                     </p>
                   </div>
                   {/* Hover Overlay for non-images */}

@@ -47,16 +47,22 @@ export function PostListItem({ post, onDelete }: PostListItemProps) {
           )}
         </div>
       }
-      rightActions={
-        <ButtonGroup>
-          <IconButton asChild variant="outline" size="sm" icon={<EditIcon size={12} />} responsive>
-            <Link href={`/posts/${post.url}?edit=1`}>
-              {tSystem('edit')}
-            </Link>
-          </IconButton>
-          <IconButton
-            variant="destructive"
-            size="sm"
+        rightActions={
+          <ButtonGroup>
+            <IconButton asChild variant="outline" size="sm" icon={<EditIcon size={12} />} responsive>
+              <Link
+                href={{
+                  pathname: '/posts/[categoryUrl]',
+                  params: { categoryUrl: post.url },
+                  query: { edit: '1' }
+                }}
+              >
+                {tSystem('edit')}
+              </Link>
+            </IconButton>
+            <IconButton
+              variant="destructive"
+              size="sm"
             icon={<DeleteIcon size={12} />}
             onClick={() => onDelete(post)}
             responsive

@@ -96,7 +96,7 @@ export function PostsGrid({
         }
     }, [initialPosts, isExternallyManaged]);
 
-    const postsToRender = isExternallyManaged ? initialPosts : posts;
+    const postsToRender = (isExternallyManaged ? initialPosts : posts) ?? [];
 
     if (loading) {
         return (

@@ -41,7 +41,7 @@ export default function LanguageSwitcher({ className }: LanguageSwitcherProps = 
         dispatch(setLanguage(newLocale));
 
         // Update URL and next-intl routing
-        router.replace(pathname, { locale: newLocale });
+        router.replace(pathname as Parameters<typeof router.replace>[0], { locale: newLocale });
     };
 
     return (

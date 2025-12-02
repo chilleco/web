@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction, type AnyAction } from '@reduxjs/toolkit';
 import { STORAGE_KEYS } from '@/shared/constants';
 import { initializeSession, resetSession, setAuthToken } from '@/features/session/stores/sessionSlice';
 import { loginWithCredentialsApi, loginWithTelegramAppApi, loginWithSocialApi, logoutApi, type AuthUser, type CredentialsAuthRequest, type TelegramAppAuthRequest, type SocialAuthRequest } from '../api/authApi';
@@ -108,14 +108,14 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
             persistAuthToken(null);
             dispatch(setAuthToken(null));
             dispatch(resetSession());
-            dispatch(initializeSession());
+            dispatch(initializeSession() as unknown as AnyAction);
             return rejectWithValue(message);
         }
 
         persistAuthToken(null);
         dispatch(setAuthToken(null));
         dispatch(resetSession());
-        dispatch(initializeSession());
+        dispatch(initializeSession() as unknown as AnyAction);
     }
 );
 

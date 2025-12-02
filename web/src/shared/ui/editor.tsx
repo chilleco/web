@@ -13,8 +13,10 @@ interface EditorProps {
 }
 
 export function Editor({ value, onChange, disabled, className, placeholder }: EditorProps) {
-  const [EditorComponent, setEditorComponent] = useState<null | typeof import('@ckeditor/ckeditor5-react').CKEditor>(null);
-  const [EditorBuild, setEditorBuild] = useState<null | typeof import('@ckeditor/ckeditor5-build-classic')>(null);
+  type CKEditorComponent = typeof import('@ckeditor/ckeditor5-react').CKEditor;
+
+  const [EditorComponent, setEditorComponent] = useState<CKEditorComponent | null>(null);
+  const [EditorBuild, setEditorBuild] = useState<unknown>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -25,7 +27,7 @@ export function Editor({ value, onChange, disabled, className, placeholder }: Ed
     ]).then(([reactEditor, classic]) => {
       if (!isMounted) return;
       setEditorComponent(() => reactEditor.CKEditor);
-      setEditorBuild(() => (classic as unknown as { default: unknown }).default as typeof import('@ckeditor/ckeditor5-build-classic'));
+      setEditorBuild(() => (classic as { default: unknown }).default);
     }).catch(() => {
       // ignore load errors; editor will not render
     });
@@ -67,10 +69,10 @@ export function Editor({ value, onChange, disabled, className, placeholder }: Ed
   );
 
   return (
-    <div className={cn('w-full min-h-[24rem]', className)} styles={{ color: '#000' }}>
+    <div className={cn('w-full min-h-[24rem]', className)} style={{ color: '#000' }}>
       {EditorComponent && EditorBuild ? (
         <EditorComponent
-          editor={EditorBuild}
+          editor={EditorBuild as never}
           data={value}
           config={editorConfig}
           disabled={disabled}
@@ -89,7 +91,7 @@ export function Editor({ value, onChange, disabled, className, placeholder }: Ed
               editable.style.padding = '1rem';
               editable.classList.add('ckeditor-theme-adaptive');
             }
-            const toolbar = editor.ui.view.toolbar.element;
+            const toolbar = editor.ui.view.toolbar?.element;
             if (toolbar) {
               toolbar.classList.add('ckeditor-theme-adaptive');
             }
