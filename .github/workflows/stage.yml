@@ -1,15 +1,8 @@
-name: CI/CD main
+name: CI/CD dev
 
 on:
   push:
-    branches: [ "main" ]
-
-env:
-  REGISTRY_HOST: ghcr.io
-  REGISTRY_OWNER: keygo-io
-  PROJECT_NAME: keygo
-  STACK_NAME: keygo-prod
-
+    branches: [ "dev" ]
 
 jobs:
   lint:
@@ -44,14 +37,10 @@ jobs:
           cd ./api/
           make lint-black
 
-      # - name: mypy
-      #   run: |
-      #     cd ./api/
-      #     make lint-mypy
-
   test:
     name: Tests
     runs-on: ubuntu-latest
+    needs: lint
     services:
 
       mongodb:
@@ -181,68 +170,3 @@ jobs:
         run: |
           cd ./api/
           pytest
-
-  deploy:
-    name: Deploy
-    needs: [lint, test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set VERSION
-        run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Executing remote ssh command
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          port: ${{ secrets.PORT }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH }}
-          script: |
-            echo "Pulling new version"
-            cd ~/keygo
-            git checkout -f main
-            git reset --hard
-            GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git pull --rebase origin main
-
-            echo "Checking data directory"
-            if [ -d ~/data ];
-            then
-                echo ""
-            else
-                mkdir data
-            fi
-            if [ -d ~/data/keygo ];
-            then
-                echo ""
-            else
-                cp -r ~/keygo/data ~/data/keygo
-            fi
-
-            echo "Copying keys"
-            cp ~/.secrets/keygo.env ~/keygo/.env
-
-            echo "Setting RELEASE variable"
-            export RELEASE=${{ env.VERSION }}
-            # Remove existing RELEASE line if exists and add new one
-            sed -i '/^RELEASE=/d' ~/keygo/.env
-            echo "RELEASE=${{ env.VERSION }}" >> ~/keygo/.env
-
-            echo "Starting new version"
-            cd ~/keygo
-            make run
-
-            # echo "Waiting for services to be ready..."
-            # sleep 30
-
-            # echo "Clearing caches after deployment"
-            # # Clear nginx cache
-            # sudo rm -rf /var/cache/nginx/* || true
-
-            # # Reload nginx
-            # sudo nginx -s reload || sudo systemctl reload nginx || true
-
-            # echo "Health check"
-            # curl -f https://keygo.io/ || echo "Main site health check failed"
-            # curl -f https://keygo.io/eye/ || echo "Admin site health check failed"
