@@ -13,5 +13,5 @@ export interface CreateSessionTokenResponse {
 }
 
 export async function createSessionToken(payload: CreateSessionTokenPayload): Promise<CreateSessionTokenResponse> {
-    return apiWithoutGlobalErrors.post<CreateSessionTokenResponse>(API_ENDPOINTS.USERS.TOKEN, payload);
+    return apiWithoutGlobalErrors.post<CreateSessionTokenResponse>(API_ENDPOINTS.USERS.TOKEN, payload, { skipAuthInit: true });
 }

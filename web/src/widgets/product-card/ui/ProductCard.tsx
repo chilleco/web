@@ -31,7 +31,8 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
     const discountFactor = rawPriceFrom > 0 ? rawFinalPrice / rawPriceFrom : 1;
     const finalPrice = Math.round(priceFrom * discountFactor);
     const primaryOption = product.options?.[0];
-    const pricePrefix = product.options?.length ? t('priceFrom') : undefined;
+    const hasPrice = priceFrom > 0 && finalPrice > 0;
+    const pricePrefix = product.options?.length && hasPrice ? t('priceFrom') : undefined;
     const inStock = typeof product.inStock === 'boolean'
         ? product.inStock
         : (product.options?.some((option) => (option.stockCount ?? 0) > 0) ?? true);
@@ -152,8 +153,8 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             images={productImages}
             filters={filters}
             tags={tags}
-            price={finalPrice}
-            basePrice={priceFrom}
+            price={hasPrice ? finalPrice : undefined}
+            basePrice={hasPrice && priceFrom > finalPrice ? priceFrom : undefined}
             pricePrefix={pricePrefix}
             currency={product.currency}
             actions={actions}

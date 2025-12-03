@@ -6,6 +6,13 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 ## Architecture & Structure
 - Services: `api/` FastAPI backend; `web/` Next.js 15 + TypeScript (dirs: `src/app`, `entities`, `features`, `widgets`, `shared`, `i18n`, `styles`); `tg/` Telegram worker; `infra/` Docker Compose; `data/` runtime storage.
 - Localization: bundles in `web/messages/*.json`; per-locale routing under `web/src/app/[locale]/**`. All user-facing text must use locale files.
+## Entities
+Depending on the project that develops based on this template, the entities of this template can be reused as follows:
+- spaces (switch environment: like Slack workspaces)
+- posts (text-centred entity: articles, news, ...)
+- products (sales unit: goods, apartments, ...)
+  - options (example for goods: product size variations on marketplaces, example for apartments: pricing plans)
+- users (main clients of the service + admins)
 
 ## Environments
 - `.env` defines `MODE`: LOCAL / TEST / DEV / PRE / PROD; loaded in `api/`, `web/`, and `tg/` containers. Copy `base.env` → `.env`; merge `prod.env` values for production.
@@ -25,6 +32,8 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Unit suffixes**: Show measurement units using right-side labels/suffix segments on inputs (e.g., %, kg, cm); keep left labels clean.
 - **Number inputs**: Hide browser stepper arrows and prevent scroll-wheel value changes; use shared Input defaults or equivalent handlers for any custom number fields.
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
+- **API sanity via curl**: When debugging/adding flows, hit backend endpoints with curl locally (using provided bearer tokens when available) to validate responses and fix errors before shipping.
+- **Pre-handoff checks**: Always run `npm run lint` and `npm run build` (or `make lint-web`) yourself before finishing a task; fix any errors locally. If sandbox/network blocks them, explicitly note the failure reason and keep TypeScript/routing types clean (use typed `redirect/push` objects aligned with `web/src/i18n/routing.ts`).
 - **Reuse cards/items**: Always reuse existing card/item components for repeated contexts (landing listings, related/recommended blocks, similar products, etc.)—e.g., use the shared PostCard for any post teasers (landing, related posts) and the shared product card for similar products instead of creating new variants.
 - **Follow FSD Architecture**: respect Feature-Sliced Design layers and import rules
 - **Never hard-code secrets** or credentials; never read or write `.env`, `secrets/`, or CI secrets
@@ -127,6 +136,10 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - **Icons**: Centralized icon management: ALL icons MUST be imported from `shared/ui/icons.tsx` file, never directly from `react-icons`; React-icons priority system**: use `react-icons` with priority order: 1. `fa6` (Font Awesome 6), 2. `bi` (Bootstrap Icons), 3. `hi` (Heroicons). Never use inline SVG
 - **Special symbols vs icons**: use Unicode symbols (©, ®, ™) as text characters, not icons with backgrounds
 - **Accessibility first**: proper aria labels/roles, focus states, keyboard nav; no color-only affordances
+
+### Frontend Coding Flow
+- For any entity, cover the full pipeline if needed: create/update the DB model, expose/extend the route endpoint and typed API routes, ship the frontend client page, set access levels, and surface it in header sections, landing blocks, and the admin panel page.
+- After finishing any feature, run lint and build, start the frontend, and recheck Docker console logs for new errors.
 
 ### Styling & Format
 
@@ -243,6 +256,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 7. **Frontend Tests**: Add frontend tests.
 8. **Run tests and linters**: Avoid extra layers unless justified.
 9. **Frontend prod parity**: Before merging, rerun frontend lint/build and fix all prod build errors (typed routes, lint violations). Ensure `npm run build` (or CI web-check job) passes without errors.
+10. **Local verification gate**: Always run `npm run lint` and `npm run build` (or `make lint-web`/`make lint-web-fix` + build) before handing off; if blocked by sandbox/network (e.g., Google Fonts fetch), report the failure reason explicitly in the summary and keep the TypeScript check clean.
 
 ## Commands
 - Frontend (`web/`): `npm install`; `npm run dev`; `npm run build`; `npm run start`; `npm run lint`.

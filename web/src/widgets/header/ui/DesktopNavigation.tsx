@@ -1,5 +1,6 @@
 'use client';
 
+import { type ReactNode } from 'react';
 import { IconButton } from '@/shared/ui/icon-button';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
@@ -10,6 +11,7 @@ export default function DesktopNavigation() {
     const t = useTranslations('navigation');
     const locale = useLocale();
     const router = useRouter();
+    type RouteHref = Parameters<typeof router.push>[0];
 
     const navigationItems = [
         {
@@ -36,9 +38,14 @@ export default function DesktopNavigation() {
             icon: <HubIcon size={16} />,
             path: '/hub' as const
         },
-    ] as const;
+    ] satisfies ReadonlyArray<{
+        key: string;
+        label: string;
+        icon: ReactNode;
+        path: RouteHref;
+    }>;
 
-    const handleNavigate = (path: "/" | "/posts" | "/space" | "/hub" | "/catalog") => {
+    const handleNavigate = (path: RouteHref) => {
         router.push(path);
     };
 

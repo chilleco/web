@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/shared/stores/store';
 import { STORAGE_KEYS } from '@/shared/constants';
-import { createSessionToken } from '../api/sessionApi';
+import { ensureAuthToken } from '@/shared/services/api/client';
 
 type SessionStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
@@ -58,7 +58,6 @@ export const initializeSession = createAsyncThunk<
         const storedClientToken = localStorage.getItem(STORAGE_KEYS.SESSION_TOKEN);
 
         const clientToken = session.clientToken || storedClientToken || generateClientToken();
-        const network = session.network || 'web';
 
         // If we already have an auth token, just ensure client token is stored
         if (storedAuthToken) {
@@ -75,21 +74,11 @@ export const initializeSession = createAsyncThunk<
         localStorage.setItem(STORAGE_KEYS.SESSION_TOKEN, clientToken);
 
         try {
-            const response = await createSessionToken({
-                token: clientToken,
-                network,
-                utm: utm || undefined,
-                extra: {
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    languages: navigator.languages,
-                },
-            });
-
-            const authToken = response.token;
-            localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, authToken);
+            const authToken = await ensureAuthToken();
+            const refreshedClientToken = localStorage.getItem(STORAGE_KEYS.SESSION_TOKEN) || clientToken;
 
             return {
-                clientToken,
+                clientToken: refreshedClientToken,
                 authToken,
                 utm,
             };

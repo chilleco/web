@@ -1,5 +1,6 @@
 'use client';
 
+import { type ComponentType } from 'react';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { useTranslations, useLocale } from 'next-intl';
@@ -21,6 +22,8 @@ export default function MobileMenuContent({ isOpen, onSearchSubmit, onClose }: M
     const tNav = useTranslations('navigation');
     const locale = useLocale();
     const router = useRouter();
+    type RouteHref = Parameters<typeof router.push>[0];
+    type NavIcon = ComponentType<{ size?: number }>;
 
     const navigationItems = [
         {
@@ -47,9 +50,14 @@ export default function MobileMenuContent({ isOpen, onSearchSubmit, onClose }: M
             icon: HubIcon,
             path: '/hub' as const
         },
-    ] as const;
+    ] satisfies ReadonlyArray<{
+        key: string;
+        label: string;
+        icon: NavIcon;
+        path: RouteHref;
+    }>;
 
-    const handleNavigate = (path: "/" | "/posts" | "/space" | "/hub" | "/catalog") => {
+    const handleNavigate = (path: RouteHref) => {
         router.push(path);
         onClose?.();
     };
@@ -121,7 +129,7 @@ export default function MobileMenuContent({ isOpen, onSearchSubmit, onClose }: M
                     <div className="space-y-3 pt-4 border-t">
                         <Button
                             variant="outline"
-                            className="w-full justify-start gap-3 h-12"
+                            className="w-full justify-start gap-3 h-12 cursor-pointer"
                             onClick={() => handleNavigate('/')}
                         >
                             <HomeIcon size={18} />

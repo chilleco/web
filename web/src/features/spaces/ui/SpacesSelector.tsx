@@ -14,9 +14,15 @@ interface SpacesSelectorProps {
   userId?: number;
   onCreated?: (space: Space) => void;
   onSelect?: () => void;
+  navigateOnSelect?: boolean;
 }
 
-export function SpacesSelector({ userId, onCreated, onSelect }: SpacesSelectorProps) {
+export function SpacesSelector({
+  userId,
+  onCreated,
+  onSelect,
+  navigateOnSelect = true
+}: SpacesSelectorProps) {
   const t = useTranslations('spaces.selector');
   const tSystem = useTranslations('system');
   const tEntities = useTranslations('entities');
@@ -104,11 +110,13 @@ export function SpacesSelector({ userId, onCreated, onSelect }: SpacesSelectorPr
       dispatch(setSelectedSpace({ link: newSpace.link, margin: newSpace.margin }));
       success(t('created', { title: newSpace.title }));
       onCreated?.(newSpace);
-      router.push({
-        pathname: '/spaces/[link]',
-        params: { link: newSpace.link },
-        query: { edit: '1' }
-      });
+      if (navigateOnSelect) {
+        router.push({
+          pathname: '/spaces/[link]',
+          params: { link: newSpace.link },
+          query: { edit: '1' }
+        });
+      }
       onSelect?.();
     } catch (err) {
       const message = err instanceof Error ? err.message : tSystem('error');
@@ -131,10 +139,10 @@ export function SpacesSelector({ userId, onCreated, onSelect }: SpacesSelectorPr
 
     const pickedSpace = spaces.find((item) => item.link === link);
     dispatch(setSelectedSpace({ link, margin: pickedSpace?.margin }));
-    if (link) {
+    if (link && navigateOnSelect) {
       router.push({ pathname: '/spaces/[link]', params: { link } });
-      onSelect?.();
     }
+    onSelect?.();
   };
 
   if (!userId) return null;

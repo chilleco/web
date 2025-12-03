@@ -16,6 +16,7 @@ import { toggleCartItem, selectCartItemsAsSet } from '@/features/cart';
 import { toggleFavorite, selectFavoriteItemsAsSet } from '@/features/favorites';
 import { useShare } from '@/features/share';
 import { getProduct, Product, ProductOption } from '@/entities/product';
+import { selectSelectedSpace } from '@/features/spaces/stores/spaceSelectionSlice';
 import {
   HeartIcon,
   ShareIcon,
@@ -41,6 +42,10 @@ function parseProductId(raw: string): number | null {
 }
 
 function calculateFinalPrice(option: ProductOption) {
+  if (typeof option.finalPrice === 'number') {
+    return option.finalPrice;
+  }
+
   const basePrice = option.price || 0;
   const value = option.discountValue || 0;
 
@@ -67,6 +72,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   const cart = useAppSelector(selectCartItemsAsSet);
   const favorites = useAppSelector(selectFavoriteItemsAsSet);
   const shareUrl = useMemo(() => (typeof window !== 'undefined' ? window.location.href : ''), []);
+  const selectedSpace = useAppSelector(selectSelectedSpace);
   const { share, sharing, available: shareAvailable } = useShare({
     shareMessage: t('shareCopied'),
     unavailableMessage: tSystem('shareUnavailable'),
@@ -80,6 +86,14 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const marginFactor = useMemo(() => {
+    const margin = selectedSpace?.margin ?? 0;
+    return 1 + Math.max(0, margin) / 100;
+  }, [selectedSpace?.margin]);
+  const applyMargin = (value?: number | null) => (value ?? 0) * marginFactor;
+  const getOptionFinalPrice = (option?: ProductOption | null) =>
+    applyMargin(option ? calculateFinalPrice(option) : 0);
+  const getOptionBasePrice = (option?: ProductOption | null) => applyMargin(option?.price);
 
   useEffect(() => {
     if (!productId) {
@@ -153,9 +167,8 @@ export default function ProductPage({ params }: ProductPageProps) {
               <button
                 key={thumb + index}
                 type="button"
-                className={`relative aspect-[3/4] rounded-[1rem] overflow-hidden border-2 cursor-pointer ${
-                  index === selectedImageIndex ? 'border-primary' : 'border-transparent'
-                }`}
+                className={`relative aspect-[3/4] rounded-[1rem] overflow-hidden border-2 cursor-pointer ${index === selectedImageIndex ? 'border-primary' : 'border-transparent'
+                  }`}
                 onClick={() => handleSelectImage(index)}
               >
                 <Image
@@ -219,8 +232,12 @@ export default function ProductPage({ params }: ProductPageProps) {
     );
   }
 
-  const finalPrice = selectedOption ? calculateFinalPrice(selectedOption) : product.finalPriceFrom || product.priceFrom;
-  const basePrice = selectedOption ? selectedOption.price : product.priceFrom;
+  const productBasePriceFrom = applyMargin(product.priceFrom ?? product.price ?? 0);
+  const productFinalPriceFrom = applyMargin(
+    product.finalPriceFrom ?? product.priceFrom ?? product.price ?? 0,
+  );
+  const finalPrice = selectedOption ? getOptionFinalPrice(selectedOption) : productFinalPriceFrom;
+  const basePrice = selectedOption ? getOptionBasePrice(selectedOption) : productBasePriceFrom;
   const pricePrefix = product.options?.length ? t('priceFrom') : undefined;
 
   return (
@@ -283,20 +300,24 @@ export default function ProductPage({ params }: ProductPageProps) {
               <h3 className="text-lg font-semibold">{t('optionsTitle')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {(product.options || []).map((option) => {
-                  const optionFinal = calculateFinalPrice(option);
+                  const optionFinal = getOptionFinalPrice(option);
+                  const optionBasePrice = getOptionBasePrice(option);
                   const isSelected = selectedOptionId === option.name;
                   return (
                     <button
                       key={option.name}
                       type="button"
                       onClick={() => handleSelectOption(option.name)}
-                      className={`w-full text-left p-4 rounded-[1rem] bg-muted transition-all cursor-pointer ${
-                        isSelected ? 'ring-2 ring-primary shadow-md' : 'hover:shadow-sm'
-                      }`}
+                      className={`w-full text-left p-4 rounded-[1rem] bg-muted transition-all cursor-pointer ${isSelected ? 'ring-2 ring-primary shadow-md' : 'hover:shadow-sm'
+                        }`}
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-semibold">{option.name}</span>
-                        <Pricing price={optionFinal} basePrice={option.price} currency={product.currency} />
+                        <Pricing
+                          price={optionFinal}
+                          basePrice={optionBasePrice}
+                          currency={product.currency}
+                        />
                       </div>
                       {(option.attributes && option.attributes.length > 0) && (
                         <div className="flex flex-wrap gap-2 mt-2">

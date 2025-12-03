@@ -4,7 +4,7 @@
  */
 
 import { handleGlobalApiError } from './globalErrorHandler';
-import { STORAGE_KEYS } from '@/shared/constants';
+import { API_ENDPOINTS, STORAGE_KEYS } from '@/shared/constants';
 
 // Use different base URLs for server-side vs client-side requests
 const getApiBaseUrl = () => {
@@ -30,6 +30,99 @@ const getApiBaseUrl = () => {
 
 const apiBaseUrl = getApiBaseUrl();
 
+let authInitPromise: Promise<string> | null = null;
+
+const generateClientToken = () => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+
+    return `session_${Math.random().toString(36).slice(2)}_${Date.now()}`;
+};
+
+const getBrowserApiBaseUrl = () => {
+    if (typeof window === 'undefined') {
+        return apiBaseUrl;
+    }
+
+    const envBaseUrl = process.env.NEXT_PUBLIC_API;
+    if (envBaseUrl && envBaseUrl.trim().length > 0) {
+        return envBaseUrl;
+    }
+
+    return apiBaseUrl;
+};
+
+export async function ensureAuthToken(): Promise<string> {
+    if (typeof window === 'undefined') {
+        throw new ApiError(0, 'session_init_client_only');
+    }
+
+    const existingToken = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    if (existingToken) {
+        return existingToken;
+    }
+
+    if (authInitPromise) {
+        return authInitPromise;
+    }
+
+    const clientToken = localStorage.getItem(STORAGE_KEYS.SESSION_TOKEN) || generateClientToken();
+    localStorage.setItem(STORAGE_KEYS.SESSION_TOKEN, clientToken);
+
+    const payload = {
+        token: clientToken,
+        network: 'web',
+        extra: {
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            languages: navigator.languages,
+        },
+    };
+
+    const requestUrl = `${getBrowserApiBaseUrl().replace(/\/$/, '')}${API_ENDPOINTS.USERS.TOKEN}`;
+
+    authInitPromise = fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    })
+        .then(async (response) => {
+            const responseData = await response.json().catch(() => null);
+
+            if (!response.ok) {
+                const errorMessage = responseData && typeof responseData === 'object' && 'message' in responseData
+                    ? String((responseData as { message: unknown }).message)
+                    : `HTTP error! status: ${response.status}`;
+
+                throw new ApiError(response.status, errorMessage, responseData ?? undefined);
+            }
+
+            const token = responseData && typeof responseData === 'object' && 'token' in responseData
+                ? String((responseData as { token: unknown }).token)
+                : null;
+
+            if (token) {
+                localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
+                return token;
+            }
+
+            throw new ApiError(500, 'session_init_failed', responseData ?? undefined);
+        })
+        .catch((error) => {
+            authInitPromise = null;
+
+            if (error instanceof ApiError) {
+                throw error;
+            }
+
+            throw new ApiError(0, error instanceof Error ? error.message : 'session_init_failed');
+        });
+
+    return authInitPromise;
+}
+
 export class ApiError extends Error {
     constructor(
         public status: number,
@@ -46,6 +139,7 @@ export interface ApiRequestOptions extends Omit<RequestInit, 'body'> {
     params?: Record<string, unknown>;
     timeout?: number;
     suppressGlobalErrorHandler?: boolean;
+    skipAuthInit?: boolean;
 }
 
 export interface ApiResponse<T = unknown> {
@@ -72,8 +166,23 @@ export async function apiClient<T = unknown>(
         headers = {},
         method = 'GET',
         suppressGlobalErrorHandler = false,
+        skipAuthInit = false,
         ...restOptions
     } = options;
+
+    const shouldSkipAuthInit = skipAuthInit || endpoint === API_ENDPOINTS.USERS.TOKEN;
+
+    // Ensure auth token exists before making client-side requests to avoid initial 401s
+    if (isBrowser && !shouldSkipAuthInit) {
+        try {
+            await ensureAuthToken();
+        } catch (error) {
+            if (!suppressGlobalErrorHandler) {
+                handleGlobalApiError(error, endpoint);
+            }
+            throw error;
+        }
+    }
 
     // Build URL with query parameters for GET requests
     const baseUrl = isBrowser
@@ -236,7 +345,6 @@ export const apiWithoutGlobalErrors = {
 /**
  * Request interceptor - runs before every request
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function addRequestInterceptor(_interceptor: (options: ApiRequestOptions) => ApiRequestOptions | Promise<ApiRequestOptions>) {
     // Implementation would go here if needed
     // This is a placeholder for future enhancement
@@ -245,7 +353,6 @@ export function addRequestInterceptor(_interceptor: (options: ApiRequestOptions)
 /**
  * Response interceptor - runs after every response
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function addResponseInterceptor(_interceptor: (response: unknown) => unknown | Promise<unknown>) {
     // Implementation would go here if needed
     // This is a placeholder for future enhancement

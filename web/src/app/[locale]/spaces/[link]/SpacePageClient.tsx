@@ -10,6 +10,9 @@ import { BuildingIcon, RefreshIcon, DeleteIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { deleteSpace, getSpaceByLink, type Space } from '@/entities/space';
 import { SpaceForm } from '@/features/spaces';
+import { useRouter } from '@/i18n/routing';
+import { useAppSelector } from '@/shared/stores/store';
+import { selectSelectedSpace } from '@/features/spaces/stores/spaceSelectionSlice';
 
 interface SpacePageClientProps {
   link: string;
@@ -19,10 +22,13 @@ export function SpacePageClient({ link }: SpacePageClientProps) {
   const t = useTranslations('spaces.page');
   const tSystem = useTranslations('system');
   const { error: showError, success: showSuccess } = useToastActions();
+  const router = useRouter();
+  const selectedSpace = useAppSelector(selectSelectedSpace);
   const [space, setSpace] = useState<Space | null>(null);
   const [loading, setLoading] = useState(true);
   const [removing, setRemoving] = useState(false);
   const fetchKeyRef = useRef<string | null>(null);
+  const selectionRef = useRef<string | null | undefined>(undefined);
 
   const loadSpace = useCallback(async () => {
     setLoading(true);
@@ -44,6 +50,25 @@ export function SpacePageClient({ link }: SpacePageClientProps) {
     fetchKeyRef.current = fetchKey;
     void loadSpace();
   }, [link, loadSpace]);
+
+  useEffect(() => {
+    if (selectionRef.current === undefined) {
+      selectionRef.current = selectedSpace?.link ?? null;
+      return;
+    }
+    if (selectionRef.current === selectedSpace?.link) return;
+
+    selectionRef.current = selectedSpace?.link ?? null;
+
+    if (!selectedSpace?.link) {
+      router.push('/spaces');
+      return;
+    }
+
+    if (selectedSpace.link !== link) {
+      router.push({ pathname: '/spaces/[link]', params: { link: selectedSpace.link } });
+    }
+  }, [link, router, selectedSpace?.link]);
 
   return (
     <div className="space-y-4">

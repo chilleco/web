@@ -13,6 +13,7 @@ import { uploadFile } from '@/shared/services/api/upload';
 import { cn } from '@/shared/lib/utils';
 
 interface FeatureField {
+  id: string;
   key: string;
   value: string;
   valueType: 'string' | 'number' | 'boolean';
@@ -37,6 +38,11 @@ const inlineLabelClass = 'h-full px-3 flex items-center justify-center border-r 
 const inlineInputClass = 'bg-muted border-0 text-base text-foreground rounded-none shadow-none focus:ring-0 focus:outline-none h-full w-full placeholder:text-muted-foreground';
 const inlineSelectClass = 'bg-muted border-0 text-base text-foreground rounded-none rounded-r-[0.75rem] h-full px-3 w-full cursor-pointer focus:outline-none focus:ring-0 appearance-none pr-10';
 
+const generateId = () =>
+(typeof crypto !== 'undefined' && crypto.randomUUID
+  ? crypto.randomUUID()
+  : `${Date.now()}-${Math.random()}`);
+
 function createEmptyOption(): OptionField {
   const id = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
   return {
@@ -44,15 +50,30 @@ function createEmptyOption(): OptionField {
     name: '',
     price: '',
     discountType: 'none',
-  discountValue: '',
-  rating: '',
-  ratingCount: '',
-  stockCount: '1',
-  images: [],
-  attributes: [],
-  features: [],
+    discountValue: '',
+    rating: '',
+    ratingCount: '',
+    stockCount: '1',
+    images: [],
+    attributes: [],
+    features: [],
   };
 }
+
+const toFeatureField = (feature?: ProductFeature | FeatureField): FeatureField => {
+  const valueType = feature?.valueType || 'string';
+  const normalizedValue =
+    valueType === 'boolean'
+      ? String(feature?.value ?? 'false')
+      : String(feature?.value ?? '');
+
+  return {
+    id: (feature as FeatureField)?.id || generateId(),
+    key: feature?.key || '',
+    value: normalizedValue,
+    valueType,
+  };
+};
 
 function InlineSelect({
   className,
@@ -125,12 +146,6 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
     return Math.max(basePrice - discountValue, 0);
   };
 
-  const toFeatureField = (feature: ProductFeature | FeatureField): FeatureField => ({
-    key: feature.key || '',
-    value: feature.valueType === 'boolean' ? String(feature.value) : String(feature.value ?? ''),
-    valueType: feature.valueType || 'string',
-  });
-
   useEffect(() => {
     if (!product) {
       const initialOption = createEmptyOption();
@@ -182,7 +197,7 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
       isNew: product.isNew ?? false,
       isFeatured: product.isFeatured ?? false,
       status: product.status ? String(product.status) : '1',
-      features: (product.features || []).map(toFeatureField),
+      features: (product.features || []).map((item) => toFeatureField(item)),
       options: optionsWithFallback,
     });
     setFiles(initialFiles);
@@ -220,7 +235,7 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
   const handleAddFeature = () => {
     setForm((prev) => ({
       ...prev,
-      features: [...prev.features, { key: '', value: '', valueType: 'string' }],
+      features: [...prev.features, toFeatureField()],
     }));
   };
 
@@ -236,9 +251,9 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
       const options = prev.options.map((option) =>
         option.id === optionId
           ? {
-              ...option,
-              [field]: value,
-            }
+            ...option,
+            [field]: value,
+          }
           : option
       );
       return { ...prev, options };
@@ -277,7 +292,7 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
       ...prev,
       options: prev.options.map((option) =>
         option.id === optionId
-          ? { ...option, [target]: [...option[target], { key: '', value: '', valueType: 'string' }] }
+          ? { ...option, [target]: [...option[target], toFeatureField()] }
           : option
       ),
     }));
@@ -589,7 +604,7 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
             <div className="text-sm text-muted-foreground px-2">{t('featuresEmpty')}</div>
           ) : (
             form.features.map((feature, index) => (
-              <div key={`${feature.key}-${index}`} className="rounded-[1rem] bg-muted/50 p-3 space-y-2">
+              <div key={feature.id} className="rounded-[1rem] bg-muted/50 p-3 space-y-2">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                   <div className={inlineRowClass}>
                     <span className={inlineLabelClass}>{t('featureKey')}</span>
@@ -804,7 +819,7 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                     <div className="text-sm text-muted-foreground px-2">{t('optionAttributesEmpty')}</div>
                   ) : (
                     option.attributes.map((feature, index) => (
-                      <div key={`${option.id}-attr-${index}`} className="rounded-[1rem] bg-muted/40 p-3 space-y-2">
+                      <div key={feature.id} className="rounded-[1rem] bg-muted/40 p-3 space-y-2">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                           <div className={inlineRowClass}>
                             <span className={inlineLabelClass}>{t('featureKey')}</span>
@@ -829,14 +844,14 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                           <div className={inlineRowClass}>
                             <span className={inlineLabelClass}>{t('featureValue')}</span>
                             {feature.valueType === 'boolean' ? (
-                      <InlineSelect
-                        value={feature.value}
-                        onChange={(e) => handleOptionFeatureChange(option.id, 'attributes', index, 'value', e.target.value)}
-                      >
-                        <option value="true">{tSystem('yes')}</option>
-                        <option value="false">{tSystem('no')}</option>
-                      </InlineSelect>
-                    ) : (
+                              <InlineSelect
+                                value={feature.value}
+                                onChange={(e) => handleOptionFeatureChange(option.id, 'attributes', index, 'value', e.target.value)}
+                              >
+                                <option value="true">{tSystem('yes')}</option>
+                                <option value="false">{tSystem('no')}</option>
+                              </InlineSelect>
+                            ) : (
                               <Input
                                 placeholder={t('featureValue')}
                                 type={feature.valueType === 'number' ? 'number' : 'text'}
@@ -884,7 +899,7 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
                     <div className="text-sm text-muted-foreground px-2">{t('optionFeaturesEmpty')}</div>
                   ) : (
                     option.features.map((feature, index) => (
-                      <div key={`${option.id}-feature-${index}`} className="rounded-[1rem] bg-muted/40 p-3 space-y-2">
+                      <div key={feature.id} className="rounded-[1rem] bg-muted/40 p-3 space-y-2">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                           <div className={inlineRowClass}>
                             <span className={inlineLabelClass}>{t('featureKey')}</span>

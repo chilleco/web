@@ -139,6 +139,7 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
                     <div className="px-2 py-2">
                         <SpacesSelector
                             userId={user?.id}
+                            navigateOnSelect={false}
                             onSelect={() => setMenuOpen(false)}
                         />
                     </div>
