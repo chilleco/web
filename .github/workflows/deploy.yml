@@ -1,6 +1,14 @@
+name: CI/CD main
+
 on:
   push:
     branches: [ "main" ]
+
+env:
+  REGISTRY_HOST: ghcr.io
+  REGISTRY_OWNER: kosyachniy
+  PROJECT_NAME: web
+  STACK_NAME: web-prod
 
 jobs:
   web-check:
@@ -43,51 +51,100 @@ jobs:
   #     - name: Running tests inside the container
   #       run: make run-test
 
-  deploy:
+  build-and-push:
+    name: Build & Push
     needs: web-check
-    # needs: tests
-    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Executing remote ssh command
-        uses: appleboy/ssh-action@master
+      - name: Set VERSION
+        run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.REGISTRY_HOST }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_TOKEN }}     # PAT or token
+
+      - name: Build & push images
+        run: |
+          for svc in api web; do
+            CONTEXT="$svc"
+            DOCKERFILE="$svc/Dockerfile"
+            IMAGE="${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_OWNER }}/${{ env.PROJECT_NAME }}/${svc}"
+            docker buildx build \
+              --platform linux/amd64 \
+              -f $DOCKERFILE \
+              -t $IMAGE:${{ env.VERSION }} \
+              -t $IMAGE:latest \
+              $CONTEXT \
+              --push
+          done
+
+  deploy-main:
+    name: Deploy Main
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Swarm via SSH
+        uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH }}
-          command_timeout: 30m
+          # script_stop: true
           script: |
-            echo "Pulling new version"
-            if [ -d ~/web ];
-            then
-                cd ~/web
-                git checkout -f main
-                git reset --hard
-                GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git pull --rebase origin main
-            else
-                GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone git@github.com:chilleco/web.git
-                cd ~/web
-            fi
+            # set -euo pipefail
+            COMPOSE_FILE=~/compose.node.yml
+            REGISTRY=${{ secrets.REGISTRY_HOST }}/${{ env.REGISTRY_OWNER }}
+            PROJECT_NAME=${{ env.PROJECT_NAME }}
+            STACK=${{ env.STACK_NAME }}
+            # login to registry
+            echo "${{ secrets.REGISTRY_TOKEN }}" | docker login \
+                   ${{ secrets.REGISTRY_HOST }} \
+                   --username ${{ secrets.REGISTRY_USER }} --password-stdin
+            # compile compose file
+            rm -f ~/deploy.yml
+            # set -o allexport
+            # source .env
+            # set +o allexport
+            export $(grep -v '^#' .env | xargs -d '\n')
+            export RELEASE=${{ env.VERSION }}
+            envsubst < "$COMPOSE_FILE" > ~/deploy.yml
+            #
+            # optional: pull fresh images
+            sudo docker pull $REGISTRY/$PROJECT_NAME/api:latest
+            sudo docker pull $REGISTRY/$PROJECT_NAME/web:latest
+            # deploy (with registry auth)
+            sudo docker stack deploy \
+                  --compose-file ~/deploy.yml \
+                  --with-registry-auth \
+                  --resolve-image always \
+                  --prune \
+                  "$STACK"
 
-            echo "Checking data directory"
-            if [ -d ~/data ];
-            then
-                echo ""
-            else
-                mkdir data
-            fi
-            if [ -d ~/data/web ];
-            then
-                echo ""
-            else
-                cp -r ~/web/data ~/data/web
-            fi
+            # force update all services to ensure new images are deployed
+            # this handles cases where services are at max replicas per node
+            echo "Force updating services to ensure latest images are deployed..."
+            for service in api web; do
+              echo "Updating ${STACK}_${service} with stop-first strategy to avoid replica-limit deadlocks..."
+              sudo docker service update \
+                --image $REGISTRY/$PROJECT_NAME/${service}:latest \
+                --update-order stop-first \
+                --update-parallelism 1 \
+                --force \
+                "${STACK}_${service}"
+            done
 
-            echo "Copying keys"
-            cp ~/.secrets/web.env ~/web/.env
-
-            echo "Starting new version"
-            make up-prod
+            # check services
+            sudo docker stack services "$STACK"

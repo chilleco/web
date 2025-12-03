@@ -14,10 +14,10 @@ up:
 	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.local.yml -p ${PROJECT_NAME} up --build
 
 up-dev:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml -p ${PROJECT_NAME} up --build
+	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml -p ${PROJECT_NAME} up --build
 
 up-prod:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml -p ${PROJECT_NAME} up --build -d
+	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml -p ${PROJECT_NAME} up --build -d
 
 up-test:
 	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.test.yml -p ${PROJECT_NAME} up --build
@@ -27,30 +27,27 @@ down:
 	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.local.yml -p ${PROJECT_NAME} down
 
 down-dev:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml -p ${PROJECT_NAME} down
+	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml -p ${PROJECT_NAME} down
 
 down-prod:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml -p ${PROJECT_NAME} down
+	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml -p ${PROJECT_NAME} down
 
 down-test:
 	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.test.yml -p ${PROJECT_NAME} down
 
 # Status and monitoring
 status:
-	docker ps --filter name="^${PROJECT_NAME}" --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+	sudo docker ps --filter name="^${PROJECT_NAME}" --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
 
 # Logs
 logs:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml logs
+	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml logs
 
 logs-dev:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml logs
+	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml logs
 
 logs-local:
 	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.local.yml logs
-
-logs-base:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.base.yml logs
 
 logs-api:
 	tail -f ${DATA_PATH}/logs/api.log
@@ -66,21 +63,21 @@ logs-web:
 
 # Development tools
 shell:
-	docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` bash
+	sudo docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` bash
 
 python:
-	docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` python
+	sudo docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` python
 
 script:
-	docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` python -m scripts.$(name)
+	sudo docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` python -m scripts.$(name)
 
 set:
 	sudo chmod 0755 ~
 	sudo chmod -R a+w ~/data/
 	sudo chmod 0700 ~/.ssh
 	sudo chmod -R 0600 ~/.ssh/*
-	export EXTERNAL_HOST=${EXTERNAL_HOST} WEB_PORT=${WEB_PORT} API_PORT=${API_PORT} TG_PORT=${TG_PORT} DATA_PATH=${DATA_PATH} PROMETHEUS_PORT=${PROMETHEUS_PORT} GRAFANA_PORT=${GRAFANA_PORT}; \
-	envsubst '$${EXTERNAL_HOST} $${WEB_PORT} $${API_PORT} $${TG_PORT} $${DATA_PATH} $${PROMETHEUS_PORT} $${GRAFANA_PORT}' < infra/nginx/prod.conf > /etc/nginx/sites-enabled/${PROJECT_NAME}.conf
+	export EXTERNAL_HOST=${EXTERNAL_HOST} WEB_PORT=${WEB_PORT} API_PORT=${API_PORT} TG_PORT=${TG_PORT} DATA_PATH=${DATA_PATH}; \
+	envsubst '$${EXTERNAL_HOST} $${WEB_PORT} $${API_PORT} $${TG_PORT} $${DATA_PATH}' < infra/nginx/prod.conf | sudo tee /etc/nginx/sites-enabled/${PROJECT_NAME}.conf > /dev/null
 	sudo systemctl restart nginx
 	sudo certbot --nginx
 
