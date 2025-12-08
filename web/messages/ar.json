@@ -731,6 +731,29 @@
         "takeAgain": "أخذ مرة أخرى"
     },
     "catalog": {
+        "pages": {
+            "favorites": {
+                "title": "المفضلة",
+                "description": "المنتجات المحفوظة للعودة إليها لاحقًا.",
+                "openButton": "فتح المفضلة",
+                "emptyTitle": "لا عناصر مفضلة بعد",
+                "emptyDescription": "اضغط على أيقونة القلب لحفظ المنتج هنا.",
+                "countLabel": "تم حفظ {count} عنصرًا",
+                "openCatalog": "فتح الكتالوج",
+                "openCart": "الانتقال إلى السلة"
+            },
+            "cart": {
+                "title": "سلة التسوق",
+                "description": "المنتجات التي أضفتها من الكتالوج وصفحات المنتجات.",
+                "openButton": "فتح السلة",
+                "emptyTitle": "السلة فارغة",
+                "emptyDescription": "أضف منتجات من الكتالوج لعرضها هنا.",
+                "countLabel": "{count} عنصر في السلة",
+                "openCatalog": "فتح الكتالوج",
+                "openFavorites": "فتح المفضلة",
+                "removedToast": "تمت إزالة {title} من السلة"
+            }
+        },
         "product": {
             "addToCart": "إضافة إلى السلة",
             "favorite": "مفضلة",

@@ -731,6 +731,29 @@
         "takeAgain": "Tomar de nuevo"
     },
     "catalog": {
+        "pages": {
+            "favorites": {
+                "title": "Favoritos",
+                "description": "Productos guardados para revisar más tarde.",
+                "openButton": "Abrir favoritos",
+                "emptyTitle": "Todavía no hay favoritos",
+                "emptyDescription": "Toca el corazón de un producto para guardarlo aquí.",
+                "countLabel": "{count} favoritos guardados",
+                "openCatalog": "Abrir catálogo",
+                "openCart": "Ir al carrito"
+            },
+            "cart": {
+                "title": "Carrito",
+                "description": "Productos que agregaste desde el catálogo y las fichas.",
+                "openButton": "Abrir carrito",
+                "emptyTitle": "Tu carrito está vacío",
+                "emptyDescription": "Añade productos del catálogo para revisarlos aquí.",
+                "countLabel": "{count} artículos en el carrito",
+                "openCatalog": "Abrir catálogo",
+                "openFavorites": "Abrir favoritos",
+                "removedToast": "{title} se quitó del carrito"
+            }
+        },
         "product": {
             "addToCart": "Agregar al Carrito",
             "favorite": "Favoritos",

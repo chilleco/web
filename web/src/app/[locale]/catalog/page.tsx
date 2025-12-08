@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 import { PageHeader } from '@/shared/ui/page-header';
 import { ButtonGroup } from '@/shared/ui/button-group';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -24,6 +25,7 @@ export default function CatalogPage() {
     const tCatalogPage = useTranslations('catalog');
     const tSearch = useTranslations('search');
     const tSystem = useTranslations('system');
+    const router = useRouter();
 
     const [query, setQuery] = useState('');
     const [filters, setFilters] = useState<SearchFilters>({});
@@ -83,15 +85,13 @@ export default function CatalogPage() {
     }, [filters, query]);
 
     // Handle favorites and cart actions
-    const handleOpenFavorites = () => {
-        console.log('Opening favorites panel with', favoriteItems.size, 'items');
-        // TODO: Open favorites modal/panel
-    };
+    const handleOpenFavorites = useCallback(() => {
+        router.push({ pathname: '/favorites' });
+    }, [router]);
 
-    const handleOpenCart = () => {
-        console.log('Opening cart panel with', cartItems.size, 'items');
-        // TODO: Open cart modal/panel
-    };
+    const handleOpenCart = useCallback(() => {
+        router.push({ pathname: '/cart' });
+    }, [router]);
 
     // Handle product interactions from ProductsGrid
     const handleProductAddToCart = (productId: number) => {

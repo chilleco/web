@@ -750,6 +750,29 @@
     },
     "catalog": {
         "description": "Откройте нашу подборку товаров и сервисов с расширенным поиском и фильтрами.",
+        "pages": {
+            "favorites": {
+                "title": "Избранное",
+                "description": "Сохраненные товары, которые вы хотите пересмотреть позже.",
+                "openButton": "Открыть избранное",
+                "emptyTitle": "В избранном пока пусто",
+                "emptyDescription": "Нажмите на сердце у товара, чтобы сохранить его здесь.",
+                "countLabel": "Сохранено: {count}",
+                "openCatalog": "Открыть каталог",
+                "openCart": "Перейти в корзину"
+            },
+            "cart": {
+                "title": "Корзина",
+                "description": "Товары, которые вы добавили из каталога и карточек.",
+                "openButton": "Открыть корзину",
+                "emptyTitle": "Корзина пуста",
+                "emptyDescription": "Добавьте товары из каталога, чтобы увидеть их здесь.",
+                "countLabel": "{count} позиций в корзине",
+                "openCatalog": "Открыть каталог",
+                "openFavorites": "Открыть избранное",
+                "removedToast": "«{title}» удалён из корзины"
+            }
+        },
         "product": {
             "addToCart": "Добавить в Корзину",
             "favorite": "Избранное",
@@ -764,7 +787,10 @@
             "empty": "Товары не найдены",
             "emptyHint": "Измените фильтры или запрос, чтобы увидеть больше результатов",
             "addedToCartToast": "«{title}» добавлен в корзину",
+            "removedFromCartToast": "«{title}» удалён из корзины",
             "favoriteToggledToast": "Избранное обновлено для {title}",
+            "favoriteAddedToast": "«{title}» добавлен в избранное",
+            "favoriteRemovedToast": "«{title}» убран из избранного",
             "priceFrom": "От",
             "loading": "Загружаем товар...",
             "optionsTitle": "Опции",

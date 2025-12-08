@@ -750,6 +750,29 @@
     },
     "catalog": {
         "description": "Discover our curated collection of products and services with advanced filtering and search capabilities.",
+        "pages": {
+            "favorites": {
+                "title": "Favorites",
+                "description": "Saved products to revisit later.",
+                "openButton": "Open favorites",
+                "emptyTitle": "No favorites yet",
+                "emptyDescription": "Tap the heart on a product to save it for later.",
+                "countLabel": "{count} favorites saved",
+                "openCatalog": "Open catalog",
+                "openCart": "Go to cart"
+            },
+            "cart": {
+                "title": "Cart",
+                "description": "Products you've added from the catalog and product pages.",
+                "openButton": "Open cart",
+                "emptyTitle": "Your cart is empty",
+                "emptyDescription": "Add products from the catalog to review them here.",
+                "countLabel": "{count} items in cart",
+                "openCatalog": "Open catalog",
+                "openFavorites": "Open favorites",
+                "removedToast": "{title} removed from cart"
+            }
+        },
         "product": {
             "addToCart": "Add to Cart",
             "favorite": "Favorites",
@@ -765,7 +788,10 @@
             "empty": "No products found",
             "emptyHint": "Adjust filters or search terms to see more results",
             "addedToCartToast": "{title} added to cart",
+            "removedFromCartToast": "{title} removed from cart",
             "favoriteToggledToast": "Updated favorites for {title}",
+            "favoriteAddedToast": "{title} added to favorites",
+            "favoriteRemovedToast": "{title} removed from favorites",
             "loading": "Loading product... ",
             "optionsTitle": "Options",
             "descriptionTitle": "Description",

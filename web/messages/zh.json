@@ -731,6 +731,29 @@
         "takeAgain": "重新开始"
     },
     "catalog": {
+        "pages": {
+            "favorites": {
+                "title": "收藏夹",
+                "description": "保存的商品，便于稍后查看。",
+                "openButton": "打开收藏夹",
+                "emptyTitle": "暂时没有收藏",
+                "emptyDescription": "点击商品的爱心即可保存到这里。",
+                "countLabel": "已保存 {count} 个收藏",
+                "openCatalog": "查看目录",
+                "openCart": "前往购物车"
+            },
+            "cart": {
+                "title": "购物车",
+                "description": "你在目录和商品页添加的商品。",
+                "openButton": "打开购物车",
+                "emptyTitle": "购物车为空",
+                "emptyDescription": "从目录添加商品后会显示在这里。",
+                "countLabel": "购物车中有 {count} 件商品",
+                "openCatalog": "查看目录",
+                "openFavorites": "打开收藏夹",
+                "removedToast": "{title} 已从购物车移除"
+            }
+        },
         "product": {
             "addToCart": "加入购物车",
             "favorite": "收藏夹",

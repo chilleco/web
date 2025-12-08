@@ -17,6 +17,7 @@ import { toggleFavorite, selectFavoriteItemsAsSet } from '@/features/favorites';
 import { useShare } from '@/features/share';
 import { getProduct, Product, ProductOption } from '@/entities/product';
 import { selectSelectedSpace } from '@/features/spaces/stores/spaceSelectionSlice';
+import { useRouter } from '@/i18n/routing';
 import {
   HeartIcon,
   ShareIcon,
@@ -67,10 +68,12 @@ function buildOptionLabel(option: ProductOption, currency: string | undefined) {
 export default function ProductPage({ params }: ProductPageProps) {
   const t = useTranslations('catalog.product');
   const tSystem = useTranslations('system');
+  const tCartPage = useTranslations('catalog.pages.cart');
   const { success, error, info } = useToastActions();
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectCartItemsAsSet);
   const favorites = useAppSelector(selectFavoriteItemsAsSet);
+  const router = useRouter();
   const shareUrl = useMemo(() => (typeof window !== 'undefined' ? window.location.href : ''), []);
   const selectedSpace = useAppSelector(selectSelectedSpace);
   const { share, sharing, available: shareAvailable } = useShare({
@@ -130,17 +133,29 @@ export default function ProductPage({ params }: ProductPageProps) {
   const optionFeatures = useMemo(() => selectedOption?.features || [], [selectedOption]);
   const isFavorite = product ? favorites.has(product.id) : false;
   const inCart = product ? cart.has(product.id) : false;
+  const favoritesCount = favorites.size;
+  const cartCount = cart.size;
 
   const handleAddToCart = () => {
     if (!product) return;
+    const willBeInCart = !inCart;
     dispatch(toggleCartItem(product.id));
-    success(inCart ? t('inCart') : t('addedToCartToast', { title: product.title }));
+    if (willBeInCart) {
+      success(t('addedToCartToast', { title: product.title }));
+    } else {
+      info(t('removedFromCartToast', { title: product.title }));
+    }
   };
 
   const handleToggleFavorite = () => {
     if (!product) return;
+    const willBeFavorite = !isFavorite;
     dispatch(toggleFavorite(product.id));
-    info(t('favoriteToggledToast', { title: product.title }));
+    if (willBeFavorite) {
+      success(t('favoriteAddedToast', { title: product.title }));
+    } else {
+      info(t('favoriteRemovedToast', { title: product.title }));
+    }
   };
 
   const handleSelectImage = (index: number) => {
@@ -247,33 +262,72 @@ export default function ProductPage({ params }: ProductPageProps) {
         title={product.title}
         description={product.category || ''}
         actions={
-          <ButtonGroup>
-            <IconButton
-              variant={isFavorite ? 'secondary' : 'outline'}
-              icon={<HeartIcon size={14} />}
-              onClick={handleToggleFavorite}
-              responsive
-            >
-              {t('favorite')}
-            </IconButton>
-            <IconButton
-              variant={inCart ? 'secondary' : 'default'}
-              icon={<ShoppingIcon size={14} />}
-              onClick={handleAddToCart}
-              responsive
-            >
-              {inCart ? t('inCart') : t('addToCart')}
-            </IconButton>
-            <IconButton
-              variant="outline"
-              icon={<ShareIcon size={14} />}
-              onClick={() => product && share({ title: product.title, url: shareUrl })}
-              responsive
-              disabled={sharing || !shareAvailable}
-            >
-              {tSystem('share')}
-            </IconButton>
-          </ButtonGroup>
+          <div className="flex flex-wrap gap-2">
+            <ButtonGroup>
+              <IconButton
+                variant={isFavorite ? 'secondary' : 'outline'}
+                icon={<HeartIcon size={14} />}
+                onClick={handleToggleFavorite}
+                responsive
+                className="relative"
+              >
+                {isFavorite ? tSystem('remove') : tSystem('add')}
+                {favoritesCount > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-red-500 border-red-500 pointer-events-none z-10"
+                  >
+                    {favoritesCount}
+                  </Badge>
+                )}
+              </IconButton>
+              <IconButton
+                variant={inCart ? 'secondary' : 'default'}
+                icon={<ShoppingIcon size={14} />}
+                onClick={handleAddToCart}
+                responsive
+                className="relative"
+              >
+                {inCart ? tSystem('remove') : tSystem('add')}
+                {cartCount > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-red-500 border-red-500 pointer-events-none z-10"
+                  >
+                    {cartCount}
+                  </Badge>
+                )}
+              </IconButton>
+            </ButtonGroup>
+            <ButtonGroup>
+              <IconButton
+                variant="outline"
+                icon={<ShareIcon size={14} />}
+                onClick={() => product && share({ title: product.title, url: shareUrl })}
+                responsive
+                disabled={sharing || !shareAvailable}
+              >
+                {tSystem('share')}
+              </IconButton>
+              <IconButton
+                variant="outline"
+                icon={<ShoppingIcon size={14} />}
+                onClick={() => router.push({ pathname: '/cart' })}
+                responsive
+                className="relative"
+              >
+                {tCartPage('openButton')}
+                {cartCount > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-red-500 border-red-500 pointer-events-none z-10"
+                  >
+                    {cartCount}
+                  </Badge>
+                )}
+              </IconButton>
+            </ButtonGroup>
+          </div>
         }
       />
 
