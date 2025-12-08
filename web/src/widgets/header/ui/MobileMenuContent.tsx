@@ -1,15 +1,15 @@
 'use client';
 
-import { type ComponentType } from 'react';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { useTranslations, useLocale } from 'next-intl';
 import { ThemeSwitcher } from '@/shared/components/layout';
 import LanguageSwitcher from '@/features/navigation/components/LanguageSwitcher';
 import { UserProfileDropdown } from '@/widgets/user-profile';
-import { PostsIcon, SpaceIcon, HubIcon, CatalogIcon, HomeIcon, SearchIcon } from '@/shared/ui/icons';
+import { HomeIcon, SearchIcon } from '@/shared/ui/icons';
 import { useRouter } from '@/i18n/routing';
 import { CategoriesHoverPopup } from '@/widgets/category';
+import { useNavigationItems } from '../model/navigationItems';
 
 interface MobileMenuContentProps {
     isOpen: boolean;
@@ -22,40 +22,8 @@ export default function MobileMenuContent({ isOpen, onSearchSubmit, onClose }: M
     const tNav = useTranslations('navigation');
     const locale = useLocale();
     const router = useRouter();
+    const navigationItems = useNavigationItems();
     type RouteHref = Parameters<typeof router.push>[0];
-    type NavIcon = ComponentType<{ size?: number }>;
-
-    const navigationItems = [
-        {
-            key: 'posts',
-            label: tNav('posts'),
-            icon: PostsIcon,
-            path: '/posts' as const
-        },
-        {
-            key: 'catalog',
-            label: tNav('catalog'),
-            icon: CatalogIcon,
-            path: '/catalog' as const
-        },
-        {
-            key: 'space',
-            label: tNav('space'),
-            icon: SpaceIcon,
-            path: '/space' as const
-        },
-        {
-            key: 'hub',
-            label: tNav('hub'),
-            icon: HubIcon,
-            path: '/hub' as const
-        },
-    ] satisfies ReadonlyArray<{
-        key: string;
-        label: string;
-        icon: NavIcon;
-        path: RouteHref;
-    }>;
 
     const handleNavigate = (path: RouteHref) => {
         router.push(path);
@@ -80,7 +48,7 @@ export default function MobileMenuContent({ isOpen, onSearchSubmit, onClose }: M
                             />
                             <button
                                 type="submit"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                             >
                                 <SearchIcon size={16} />
                             </button>
@@ -89,22 +57,24 @@ export default function MobileMenuContent({ isOpen, onSearchSubmit, onClose }: M
 
                     {/* Navigation Sections */}
                     <div className="space-y-3 pb-4 border-b">
-                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Navigation</h3>
+                        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                            {tNav('sections')}
+                        </h3>
                         {navigationItems.map((item) => {
+                            const Icon = item.icon;
                             const button = (
                                 <Button
                                     key={item.key}
                                     variant="outline"
-                                    className="w-full justify-start gap-3 h-12"
+                                    className="w-full justify-start gap-3 h-12 cursor-pointer"
                                     onClick={() => handleNavigate(item.path)}
                                 >
-                                    <item.icon size={18} />
+                                    <Icon size={18} />
                                     <span>{item.label}</span>
                                 </Button>
                             );
 
-                            // Wrap Posts navigation item with CategoriesHoverPopup
-                            if (item.key === 'posts') {
+                            if (item.withCategoriesPopup) {
                                 return (
                                     <CategoriesHoverPopup key={item.key} locale={locale}>
                                         {button}
