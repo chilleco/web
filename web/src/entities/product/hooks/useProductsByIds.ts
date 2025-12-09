@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { getProducts, type Product } from '../api/productApi';
+import { getProducts } from '../api/productApi';
+import { type Product } from '../model/product';
 
 interface UseProductsByIdsResult {
     products: Product[];

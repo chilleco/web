@@ -236,7 +236,6 @@ export async function apiClient<T = unknown>(
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
     try {
-        console.log('Fetching URL:', url);
         const response = await fetch(url, {
             method,
             headers: {

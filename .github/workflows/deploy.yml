@@ -71,7 +71,7 @@ jobs:
       - name: Log in to registry
         uses: docker/login-action@v2
         with:
-          registry: ${{ secrets.REGISTRY_HOST }}
+          registry: ${{ env.REGISTRY_HOST }}
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_TOKEN }}     # PAT or token
 
@@ -104,15 +104,45 @@ jobs:
           key: ${{ secrets.SSH }}
           # script_stop: true
           script: |
-            # set -euo pipefail
-            COMPOSE_FILE=~/compose.node.yml
-            REGISTRY=${{ secrets.REGISTRY_HOST }}/${{ env.REGISTRY_OWNER }}
+            echo "Pulling new version"
+            if [ -d ~/web ];
+            then
+                cd ~/web
+                git checkout -f main
+                git reset --hard
+                GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git pull --rebase origin main
+            else
+                GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone git@github.com:chilleco/web.git
+                cd ~/web
+            fi
+
+            echo "Checking data directory"
+            if [ -d ~/data ];
+            then
+                echo ""
+            else
+                mkdir -p ~/data
+            fi
+            if [ -d ~/data/web ];
+            then
+                echo ""
+            else
+                cp -r ~/web/data ~/data/web
+            fi
+
+            echo "Copying keys"
+            cp ~/.secrets/web.env ~/web/.env
+
+            COMPOSE_FILE=infra/compose/compose.node.yml
+            REGISTRY=${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_OWNER }}
             PROJECT_NAME=${{ env.PROJECT_NAME }}
             STACK=${{ env.STACK_NAME }}
+
             # login to registry
             echo "${{ secrets.REGISTRY_TOKEN }}" | docker login \
-                   ${{ secrets.REGISTRY_HOST }} \
+                   ${{ env.REGISTRY_HOST }} \
                    --username ${{ secrets.REGISTRY_USER }} --password-stdin
+
             # compile compose file
             rm -f ~/deploy.yml
             # set -o allexport
@@ -121,10 +151,11 @@ jobs:
             export $(grep -v '^#' .env | xargs -d '\n')
             export RELEASE=${{ env.VERSION }}
             envsubst < "$COMPOSE_FILE" > ~/deploy.yml
-            #
+
             # optional: pull fresh images
             sudo docker pull $REGISTRY/$PROJECT_NAME/api:latest
             sudo docker pull $REGISTRY/$PROJECT_NAME/web:latest
+
             # deploy (with registry auth)
             sudo docker stack deploy \
                   --compose-file ~/deploy.yml \
