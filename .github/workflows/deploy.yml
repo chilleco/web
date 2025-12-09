@@ -9,6 +9,10 @@ env:
   REGISTRY_OWNER: kosyachniy
   PROJECT_NAME: web
   STACK_NAME: web-prod
+  FOLDER: ~/web
+  GITHUB_REPO: git@github.com:chilleco/web.git
+  DATA_FOLDER: ~/data/web
+  SECRETS_FILE: ~/.secrets/web.env
 
 jobs:
   web-check:
@@ -104,34 +108,42 @@ jobs:
           key: ${{ secrets.SSH }}
           # script_stop: true
           script: |
+            # set -euo pipefail
+
+            FOLDER=${{ env.FOLDER }}
+            PROJECT_NAME=${{ env.PROJECT_NAME }}
+            REPO=${{ env.GITHUB_REPO }}
+            DATA_FOLDER=${{ env.DATA_FOLDER }}
+            SECRETS_FILE=${{ env.SECRETS_FILE }}
+            DATA_ROOT="$(dirname "$DATA_FOLDER")"
             echo "Pulling new version"
-            if [ -d ~/web ];
+            if [ -d "$FOLDER" ];
             then
-                cd ~/web
+                cd "$FOLDER"
                 git checkout -f main
                 git reset --hard
                 GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git pull --rebase origin main
             else
-                GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone git@github.com:chilleco/web.git
-                cd ~/web
+                GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone "$REPO" "$FOLDER"
+                cd "$FOLDER"
             fi
 
             echo "Checking data directory"
-            if [ -d ~/data ];
+            if [ -d "$DATA_ROOT" ];
             then
                 echo ""
             else
-                mkdir -p ~/data
+                mkdir -p "$DATA_ROOT"
             fi
-            if [ -d ~/data/web ];
+            if [ -d "$DATA_FOLDER" ];
             then
                 echo ""
             else
-                cp -r ~/web/data ~/data/web
+                cp -r "$FOLDER/data" "$DATA_FOLDER"
             fi
 
             echo "Copying keys"
-            cp ~/.secrets/web.env ~/web/.env
+            cp "$SECRETS_FILE" "$FOLDER/.env"
 
             COMPOSE_FILE=infra/compose/compose.node.yml
             REGISTRY=${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_OWNER }}
@@ -144,8 +156,8 @@ jobs:
                    --username ${{ secrets.REGISTRY_USER }} --password-stdin
 
             # compile compose file
-            rm -f ~/web/deploy.yml
-            export ENV_FILE_PATH="$HOME/web/.env"
+            rm -f "$FOLDER/deploy.yml"
+            export ENV_FILE_PATH="$FOLDER/.env"
             while IFS='=' read -r key value; do
               case "$key" in
                 ''|\#*) continue ;;
@@ -157,7 +169,7 @@ jobs:
               export "${key}=${value}"
             done < "$ENV_FILE_PATH"
             export RELEASE=${{ env.VERSION }}
-            envsubst < "$COMPOSE_FILE" > ~/web/deploy.yml
+            envsubst < "$COMPOSE_FILE" > "$FOLDER/deploy.yml"
 
             # optional: pull fresh images
             sudo docker pull $REGISTRY/$PROJECT_NAME/api:latest
@@ -165,7 +177,7 @@ jobs:
 
             # deploy (with registry auth)
             sudo docker stack deploy \
-                  --compose-file ~/web/deploy.yml \
+                  --compose-file "$FOLDER/deploy.yml" \
                   --with-registry-auth \
                   --resolve-image always \
                   --prune \
