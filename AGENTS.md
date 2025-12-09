@@ -105,17 +105,17 @@ Depending on the project that develops based on this template, the entities of t
 - Keep it lean: no unnecessary wrappers, deep inheritance, or extra deps; keep schemas/models near routes.
 - **Typing**: prefer modern PEP syntax (for example: `T | None`, `list[str]`, `dict[str, Any]` over legacy `Optional`/`List`/`Dict`).
 - **API Documentation**: OpenAPI/Swagger auto-generated; Contracts: Swagger/OpenAPI is source of truth; define Pydantic request/response schemas; auto-generate TS types + client (e.g., `openapi-typescript` + `openapi-fetch`) so drift fails lint/build.
-- **Custom libs**: `consys` ORM (`docs/CONSYS_ORM_DOCUMENTATION.md`), `libdev` helpers (`docs/LIBDEV_DOCUMENTATION.md`), `userhub` (auth), `tgio` (Telegram helpers), `tgreports` (reporting). Check docs/README before changes.
+- **Custom libs**: `consys` ORM (`docs/packages/consys.md`), `libdev` helpers (`docs/packages/libdev.md`), `userhub` (auth, `docs/packages/userhub.md`), `tgio` (Telegram helpers, `docs/packages/tgio.md`), `tgreports` (reporting, `docs/packages/tgreports.md`). Check docs/README before changes.
 - **Authentication**: JWT tokens with FastAPI security
 - **Caching**: Redis for session storage and caching
-- **Logging & alerts**: Structured loguru logging; Telegram alerts/reporting via `tgreports` — follow `docs/TGREPORTS_GUIDE.md`.
+- **Logging & alerts**: Structured loguru logging; Telegram alerts/reporting via `tgreports` — follow `docs/packages/tgreports.md`.
 - **Testing**: pytest with async test support
 - **Background Tasks**: Celery with Redis broker
 - **Auth/Session flow (FE+BE)**:
     - **Guest bootstrap**: On first client load `SessionInitializer` generates a client token (UUID/random), calls `/users/token/` with network=`web`, utm + browser tz/langs, receives JWT. Tokens persist in `localStorage` as `sessionToken` (client) and `authToken` (JWT). API client automatically adds `Authorization: Bearer <authToken>`.
     - **JWT contents**: encodes `token` (session id), `user` (id or 0), `status` (rights), `network` (provider id). Backend `AccessMiddleware` validates JWT and sets `request.state.token|user|status|network` for all routes.
     - **Rights/status**: Status codes follow UserHub (0 deleted, 1 blocked, 2 unauthorized, 3 authorized, 4+ elevated incl. moderators/admins up to 8 owner). Whitelist in `AccessMiddleware` allows public POSTs (token creation, content fetch/save as configured); others require valid JWT.
-    - **User storage (BE)**: Users and tokens live in core UserHub (`userhub` lib), plus project-local overlay `UserLocal` (`api/app/models/user.py`) for per-project fields (balance, premium, mailing, wallet, locale, referrer/frens, utm, tasks/social cache). Creation/auth flows go through `routes/users/auth.py`, `routes/users/token.py`, `routes/users/social.py`, `routes/users/app/tg.py` using `userhub.auth/token`; `UserLocal` is created/updated during auth (on referral/locale changes). See `docs/USERHUB_DOC.md` for contract, validation, and status meanings. Local users are fetched in routes via `UserLocal.get(request.state.user)` to apply project-specific data/roles.
+    - **User storage (BE)**: Users and tokens live in core UserHub (`userhub` lib), plus project-local overlay `UserLocal` (`api/app/models/user.py`) for per-project fields (balance, premium, mailing, wallet, locale, referrer/frens, utm, tasks/social cache). Creation/auth flows go through `routes/users/auth.py`, `routes/users/token.py`, `routes/users/social.py`, `routes/users/app/tg.py` using `userhub.auth/token`; `UserLocal` is created/updated during auth (on referral/locale changes). See `docs/packages/userhub.md` for contract, validation, and status meanings. Local users are fetched in routes via `UserLocal.get(request.state.user)` to apply project-specific data/roles.
     - **Login**: FE dispatches `loginWithCredentials` → `/users/auth/` with login/password/utm, stores returned JWT in `authToken`, updates Redux `auth` slice with user profile. API requests immediately use new JWT.
     - **Telegram Mini App auto-auth**: `TelegramAuthInitializer` checks `window.Telegram.WebApp.initData` + user; if present and user not set, calls `/users/app/tg/` with `initData` + utm to auth/link Telegram session and rotate JWT.
     - **Social callback**: External providers (Google/Telegram/etc.) redirect to `/[locale]/callback` with `code`; page infers provider, calls `/users/social/` with `code` + utm, stores JWT/user, and redirects to previous path or profile.
@@ -148,6 +148,7 @@ Depending on the project that develops based on this template, the entities of t
 - After finishing any feature, run lint and build, start the frontend, and recheck Docker console logs for new errors.
 
 ### Styling & Format
+- Детальные правила со сниппетами: основы (`docs/components/foundations.md`), контейнеры/страницы (`docs/components/layout.md`), кнопки (`docs/components/buttons.md`), формы (`docs/components/forms.md`), списки (`docs/components/entity-lists.md`), фидбек (`docs/components/feedback.md`).
 
 #### Theme
 - **Theme-aware**: Support both light & dark themes via CSS variables/tokens
@@ -184,6 +185,7 @@ Depending on the project that develops based on this template, the entities of t
 - Success actions (create/save/delete) must show green success toasts; failures must show red error toasts. Use shared toast helpers (`useToastActions`) consistently.
 
 #### Custom Components
+- Полные правила и примеры по компонентам см. `docs/components/foundations.md`, `docs/components/layout.md`, `docs/components/buttons.md`, `docs/components/forms.md`, `docs/components/entity-lists.md`, `docs/components/feedback.md`.
 
 ##### Box containers
 - Wrap ALL content in `Box` component from `@/shared/ui/box`
