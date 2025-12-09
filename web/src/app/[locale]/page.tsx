@@ -401,8 +401,12 @@ export default function Home() {
                         </div>
                     ) : landingPosts.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            {landingPosts.map((post) => (
-                                <PostCard key={post.id} post={post} />
+                            {landingPosts.map((post, index) => (
+                                <PostCard
+                                    key={post.id}
+                                    post={post}
+                                    imageLoading={index === 0 ? 'eager' : 'lazy'}
+                                />
                             ))}
                         </div>
                     ) : (
@@ -435,8 +439,12 @@ export default function Home() {
                         </div>
                     ) : landingProducts.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {landingProducts.map((product) => (
-                                <ProductCard key={product.id} product={product} />
+                            {landingProducts.map((product, index) => (
+                                <ProductCard
+                                    key={product.id}
+                                    product={product}
+                                    imageLoading={index === 0 ? 'eager' : 'lazy'}
+                                />
                             ))}
                         </div>
                     ) : (

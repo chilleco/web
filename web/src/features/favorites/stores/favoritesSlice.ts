@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface FavoritesState {
     items: number[]
@@ -90,15 +90,14 @@ export const {
 } = favoritesSlice.actions
 
 // Selectors
-export const selectFavoriteItems = (state: { favorites: FavoritesState }) => {
-    const items = state.favorites?.items;
-    return Array.isArray(items) ? items : [];
-}
+const selectFavoritesState = (state: { favorites: FavoritesState }) => state.favorites;
 
-export const selectFavoriteItemsAsSet = (state: { favorites: FavoritesState }) => {
-    const items = state.favorites?.items;
-    return new Set(Array.isArray(items) ? items : []);
-}
+export const selectFavoriteItems = createSelector([selectFavoritesState], (favorites) => {
+    const items = favorites?.items;
+    return Array.isArray(items) ? items : [];
+});
+
+export const selectFavoriteItemsAsSet = createSelector([selectFavoriteItems], (items) => new Set(items));
 
 export const selectFavoritesCount = (state: { favorites: FavoritesState }) => {
     const items = state.favorites?.items;

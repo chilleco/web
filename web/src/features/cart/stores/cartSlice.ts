@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface CartState {
     items: number[]
@@ -9,6 +9,7 @@ const initialState: CartState = {
     items: [],
     isInitialized: false,
 }
+const emptyCartItems: number[] = []
 
 export const cartSlice = createSlice({
     name: 'cart',
@@ -91,14 +92,14 @@ export const {
 
 // Selectors
 export const selectCartItems = (state: { cart: CartState }) => {
-    const items = state.cart?.items;
-    return Array.isArray(items) ? items : [];
+    const items = state.cart?.items
+    return Array.isArray(items) ? items : emptyCartItems
 }
 
-export const selectCartItemsAsSet = (state: { cart: CartState }) => {
-    const items = state.cart?.items;
-    return new Set(Array.isArray(items) ? items : []);
-}
+export const selectCartItemsAsSet = createSelector(
+    [selectCartItems],
+    (items) => new Set(items),
+)
 
 export const selectCartCount = (state: { cart: CartState }) => {
     const items = state.cart?.items;

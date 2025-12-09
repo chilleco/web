@@ -9,9 +9,10 @@ import Image from 'next/image';
 
 interface PostCardProps {
     post: Post;
+    imageLoading?: 'lazy' | 'eager';
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, imageLoading = 'lazy' }: PostCardProps) {
     // Like functionality - in production this would come from props or global state
     const [isLiked, setIsLiked] = useState(false);
 
@@ -88,6 +89,7 @@ export function PostCard({ post }: PostCardProps) {
             isLiked={isLiked}
             onLikeClick={handleLikeClick}
             id={post.id}
+            imageLoading={imageLoading}
         />
     );
 }

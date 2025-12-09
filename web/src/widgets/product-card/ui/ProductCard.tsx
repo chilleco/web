@@ -15,9 +15,17 @@ interface ProductCardProps {
     onToggleFavorite?: (product: Product) => void;
     isInCart?: boolean;
     isInFavorites?: boolean;
+    imageLoading?: 'lazy' | 'eager';
 }
 
-export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart = false, isInFavorites = false }: ProductCardProps) {
+export function ProductCard({
+    product,
+    onAddToCart,
+    onToggleFavorite,
+    isInCart = false,
+    isInFavorites = false,
+    imageLoading = 'lazy'
+}: ProductCardProps) {
     const t = useTranslations('catalog.product');
     const tSystem = useTranslations('system');
     const selectedSpace = useAppSelector(selectSelectedSpace);
@@ -164,6 +172,7 @@ export function ProductCard({ product, onAddToCart, onToggleFavorite, isInCart =
             onLikeClick={handleLikeClick}
             id={product.id}
             href={productLink}
+            imageLoading={imageLoading}
         />
     );
 }

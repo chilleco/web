@@ -160,7 +160,7 @@ export function ProductsGrid({
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-            {products.map((product) => (
+            {products.map((product, index) => (
                 <ProductCard
                     key={product.id}
                     product={product}
@@ -168,6 +168,7 @@ export function ProductsGrid({
                     onToggleFavorite={handleToggleFavorite}
                     isInCart={finalCartItems.has(product.id)}
                     isInFavorites={finalFavoriteItems.has(product.id)}
+                    imageLoading={index === 0 ? 'eager' : 'lazy'}
                 />
             ))}
         </div>

@@ -146,5 +146,8 @@ jobs:
                 "${STACK}_${service}"
             done
 
+            #
+            yes | sudo docker system prune -a
+
             # check services
             sudo docker stack services "$STACK"

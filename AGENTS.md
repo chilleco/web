@@ -6,6 +6,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 ## Architecture & Structure
 - Services: `api/` FastAPI backend; `web/` Next.js 15 + TypeScript (dirs: `src/app`, `entities`, `features`, `widgets`, `shared`, `i18n`, `styles`); `tg/` Telegram worker; `infra/` Docker Compose; `data/` runtime storage.
 - Localization: bundles in `web/messages/*.json`; per-locale routing under `web/src/app/[locale]/**`. All user-facing text must use locale files.
+
 ## Entities
 Depending on the project that develops based on this template, the entities of this template can be reused as follows:
 - spaces (switch environment: like Slack workspaces)
@@ -27,10 +28,14 @@ Depending on the project that develops based on this template, the entities of t
 - **Cursor pointer everywhere**: All clickable elements/blocks/links/pickers/sliders must explicitly set `cursor-pointer` for clear affordance
 - **No duplicate API calls**: guard client-side fetch effects with stable fetch keys/in-flight refs so Strict Mode doesn’t trigger the same request multiple times (one request per dataset)
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
+- **Required fields UX**: For all forms mark required inputs with `*` and highlight missing/invalid required fields with a red focus/outline when the API returns validation errors (e.g., `detail` value). Keep visual feedback consistent across the app.
+- **Dialogs must scroll**: Large popups (forms/modals) must fit on mobile and small screens with max-height constraints and internal `overflow-y-auto` so content is scrollable without breaking layout.
 - **Shared translations first**: Use existing `system.*` translation keys for shared labels (loading, refresh, common actions) instead of introducing feature-specific duplicates; migrate simple words from feature scopes to `system.*` when touching those areas.
   - When adding new locale strings, ensure non-English locales are translated (avoid copy-pasting English into `ru`/`es`/`ar`/`zh`).
 - **Unit suffixes**: Show measurement units using right-side labels/suffix segments on inputs (e.g., %, kg, cm); keep left labels clean.
 - **Number inputs**: Hide browser stepper arrows and prevent scroll-wheel value changes; use shared Input defaults or equivalent handlers for any custom number fields.
+- **Allow clearing inputs**: Form fields (including numeric inputs) must allow users to clear the value with Backspace/Delete before retyping; do not force immediate fallback values while typing.
+- **Verify APIs with curl**: When adding or debugging endpoints, hit them with `curl` (use bearer tokens provided in examples when available) to confirm responses and contracts before handoff.
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
 - **API sanity via curl**: When debugging/adding flows, hit backend endpoints with curl locally (using provided bearer tokens when available) to validate responses and fix errors before shipping.
 - **Pre-handoff checks**: Always run `npm run lint` and `npm run build` (or `make lint-web`) yourself before finishing a task; fix any errors locally. If sandbox/network blocks them, explicitly note the failure reason and keep TypeScript/routing types clean (use typed `redirect/push` objects aligned with `web/src/i18n/routing.ts`).
@@ -45,6 +50,7 @@ Depending on the project that develops based on this template, the entities of t
   - Non-English locales must be properly translated (no English copy/paste for `ru`/`es`/`ar`/`zh`); add missing keys to all locales together.
   - Centralize reusable option labels (e.g., entity forms/types) under shared namespaces rather than duplicating in feature scopes.
 - **API routing objects**: When calling backend routes, use the existing typed API helpers and common endpoints (`/posts/get|save|rm`, `/categories/get|save|rm`, `/products/get|save|rm`, etc.) instead of ad-hoc URLs or duplicated schemas.
+- **Typed frontend routing**: Use `useRouter` from `@/i18n/routing` and pass `RouteHref = Parameters<typeof router.push>[0]` only; avoid raw string concatenation. Dynamic routes must use `{ pathname: '/spaces/[link]', params: { link } }` style objects. Keep `web/src/i18n/routing.ts` `pathnames` updated before adding navigation targets so unions include new routes. Navigation lists should type their `path` fields as `RouteHref` to prevent loose strings.
 
 ### Validation Checklist
 
@@ -240,6 +246,7 @@ Depending on the project that develops based on this template, the entities of t
   - File uploads: `@/shared/ui/file-upload` for single image/avatar; `@/shared/ui/multi-file-upload` for multiple images (products, galleries). Always upload via `/upload/` and store returned URLs in form state.
   - Rich text: `@/shared/ui/editor` (CKEditor lazy-load wrapper) for WYSIWYG fields; keep placeholders/i18n and honor the light edit surface it applies.
   - Inline rows: follow the product/profile pattern—muted row, left label segment with divider, borderless controls, pointer cursor on interactive selects/toggles.
+  - Copy/suffix actions: share/copy fields must be a single muted row with a read-only input and a right-side icon+label button (suffix) inside the same surface; no extra borders, keep cursor-pointer on the action.
   - Units: keep measurement units (%, kg, cm, etc.) as right-side suffixes inside the input row; do not mix units into the left labels.
   - Grouped fields: when fields are tightly related (e.g., name+surname, country+region+city), group them into a single inline row on desktop with shared muted background/dividers and stack vertically on mobile.
   - Toggles/checkboxes: prefer row-level click targets (as in product form) with 20px checkboxes, rounded corners, and full-row cursor-pointer/hover.

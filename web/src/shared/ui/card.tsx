@@ -42,9 +42,20 @@ interface ImageSliderProps {
   showLikeButton?: boolean;
   isLiked?: boolean;
   onLikeClick?: (e: React.MouseEvent) => void;
+  loading?: 'lazy' | 'eager';
 }
 
-function ImageSlider({ images, alt, className, showDiscount, discountPercent, showLikeButton, isLiked, onLikeClick }: ImageSliderProps) {
+function ImageSlider({
+  images,
+  alt,
+  className,
+  showDiscount,
+  discountPercent,
+  showLikeButton,
+  isLiked,
+  onLikeClick,
+  loading = 'lazy'
+}: ImageSliderProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const hasMultipleImages = images.length > 1;
 
@@ -68,6 +79,8 @@ function ImageSlider({ images, alt, className, showDiscount, discountPercent, sh
         fill
         className="object-cover"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        loading={loading}
+        priority={loading === 'eager'}
       />
 
       {/* Discount Badge */}
@@ -242,6 +255,7 @@ interface CardProps extends VariantProps<typeof cardVariants> {
   // Additional props
   className?: string;
   children?: React.ReactNode;
+  imageLoading?: 'lazy' | 'eager';
 }
 
 function Card({
@@ -266,6 +280,7 @@ function Card({
   size,
   className,
   children,
+  imageLoading = 'lazy',
   ...props
 }: CardProps) {
   const hasImages = images.length > 0;
@@ -294,6 +309,7 @@ function Card({
           showLikeButton={showLikeButton}
           isLiked={isLiked}
           onLikeClick={handleLikeClick}
+          loading={imageLoading}
         />
       )}
 
