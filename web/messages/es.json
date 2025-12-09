@@ -406,6 +406,55 @@
         }
     },
     "admin": {
+        "dashboard": {
+            "description": "Resumen de métricas de la plataforma y actualizaciones recientes.",
+            "loadError": "No se pudieron cargar las estadísticas del panel",
+            "cards": {
+                "users": "Usuarios registrados",
+                "posts": "Publicaciones publicadas",
+                "products": "Productos activos"
+            },
+            "activity": {
+                "title": "Actividad reciente",
+                "userRegistered": {
+                    "title": "Nuevo usuario registrado",
+                    "subtitle": "Cuenta nueva en espera de onboarding"
+                },
+                "postPublished": {
+                    "title": "Publicación publicada",
+                    "subtitle": "El contenido apareció en el feed"
+                },
+                "productUpdated": {
+                    "title": "Producto actualizado",
+                    "subtitle": "Inventario del catálogo sincronizado"
+                },
+                "time": {
+                    "hoursAgo": "Hace {value} horas",
+                    "dayAgo": "Hace 1 día"
+                }
+            },
+            "funnel": {
+                "title": "Embudo de usuarios (ejemplo)",
+                "subtitle": "Ruta de ejemplo desde visita hasta recompra",
+                "units": "usuarios",
+                "relativeFirst": "{value} de las visitas",
+                "relativePrev": "{value} frente al paso previo",
+                "table": {
+                    "amount": "Cantidad",
+                    "absolute": "% de visitas",
+                    "relative": "% vs paso previo"
+                },
+                "stages": {
+                    "websiteVisit": "Visita al sitio",
+                    "registration": "Registro",
+                    "dataSubmission": "Envío de datos",
+                    "engagement": "Interacción",
+                    "returningVisit": "Visita de retorno",
+                    "purchase": "Compra",
+                    "repeatPurchase": "Recompra"
+                }
+            }
+        },
         "categories": {
             "title": "Categorías",
             "description": "Gestiona y organiza las categorías de tu sitio web con jerarquía anidada, iconos personalizados, colores e imágenes",

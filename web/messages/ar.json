@@ -406,6 +406,55 @@
         }
     },
     "admin": {
+        "dashboard": {
+            "description": "نظرة عامة على مؤشرات المنصة وآخر التحديثات.",
+            "loadError": "تعذر تحميل إحصائيات لوحة التحكم",
+            "cards": {
+                "users": "المستخدمون المسجلون",
+                "posts": "المقالات المنشورة",
+                "products": "المنتجات النشطة"
+            },
+            "activity": {
+                "title": "النشاط الأخير",
+                "userRegistered": {
+                    "title": "تسجيل مستخدم جديد",
+                    "subtitle": "حساب جديد بانتظار الإعداد"
+                },
+                "postPublished": {
+                    "title": "تم نشر مقال",
+                    "subtitle": "تم دفع المحتوى إلى الخلاصة"
+                },
+                "productUpdated": {
+                    "title": "تم تحديث منتج",
+                    "subtitle": "تم تحديث مخزون الكتالوج"
+                },
+                "time": {
+                    "hoursAgo": "منذ {value} ساعة",
+                    "dayAgo": "منذ يوم واحد"
+                }
+            },
+            "funnel": {
+                "title": "قمع المستخدمين (مثال)",
+                "subtitle": "مسار توضيحي من الزيارة حتى إعادة الشراء",
+                "units": "مستخدمين",
+                "relativeFirst": "{value} من الزيارات",
+                "relativePrev": "{value} مقارنة بالخطوة السابقة",
+                "table": {
+                    "amount": "العدد",
+                    "absolute": "% من الزيارات",
+                    "relative": "% مقارنة بالخطوة السابقة"
+                },
+                "stages": {
+                    "websiteVisit": "زيارة الموقع",
+                    "registration": "التسجيل",
+                    "dataSubmission": "إرسال البيانات",
+                    "engagement": "التفاعل",
+                    "returningVisit": "زيارة عودة",
+                    "purchase": "شراء",
+                    "repeatPurchase": "شراء متكرر"
+                }
+            }
+        },
         "categories": {
             "title": "الفئات",
             "description": "إدارة وتنظيم فئات موقعك الإلكتروني مع التسلسل الهرمي المتداخل والأيقونات المخصصة والألوان والصور",

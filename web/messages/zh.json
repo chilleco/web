@@ -406,6 +406,55 @@
         }
     },
     "admin": {
+        "dashboard": {
+            "description": "查看平台指标和最新更新。",
+            "loadError": "无法加载控制台统计数据",
+            "cards": {
+                "users": "注册用户数",
+                "posts": "已发布的文章",
+                "products": "上架商品数"
+            },
+            "activity": {
+                "title": "最近动态",
+                "userRegistered": {
+                    "title": "新用户注册",
+                    "subtitle": "新账户等待引导"
+                },
+                "postPublished": {
+                    "title": "文章已发布",
+                    "subtitle": "内容已推送到信息流"
+                },
+                "productUpdated": {
+                    "title": "商品已更新",
+                    "subtitle": "目录库存已刷新"
+                },
+                "time": {
+                    "hoursAgo": "{value} 小时前",
+                    "dayAgo": "1 天前"
+                }
+            },
+            "funnel": {
+                "title": "用户漏斗（示例）",
+                "subtitle": "从访问到复购的示例路径",
+                "units": "用户",
+                "relativeFirst": "{value} 来自访问",
+                "relativePrev": "{value} 相比上一步",
+                "table": {
+                    "amount": "数量",
+                    "absolute": "% 来自访问",
+                    "relative": "% 相比上一步"
+                },
+                "stages": {
+                    "websiteVisit": "访问网站",
+                    "registration": "注册",
+                    "dataSubmission": "提交数据",
+                    "engagement": "活跃互动",
+                    "returningVisit": "回访",
+                    "purchase": "购买",
+                    "repeatPurchase": "复购"
+                }
+            }
+        },
         "categories": {
             "title": "类别",
             "description": "管理和组织您的网站分类，包括嵌套层次结构、自定义图标、颜色和图片",

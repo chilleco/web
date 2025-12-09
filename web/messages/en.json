@@ -407,6 +407,55 @@
         }
     },
     "admin": {
+        "dashboard": {
+            "description": "Overview of platform metrics and recent updates.",
+            "loadError": "Failed to load dashboard stats",
+            "cards": {
+                "users": "Registered users",
+                "posts": "Published posts",
+                "products": "Active products"
+            },
+            "activity": {
+                "title": "Recent activity",
+                "userRegistered": {
+                    "title": "New user registered",
+                    "subtitle": "Fresh account waiting for onboarding"
+                },
+                "postPublished": {
+                    "title": "Post published",
+                    "subtitle": "Content was promoted to the feed"
+                },
+                "productUpdated": {
+                    "title": "Product updated",
+                    "subtitle": "Catalog inventory refreshed"
+                },
+                "time": {
+                    "hoursAgo": "{value} hours ago",
+                    "dayAgo": "1 day ago"
+                }
+            },
+            "funnel": {
+                "title": "User funnel (placeholder)",
+                "subtitle": "Example path from visit to repeat purchase",
+                "units": "users",
+                "relativeFirst": "{value} of visits",
+                "relativePrev": "{value} vs previous",
+                "table": {
+                    "amount": "Amount",
+                    "absolute": "% of visits",
+                    "relative": "% of previous"
+                },
+                "stages": {
+                    "websiteVisit": "Website visit",
+                    "registration": "Registration",
+                    "dataSubmission": "Data submission",
+                    "engagement": "Engagement",
+                    "returningVisit": "Returning visit",
+                    "purchase": "Purchase",
+                    "repeatPurchase": "Repeat purchase"
+                }
+            }
+        },
         "categories": {
             "title": "Categories",
             "description": "Manage and organize your website categories with nested hierarchy, custom icons, colors, and images",

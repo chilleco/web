@@ -63,6 +63,9 @@ export const API_ENDPOINTS = {
     SAVE: '/spaces/save/',
     DELETE: '/spaces/rm/',
   },
+  ADMIN: {
+    STATS: '/admin/stats/',
+  },
 } as const;
 
 // Status Codes
