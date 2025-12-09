@@ -68,9 +68,17 @@ export function SpacesSelector({
   }, [loadSpaces, userId]);
 
   useEffect(() => {
-    if (!selectedState?.link || !spaces.length) return;
+    if (loading || !selectedState?.link) return;
+    if (!spaces.length) {
+      dispatch(setSelectedSpace(null));
+      return;
+    }
+
     const matchingSpace = spaces.find((item) => item.link === selectedState.link);
-    if (!matchingSpace) return;
+    if (!matchingSpace) {
+      dispatch(setSelectedSpace(null));
+      return;
+    }
 
     const normalizedMargin =
       typeof matchingSpace.margin === 'number'
@@ -82,7 +90,7 @@ export function SpacesSelector({
     if (selectedState.margin !== normalizedMargin) {
       dispatch(setSelectedSpace({ link: selectedState.link, margin: normalizedMargin }));
     }
-  }, [dispatch, selectedState?.link, selectedState?.margin, spaces]);
+  }, [dispatch, loading, selectedState?.link, selectedState?.margin, spaces]);
 
   useEffect(() => {
     if (activeSpaceLink && activeSpaceLink !== selectedState?.link) {

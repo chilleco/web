@@ -566,6 +566,45 @@
                 "load": "Failed to load spaces",
                 "delete": "Failed to delete space"
             }
+        },
+        "users": {
+            "title": "Users",
+            "description": "Manage accounts, balances, and access levels.",
+            "loading": "Loading users...",
+            "empty": "No users yet",
+            "loadError": "Failed to load users",
+            "saveSuccess": "User updated",
+            "saveError": "Failed to save user",
+            "noChanges": "No changes to save.",
+            "editTitle": "Edit user: {name}",
+            "titleFallback": "User #{id}",
+            "balance": {
+                "label": "Balance",
+                "placeholder": "Enter balance",
+                "badge": "Balance: {value}"
+            },
+            "status": {
+                "label": "Status",
+                "unset": "Keep global status",
+                "unknown": "Unknown",
+                "active": "Active",
+                "blocked": "Blocked",
+                "pending": "Pending",
+                "moderator": "Moderator",
+                "manager": "Manager",
+                "admin": "Admin",
+                "owner": "Owner",
+                "deleted": "Deleted"
+            },
+            "actions": {
+                "ban": "Ban",
+                "unban": "Unban",
+                "refresh": "Refresh list"
+            },
+            "toasts": {
+                "banned": "\"{name}\" blocked",
+                "unbanned": "\"{name}\" unblocked"
+            }
         }
     },
     "posts": {

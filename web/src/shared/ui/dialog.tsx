@@ -36,7 +36,7 @@ function DialogOverlay({
         <DialogPrimitive.Overlay
             data-slot="dialog-overlay"
             className={cn(
-                "fixed inset-0 z-50 bg-black/50",
+                "fixed inset-0 z-50 bg-black/50 cursor-pointer",
                 className
             )}
             {...props}
@@ -61,7 +61,7 @@ function DialogContent({
                 {...props}
             >
                 {children}
-                <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute right-4 top-4 rounded-[0.75rem] opacity-70 hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none">
+                <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute right-4 top-4 rounded-[0.75rem] opacity-70 hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:pointer-events-none cursor-pointer">
                     <CloseIcon size={16} />
                     <span className="sr-only">Close</span>
                 </DialogPrimitive.Close>

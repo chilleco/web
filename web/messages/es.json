@@ -548,6 +548,45 @@
                 "load": "No se pudieron cargar los espacios",
                 "delete": "No se pudo eliminar el espacio"
             }
+        },
+        "users": {
+            "title": "Usuarios",
+            "description": "Gestiona cuentas, balances y niveles de acceso.",
+            "loading": "Cargando usuarios...",
+            "empty": "No hay usuarios aún",
+            "loadError": "No se pudieron cargar los usuarios",
+            "saveSuccess": "Usuario actualizado",
+            "saveError": "No se pudo guardar el usuario",
+            "noChanges": "Sin cambios para guardar.",
+            "editTitle": "Editar usuario: {name}",
+            "titleFallback": "Usuario #{id}",
+            "balance": {
+                "label": "Saldo",
+                "placeholder": "Ingresa el saldo",
+                "badge": "Saldo: {value}"
+            },
+            "status": {
+                "label": "Estado",
+                "unset": "Conservar estado global",
+                "unknown": "Desconocido",
+                "active": "Activo",
+                "blocked": "Bloqueado",
+                "pending": "Pendiente",
+                "moderator": "Moderador",
+                "manager": "Gestor",
+                "admin": "Admin",
+                "owner": "Propietario",
+                "deleted": "Eliminado"
+            },
+            "actions": {
+                "ban": "Bloquear",
+                "unban": "Desbloquear",
+                "refresh": "Actualizar lista"
+            },
+            "toasts": {
+                "banned": "\"{name}\" bloqueado",
+                "unbanned": "\"{name}\" desbloqueado"
+            }
         }
     },
     "posts": {

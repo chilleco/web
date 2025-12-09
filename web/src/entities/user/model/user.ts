@@ -11,7 +11,7 @@ export interface User {
   image?: string | null;
   created?: number;
   updated?: number;
-  status?: number;
+  status?: UserStatus;
   balance?: number;
   premium?: boolean;
   mailing?: boolean;
@@ -66,4 +66,12 @@ export interface UpdateProfileRequest {
   locale?: string | null;
   mailing?: boolean | null;
   wallet?: string | null;
+}
+
+export type UserStatus = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+
+export interface SaveUserRequest extends UpdateProfileRequest {
+  id?: number;
+  status?: UserStatus | null;
+  balance?: number | null;
 }

@@ -26,6 +26,7 @@ Depending on the project that develops based on this template, the entities of t
 - **Development**: Follow the **DevOps Principles** & **Backend Principles** & **Frontend Principles**
 - **Minimal, focused diffs**: change only what's necessary; Make minimal changes in relevant files & rows only
 - **Cursor pointer everywhere**: All clickable elements/blocks/links/pickers/sliders must explicitly set `cursor-pointer` for clear affordance
+- **Dialog affordance**: Dialog close buttons AND the dimmed overlay/backdrop used to close dialogs must have `cursor-pointer`
 - **No duplicate API calls**: guard client-side fetch effects with stable fetch keys/in-flight refs so Strict Mode doesn’t trigger the same request multiple times (one request per dataset)
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
 - **Required fields UX**: For all forms mark required inputs with `*` and highlight missing/invalid required fields with a red focus/outline when the API returns validation errors (e.g., `detail` value). Keep visual feedback consistent across the app.

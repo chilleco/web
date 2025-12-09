@@ -8,7 +8,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess, ErrorInvalid
 
-from models.user import User, UserLocal, DEFAULT_BALANCE
+from models.user import User, UserLocal, DEFAULT_BALANCE, complex_global_users
 from models.socket import Socket
 
 
@@ -56,14 +56,24 @@ async def handler(
     if request.state.user == 0:
         raise ErrorInvalid("id")
 
+    is_admin = request.state.status >= 6
+
     # UserHub
-    users = await User.complex(
-        token=request.state.token,
-        id=data.id,
-        limit=data.limit,
-        offset=data.offset,
-        fields=data.fields,
-    )
+    if is_admin:
+        users = await complex_global_users(
+            id=data.id,
+            limit=data.limit,
+            offset=data.offset,
+            fields=data.fields,
+        )
+    else:
+        users = await User.complex(
+            token=request.state.token,
+            id=data.id,
+            limit=data.limit,
+            offset=data.offset,
+            fields=data.fields,
+        )
 
     if isinstance(users, str):
         raise ErrorInvalid("res")

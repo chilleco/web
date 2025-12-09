@@ -117,7 +117,9 @@ async def wrap_auth(*args, **kwargs):
         raise ErrorWrong("password")
 
     local_user, new_local = get_user(user, **kwargs)
-    user["status"] = local_user["status"]
+    local_status = local_user["status"]
+    if local_status is not None:
+        user["status"] = local_status
     user["roles"] = local_user.roles
     for key, value in local_user.json().items():
         if value is not None:

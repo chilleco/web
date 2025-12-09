@@ -5,3 +5,4 @@ export * from './posts-list';
 export * from './user-profile';
 export * from './category';
 export * from './admin-layout';
+export * from './user-management';

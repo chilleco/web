@@ -15,6 +15,11 @@ router = APIRouter()
 
 
 class SaveUserRequest(BaseModel):
+    id: int | None = Field(
+        None,
+        description="Target user id (admin only)",
+        examples=[42],
+    )
     login: str | None = Field(
         None,
         description="Preferred login/username",
@@ -60,6 +65,16 @@ class SaveUserRequest(BaseModel):
         description="Wallet identifier",
         examples=["0x123"],
     )
+    balance: int | str | None = Field(
+        None,
+        description="Adjust user balance (admin only)",
+        examples=[1500],
+    )
+    status: int | None = Field(
+        None,
+        description="Update user status / access level (admin only)",
+        examples=[3],
+    )
 
 
 class UserPayload(BaseModel):
@@ -104,6 +119,22 @@ def _normalize_phone(phone: str | int | None) -> int | None:
     return int(digits)
 
 
+def _normalize_balance(balance: str | int | None) -> int | None:
+    """Normalize balance input to integer; allow clearing."""
+    if balance is None:
+        return None
+
+    if isinstance(balance, str):
+        stripped = balance.strip()
+        if stripped == "":
+            return None
+        if not stripped.lstrip("-").isdigit():
+            raise ErrorInvalid("balance")
+        return int(stripped)
+
+    return int(balance)
+
+
 @router.post("/save/", response_model=SaveUserResponse)
 async def handler(
     request: Request,
@@ -114,17 +145,37 @@ async def handler(
     if request.state.status < 3 or not request.state.user:
         raise ErrorAccess("save")
 
+    target_user_id = data.id or request.state.user
+    is_admin = request.state.status >= 6
+
+    if data.id and target_user_id != request.state.user and not is_admin:
+        raise ErrorAccess("save user")
+
     try:
-        user_local = UserLocal.get(request.state.user)
+        user_local = UserLocal.get(target_user_id)
         created = False
     except ErrorWrong:
         user_local = UserLocal(
-            id=request.state.user,
+            id=target_user_id,
             balance=DEFAULT_BALANCE,
         )
         created = True
 
     payload = data.model_dump(exclude_unset=True)
+    payload.pop("id", None)
+
+    if not is_admin:
+        payload.pop("status", None)
+        payload.pop("balance", None)
+
+    if "balance" in payload:
+        payload["balance"] = _normalize_balance(payload["balance"])
+
+    if "status" in payload and payload["status"] is not None:
+        try:
+            payload["status"] = int(payload["status"])
+        except (TypeError, ValueError) as exc:
+            raise ErrorInvalid("status") from exc
 
     if "phone" in payload:
         phone_raw = payload["phone"]
@@ -141,7 +192,7 @@ async def handler(
 
     user_data = await User.complex(
         token=request.state.token,
-        id=request.state.user,
+        id=target_user_id,
     )
 
     if isinstance(user_data, str):

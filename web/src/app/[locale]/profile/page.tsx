@@ -1,32 +1,25 @@
 'use client';
 
-import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { PageHeader } from '@/shared/ui/page-header';
 import { Box } from '@/shared/ui/box';
-import { Input } from '@/shared/ui/input';
 import { UserIcon, ShieldIcon, SaveIcon, RefreshIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { getUserById, updateUserProfile } from '@/entities/user/api/userApi';
 import type { User, UpdateProfileRequest } from '@/entities/user/model/user';
-import { FileUpload } from '@/shared/ui/file-upload';
 import type { FileData } from '@/shared/ui/file-upload';
 import { uploadFile } from '@/shared/services/api/upload';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ButtonGroup } from '@/shared/ui/button-group';
 import { setUser as setAuthUser } from '@/features/auth';
 import type { AuthProfile } from '@/features/auth/stores/authSlice';
+import { UserFormFields } from '@/widgets/user-management/ui/UserFormFields';
+import { buildUserFormState, sanitizePhoneValue, type UserFormState } from '@/widgets/user-management/lib/userFormUtils';
 
-type ProfileFormState = {
-    login: string;
-    name: string;
-    surname: string;
-    mail: string;
-    phone: string;
-    image: string;
-};
+const profileFields: Array<keyof UserFormState> = ['login', 'name', 'surname', 'mail', 'phone', 'image'];
 
 export default function ProfilePage() {
     const tSystem = useTranslations('system');
@@ -40,32 +33,9 @@ export default function ProfilePage() {
     const [isSaving, setIsSaving] = useState(false);
     const [imageFileData, setImageFileData] = useState<FileData | null>(null);
     const [uploadingImage, setUploadingImage] = useState(false);
-    const [formData, setFormData] = useState<ProfileFormState>({
-        login: '',
-        name: '',
-        surname: '',
-        mail: '',
-        phone: '',
-        image: '',
-    });
-    const [initialData, setInitialData] = useState<ProfileFormState | null>(null);
+    const [formData, setFormData] = useState<UserFormState>(buildUserFormState(null));
+    const [initialData, setInitialData] = useState<UserFormState | null>(null);
     const fetchedUserIdRef = useRef<number | null>(null);
-
-    const buildFormState = useCallback((source: Partial<User> | null): ProfileFormState => {
-        const toString = (value: string | number | null | undefined) => {
-            if (value === null || value === undefined) return '';
-            return String(value);
-        };
-
-        return {
-            login: toString(source?.login),
-            name: toString(source?.name),
-            surname: toString(source?.surname),
-            mail: toString(source?.mail),
-            phone: toString(source?.phone),
-            image: toString(source?.image),
-        };
-    }, []);
 
     useEffect(() => {
         if (!authUser?.id) {
@@ -102,10 +72,10 @@ export default function ProfilePage() {
 
     useEffect(() => {
         if (!display) return;
-        const nextState = buildFormState(display);
+        const nextState = buildUserFormState(display as Partial<User>);
         setFormData(nextState);
         setInitialData(nextState);
-    }, [buildFormState, display]);
+    }, [display]);
 
     const statusLabel = useMemo(() => {
         if (display?.status === undefined || display?.status === null) {
@@ -116,19 +86,14 @@ export default function ProfilePage() {
 
     const hasChanges = useMemo(() => {
         if (!initialData) return false;
-        return (Object.keys(initialData) as Array<keyof ProfileFormState>).some(
-            (key) => initialData[key] !== formData[key]
-        );
+        return profileFields.some((key) => initialData[key] !== formData[key]);
     }, [formData, initialData]);
 
-    const handleInputChange = useCallback((field: keyof ProfileFormState) => (event: ChangeEvent<HTMLInputElement>) => {
-        let { value } = event.target;
-        if (field === 'phone') {
-            value = value.replace(/\D/g, '');
-        }
+    const handleFieldChange = useCallback((field: keyof UserFormState, value: string) => {
+        const nextValue = field === 'phone' ? sanitizePhoneValue(value) : value;
         setFormData((prev) => ({
             ...prev,
-            [field]: value,
+            [field]: nextValue,
         }));
     }, []);
 
@@ -175,13 +140,13 @@ export default function ProfilePage() {
         const payload: UpdateProfileRequest = {};
         const payloadDraft = payload as Record<string, string | number | boolean | null>;
 
-        Object.entries(formData).forEach(([key, value]) => {
-            const typedKey = key as keyof ProfileFormState;
-            if (initialData[typedKey] !== value) {
-                if (typedKey === 'phone') {
-                    payload.phone = value ? value.replace(/\D/g, '') : null;
+        profileFields.forEach((field) => {
+            const value = formData[field];
+            if (initialData[field] !== value) {
+                if (field === 'phone') {
+                    payload.phone = value ? sanitizePhoneValue(value) : null;
                 } else {
-                    payloadDraft[typedKey] = value || null;
+                    payloadDraft[field] = value || null;
                 }
             }
         });
@@ -194,7 +159,7 @@ export default function ProfilePage() {
         setIsSaving(true);
         try {
             const updatedUser = await updateUserProfile(payload);
-            const normalized = buildFormState(updatedUser);
+            const normalized = buildUserFormState(updatedUser);
             setUser(updatedUser);
             setFormData(normalized);
             setInitialData(normalized);
@@ -246,74 +211,24 @@ export default function ProfilePage() {
                     }
                 />
                 <Box className="mt-6 space-y-6">
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
-                        <div className="h-full">
-                            <FileUpload
-                                value={formData.image}
-                                fileData={imageFileData ? { ...imageFileData, type: 'image' as const } : null}
-                                onFileChange={handleFileChange}
-                                onFileRemove={handleFileRemove}
-                                fileTypes="images"
-                                width="w-full h-full"
-                                height={320}
-                                disabled={isActionDisabled}
-                            />
-                        </div>
-                        <div className="space-y-3 h-full">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <Input
-                                    placeholder={tProfile('name')}
-                                    value={formData.name}
-                                    onChange={handleInputChange('name')}
-                                    disabled={isActionDisabled}
-                                    className="bg-muted border-0 text-base text-foreground"
-                                />
-                                <Input
-                                    placeholder={tProfile('surname')}
-                                    value={formData.surname}
-                                    onChange={handleInputChange('surname')}
-                                    disabled={isActionDisabled}
-                                    className="bg-muted border-0 text-base text-foreground"
-                                />
-                            </div>
-                            <div className="flex items-center rounded-[0.75rem] bg-muted h-12 overflow-hidden px-3 gap-3">
-                                <span className="text-base text-muted-foreground">@</span>
-                                <Input
-                                    placeholder={tProfile('login')}
-                                    value={formData.login}
-                                    onChange={handleInputChange('login')}
-                                    disabled={isActionDisabled}
-                                    className="bg-transparent border-0 text-base text-foreground rounded-none shadow-none focus:ring-0 focus:outline-none h-full px-0"
-                                />
-                            </div>
-                            <Input
-                                placeholder={tProfile('mail')}
-                                value={formData.mail}
-                                onChange={handleInputChange('mail')}
-                                disabled={isActionDisabled}
-                                className="bg-muted border-0 text-base text-foreground"
-                            />
-                            <div className="flex items-center rounded-[0.75rem] bg-muted h-12 overflow-hidden px-3 gap-3">
-                                <span className="text-base text-muted-foreground">+</span>
-                                <Input
-                                    placeholder={tProfile('phone')}
-                                    value={formData.phone}
-                                    onChange={handleInputChange('phone')}
-                                    disabled={isActionDisabled}
-                                    inputMode="numeric"
-                                    pattern="[0-9]*"
-                                    className="bg-transparent border-0 text-base text-foreground rounded-none shadow-none focus:ring-0 focus:outline-none h-full px-0"
-                                />
-                            </div>
-                            <Input
-                                placeholder={tProfile('password')}
-                                value="••••••••"
-                                readOnly
-                                disabled
-                                className="bg-muted border-0 text-base text-foreground"
-                            />
-                        </div>
-                    </div>
+                    <UserFormFields
+                        data={formData}
+                        onChange={handleFieldChange}
+                        onFileChange={handleFileChange}
+                        onFileRemove={handleFileRemove}
+                        disabled={isActionDisabled}
+                        uploadingImage={uploadingImage}
+                        imageFileData={imageFileData}
+                        labels={{
+                            name: tProfile('name'),
+                            surname: tProfile('surname'),
+                            login: tProfile('login'),
+                            mail: tProfile('mail'),
+                            phone: tProfile('phone'),
+                            password: tProfile('password'),
+                        }}
+                        showPasswordPlaceholder
+                    />
 
                     <div className="flex justify-center items-center text-muted-foreground gap-2">
                         <ShieldIcon size={16} />

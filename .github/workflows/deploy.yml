@@ -172,8 +172,9 @@ jobs:
             envsubst < "$COMPOSE_FILE" > "$FOLDER/deploy.yml"
 
             # optional: pull fresh images
-            sudo docker pull $REGISTRY/$PROJECT_NAME/api:latest
-            sudo docker pull $REGISTRY/$PROJECT_NAME/web:latest
+            for service in api web; do
+              sudo docker pull "$REGISTRY/$PROJECT_NAME/${service}:latest"
+            done
 
             # deploy (with registry auth)
             sudo docker stack deploy \

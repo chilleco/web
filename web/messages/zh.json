@@ -548,6 +548,45 @@
                 "load": "加载空间失败",
                 "delete": "删除空间失败"
             }
+        },
+        "users": {
+            "title": "用户",
+            "description": "管理账户、余额和访问权限。",
+            "loading": "正在加载用户...",
+            "empty": "暂无用户",
+            "loadError": "无法加载用户列表",
+            "saveSuccess": "用户已更新",
+            "saveError": "保存用户失败",
+            "noChanges": "没有可保存的更改。",
+            "editTitle": "编辑用户：{name}",
+            "titleFallback": "用户 #{id}",
+            "balance": {
+                "label": "余额",
+                "placeholder": "输入余额",
+                "badge": "余额：{value}"
+            },
+            "status": {
+                "label": "状态",
+                "unset": "保持全局状态",
+                "unknown": "未知",
+                "active": "正常",
+                "blocked": "已封禁",
+                "pending": "待验证",
+                "moderator": "版主",
+                "manager": "管理者",
+                "admin": "管理员",
+                "owner": "拥有者",
+                "deleted": "已删除"
+            },
+            "actions": {
+                "ban": "封禁",
+                "unban": "解封",
+                "refresh": "刷新列表"
+            },
+            "toasts": {
+                "banned": "\"{name}\" 已封禁",
+                "unbanned": "\"{name}\" 已解封"
+            }
         }
     },
     "posts": {

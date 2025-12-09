@@ -18,6 +18,7 @@ class UserLocal(Base):
     phone = Attribute(types=int)
     mail = Attribute(types=str)
     image = Attribute(types=str)
+    status = Attribute(types=int)
 
     roles = Attribute(types=list)
 

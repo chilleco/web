@@ -1,89 +1,39 @@
-import { Box } from '@/shared/ui/box';
-import { Button } from '@/shared/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/shared/ui/page-header';
 import { IconButton } from '@/shared/ui/icon-button';
-import { AdminIcon, AddIcon } from '@/shared/ui/icons';
+import { UsersIcon, RefreshIcon } from '@/shared/ui/icons';
+import { UserManagement } from '@/widgets/user-management';
 
 export default function AdminUsersPage() {
+  const t = useTranslations('admin.users');
+  const tSystem = useTranslations('system');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
+
   return (
     <div className="space-y-6">
       <PageHeader
-        icon={<AdminIcon size={24} />}
-        iconClassName="bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400"
-        title="Users Management"
-        description="Manage user accounts, permissions and access control"
+        icon={<UsersIcon size={24} />}
+        iconClassName="bg-rose-500/15 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400"
+        title={t('title')}
+        description={t('description')}
         actions={
           <IconButton
-            icon={<AddIcon size={16} />}
-            variant="success"
+            icon={<RefreshIcon size={16} />}
+            variant="outline"
             responsive
+            onClick={handleRefresh}
           >
-            Add User
+            {tSystem('refresh')}
           </IconButton>
         }
       />
 
-      {/* Users List */}
-      <Box size="lg">
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold mb-4">All Users</h2>
-          
-          {/* Sample Users */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between p-3 border rounded-lg">
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="" alt="John Doe" />
-                  <AvatarFallback />
-                </Avatar>
-                <div>
-                  <h3 className="font-medium">John Doe</h3>
-                  <p className="text-sm text-muted-foreground">john@example.com • Admin</p>
-                </div>
-              </div>
-              <div className="flex space-x-2">
-                <Button variant="outline" size="sm">Edit</Button>
-                <Button variant="destructive" size="sm">Ban</Button>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between p-3 border rounded-lg">
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="" alt="Jane Smith" />
-                  <AvatarFallback />
-                </Avatar>
-                <div>
-                  <h3 className="font-medium">Jane Smith</h3>
-                  <p className="text-sm text-muted-foreground">jane@example.com • Editor</p>
-                </div>
-              </div>
-              <div className="flex space-x-2">
-                <Button variant="outline" size="sm">Edit</Button>
-                <Button variant="destructive" size="sm">Ban</Button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between p-3 border rounded-lg">
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="" alt="Mike Wilson" />
-                  <AvatarFallback />
-                </Avatar>
-                <div>
-                  <h3 className="font-medium">Mike Wilson</h3>
-                  <p className="text-sm text-muted-foreground">mike@example.com • User</p>
-                </div>
-              </div>
-              <div className="flex space-x-2">
-                <Button variant="outline" size="sm">Edit</Button>
-                <Button variant="destructive" size="sm">Ban</Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Box>
+      <UserManagement triggerRefresh={refreshTrigger} />
     </div>
   );
 }
