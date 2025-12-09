@@ -144,13 +144,20 @@ jobs:
                    --username ${{ secrets.REGISTRY_USER }} --password-stdin
 
             # compile compose file
-            rm -f ~/deploy.yml
-            # set -o allexport
-            # source .env
-            # set +o allexport
-            export $(grep -v '^#' .env | xargs -d '\n')
+            rm -f ~/web/deploy.yml
+            export ENV_FILE_PATH="$HOME/web/.env"
+            while IFS='=' read -r key value; do
+              case "$key" in
+                ''|\#*) continue ;;
+              esac
+              # trim whitespace from key and escape quotes in value to keep JSON-like strings intact
+              key="${key//[[:space:]]/}"
+              value="${value%$'\r'}"
+              value="${value//\"/\\\"}"
+              export "${key}=${value}"
+            done < "$ENV_FILE_PATH"
             export RELEASE=${{ env.VERSION }}
-            envsubst < "$COMPOSE_FILE" > ~/deploy.yml
+            envsubst < "$COMPOSE_FILE" > ~/web/deploy.yml
 
             # optional: pull fresh images
             sudo docker pull $REGISTRY/$PROJECT_NAME/api:latest
@@ -158,7 +165,7 @@ jobs:
 
             # deploy (with registry auth)
             sudo docker stack deploy \
-                  --compose-file ~/deploy.yml \
+                  --compose-file ~/web/deploy.yml \
                   --with-registry-auth \
                   --resolve-image always \
                   --prune \
