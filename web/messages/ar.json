@@ -410,9 +410,15 @@
             "description": "نظرة عامة على مؤشرات المنصة وآخر التحديثات.",
             "loadError": "تعذر تحميل إحصائيات لوحة التحكم",
             "cards": {
+                "visits": "الزيارات",
+                "visitsSubtitle": "الزيارات المسجلة",
                 "users": "المستخدمون المسجلون",
+                "payments": "المدفوعات",
+                "paymentsSubtitle": "المدفوعات الناجحة",
                 "posts": "المقالات المنشورة",
-                "products": "المنتجات النشطة"
+                "products": "المنتجات النشطة",
+                "tasks": "المهام",
+                "tasksSubtitle": "المهام النشطة"
             },
             "activity": {
                 "title": "النشاط الأخير",
@@ -441,24 +447,36 @@
                 "relativePrev": "{value} مقارنة بالخطوة السابقة",
                 "formulas": {
                     "title": "الصيغ",
-                    "subtitle": "حسابات بالبيانات الحالية وأمثلة توضيحية",
+                    "subtitle": "حسابات بالبيانات الحالية",
                     "referral": {
                         "title": "معدل الإحالة",
-                    "subtitle": "تحويل التسجيل إلى مُحيل × متوسط الدعوات",
-                    "conversion": "تسجيل → مُحيل",
-                    "avgReferrals": "إحالات لكل مُحيل",
-                    "result": "معدل الإحالة",
-                    "example": "مثال: {conversion} × {avg} = {rate}"
+                        "subtitle": "تحويل التسجيل إلى مُحيل × متوسط الدعوات",
+                        "conversion": "تسجيل → مُحيل",
+                        "avgReferrals": "إحالات لكل مُحيل",
+                        "result": "معامل الفيرالية",
+                        "example": "مثال: {conversion} × {avg} = {rate}"
+                    },
+                    "economy": {
+                        "title": "معامل الاقتصاد",
+                        "subtitle": "متوسط الإيصال × تحويل الزيارة إلى دفع / سعر العميل المحتمل",
+                        "averageReceipt": "متوسط الإيصال",
+                        "visitToPayment": "زيارة → دفع",
+                        "pricePerLead": "سعر العميل المحتمل",
+                        "result": "معامل الاقتصاد",
+                        "example": "مثال: {receipt} × {conversion} / {lead} = {rate}"
+                    }
                 },
-                "economy": {
-                    "title": "معامل الاقتصاد",
-                    "subtitle": "متوسط الإيصال × تحويل الزيارة إلى دفع / سعر العميل المحتمل",
-                    "averageReceipt": "متوسط الإيصال",
-                    "visitToPayment": "زيارة → دفع",
-                    "pricePerLead": "سعر العميل المحتمل",
-                    "result": "معامل الاقتصاد",
-                    "example": "مثال: {receipt} × {conversion} / {lead} = {rate}"
-                }
+                "retention": {
+                    "title": "الاحتفاظ الشهري بالمستخدمين",
+                    "subtitle": "حجم الدُفعة ونسب الاحتفاظ",
+                    "month": "الشهر",
+                    "cohort": "الدُفعة",
+                    "m1": "M1",
+                    "m2": "M2",
+                    "m3": "M3",
+                    "m4": "M4",
+                    "m5": "M5",
+                    "m6": "M6"
                 },
                 "table": {
                     "amount": "العدد",

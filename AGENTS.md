@@ -31,6 +31,7 @@ Depending on the project that develops based on this template, the entities of t
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
 - **Required fields UX**: For all forms mark required inputs with `*` and highlight missing/invalid required fields with a red focus/outline when the API returns validation errors (e.g., `detail` value). Keep visual feedback consistent across the app.
 - **Dialogs must scroll**: Large popups (forms/modals) must fit on mobile and small screens with max-height constraints and internal `overflow-y-auto` so content is scrollable without breaking layout.
+- **Mobile adaptive**: Every screen, table, and control layout must stay usable on small/mobile widths; add horizontal scroll containers for wide tables instead of letting them overflow.
 - **Shared translations first**: Use existing `system.*` translation keys for shared labels (loading, refresh, common actions) instead of introducing feature-specific duplicates; migrate simple words from feature scopes to `system.*` when touching those areas.
   - When adding new locale strings, ensure non-English locales are translated (avoid copy-pasting English into `ru`/`es`/`ar`/`zh`).
 - **Unit suffixes**: Show measurement units using right-side labels/suffix segments on inputs (e.g., %, kg, cm); keep left labels clean.
@@ -203,6 +204,9 @@ Depending on the project that develops based on this template, the entities of t
 - **Title**: SEO-optimized page title
 - **Description**: Additional context/breadcrumbs
 - **Actions**: Button groups on right side
+
+##### Tables
+- Wide tables must be wrapped in horizontal scroll containers (`overflow-x-auto` with sensible `min-width`) to avoid clipping on mobile; do not let columns overflow their parent.
 
 ##### Buttons
 - **Import**: `import { Button } from '@/shared/ui/button'`, `import { IconButton } from '@/shared/ui/icon-button'`,  `import { ButtonGroup } from '@/shared/ui/button-group'`

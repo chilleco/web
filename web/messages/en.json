@@ -411,9 +411,15 @@
             "description": "Overview of platform metrics and recent updates.",
             "loadError": "Failed to load dashboard stats",
             "cards": {
+                "visits": "Visits",
+                "visitsSubtitle": "Recorded visits",
                 "users": "Registered users",
+                "payments": "Payments",
+                "paymentsSubtitle": "Successful payments",
                 "posts": "Published posts",
-                "products": "Active products"
+                "products": "Active products",
+                "tasks": "Tasks",
+                "tasksSubtitle": "Active tasks"
             },
             "activity": {
                 "title": "Recent activity",
@@ -442,24 +448,36 @@
                 "relativePrev": "{value} vs previous",
                 "formulas": {
                     "title": "Formula highlights",
-                    "subtitle": "Illustrative calculations with current data and examples",
+                    "subtitle": "Calculations based on current data",
                     "referral": {
                         "title": "Referral rate",
-                    "subtitle": "Conversion from registration to referrer × average invites",
-                    "conversion": "Registration → referrer",
-                    "avgReferrals": "Average referrals per referrer",
-                    "result": "Referral rate",
-                    "example": "Example: {conversion} × {avg} = {rate}"
-                },
-                "economy": {
-                    "title": "Economy rate",
-                    "subtitle": "Average receipt × conversion from visit to payment / price per lead",
-                    "averageReceipt": "Average receipt",
-                    "visitToPayment": "Visit → payment",
-                    "pricePerLead": "Price per lead",
-                    "result": "Economy rate",
+                        "subtitle": "Conversion from registration to referrer × average invites",
+                        "conversion": "Registration → referrer",
+                        "avgReferrals": "Average referrals per referrer",
+                        "result": "Viral rate",
+                        "example": "Example: {conversion} × {avg} = {rate}"
+                    },
+                    "economy": {
+                        "title": "Economy rate",
+                        "subtitle": "Average receipt × conversion from visit to payment / price per lead",
+                        "averageReceipt": "Average receipt",
+                        "visitToPayment": "Visit → payment",
+                        "pricePerLead": "Price per lead",
+                        "result": "Economy rate",
                         "example": "Example: {receipt} × {conversion} / {lead} = {rate}"
                     }
+                },
+                "retention": {
+                    "title": "User retention by month",
+                    "subtitle": "Cohort sizes and retention percentages",
+                    "month": "Month",
+                    "cohort": "Cohort",
+                    "m1": "M1",
+                    "m2": "M2",
+                    "m3": "M3",
+                    "m4": "M4",
+                    "m5": "M5",
+                    "m6": "M6"
                 },
                 "table": {
                     "amount": "Amount",

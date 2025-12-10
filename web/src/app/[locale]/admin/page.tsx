@@ -14,6 +14,8 @@ import {
   ClockIcon,
   ChartIcon,
   EyeIcon,
+  DollarIcon,
+  CheckIcon,
 } from '@/shared/ui/icons';
 import { API_ENDPOINTS } from '@/shared/constants';
 import { api } from '@/shared/services/api/client';
@@ -24,6 +26,9 @@ interface AdminStats {
   users: number;
   posts: number;
   products: number;
+  payments?: number;
+  visits?: number;
+  tasks?: number;
 }
 
 interface StatCardProps {
@@ -69,7 +74,14 @@ export default function AdminPage() {
   const tNav = useTranslations('navigation');
   const { error: showError } = useToastActions();
 
-  const [stats, setStats] = useState<AdminStats>({ users: 0, posts: 0, products: 0 });
+  const [stats, setStats] = useState<AdminStats>({
+    users: 0,
+    posts: 0,
+    products: 0,
+    payments: 0,
+    visits: 0,
+    tasks: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const isFetchingRef = useRef(false);
 
@@ -89,6 +101,14 @@ export default function AdminPage() {
         style: 'currency',
         currency: 'USD',
         maximumFractionDigits: 2,
+      }),
+    [locale]
+  );
+  const monthFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        month: 'short',
+        year: 'numeric',
       }),
     [locale]
   );
@@ -238,6 +258,21 @@ export default function AdminPage() {
     ]
   );
 
+  const retentionRows = useMemo(() => {
+    const seed = [
+      { start: '2024-01-01', cohort: 1200, retention: [100, 72, 61, 49, 38, 28] },
+      { start: '2024-02-01', cohort: 1100, retention: [100, 70, 58, 47, 35, 26] },
+      { start: '2024-03-01', cohort: 980, retention: [100, 68, 55, 44, 33, 24] },
+      { start: '2024-04-01', cohort: 1020, retention: [100, 66, 53, 41, 30, 22] },
+      { start: '2024-05-01', cohort: 890, retention: [100, 64, 51, 39, 28, 20] },
+    ];
+
+    return seed.map((row) => ({
+      ...row,
+      label: monthFormatter.format(new Date(row.start)),
+    }));
+  }, [monthFormatter]);
+
   const fetchStats = useCallback(async () => {
     if (isFetchingRef.current) return;
 
@@ -254,6 +289,9 @@ export default function AdminPage() {
         users: response.users ?? 0,
         posts: response.posts ?? 0,
         products: response.products ?? 0,
+        payments: response.payments ?? 0,
+        visits: response.visits ?? 0,
+        tasks: response.tasks ?? 0,
       });
     } catch (error) {
       showError(t('loadError'));
@@ -270,12 +308,28 @@ export default function AdminPage() {
   const statCards = useMemo(
     () => [
       {
+        key: 'visits',
+        title: t('cards.visits'),
+        subtitle: t('cards.visitsSubtitle'),
+        value: stats.visits ? numberFormatter.format(stats.visits) : '–',
+        icon: <EyeIcon size={20} />,
+        accentClassName: 'bg-sky-500/15 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
+      },
+      {
         key: 'users',
         title: tSystem('users'),
         subtitle: t('cards.users'),
         value: numberFormatter.format(stats.users ?? 0),
         icon: <UsersIcon size={20} />,
         accentClassName: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+      },
+      {
+        key: 'payments',
+        title: t('cards.payments'),
+        subtitle: t('cards.paymentsSubtitle'),
+        value: numberFormatter.format(stats.payments ?? 0),
+        icon: <DollarIcon size={20} />,
+        accentClassName: 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
       },
       {
         key: 'posts',
@@ -294,8 +348,27 @@ export default function AdminPage() {
         accentClassName:
           'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
       },
+      {
+        key: 'tasks',
+        title: t('cards.tasks'),
+        subtitle: t('cards.tasksSubtitle'),
+        value: stats.tasks ? numberFormatter.format(stats.tasks) : '–',
+        icon: <CheckIcon size={20} />,
+        accentClassName: 'bg-rose-500/15 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400',
+      },
     ],
-    [numberFormatter, stats.posts, stats.products, stats.users, t, tNav, tSystem]
+    [
+      numberFormatter,
+      stats.payments,
+      stats.posts,
+      stats.products,
+      stats.tasks,
+      stats.users,
+      stats.visits,
+      t,
+      tNav,
+      tSystem,
+    ]
   );
 
   const activityItems = useMemo(
@@ -348,7 +421,7 @@ export default function AdminPage() {
         }
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {statCards.map((card) => (
           <StatCard
             key={card.key}
@@ -422,51 +495,99 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="grid grid-cols-[minmax(140px,_0.9fr)_minmax(0,_2.4fr)_repeat(2,minmax(90px,_0.9fr))] items-center gap-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            <span />
-            <span className="text-center">{t('funnel.table.amount')}</span>
-            <span className="text-right">{t('funnel.table.absolute')}</span>
-            <span className="text-right">{t('funnel.table.relative')}</span>
-          </div>
+        <div className="overflow-x-auto">
+          <div className="min-w-[720px] space-y-2">
+            <div className="grid grid-cols-[minmax(140px,_0.9fr)_minmax(0,_2.4fr)_repeat(2,minmax(90px,_0.9fr))] items-center gap-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <span />
+              <span className="text-center">{t('funnel.table.amount')}</span>
+              <span className="text-right">{t('funnel.table.absolute')}</span>
+              <span className="text-right">{t('funnel.table.relative')}</span>
+            </div>
 
-          <div className="space-y-2">
-            {funnelStages.map((stage) => {
-              const label = t(`funnel.stages.${stage.key}`);
-              const width = Math.max(Math.min(stage.relativeFirst, 100), 5);
+            <div className="space-y-2">
+              {funnelStages.map((stage) => {
+                const label = t(`funnel.stages.${stage.key}`);
+                const width = Math.max(Math.min(stage.relativeFirst, 100), 5);
 
-              return (
-                <div
-                  key={stage.key}
-                  className="grid grid-cols-[minmax(140px,_0.9fr)_minmax(0,_2.4fr)_repeat(2,minmax(90px,_0.9fr))] items-center gap-3"
-                >
-                  <span className="text-sm font-semibold text-foreground">{label}</span>
+                return (
+                  <div
+                    key={stage.key}
+                    className="grid grid-cols-[minmax(140px,_0.9fr)_minmax(0,_2.4fr)_repeat(2,minmax(90px,_0.9fr))] items-center gap-3"
+                  >
+                    <span className="text-sm font-semibold text-foreground">{label}</span>
 
-                  <div className="relative h-12 w-full overflow-hidden rounded-[1rem] bg-muted/30 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
-                    <div
-                      className="absolute top-0 flex h-full items-center justify-center bg-foreground text-background text-sm font-semibold transition-all duration-500"
-                      style={{
-                        width: `${width}%`,
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        borderRadius: '1rem',
-                      }}
-                    >
-                      <span className="text-xs font-semibold">
-                        {numberFormatter.format(stage.count)}
-                      </span>
+                    <div className="relative h-12 w-full overflow-hidden rounded-[1rem] bg-muted/30 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
+                      <div
+                        className="absolute top-0 flex h-full items-center justify-center bg-foreground text-background text-sm font-semibold transition-all duration-500"
+                        style={{
+                          width: `${width}%`,
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          borderRadius: '1rem',
+                        }}
+                      >
+                        <span className="text-xs font-semibold">
+                          {numberFormatter.format(stage.count)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <span className="text-right text-sm text-muted-foreground">
-                    {percentFormatter.format(stage.relativeFirst / 100)}
+                    <span className="text-right text-sm text-muted-foreground">
+                      {percentFormatter.format(stage.relativeFirst / 100)}
+                    </span>
+                    <span className="text-right text-sm text-muted-foreground">
+                      {percentFormatter.format(stage.relativePrev / 100)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </Box>
+
+      <Box size="lg" className="space-y-4">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center justify-center rounded-[0.75rem] bg-emerald-500/15 p-2 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+            <UsersIcon size={18} />
+          </span>
+          <div>
+            <h2 className="text-xl font-semibold">{t('funnel.retention.title')}</h2>
+            <p className="text-sm text-muted-foreground">{t('funnel.retention.subtitle')}</p>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <div className="min-w-[820px] space-y-2">
+            <div className="grid grid-cols-[minmax(140px,_1.2fr)_minmax(120px,_1fr)_repeat(6,minmax(70px,_0.7fr))] items-center gap-3 rounded-[1rem] bg-muted/40 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-wide text-muted-foreground shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.08)]">
+              <span>{t('funnel.retention.month')}</span>
+              <span className="text-center">{t('funnel.retention.cohort')}</span>
+              <span className="text-center">{t('funnel.retention.m1')}</span>
+              <span className="text-center">{t('funnel.retention.m2')}</span>
+              <span className="text-center">{t('funnel.retention.m3')}</span>
+              <span className="text-center">{t('funnel.retention.m4')}</span>
+              <span className="text-center">{t('funnel.retention.m5')}</span>
+              <span className="text-center">{t('funnel.retention.m6')}</span>
+            </div>
+
+            <div className="space-y-2">
+              {retentionRows.map((row) => (
+                <div
+                  key={row.start}
+                  className="grid grid-cols-[minmax(140px,_1.2fr)_minmax(120px,_1fr)_repeat(6,minmax(70px,_0.7fr))] items-center gap-3 rounded-[1rem] bg-muted/30 px-4 py-3 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.08)]"
+                >
+                  <span className="text-sm font-semibold text-foreground">{row.label}</span>
+                  <span className="text-center text-sm font-semibold text-foreground">
+                    {numberFormatter.format(row.cohort)}
                   </span>
-                  <span className="text-right text-sm text-muted-foreground">
-                    {percentFormatter.format(stage.relativePrev / 100)}
-                  </span>
+                  {row.retention.map((value, idx) => (
+                    <span key={idx} className="text-center text-sm text-muted-foreground">
+                      {percentFormatter.format(value / 100)}
+                    </span>
+                  ))}
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
       </Box>

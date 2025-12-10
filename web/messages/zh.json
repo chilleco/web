@@ -410,9 +410,15 @@
             "description": "查看平台指标和最新更新。",
             "loadError": "无法加载控制台统计数据",
             "cards": {
+                "visits": "访问量",
+                "visitsSubtitle": "记录的访问",
                 "users": "注册用户数",
+                "payments": "支付",
+                "paymentsSubtitle": "成功支付",
                 "posts": "已发布的文章",
-                "products": "上架商品数"
+                "products": "上架商品数",
+                "tasks": "任务",
+                "tasksSubtitle": "进行中的任务"
             },
             "activity": {
                 "title": "最近动态",
@@ -441,24 +447,36 @@
                 "relativePrev": "{value} 相比上一步",
                 "formulas": {
                     "title": "公式",
-                    "subtitle": "结合当前数据与示例的计算",
+                    "subtitle": "基于当前数据的计算",
                     "referral": {
                         "title": "推荐率",
-                    "subtitle": "注册转为推荐人 × 人均推荐数",
-                    "conversion": "注册 → 推荐人",
-                    "avgReferrals": "推荐数/推荐人",
-                    "result": "推荐系数",
-                    "example": "示例：{conversion} × {avg} = {rate}"
+                        "subtitle": "注册转为推荐人 × 人均推荐数",
+                        "conversion": "注册 → 推荐人",
+                        "avgReferrals": "推荐数/推荐人",
+                        "result": "传播系数",
+                        "example": "示例：{conversion} × {avg} = {rate}"
+                    },
+                    "economy": {
+                        "title": "经济系数",
+                        "subtitle": "平均客单价 × 访问→支付转化 / 获客成本",
+                        "averageReceipt": "平均客单价",
+                        "visitToPayment": "访问 → 支付",
+                        "pricePerLead": "获客成本",
+                        "result": "经济系数",
+                        "example": "示例：{receipt} × {conversion} / {lead} = {rate}"
+                    }
                 },
-                "economy": {
-                    "title": "经济系数",
-                    "subtitle": "平均客单价 × 访问→支付转化 / 获客成本",
-                    "averageReceipt": "平均客单价",
-                    "visitToPayment": "访问 → 支付",
-                    "pricePerLead": "获客成本",
-                    "result": "经济系数",
-                    "example": "示例：{receipt} × {conversion} / {lead} = {rate}"
-                }
+                "retention": {
+                    "title": "按月留存",
+                    "subtitle": "分批规模与留存百分比",
+                    "month": "月份",
+                    "cohort": "批次",
+                    "m1": "M1",
+                    "m2": "M2",
+                    "m3": "M3",
+                    "m4": "M4",
+                    "m5": "M5",
+                    "m6": "M6"
                 },
                 "table": {
                     "amount": "数量",

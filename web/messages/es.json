@@ -410,9 +410,15 @@
             "description": "Resumen de métricas de la plataforma y actualizaciones recientes.",
             "loadError": "No se pudieron cargar las estadísticas del panel",
             "cards": {
+                "visits": "Visitas",
+                "visitsSubtitle": "Visitas registradas",
                 "users": "Usuarios registrados",
+                "payments": "Pagos",
+                "paymentsSubtitle": "Pagos exitosos",
                 "posts": "Publicaciones publicadas",
-                "products": "Productos activos"
+                "products": "Productos activos",
+                "tasks": "Tareas",
+                "tasksSubtitle": "Tareas activas"
             },
             "activity": {
                 "title": "Actividad reciente",
@@ -441,24 +447,36 @@
                 "relativePrev": "{value} frente al paso previo",
                 "formulas": {
                     "title": "Fórmulas",
-                    "subtitle": "Cálculos con datos actuales y ejemplos",
+                    "subtitle": "Cálculos con datos actuales",
                     "referral": {
                         "title": "Tasa de referidos",
-                    "subtitle": "Conversión de registro a referente × invitaciones promedio",
-                    "conversion": "Registro → referente",
-                    "avgReferrals": "Referidos por referente",
-                    "result": "Tasa de referidos",
-                    "example": "Ejemplo: {conversion} × {avg} = {rate}"
+                        "subtitle": "Conversión de registro a referente × invitaciones promedio",
+                        "conversion": "Registro → referente",
+                        "avgReferrals": "Referidos por referente",
+                        "result": "Coeficiente de viralidad",
+                        "example": "Ejemplo: {conversion} × {avg} = {rate}"
+                    },
+                    "economy": {
+                        "title": "Coeficiente económico",
+                        "subtitle": "Ticket promedio × conversión visita → pago / costo por lead",
+                        "averageReceipt": "Ticket promedio",
+                        "visitToPayment": "Visita → pago",
+                        "pricePerLead": "Costo por lead",
+                        "result": "Coeficiente económico",
+                        "example": "Ejemplo: {receipt} × {conversion} / {lead} = {rate}"
+                    }
                 },
-                "economy": {
-                    "title": "Coeficiente económico",
-                    "subtitle": "Ticket promedio × conversión visita → pago / costo por lead",
-                    "averageReceipt": "Ticket promedio",
-                    "visitToPayment": "Visita → pago",
-                    "pricePerLead": "Costo por lead",
-                    "result": "Coeficiente económico",
-                    "example": "Ejemplo: {receipt} × {conversion} / {lead} = {rate}"
-                }
+                "retention": {
+                    "title": "Retención por mes",
+                    "subtitle": "Tamaño de cohorte y porcentajes de retención",
+                    "month": "Mes",
+                    "cohort": "Cohorte",
+                    "m1": "M1",
+                    "m2": "M2",
+                    "m3": "M3",
+                    "m4": "M4",
+                    "m5": "M5",
+                    "m6": "M6"
                 },
                 "table": {
                     "amount": "Cantidad",
