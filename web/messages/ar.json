@@ -434,22 +434,45 @@
                 }
             },
             "funnel": {
-                "title": "قمع المستخدمين (مثال)",
-                "subtitle": "مسار توضيحي من الزيارة حتى إعادة الشراء",
+                "title": "قمع المستخدمين",
+                "subtitle": "مسار من الزيارة حتى إعادة الشراء",
                 "units": "مستخدمين",
                 "relativeFirst": "{value} من الزيارات",
                 "relativePrev": "{value} مقارنة بالخطوة السابقة",
+                "formulas": {
+                    "title": "الصيغ",
+                    "subtitle": "حسابات بالبيانات الحالية وأمثلة توضيحية",
+                    "referral": {
+                        "title": "معدل الإحالة",
+                        "subtitle": "تحويل التسجيل إلى مُحيل × متوسط الدعوات",
+                        "conversion": "تسجيل → مُحيل",
+                        "avgReferrals": "متوسط الإحالات لكل مُحيل",
+                        "result": "المعدل النهائي",
+                        "example": "مثال: {conversion} × {avg} = {rate}"
+                    },
+                    "economy": {
+                        "title": "معدل الاقتصاد",
+                        "subtitle": "متوسط الإيصال × تحويل الزيارة إلى دفع / سعر العميل المحتمل",
+                        "averageReceipt": "متوسط الإيصال",
+                        "visitToPayment": "تحويل زيارة → دفع",
+                        "pricePerLead": "سعر العميل المحتمل",
+                        "result": "المعدل الاقتصادي",
+                        "example": "مثال: {receipt} × {conversion} / {lead} = {rate}"
+                    }
+                },
                 "table": {
                     "amount": "العدد",
                     "absolute": "% من الزيارات",
                     "relative": "% مقارنة بالخطوة السابقة"
                 },
                 "stages": {
-                    "websiteVisit": "زيارة الموقع",
+                    "visit": "زيارة",
                     "registration": "التسجيل",
-                    "dataSubmission": "إرسال البيانات",
+                    "dataSubmission": "إدخال البيانات",
                     "engagement": "التفاعل",
-                    "returningVisit": "زيارة عودة",
+                    "taskCompletion": "إتمام المهمة",
+                    "referralInvite": "إرسال دعوة إحالة",
+                    "returningVisit": "زيارة متكررة",
                     "purchase": "شراء",
                     "repeatPurchase": "شراء متكرر"
                 }

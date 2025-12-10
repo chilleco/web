@@ -434,21 +434,44 @@
                 }
             },
             "funnel": {
-                "title": "用户漏斗（示例）",
-                "subtitle": "从访问到复购的示例路径",
+                "title": "用户漏斗",
+                "subtitle": "从访问到复购的路径",
                 "units": "用户",
                 "relativeFirst": "{value} 来自访问",
                 "relativePrev": "{value} 相比上一步",
+                "formulas": {
+                    "title": "公式",
+                    "subtitle": "结合当前数据与示例的计算",
+                    "referral": {
+                        "title": "推荐率",
+                        "subtitle": "注册转为推荐人 × 人均推荐数",
+                        "conversion": "注册 → 推荐人",
+                        "avgReferrals": "人均推荐数",
+                        "result": "最终推荐率",
+                        "example": "示例：{conversion} × {avg} = {rate}"
+                    },
+                    "economy": {
+                        "title": "经济指标",
+                        "subtitle": "平均客单价 × 访问→支付转化 / 获客成本",
+                        "averageReceipt": "平均客单价",
+                        "visitToPayment": "访问 → 支付转化",
+                        "pricePerLead": "获客成本",
+                        "result": "经济指标",
+                        "example": "示例：{receipt} × {conversion} / {lead} = {rate}"
+                    }
+                },
                 "table": {
                     "amount": "数量",
                     "absolute": "% 来自访问",
                     "relative": "% 相比上一步"
                 },
                 "stages": {
-                    "websiteVisit": "访问网站",
+                    "visit": "访问",
                     "registration": "注册",
-                    "dataSubmission": "提交数据",
-                    "engagement": "活跃互动",
+                    "dataSubmission": "填写资料",
+                    "engagement": "互动",
+                    "taskCompletion": "完成任务",
+                    "referralInvite": "邀请好友",
                     "returningVisit": "回访",
                     "purchase": "购买",
                     "repeatPurchase": "复购"

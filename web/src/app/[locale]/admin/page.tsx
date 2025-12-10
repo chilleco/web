@@ -5,7 +5,16 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Box } from '@/shared/ui/box';
 import { PageHeader } from '@/shared/ui/page-header';
 import { IconButton } from '@/shared/ui/icon-button';
-import { AdminIcon, FilterIcon, PostsIcon, RefreshIcon, ShoppingIcon, UsersIcon } from '@/shared/ui/icons';
+import {
+  AdminIcon,
+  FilterIcon,
+  PostsIcon,
+  RefreshIcon,
+  ShoppingIcon,
+  UsersIcon,
+  ClockIcon,
+  ChartIcon,
+} from '@/shared/ui/icons';
 import { API_ENDPOINTS } from '@/shared/constants';
 import { api } from '@/shared/services/api/client';
 import { useToastActions } from '@/shared/hooks/useToast';
@@ -69,19 +78,30 @@ export default function AdminPage() {
     () =>
       new Intl.NumberFormat(locale, {
         style: 'percent',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 1,
+        minimumSignificantDigits: 1,
+        maximumSignificantDigits: 2,
+      }),
+    [locale]
+  );
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 2,
       }),
     [locale]
   );
 
   const funnelStages = useMemo(() => {
     const seed = [
-      { key: 'websiteVisit', count: 12000 },
+      { key: 'visit', count: 12000 },
       { key: 'registration', count: 4200 },
       { key: 'dataSubmission', count: 2800 },
       { key: 'engagement', count: 1900 },
-      { key: 'returningVisit', count: 1100 },
+      { key: 'taskCompletion', count: 1400 },
+      { key: 'referralInvite', count: 900 },
+      { key: 'returningVisit', count: 600 },
       { key: 'purchase', count: 500 },
       { key: 'repeatPurchase', count: 220 },
     ];
@@ -99,6 +119,51 @@ export default function AdminPage() {
         relativePrev,
       };
     });
+  }, []);
+
+  const stageMap = useMemo(
+    () => Object.fromEntries(funnelStages.map((stage) => [stage.key, stage])),
+    [funnelStages]
+  );
+
+  const ratioFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 0,
+      }),
+    [locale]
+  );
+
+  const referralConversion = useMemo(() => {
+    const referral = stageMap.referralInvite?.count || 0;
+    const registration = stageMap.registration?.count || 0;
+    return registration ? (referral / registration) * 100 : 0;
+  }, [stageMap]);
+
+  const averageReferralsPerReferrer = 3;
+  const referralRate = (referralConversion / 100) * averageReferralsPerReferrer;
+
+  const conversionToPayment = useMemo(() => {
+    const payments = stageMap.purchase?.count || 0;
+    const visits = stageMap.visit?.count || 0;
+    return visits ? (payments / visits) * 100 : 0;
+  }, [stageMap]);
+
+  const averageReceipt = 10;
+  const pricePerLead = 1;
+  const economyRate = pricePerLead
+    ? (averageReceipt * (conversionToPayment / 100)) / pricePerLead
+    : 0;
+
+  const getZoneClass = useCallback((value: number) => {
+    if (value > 1) {
+      return 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400';
+    }
+    if (Math.abs(value - 1) < 0.0001) {
+      return 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400';
+    }
+    return 'bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400';
   }, []);
 
   const fetchStats = useCallback(async () => {
@@ -168,18 +233,24 @@ export default function AdminPage() {
         title: t('activity.userRegistered.title'),
         subtitle: t('activity.userRegistered.subtitle'),
         time: t('activity.time.hoursAgo', { value: 2 }),
+        icon: <UsersIcon size={16} />,
+        accent: 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
       },
       {
         key: 'postPublished',
         title: t('activity.postPublished.title'),
         subtitle: t('activity.postPublished.subtitle'),
         time: t('activity.time.hoursAgo', { value: 4 }),
+        icon: <PostsIcon size={16} />,
+        accent: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
       },
       {
         key: 'productUpdated',
         title: t('activity.productUpdated.title'),
         subtitle: t('activity.productUpdated.subtitle'),
         time: t('activity.time.dayAgo'),
+        icon: <ShoppingIcon size={16} />,
+        accent: 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
       },
     ],
     [t]
@@ -221,6 +292,114 @@ export default function AdminPage() {
 
       <Box size="lg" className="space-y-4">
         <div className="flex items-center gap-3">
+          <span className="inline-flex items-center justify-center rounded-[0.75rem] bg-purple-500/15 p-2 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
+            <ChartIcon size={18} />
+          </span>
+          <div>
+            <h2 className="text-xl font-semibold">{t('funnel.formulas.title')}</h2>
+            <p className="text-sm text-muted-foreground">{t('funnel.formulas.subtitle')}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="space-y-3 rounded-[1rem] bg-muted/40 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <p className="text-sm font-semibold leading-none">{t('funnel.formulas.referral.title')}</p>
+                <p className="text-xs text-muted-foreground leading-tight">
+                  {t('funnel.formulas.referral.subtitle')}
+                </p>
+              </div>
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-[0.75rem] px-3 py-1 text-sm font-semibold',
+                  getZoneClass(referralRate)
+                )}
+              >
+                {ratioFormatter.format(referralRate)}
+              </span>
+            </div>
+            <div className="space-y-2 text-sm font-semibold text-foreground">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {t('funnel.formulas.referral.conversion')}
+                </span>
+                <span>{percentFormatter.format(referralConversion / 100)}</span>
+                <span className="text-muted-foreground">×</span>
+                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {t('funnel.formulas.referral.avgReferrals')}
+                </span>
+                <span>{ratioFormatter.format(averageReferralsPerReferrer)}</span>
+                <span className="text-muted-foreground">=</span>
+                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {t('funnel.formulas.referral.result')}
+                </span>
+                <span>{ratioFormatter.format(referralRate)}</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {t('funnel.formulas.referral.example', {
+                  conversion: '10%',
+                  avg: 3,
+                  rate: 0.3,
+                })}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3 rounded-[1rem] bg-muted/40 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <p className="text-sm font-semibold leading-none">{t('funnel.formulas.economy.title')}</p>
+                <p className="text-xs text-muted-foreground leading-tight">
+                  {t('funnel.formulas.economy.subtitle')}
+                </p>
+              </div>
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-[0.75rem] px-3 py-1 text-sm font-semibold',
+                  getZoneClass(economyRate)
+                )}
+              >
+                {ratioFormatter.format(economyRate)}
+              </span>
+            </div>
+            <div className="space-y-2 text-sm font-semibold text-foreground">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {t('funnel.formulas.economy.averageReceipt')}
+                </span>
+                <span>{currencyFormatter.format(averageReceipt)}</span>
+                <span className="text-muted-foreground">×</span>
+                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {t('funnel.formulas.economy.visitToPayment')}
+                </span>
+                <span>{percentFormatter.format(conversionToPayment / 100)}</span>
+                <span className="text-muted-foreground">/</span>
+                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {t('funnel.formulas.economy.pricePerLead')}
+                </span>
+                <span>{currencyFormatter.format(pricePerLead)}</span>
+                <span className="text-muted-foreground">=</span>
+                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {t('funnel.formulas.economy.result')}
+                </span>
+                <span>{ratioFormatter.format(economyRate)}</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {t('funnel.formulas.economy.example', {
+                  receipt: '$10',
+                  conversion: '1%',
+                  lead: '$1',
+                  rate: 0.1,
+                })}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Box>
+
+      <Box size="lg" className="space-y-4">
+        <div className="flex items-center gap-3">
           <span className="inline-flex items-center justify-center rounded-[0.75rem] bg-blue-500/15 p-2 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
             <FilterIcon size={18} />
           </span>
@@ -252,7 +431,7 @@ export default function AdminPage() {
 
                   <div className="relative h-12 w-full overflow-hidden rounded-[1rem] bg-muted/30 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
                     <div
-                      className="absolute top-0 flex h-full items-center justify-center bg-foreground/20 text-sm font-semibold text-foreground transition-all duration-500 dark:bg-white/20"
+                      className="absolute top-0 flex h-full items-center justify-center bg-foreground text-background text-sm font-semibold transition-all duration-500"
                       style={{
                         width: `${width}%`,
                         left: '50%',
@@ -283,17 +462,30 @@ export default function AdminPage() {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">{t('activity.title')}</h2>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2">
           {activityItems.map((item) => (
             <div
               key={item.key}
-              className="flex items-center justify-between rounded-[0.75rem] bg-muted/50 px-4 py-3"
+              className="flex items-center justify-between rounded-[1rem] bg-muted/40 px-4 py-3 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]"
             >
-              <div className="space-y-1">
-                <p className="font-medium">{item.title}</p>
-                <p className="text-sm text-muted-foreground">{item.subtitle}</p>
+              <div className="flex items-center gap-3">
+                <span
+                  className={cn(
+                    'inline-flex size-10 items-center justify-center rounded-[0.75rem] bg-muted text-muted-foreground',
+                    item.accent
+                  )}
+                >
+                  {item.icon}
+                </span>
+                <div className="space-y-1">
+                  <p className="font-medium leading-tight">{item.title}</p>
+                  <p className="text-sm text-muted-foreground leading-tight">{item.subtitle}</p>
+                </div>
               </div>
-              <span className="text-sm text-muted-foreground">{item.time}</span>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <ClockIcon size={14} />
+                <span>{item.time}</span>
+              </div>
             </div>
           ))}
         </div>

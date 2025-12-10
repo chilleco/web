@@ -434,21 +434,44 @@
                 }
             },
             "funnel": {
-                "title": "Embudo de usuarios (ejemplo)",
-                "subtitle": "Ruta de ejemplo desde visita hasta recompra",
+                "title": "Embudo de usuarios",
+                "subtitle": "Ruta desde la visita hasta la recompra",
                 "units": "usuarios",
                 "relativeFirst": "{value} de las visitas",
                 "relativePrev": "{value} frente al paso previo",
+                "formulas": {
+                    "title": "Fórmulas",
+                    "subtitle": "Cálculos con datos actuales y ejemplos",
+                    "referral": {
+                        "title": "Tasa de referidos",
+                        "subtitle": "Conversión de registro a referente × invitaciones promedio",
+                        "conversion": "Registro → referente",
+                        "avgReferrals": "Referidos promedio por referente",
+                        "result": "Tasa resultante",
+                        "example": "Ejemplo: {conversion} × {avg} = {rate}"
+                    },
+                    "economy": {
+                        "title": "Tasa económica",
+                        "subtitle": "Ticket promedio × conversión visita → pago / costo por lead",
+                        "averageReceipt": "Ticket promedio",
+                        "visitToPayment": "Conversión visita → pago",
+                        "pricePerLead": "Costo por lead",
+                        "result": "Tasa económica",
+                        "example": "Ejemplo: {receipt} × {conversion} / {lead} = {rate}"
+                    }
+                },
                 "table": {
                     "amount": "Cantidad",
                     "absolute": "% de visitas",
                     "relative": "% vs paso previo"
                 },
                 "stages": {
-                    "websiteVisit": "Visita al sitio",
+                    "visit": "Visita",
                     "registration": "Registro",
-                    "dataSubmission": "Envío de datos",
+                    "dataSubmission": "Completar datos",
                     "engagement": "Interacción",
+                    "taskCompletion": "Finalización de tarea",
+                    "referralInvite": "Invitación de referido",
                     "returningVisit": "Visita de retorno",
                     "purchase": "Compra",
                     "repeatPurchase": "Recompra"

@@ -435,21 +435,44 @@
                 }
             },
             "funnel": {
-                "title": "User funnel (placeholder)",
-                "subtitle": "Example path from visit to repeat purchase",
+                "title": "User funnel",
+                "subtitle": "Path from visit to repeat purchase",
                 "units": "users",
                 "relativeFirst": "{value} of visits",
                 "relativePrev": "{value} vs previous",
+                "formulas": {
+                    "title": "Formula highlights",
+                    "subtitle": "Illustrative calculations with current data and examples",
+                    "referral": {
+                        "title": "Referral rate",
+                        "subtitle": "Conversion from registration to referrer × average invites",
+                        "conversion": "Registration → referrer",
+                        "avgReferrals": "Avg referrals per referrer",
+                        "result": "Referral rate",
+                        "example": "Example: {conversion} × {avg} = {rate}"
+                    },
+                    "economy": {
+                        "title": "Economy rate",
+                        "subtitle": "Average receipt × conversion from visit to payment / price per lead",
+                        "averageReceipt": "Average receipt",
+                        "visitToPayment": "Visit → payment conversion",
+                        "pricePerLead": "Price per lead",
+                        "result": "Economy rate",
+                        "example": "Example: {receipt} × {conversion} / {lead} = {rate}"
+                    }
+                },
                 "table": {
                     "amount": "Amount",
                     "absolute": "% of visits",
                     "relative": "% of previous"
                 },
                 "stages": {
-                    "websiteVisit": "Website visit",
+                    "visit": "Visit",
                     "registration": "Registration",
-                    "dataSubmission": "Data submission",
-                    "engagement": "Engagement",
+                    "dataSubmission": "Data completion",
+                    "engagement": "Interaction",
+                    "taskCompletion": "Task completion",
+                    "referralInvite": "Referral invite",
                     "returningVisit": "Returning visit",
                     "purchase": "Purchase",
                     "repeatPurchase": "Repeat purchase"
