@@ -445,21 +445,21 @@
                     "subtitle": "Расчёты по текущим данным и примерам",
                     "referral": {
                         "title": "Реферальная ставка",
-                        "subtitle": "Конверсия регистраций в рефералов × среднее число приглашений",
-                        "conversion": "Регистрация → реферер",
-                        "avgReferrals": "Средние приглашения на реферера",
-                        "result": "Итоговая ставка",
-                        "example": "Пример: {conversion} × {avg} = {rate}"
-                    },
-                    "economy": {
-                        "title": "Экономика",
-                        "subtitle": "Средний чек × конверсия визит → оплата / цена лида",
-                        "averageReceipt": "Средний чек",
-                        "visitToPayment": "Конверсия визит → оплата",
-                        "pricePerLead": "Цена лида",
-                        "result": "Экономическая ставка",
-                        "example": "Пример: {receipt} × {conversion} / {lead} = {rate}"
-                    }
+                    "subtitle": "Конверсия регистраций в рефералов × среднее число приглашений",
+                    "conversion": "Регистрация → реферер",
+                    "avgReferrals": "Рефералов на реферера",
+                    "result": "Коэффициент реферала",
+                    "example": "Пример: {conversion} × {avg} = {rate}"
+                },
+                "economy": {
+                    "title": "Коэффициент экономики",
+                    "subtitle": "Средний чек × конверсия визит → оплата / цена лида",
+                    "averageReceipt": "Средний чек",
+                    "visitToPayment": "Визит → оплата",
+                    "pricePerLead": "Цена лида",
+                    "result": "Коэффициент экономики",
+                    "example": "Пример: {receipt} × {conversion} / {lead} = {rate}"
+                }
                 },
                 "table": {
                     "amount": "Количество",

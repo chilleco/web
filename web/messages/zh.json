@@ -444,21 +444,21 @@
                     "subtitle": "结合当前数据与示例的计算",
                     "referral": {
                         "title": "推荐率",
-                        "subtitle": "注册转为推荐人 × 人均推荐数",
-                        "conversion": "注册 → 推荐人",
-                        "avgReferrals": "人均推荐数",
-                        "result": "最终推荐率",
-                        "example": "示例：{conversion} × {avg} = {rate}"
-                    },
-                    "economy": {
-                        "title": "经济指标",
-                        "subtitle": "平均客单价 × 访问→支付转化 / 获客成本",
-                        "averageReceipt": "平均客单价",
-                        "visitToPayment": "访问 → 支付转化",
-                        "pricePerLead": "获客成本",
-                        "result": "经济指标",
-                        "example": "示例：{receipt} × {conversion} / {lead} = {rate}"
-                    }
+                    "subtitle": "注册转为推荐人 × 人均推荐数",
+                    "conversion": "注册 → 推荐人",
+                    "avgReferrals": "推荐数/推荐人",
+                    "result": "推荐系数",
+                    "example": "示例：{conversion} × {avg} = {rate}"
+                },
+                "economy": {
+                    "title": "经济系数",
+                    "subtitle": "平均客单价 × 访问→支付转化 / 获客成本",
+                    "averageReceipt": "平均客单价",
+                    "visitToPayment": "访问 → 支付",
+                    "pricePerLead": "获客成本",
+                    "result": "经济系数",
+                    "example": "示例：{receipt} × {conversion} / {lead} = {rate}"
+                }
                 },
                 "table": {
                     "amount": "数量",

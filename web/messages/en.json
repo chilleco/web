@@ -445,19 +445,19 @@
                     "subtitle": "Illustrative calculations with current data and examples",
                     "referral": {
                         "title": "Referral rate",
-                        "subtitle": "Conversion from registration to referrer × average invites",
-                        "conversion": "Registration → referrer",
-                        "avgReferrals": "Avg referrals per referrer",
-                        "result": "Referral rate",
-                        "example": "Example: {conversion} × {avg} = {rate}"
-                    },
-                    "economy": {
-                        "title": "Economy rate",
-                        "subtitle": "Average receipt × conversion from visit to payment / price per lead",
-                        "averageReceipt": "Average receipt",
-                        "visitToPayment": "Visit → payment conversion",
-                        "pricePerLead": "Price per lead",
-                        "result": "Economy rate",
+                    "subtitle": "Conversion from registration to referrer × average invites",
+                    "conversion": "Registration → referrer",
+                    "avgReferrals": "Average referrals per referrer",
+                    "result": "Referral rate",
+                    "example": "Example: {conversion} × {avg} = {rate}"
+                },
+                "economy": {
+                    "title": "Economy rate",
+                    "subtitle": "Average receipt × conversion from visit to payment / price per lead",
+                    "averageReceipt": "Average receipt",
+                    "visitToPayment": "Visit → payment",
+                    "pricePerLead": "Price per lead",
+                    "result": "Economy rate",
                         "example": "Example: {receipt} × {conversion} / {lead} = {rate}"
                     }
                 },

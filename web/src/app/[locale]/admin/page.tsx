@@ -1,12 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Box } from '@/shared/ui/box';
 import { PageHeader } from '@/shared/ui/page-header';
 import { IconButton } from '@/shared/ui/icon-button';
 import {
-  AdminIcon,
   FilterIcon,
   PostsIcon,
   RefreshIcon,
@@ -14,6 +13,7 @@ import {
   UsersIcon,
   ClockIcon,
   ChartIcon,
+  EyeIcon,
 } from '@/shared/ui/icons';
 import { API_ENDPOINTS } from '@/shared/constants';
 import { api } from '@/shared/services/api/client';
@@ -166,6 +166,78 @@ export default function AdminPage() {
     return 'bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400';
   }, []);
 
+  const formulaRows = useMemo(
+    () => [
+      {
+        key: 'referral',
+        operators: ['×', '', '='],
+        blocks: [
+          {
+            key: 'conversion',
+            label: t('funnel.formulas.referral.conversion'),
+            value: percentFormatter.format(referralConversion / 100),
+          },
+          {
+            key: 'avgReferrals',
+            label: t('funnel.formulas.referral.avgReferrals'),
+            value: ratioFormatter.format(averageReferralsPerReferrer),
+          },
+          {
+            key: 'placeholder',
+            label: '\u00A0',
+            value: '\u00A0',
+            placeholder: true,
+          },
+          {
+            key: 'result',
+            label: t('funnel.formulas.referral.result'),
+            value: ratioFormatter.format(referralRate),
+            highlightClass: getZoneClass(referralRate),
+          },
+        ],
+      },
+      {
+        key: 'economy',
+        operators: ['×', '/', '='],
+        blocks: [
+          {
+            key: 'averageReceipt',
+            label: t('funnel.formulas.economy.averageReceipt'),
+            value: currencyFormatter.format(averageReceipt),
+          },
+          {
+            key: 'visitToPayment',
+            label: t('funnel.formulas.economy.visitToPayment'),
+            value: percentFormatter.format(conversionToPayment / 100),
+          },
+          {
+            key: 'pricePerLead',
+            label: t('funnel.formulas.economy.pricePerLead'),
+            value: currencyFormatter.format(pricePerLead),
+          },
+          {
+            key: 'result',
+            label: t('funnel.formulas.economy.result'),
+            value: ratioFormatter.format(economyRate),
+            highlightClass: getZoneClass(economyRate),
+          },
+        ],
+      },
+    ],
+    [
+      conversionToPayment,
+      currencyFormatter,
+      economyRate,
+      getZoneClass,
+      percentFormatter,
+      pricePerLead,
+      referralConversion,
+      referralRate,
+      ratioFormatter,
+      t,
+    ]
+  );
+
   const fetchStats = useCallback(async () => {
     if (isFetchingRef.current) return;
 
@@ -259,8 +331,8 @@ export default function AdminPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        icon={<AdminIcon size={24} />}
-        iconClassName="bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400"
+        icon={<EyeIcon size={24} />}
+        iconClassName="bg-muted text-foreground"
         title={tSystem('dashboard')}
         description={t('description')}
         actions={
@@ -301,100 +373,41 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="space-y-3 rounded-[1rem] bg-muted/40 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <p className="text-sm font-semibold leading-none">{t('funnel.formulas.referral.title')}</p>
-                <p className="text-xs text-muted-foreground leading-tight">
-                  {t('funnel.formulas.referral.subtitle')}
-                </p>
-              </div>
-              <span
-                className={cn(
-                  'inline-flex items-center gap-1 rounded-[0.75rem] px-3 py-1 text-sm font-semibold',
-                  getZoneClass(referralRate)
-                )}
-              >
-                {ratioFormatter.format(referralRate)}
-              </span>
+        <div className="space-y-4">
+          {formulaRows.map((row) => (
+            <div
+              key={row.key}
+              className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-2 md:gap-3"
+            >
+              {row.blocks.map((block, idx) => (
+                <Fragment key={block.key}>
+                  <div
+                    className={cn(
+                      'flex min-h-[96px] flex-col items-center justify-center rounded-[0.75rem] bg-muted/50 px-3 py-3 text-center shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.08)]',
+                      block.placeholder && 'opacity-0'
+                    )}
+                  >
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground">
+                      {block.label}
+                    </span>
+                    <span
+                      className={cn(
+                        'mt-1 rounded-[0.65rem] px-2 py-1 text-xl font-bold leading-tight',
+                        block.highlightClass
+                      )}
+                    >
+                      {block.value}
+                    </span>
+                  </div>
+                  {idx < row.blocks.length - 1 && (
+                    <div className="flex h-full min-w-[28px] items-center justify-center text-lg font-semibold text-muted-foreground">
+                      {row.operators[idx]}
+                    </div>
+                  )}
+                </Fragment>
+              ))}
             </div>
-            <div className="space-y-2 text-sm font-semibold text-foreground">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {t('funnel.formulas.referral.conversion')}
-                </span>
-                <span>{percentFormatter.format(referralConversion / 100)}</span>
-                <span className="text-muted-foreground">×</span>
-                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {t('funnel.formulas.referral.avgReferrals')}
-                </span>
-                <span>{ratioFormatter.format(averageReferralsPerReferrer)}</span>
-                <span className="text-muted-foreground">=</span>
-                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {t('funnel.formulas.referral.result')}
-                </span>
-                <span>{ratioFormatter.format(referralRate)}</span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('funnel.formulas.referral.example', {
-                  conversion: '10%',
-                  avg: 3,
-                  rate: 0.3,
-                })}
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-3 rounded-[1rem] bg-muted/40 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <p className="text-sm font-semibold leading-none">{t('funnel.formulas.economy.title')}</p>
-                <p className="text-xs text-muted-foreground leading-tight">
-                  {t('funnel.formulas.economy.subtitle')}
-                </p>
-              </div>
-              <span
-                className={cn(
-                  'inline-flex items-center gap-1 rounded-[0.75rem] px-3 py-1 text-sm font-semibold',
-                  getZoneClass(economyRate)
-                )}
-              >
-                {ratioFormatter.format(economyRate)}
-              </span>
-            </div>
-            <div className="space-y-2 text-sm font-semibold text-foreground">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {t('funnel.formulas.economy.averageReceipt')}
-                </span>
-                <span>{currencyFormatter.format(averageReceipt)}</span>
-                <span className="text-muted-foreground">×</span>
-                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {t('funnel.formulas.economy.visitToPayment')}
-                </span>
-                <span>{percentFormatter.format(conversionToPayment / 100)}</span>
-                <span className="text-muted-foreground">/</span>
-                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {t('funnel.formulas.economy.pricePerLead')}
-                </span>
-                <span>{currencyFormatter.format(pricePerLead)}</span>
-                <span className="text-muted-foreground">=</span>
-                <span className="rounded-[0.75rem] bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {t('funnel.formulas.economy.result')}
-                </span>
-                <span>{ratioFormatter.format(economyRate)}</span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('funnel.formulas.economy.example', {
-                  receipt: '$10',
-                  conversion: '1%',
-                  lead: '$1',
-                  rate: 0.1,
-                })}
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </Box>
 
