@@ -52,7 +52,6 @@ async def handler(
         "status",
         "locale",
     }
-    before_state = None
     if data.id:
         post = Post.get(data.id)
 
@@ -62,7 +61,6 @@ async def handler(
             and post.token != request.state.token
         ):
             raise ErrorAccess("save")
-        before_state = post.json(fields=tracked_fields)
 
     else:
         post = Post(
@@ -97,8 +95,6 @@ async def handler(
         request=request,
         params={
             "id": post.id,
-            "before": before_state,
-            "after": post.json(fields=tracked_fields),
             "changes": changes,
         },
     )

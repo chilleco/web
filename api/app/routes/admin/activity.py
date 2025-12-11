@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 from consys.errors import ErrorAccess
 
 from models.track import Track, TrackAction, TrackObject
+from models.user import fetch_user_profiles
 
 
 router = APIRouter()
@@ -37,6 +38,7 @@ class AdminActivityItem(BaseModel):
     object: TrackObject
     action: TrackAction
     user: int | None = None
+    user_info: Dict[str, Any] | None = None
     token: str | None = None
     ip: str | None = None
     created: float
@@ -71,18 +73,25 @@ def _infer_object_action(item: Dict[str, Any]) -> Tuple[str | None, str | None]:
     return prefix, suffix
 
 
-def _serialize_item(item: Dict[str, Any]) -> Dict[str, Any]:
+def _serialize_item(item: Dict[str, Any], user_map: Dict[int, Dict[str, Any]]) -> Dict[str, Any]:
     raw_object, raw_action = _infer_object_action(item)
+    raw_params = item.get("params") or item.get("data") or {}
+    if isinstance(raw_params, dict):
+        params = {key: value for key, value in raw_params.items() if key not in {"before", "after"}}
+    else:
+        params = raw_params
 
+    user_id = item.get("user")
     return {
         "id": item["id"],
         "object": _safe_enum(raw_object, TrackObject, TrackObject.SYSTEM),
         "action": _safe_enum(raw_action, TrackAction, TrackAction.VIEW),
-        "user": item.get("user"),
+        "user": user_id,
+        "user_info": user_map.get(user_id) if isinstance(user_id, int) else None,
         "token": item.get("token"),
         "ip": item.get("ip"),
         "created": item.get("created"),
-        "params": item.get("params") or item.get("data") or {},
+        "params": params,
         "context": item.get("context") or {},
     }
 
@@ -149,7 +158,10 @@ async def handler(
     else:
         items_list = list(items)
 
+    user_ids = {item.get("user") for item in items_list if item.get("user")}
+    user_map = await fetch_user_profiles(user_ids, local_fields={"id", "login", "name", "surname"})
+
     return {
-        "items": [_serialize_item(item) for item in items_list],
+        "items": [_serialize_item(item, user_map) for item in items_list],
         "count": Track.count(extra=extra, **filters),
     }

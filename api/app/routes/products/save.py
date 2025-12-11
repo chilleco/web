@@ -228,10 +228,8 @@ async def handler(
         "status",
         "token",
     }
-    before_state = None
     if data.id:
         product = Product.get(data.id)
-        before_state = product.json(fields=tracked_fields)
     else:
         product = Product(
             token=request.state.token,
@@ -293,8 +291,6 @@ async def handler(
         request=request,
         params={
             "id": product.id,
-            "before": before_state,
-            "after": product.json(fields=tracked_fields),
             "changes": changes,
         },
     )

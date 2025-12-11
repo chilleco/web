@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from consys.errors import ErrorAccess
 
 from models.space import Space
-from models.track import Track, TrackAction, TrackObject
+from models.track import Track, TrackAction, TrackObject, changes_from_snapshot
 from .utils import detach_space_from_users
 
 
@@ -40,7 +40,10 @@ async def handler(request: Request, data: SpaceRemoveRequest = Body(...)):
         user=request.state.user,
         token=request.state.token,
         request=request,
-        params={"before": snapshot},
+        params={
+            "id": data.id,
+            "changes": changes_from_snapshot(snapshot),
+        },
     )
 
     return {"result": True}

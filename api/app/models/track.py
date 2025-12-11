@@ -5,7 +5,6 @@ from fastapi import Request
 
 from models import Base, Attribute
 
-
 class TrackObject(str, Enum):
     USER = "user"
     POST = "post"
@@ -55,6 +54,7 @@ class Track(Base):
         Persist a unified tracking entry with normalized params and context.
         """
 
+
         payload_context = _build_context(request, context)
         ip = payload_context.get("ip")
 
@@ -93,13 +93,16 @@ def _build_context(
     context: Dict[str, Any] = {}
 
     if request is not None:
+        ip_value = getattr(request.state, "ip", None) or getattr(
+            getattr(request, "client", None) or {}, "host", None
+        )
         context.update(
             {
                 "source": _resolve_source(getattr(request.state, "network", None)),
                 "network": getattr(request.state, "network", None),
                 "status": getattr(request.state, "status", None),
                 "locale": getattr(request.state, "locale", None),
-                "ip": getattr(request.state, "ip", None),
+                "ip": ip_value,
                 "url": getattr(request.state, "url", None),
                 "user_agent": getattr(request.state, "user_agent", None),
             }
@@ -138,3 +141,17 @@ def format_changes(
         }
 
     return formatted
+
+
+def changes_from_snapshot(snapshot: Dict[str, Any] | None) -> Dict[str, Dict[str, Any]]:
+    """
+    Convert a static snapshot to a change-set (old -> None) for remove actions.
+    """
+
+    if not snapshot:
+        return {}
+
+    return {
+        field: {"old": _truncate_value(value, 400), "new": None}
+        for field, value in snapshot.items()
+    }

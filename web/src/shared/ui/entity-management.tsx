@@ -69,12 +69,18 @@ export function EntityManagement({
   );
 }
 
+interface EntityRowMetaItem {
+  icon: ReactNode;
+  keyLabel?: string;
+  value: ReactNode;
+}
+
 interface EntityRowProps {
   id?: number | string;
   title: string;
   url?: string;
   badges?: ReactNode[];
-  secondRowItems?: ReactNode[];
+  secondRowItems?: EntityRowMetaItem[];
   leftSlot?: ReactNode;
   rightActions?: ReactNode;
   className?: string;
@@ -97,7 +103,7 @@ export function EntityRow({
   const hasSecondRow = secondRowItems.length > 0;
 
   return (
-    <div className={cn('flex items-center gap-4 p-2 w-full', className)}>
+    <div className={cn('flex items-center gap-4 w-full', className)}>
       {leftSlot}
 
       <div className={cn('flex-1 min-w-0 overflow-hidden', hasSecondRow ? '' : 'flex items-center')}>
@@ -118,20 +124,17 @@ export function EntityRow({
         </div>
 
         {hasSecondRow ? (
-          <div className="flex items-center text-sm text-muted-foreground mt-1 hidden md:flex">
-            <span className="truncate">
-              {secondRowItems.map((item, idx) => (
-                <span
-                  key={idx}
-                  className={cn(
-                    idx ? "before:content-['•'] before:mx-1" : '',
-                    'inline-flex items-center gap-1'
-                  )}
-                >
-                  {item}
-                </span>
-              ))}
-            </span>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1 hidden md:flex">
+            {secondRowItems.map((item, idx) => (
+              <span
+                key={idx}
+                className="inline-flex items-center gap-2 rounded-[0.75rem] bg-muted/60 px-2 py-1"
+                title={item.keyLabel || undefined}
+              >
+                {item.icon}
+                <span className="truncate">{item.value}</span>
+              </span>
+            ))}
           </div>
         ) : null}
       </div>

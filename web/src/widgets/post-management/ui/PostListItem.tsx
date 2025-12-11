@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Badge } from '@/shared/ui/badge';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ButtonGroup } from '@/shared/ui/button-group';
-import { EditIcon, DeleteIcon, ImageIcon } from '@/shared/ui/icons';
+import { EditIcon, DeleteIcon, ImageIcon, CategoriesIcon } from '@/shared/ui/icons';
 import { EntityRow } from '@/shared/ui/entity-management';
 import { Post } from '@/entities/post';
 import { Link } from '@/i18n/routing';
@@ -33,7 +33,21 @@ export function PostListItem({ post, onDelete }: PostListItemProps) {
           ]
           : []
       }
-      secondRowItems={[post.category || null].filter(Boolean)}
+      secondRowItems={
+        [
+          post.category
+            ? {
+                icon: <CategoriesIcon size={12} />,
+                keyLabel: tAdmin('categoryLabel'),
+                value: post.category,
+              }
+            : null,
+        ].filter(Boolean) as {
+          icon: React.ReactNode;
+          keyLabel?: string;
+          value: React.ReactNode;
+        }[]
+      }
       leftSlot={
         <div className="relative w-12 h-12 rounded-[0.75rem] bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
           {post.image ? (

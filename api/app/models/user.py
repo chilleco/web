@@ -1,3 +1,5 @@
+from typing import Any, Dict, Iterable, List
+
 from userhub import BaseUser as User
 from libdev.codes import get_flag
 from consys.errors import ErrorWrong
@@ -109,6 +111,51 @@ async def complex_global_user_by_social(social_user):
     return users[0]
 
 
+async def fetch_user_profiles(
+    ids: Iterable[int] | None,
+    global_fields: Iterable[str] | None = None,
+    local_fields: Iterable[str] | None = None,
+) -> Dict[int, Dict[str, Any]]:
+    """
+    Fetch user data from global store first, then overlay local fields.
+    Returns a map keyed by user id with merged fields.
+    """
+
+    if not ids:
+        return {}
+
+    user_ids: List[int] = sorted({int(value) for value in ids if value is not None})
+    profiles: Dict[int, Dict[str, Any]] = {}
+
+    try:
+        global_users = await complex_global_users(
+            ids=user_ids,
+            fields=list(global_fields or {"id", "login", "name", "surname", "title"}),
+        )
+        if global_users:
+            for user in global_users if isinstance(global_users, list) else [global_users]:
+                if isinstance(user, dict) and user.get("id") is not None:
+                    profiles[user["id"]] = {key: value for key, value in user.items() if value is not None}
+    except Exception:  # pylint: disable=broad-except
+        profiles = {}
+
+    try:
+        local_users = UserLocal.complex(
+            ids=user_ids, fields=set(local_fields or {"id", "login", "name", "surname"})
+        )
+        if local_users:
+            for user in local_users if isinstance(local_users, list) else [local_users]:
+                if isinstance(user, dict) and user.get("id") is not None:
+                    target = profiles.setdefault(user["id"], {})
+                    for key, value in user.items():
+                        if value is not None:
+                            target[key] = value
+    except Exception:  # pylint: disable=broad-except
+        pass
+
+    return profiles
+
+
 __all__ = (
     "DEFAULT_BALANCE",
     "User",
@@ -117,4 +164,5 @@ __all__ = (
     "get_social",
     "get_name",
     "complex_global_user_by_social",
+    "fetch_user_profiles",
 )

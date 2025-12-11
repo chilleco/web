@@ -21,11 +21,14 @@ import {
   DollarIcon,
   EyeIcon,
   FilterIcon,
+  GlobeIcon,
+  LocationIcon,
   MessageIcon,
   PostsIcon,
   RefreshIcon,
   ShieldIcon,
   ShoppingIcon,
+  UserIcon,
   UsersIcon,
 } from '@/shared/ui/icons';
 import {
@@ -35,6 +38,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/shared/ui/dialog';
 
 interface AdminStats {
   users: number;
@@ -72,6 +81,12 @@ interface ActivityItem {
   object: TrackObjectType;
   action: TrackActionType;
   user?: number;
+  user_info?: {
+    id?: number;
+    login?: string;
+    name?: string;
+    surname?: string;
+  };
   token?: string;
   ip?: string;
   created: number;
@@ -158,6 +173,8 @@ export default function AdminPage() {
   const activityFetchingRef = useRef(false);
   const activityLastKeyRef = useRef<string | null>(null);
   const activityRequestIdRef = useRef(0);
+  const [selectedActivity, setSelectedActivity] = useState<ActivityItem | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const numberFormatter = useMemo(() => new Intl.NumberFormat(locale), [locale]);
   const percentFormatter = useMemo(
@@ -191,7 +208,7 @@ export default function AdminPage() {
     if (!timestamp) return '';
     const date = new Date(timestamp * 1000);
     const pad = (value: number) => value.toString().padStart(2, '0');
-    return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}, ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
   }, []);
 
   const activityObjectLabels = useMemo(
@@ -318,8 +335,7 @@ export default function AdminPage() {
 
   const buildActivityTitle = useCallback(
     (item: ActivityItem) =>
-      `${activityActionLabels[item.action] ?? item.action} • ${
-        activityObjectLabels[item.object] ?? item.object
+      `${activityActionLabels[item.action] ?? item.action} ${activityObjectLabels[item.object] ?? item.object
       }`,
     [activityActionLabels, activityObjectLabels]
   );
@@ -338,14 +354,54 @@ export default function AdminPage() {
         activitySourceLabels[sourceKey as keyof typeof activitySourceLabels] || sourceKey;
       parts.push(t('activity.meta.source', { value: sourceLabel }));
 
-      if (item.token) {
-        parts.push(t('activity.meta.token', { value: item.token }));
-      }
-
       return parts.join(' • ');
     },
     [activitySourceLabels, t]
   );
+
+  const buildUserLabel = useCallback(
+    (item: ActivityItem) => {
+      const login =
+        (item.user_info?.login ||
+          (item.params?.login as string | undefined)?.trim())?.trim() || undefined;
+      const name = item.user_info?.name || (item.params?.name as string | undefined) || undefined;
+      const surname =
+        item.user_info?.surname || (item.params?.surname as string | undefined) || undefined;
+      const fullName = [name, surname].filter(Boolean).join(' ');
+
+      const base =
+        (login && `@${login.replace(/^@/, '')}`) ||
+        (item.user ? `#${item.user}` : t('activity.meta.guest'));
+
+      return fullName ? `${base} (${fullName})` : base;
+    },
+    [t]
+  );
+
+  const extractChanges = useCallback((item: ActivityItem) => {
+    const raw = item.params?.changes;
+    if (!raw || typeof raw !== 'object') return [];
+
+    return Object.entries(raw as Record<string, { old: unknown; new: unknown }>)
+      .map(([field, values]) => ({
+        field,
+        old: (values && (values as { old: unknown }).old) ?? null,
+        new: (values && (values as { new: unknown }).new) ?? null,
+      }))
+      .filter((change) => change.old !== change.new);
+  }, []);
+
+  const formatValue = useCallback((value: unknown) => {
+    if (value === null || value === undefined) return '—';
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+      return String(value);
+    }
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }, []);
 
   const funnelStages = useMemo(() => {
     const seed = [
@@ -1057,11 +1113,11 @@ export default function AdminPage() {
                   <div className="flex items-center gap-3">
                     <span className="inline-flex size-10 items-center justify-center rounded-[0.75rem] bg-muted/70 text-muted-foreground animate-pulse" />
                     <div className="space-y-2">
-                      <div className="h-4 w-36 rounded-[0.75rem] bg-muted/60 animate-pulse" />
-                      <div className="h-3 w-52 rounded-[0.75rem] bg-muted/40 animate-pulse" />
+                      <div className="h-4 w-40 rounded-[0.75rem] bg-muted/60 animate-pulse" />
+                      <div className="h-3 w-64 rounded-[0.75rem] bg-muted/40 animate-pulse" />
                     </div>
                   </div>
-                  <div className="h-3 w-20 rounded-[0.75rem] bg-muted/50 animate-pulse" />
+                  <div className="h-3 w-24 rounded-[0.75rem] bg-muted/50 animate-pulse" />
                 </div>
               ))}
             </div>
@@ -1070,12 +1126,22 @@ export default function AdminPage() {
           {!isActivityLoading &&
             activityItems.map((item) => {
               const { icon, accent } = getActivityVisuals(item.object);
+              const sourceKey = (item.context?.source as string | undefined) || 'direct';
+              const sourceLabel =
+                activitySourceLabels[sourceKey as keyof typeof activitySourceLabels] || sourceKey;
+              const ipValue = item.ip || (item.context?.ip as string | undefined);
+
               return (
-                <div
+                <button
                   key={item.id}
-                  className="flex items-center justify-between rounded-[1rem] bg-muted/40 px-4 py-3 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]"
+                  type="button"
+                  onClick={() => {
+                    setSelectedActivity(item);
+                    setIsDetailsOpen(true);
+                  }}
+                  className="flex w-full items-center justify-between rounded-[1rem] bg-muted/40 px-4 py-3 text-left shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] transition-all duration-200 hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 cursor-pointer"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-1 items-start gap-3">
                     <span
                       className={cn(
                         'inline-flex size-10 items-center justify-center rounded-[0.75rem] bg-muted text-muted-foreground',
@@ -1085,17 +1151,35 @@ export default function AdminPage() {
                       {icon}
                     </span>
                     <div className="space-y-1">
-                      <p className="font-medium leading-tight">{buildActivityTitle(item)}</p>
-                      <p className="text-sm text-muted-foreground leading-tight">
-                        {buildActivitySubtitle(item)}
-                      </p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="inline-flex items-center gap-1 text-sm font-semibold text-foreground">
+                          <UserIcon size={14} />
+                          <span>{buildUserLabel(item)}</span>
+                        </span>
+                        <span className="text-xl text-muted-foreground">•</span>
+                        <span className="text-base font-semibold leading-tight text-foreground">
+                          {buildActivityTitle(item)}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                        <span className="inline-flex items-center gap-2 rounded-[0.75rem] bg-muted/60 px-2 py-1">
+                          <GlobeIcon size={14} />
+                          <span>{sourceLabel}</span>
+                        </span>
+                        {ipValue && (
+                          <span className="inline-flex items-center gap-2 rounded-[0.75rem] bg-muted/60 px-2 py-1">
+                            <LocationIcon size={14} />
+                            <span>{ipValue}</span>
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <ClockIcon size={14} />
                     <span>{formatDateTime(item.created)}</span>
                   </div>
-                </div>
+                </button>
               );
             })}
 
@@ -1105,6 +1189,85 @@ export default function AdminPage() {
             </div>
           )}
         </div>
+
+        <Dialog
+          open={isDetailsOpen}
+          onOpenChange={(open) => {
+            setIsDetailsOpen(open);
+            if (!open) {
+              setSelectedActivity(null);
+            }
+          }}
+        >
+          <DialogContent className="sm:max-w-2xl">
+            {selectedActivity && (
+              <>
+                <DialogTitle>{buildActivityTitle(selectedActivity)}</DialogTitle>
+                <DialogDescription className="flex flex-wrap items-center gap-2">
+                  <UserIcon size={14} />
+                  <span>{buildUserLabel(selectedActivity)}</span>
+                  <span className="text-xl text-muted-foreground">•</span>
+                  <ClockIcon size={14} />
+                  <span>{formatDateTime(selectedActivity.created)}</span>
+                </DialogDescription>
+
+                <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                  <span className="inline-flex items-center gap-2 rounded-[0.75rem] bg-muted px-2 py-1">
+                    <GlobeIcon size={14} />
+                    <span>
+                      {activitySourceLabels[
+                        ((selectedActivity.context?.source as string | undefined) || 'direct') as keyof typeof activitySourceLabels
+                      ] ||
+                        (selectedActivity.context?.source as string | undefined) ||
+                        'direct'}
+                    </span>
+                  </span>
+                  {Boolean(
+                    (selectedActivity.ip as string | undefined) ||
+                    (selectedActivity.context?.ip as string | undefined)
+                  ) && (
+                      <span className="inline-flex items-center gap-2 rounded-[0.75rem] bg-muted px-2 py-1">
+                        <LocationIcon size={14} />
+                        <span>
+                          {(selectedActivity.ip as string) ||
+                            (selectedActivity.context?.ip as string)}
+                        </span>
+                      </span>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold text-foreground">{t('activity.details.changes')}</p>
+                  {extractChanges(selectedActivity).length ? (
+                    <div className="overflow-hidden rounded-[1rem] bg-muted/30 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.08)]">
+                      <div className="grid grid-cols-[1.2fr_1fr_1fr] items-center gap-3 border-b border-border/40 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        <span>{t('activity.details.field')}</span>
+                        <span>{t('activity.details.old')}</span>
+                        <span>{t('activity.details.new')}</span>
+                      </div>
+                      <div className="divide-y divide-border/40">
+                        {extractChanges(selectedActivity).map((change) => (
+                          <div
+                            key={change.field}
+                            className="grid grid-cols-[1.2fr_1fr_1fr] items-start gap-3 px-4 py-2 text-sm"
+                          >
+                            <span className="font-medium text-foreground">{change.field}</span>
+                            <span className="break-all text-muted-foreground">{formatValue(change.old)}</span>
+                            <span className="break-all text-foreground">{formatValue(change.new)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-[0.75rem] bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+                      {t('activity.details.noChanges')}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">

@@ -1,4 +1,5 @@
-import { api } from '@/shared/services/api/client';
+import { api, apiWithoutGlobalErrors } from '@/shared/services/api/client';
+import { withSuppressedToasts } from '@/shared/services/api/globalErrorHandler';
 import { shouldUseMockFallback, logApiWarning, addMockDelay } from '@/shared/config/api';
 import type {
   Category,
@@ -106,7 +107,10 @@ function buildCategoriesRequest(params: GetCategoriesRequest) {
 }
 
 async function fetchCategories(params: GetCategoriesRequest): Promise<Category[]> {
-  const response = await api.post<CategoriesResponse>('/categories/get/', buildCategoriesRequest(params));
+  const response = await apiWithoutGlobalErrors.post<CategoriesResponse>(
+    '/categories/get/',
+    buildCategoriesRequest(params)
+  );
   return normalizeCategoriesResponse(response, params);
 }
 
@@ -321,8 +325,9 @@ export async function createCategory(data: CreateCategoryRequest): Promise<Categ
       return newCategory;
     }
   } else {
-    // Production mode - global error handler will handle errors and show toast notifications
-    return api.post<Category>('/categories/save/', data);
+    return withSuppressedToasts(() =>
+      api.post<Category>('/categories/save/', data, { suppressGlobalErrorHandler: true })
+    );
   }
 }
 
@@ -351,8 +356,9 @@ export async function updateCategory(id: number, data: UpdateCategoryRequest): P
       return updatedCategory;
     }
   } else {
-    // Production mode - global error handler will handle errors and show toast notifications
-    return api.post<Category>('/categories/save/', { id, ...data });
+    return withSuppressedToasts(() =>
+      api.post<Category>('/categories/save/', { id, ...data }, { suppressGlobalErrorHandler: true })
+    );
   }
 }
 
@@ -373,7 +379,8 @@ export async function deleteCategory(id: number): Promise<void> {
       mockCategories.splice(categoryIndex, 1);
     }
   } else {
-    // Production mode - global error handler will handle errors and show toast notifications
-    await api.post('/categories/rm/', { id });
+    await withSuppressedToasts(() =>
+      api.post('/categories/rm/', { id }, { suppressGlobalErrorHandler: true })
+    );
   }
 }

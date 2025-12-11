@@ -15,6 +15,7 @@ import { Box } from '@/shared/ui/box';
 import { FileUpload, FileData } from '@/shared/ui/file-upload';
 import { SaveIcon, CancelIcon } from '@/shared/ui/icons';
 import { useToast } from '@/widgets/feedback-system';
+import { ApiError } from '@/shared/services/api/client';
 import { createCategory, updateCategory } from '@/entities/category/api/categoryApi';
 import type { Category } from '@/entities/category/model/category';
 import { CategoryPreview } from './CategoryPreview';
@@ -75,6 +76,13 @@ export function CategoryForm({
   const [categoryFileData, setCategoryFileData] = useState<FileData | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { success, error: showError, info } = useToast();
+  const errorsMap = {
+    id: t('errors.id'),
+    title: t('errors.title'),
+    url: t('errors.url'),
+    parent: t('errors.parent'),
+    generic: t('errors.generic'),
+  } as const;
 
   // Get icon and color from direct fields only
   const getIconAndColor = () => {
@@ -93,6 +101,7 @@ export function CategoryForm({
     watch,
     setValue,
     reset,
+    setError,
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
@@ -253,8 +262,32 @@ export function CategoryForm({
 
       onSuccess();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-      showError(errorMessage);
+      if (error instanceof ApiError) {
+        const detailRaw = (error.data as { detail?: unknown } | undefined)?.detail;
+        const detailMessage =
+          typeof detailRaw === 'string'
+            ? detailRaw
+            : detailRaw !== null && detailRaw !== undefined
+              ? String(detailRaw)
+              : undefined;
+        const fieldKey = typeof detailRaw === 'string' ? detailRaw : undefined;
+        const friendly = (fieldKey && (errorsMap as Record<string, string>)[fieldKey]) || errorsMap.generic;
+        const toastMessage = fieldKey
+          ? `${friendly}${detailMessage ? ` — ${detailMessage}` : ''}`
+          : detailMessage || friendly;
+
+        if (fieldKey === 'title' || fieldKey === 'url' || fieldKey === 'parent') {
+          setError(fieldKey, {
+            type: 'server',
+            message: detailMessage || friendly,
+          });
+        }
+
+        showError(toastMessage);
+      } else {
+        const errorMessage = error instanceof Error ? error.message : errorsMap.generic;
+        showError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

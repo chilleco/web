@@ -31,6 +31,8 @@ Depending on the project that develops based on this template, the entities of t
 - **No duplicate API calls**: guard client-side fetch effects with stable fetch keys/in-flight refs so Strict Mode doesn’t trigger the same request multiple times (one request per dataset)
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
 - **Required fields UX**: For all forms mark required inputs with `*` and highlight missing/invalid required fields with a red focus/outline when the API returns validation errors (e.g., `detail` value). Keep visual feedback consistent across the app.
+- **Popups/Toasts**: Emit only one localized toast per error; map backend `detail`/field keys to translated messages and surface the exact field causing the issue (no duplicate global+local toasts).
+- **Error responses**: Backend errors follow `{"status":"error","error":"ErrorWrong","detail":"id"}` shape. Frontend popups must show the raw `detail` value (field/key) once, and optionally add a concise localized hint if available. Reuse this rule across all routes/components (not just categories) to avoid multiple generic popups.
 - **Dialogs must scroll**: Large popups (forms/modals) must fit on mobile and small screens with max-height constraints and internal `overflow-y-auto` so content is scrollable without breaking layout.
 - **Mobile adaptive**: Every screen, table, and control layout must stay usable on small/mobile widths; add horizontal scroll containers for wide tables instead of letting them overflow.
 - **Shared translations first**: Use existing `system.*` translation keys for shared labels (loading, refresh, common actions) instead of introducing feature-specific duplicates; migrate simple words from feature scopes to `system.*` when touching those areas.
@@ -42,7 +44,8 @@ Depending on the project that develops based on this template, the entities of t
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
 - **API sanity via curl**: When debugging/adding flows, hit backend endpoints with curl locally (using provided bearer tokens when available) to validate responses and fix errors before shipping.
 - **Pre-handoff checks**: Always run `npm run lint` and `npm run build` (or `make lint-web`) yourself before finishing a task; fix any errors locally. If sandbox/network blocks them, explicitly note the failure reason and keep TypeScript/routing types clean (use typed `redirect/push` objects aligned with `web/src/i18n/routing.ts`).
-- **Track actions with enums**: Use `Track.log` + `TrackObject`/`TrackAction` enums from `api/app/models/track.py` for every audited change (objects: user, post, product, category, comment, space, payment, session, system; actions: create, update, remove, search, view, disconnect). Always pass `request` to capture context (source/network, status/roles, locale, user agent, ip, url, token) and provide `params` with structured before/after snapshots plus `format_changes(...)` output for updates. Example: `Track.log(object=TrackObject.POST, action=TrackAction.UPDATE, user=request.state.user, token=request.state.token, request=request, params={"id": post.id, "before": before_state, "after": post.json(fields=tracked_fields), "changes": format_changes(post.get_changes())})`. The admin feed uses `/admin/activity/` (default 20 last events) with filters for user, ip, object/action, and date range—keep Track entries consistent.
+- **Track actions with enums**: Use `Track.log` + `TrackObject`/`TrackAction` enums from `api/app/models/track.py` for every audited change (objects: user, post, product, category, comment, space, payment, session, system; actions: create, update, remove, search, view, disconnect). Always pass `request` to capture context (source/network, status/roles, locale, user agent, ip via `request.state.ip`, url, token) and provide `params` with compact change sets only (no before/after echoes) via `{"id": entity.id, "changes": format_changes(entity.get_changes())}`. Example: `Track.log(object=TrackObject.POST, action=TrackAction.UPDATE, user=request.state.user, token=request.state.token, request=request, params={"id": post.id, "changes": format_changes(post.get_changes())})`. The admin feed uses `/admin/activity/` (default 20 last events) with filters for user, ip, object/action, and date range—keep Track entries consistent.
+- **User profiles fetch**: When you need user login/name/surname in responses or UI feeds, never stuff them into Track params. Use `fetch_user_profiles(ids)` from `api/app/models/user.py` to fetch global users first and overlay `UserLocal` fields in one batched request; reuse this helper across routes instead of ad-hoc UserLocal queries.
 - **Reuse cards/items**: Always reuse existing card/item components for repeated contexts (landing listings, related/recommended blocks, similar products, etc.)—e.g., use the shared PostCard for any post teasers (landing, related posts) and the shared product card for similar products instead of creating new variants.
 - **Follow FSD Architecture**: respect Feature-Sliced Design layers and import rules
 - **Never hard-code secrets** or credentials; never read or write `.env`, `secrets/`, or CI secrets
@@ -238,8 +241,16 @@ Depending on the project that develops based on this template, the entities of t
 - **Layout**: Always a single outer `Box` from EntityManagement; rows use full-width `EntityRow` with first line `#id + title + /url + badges`, second line dot-separated metadata.
 - **Left slot**: Pass icons/images/expanders via `leftSlot`; do NOT add extra wrappers that break alignment.
 - **Right actions**: Provide button groups via `rightActions`; alignment comes from EntityRow (no extra flex wrappers needed).
-- **Second-row items**: Pass an array of React nodes/strings; they auto-join with dots (same pattern as categories admin).
+- **Second-row items**: Pass an array of objects `{ icon, keyLabel?, value }`; `EntityRow` renders them as pills with icon + value and shows `keyLabel` on hover (`title` attr). Keep values short; let EntityRow handle pill styling.
 - **Reuse**: Products, posts, categories admin lists must reuse EntityRow instead of custom row markup.
+- **Row chips**: Second-line metadata must use the unified chip pill (`inline-flex items-center gap-2 rounded-[0.75rem] bg-muted px-2 py-1`) with icons (mail/phone/globe/category/price/etc.) instead of plain text so list rows match the admin activity style.
+  - Example:
+    ```tsx
+    secondRowItems={[
+      { icon: <GlobeIcon size={12} />, keyLabel: t('fields.locale'), value: locale },
+      { icon: <CategoriesIcon size={12} />, keyLabel: t('fields.category'), value: categoryTitle },
+    ]}
+    ```
 
 ##### Edit mode layout rule
 - Component reuse: use the same form component for create/edit modes and the view variation for display/preview in those modes to avoid divergence.

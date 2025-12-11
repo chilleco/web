@@ -9,6 +9,7 @@ import { cn } from '@/shared/lib/utils';
 import { ImageIcon } from '@/shared/ui/icons';
 import { formatDate } from '@/shared/lib/date';
 import { EntityRow } from '@/shared/ui/entity-management';
+import { GlobeIcon, ClockIcon, CategoriesIcon, AboutIcon } from '@/shared/ui/icons';
 
 interface CategoryMetadata {
   icon?: string;
@@ -144,7 +145,11 @@ export function CategoryPreview({
             </div>,
           ]}
           secondRowItems={(() => {
-            const contentItems: React.ReactNode[] = [];
+            const contentItems: {
+              icon: React.ReactNode;
+              keyLabel?: string;
+              value: React.ReactNode;
+            }[] = [];
 
             if (category.locale) {
               const getLocaleFlag = (locale: string) => {
@@ -157,19 +162,35 @@ export function CategoryPreview({
                   default: return '🌐';
                 }
               };
-              contentItems.push(`${tSystem('locale')}: ${getLocaleFlag(category.locale)}`);
+              contentItems.push({
+                icon: <GlobeIcon size={12} />,
+                keyLabel: tSystem('locale'),
+                value: getLocaleFlag(category.locale),
+              });
             }
 
             if (showCreated && category.created) {
-              contentItems.push(`${t('created')}: ${formatDate(category.created)}`);
+              contentItems.push({
+                icon: <ClockIcon size={12} />,
+                keyLabel: t('created'),
+                value: formatDate(category.created),
+              });
             }
 
             if (showSubcategoriesCount && hasSubcategories) {
-              contentItems.push(t('subcategoriesCount', { count: category.categories!.length }));
+              contentItems.push({
+                icon: <CategoriesIcon size={12} />,
+                keyLabel: t('subcategories'),
+                value: category.categories!.length,
+              });
             }
 
             if (showDescription && category.description) {
-              contentItems.push(category.description);
+              contentItems.push({
+                icon: <AboutIcon size={12} />,
+                keyLabel: t('description'),
+                value: category.description,
+              });
             }
 
             return contentItems;

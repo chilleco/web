@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from consys.errors import ErrorAccess
 
 from models.product import Product
-from models.track import Track, TrackAction, TrackObject
+from models.track import Track, TrackAction, TrackObject, changes_from_snapshot
 
 
 router = APIRouter()
@@ -51,7 +51,10 @@ async def handler(
         user=request.state.user,
         token=request.state.token,
         request=request,
-        params={"before": snapshot},
+        params={
+            "id": data.id,
+            "changes": changes_from_snapshot(snapshot),
+        },
     )
 
     return {"status": "ok"}

@@ -479,7 +479,14 @@
                     "next": "Next"
                 },
                 "empty": "No activity yet",
-                "loadError": "Failed to load activity"
+                "loadError": "Failed to load activity",
+                "details": {
+                    "changes": "Changed fields",
+                    "field": "Field",
+                    "old": "Old value",
+                    "new": "New value",
+                    "noChanges": "No changes recorded"
+                }
             },
             "funnel": {
                 "title": "User funnel",
@@ -553,15 +560,22 @@
             "subcategoriesCount": "Subcategories: {count}",
             "noCategories": "No categories found. Create your first category to get started.",
             "loading": "Loading categories...",
-            "deleteConfirm": "Are you sure you want to delete \"{title}\"? This will also delete all subcategories.",
-            "createSuccess": "Category \"{title}\" created successfully",
-            "updateSuccess": "Category \"{title}\" updated successfully",
-            "deleteSuccess": "Category \"{title}\" deleted successfully",
-            "createTitle": "Create New Category",
-            "editTitle": "Edit Category: {title}",
-            "form": {
-                "basicInfo": "Basic Information",
-                "title": "Title",
+                "deleteConfirm": "Are you sure you want to delete \"{title}\"? This will also delete all subcategories.",
+                "createSuccess": "Category \"{title}\" created successfully",
+                "updateSuccess": "Category \"{title}\" updated successfully",
+                "deleteSuccess": "Category \"{title}\" deleted successfully",
+                "createTitle": "Create New Category",
+                "editTitle": "Edit Category: {title}",
+                "errors": {
+                    "id": "Category not found",
+                    "title": "Title is required",
+                    "url": "URL is invalid or already used",
+                    "parent": "Parent category is invalid",
+                    "generic": "Unable to save category"
+                },
+                "form": {
+                    "basicInfo": "Basic Information",
+                    "title": "Title",
                 "titlePlaceholder": "Enter category title",
                 "url": "URL Slug",
                 "urlPlaceholder": "category-url-slug",
@@ -684,6 +698,9 @@
                 "smz": "СМЗ"
             },
             "fields": {
+                "entity": "Entity",
+                "phone": "Phone",
+                "mail": "Email",
                 "marginBadge": "+{value} margin"
             },
             "actions": {

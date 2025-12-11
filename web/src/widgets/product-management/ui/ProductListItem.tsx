@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Badge } from '@/shared/ui/badge';
 import { IconButton } from '@/shared/ui/icon-button';
 import { ButtonGroup } from '@/shared/ui/button-group';
-import { EditIcon, TagIcon, StarIcon, DeleteIcon, ImageIcon } from '@/shared/ui/icons';
+import { EditIcon, TagIcon, StarIcon, DeleteIcon, ImageIcon, CategoriesIcon, DollarIcon } from '@/shared/ui/icons';
 import { EntityRow } from '@/shared/ui/entity-management';
 import { Product } from '@/entities/product';
 
@@ -55,30 +55,40 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
         product.isFeatured ? <Badge key="featured" variant="secondary">{t('isFeatured')}</Badge> : null,
         optionsCount ? <Badge key="options" variant="secondary">{t('optionsLabel', { count: optionsCount })}</Badge> : null,
       ].filter(Boolean)}
-      secondRowItems={(() => {
-        const items: React.ReactNode[] = [];
-        if (product.rating) {
-          items.push(
-            <span className="inline-flex items-center gap-1" key="rating">
-              <StarIcon size={12} className="text-amber-500" />
-              {product.rating}
-            </span>
-          );
-        }
-        if (product.ratingCount && product.ratingCount > 0) {
-          items.push(
-            <span className="inline-flex items-center gap-1" key="ratingCount">
-              <TagIcon size={12} />
-              {product.ratingCount}
-            </span>
-          );
-        }
-        items.push(`${t('priceFromLabel')}: ${finalPrice} ${currency}`.trim());
-        if (product.category) {
-          items.push(`${t('categoryLabel')}: ${product.category}`);
-        }
-        return items;
-      })()}
+      secondRowItems={
+        [
+          product.rating
+            ? {
+                icon: <StarIcon size={12} className="text-amber-500" />,
+                keyLabel: t('rating'),
+                value: product.rating,
+              }
+            : null,
+          product.ratingCount && product.ratingCount > 0
+            ? {
+                icon: <TagIcon size={12} />,
+                keyLabel: t('ratingCount'),
+                value: product.ratingCount,
+              }
+            : null,
+          {
+            icon: <DollarIcon size={12} />,
+            keyLabel: t('priceFromLabel'),
+            value: `${finalPrice} ${currency}`.trim(),
+          },
+          product.category
+            ? {
+                icon: <CategoriesIcon size={12} />,
+                keyLabel: t('categoryLabel'),
+                value: product.category,
+              }
+            : null,
+        ].filter(Boolean) as {
+          icon: React.ReactNode;
+          keyLabel?: string;
+          value: React.ReactNode;
+        }[]
+      }
       rightActions={
         <ButtonGroup>
           <IconButton

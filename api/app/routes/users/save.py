@@ -216,8 +216,6 @@ async def handler(
             request=request,
             params={
                 "id": target_user_id,
-                "before": before_state,
-                "after": user_local.json(fields=tracked_fields),
                 "changes": changes,
             },
         )

@@ -14,7 +14,8 @@ import {
   HideIcon,
   CheckIcon,
   MailIcon,
-  PhoneIcon
+  PhoneIcon,
+  GlobeIcon
 } from '@/shared/ui/icons';
 import { getLocaleFlag, getUserDisplayName } from '../lib/userFormUtils';
 
@@ -72,20 +73,38 @@ export function UserListItem({ user, onEdit, onToggleBlock }: UserListItemProps)
 
   const secondRowItems = [
     user.mail ? (
-      <span key="mail" className="inline-flex items-center gap-1">
-        <MailIcon size={12} />
-        {user.mail}
-      </span>
+      {
+        icon: <MailIcon size={12} />,
+        keyLabel: t('fields.mail'),
+        value: user.mail,
+      }
     ) : null,
     user.phone ? (
-      <span key="phone" className="inline-flex items-center gap-1">
-        <PhoneIcon size={12} />
-        {user.phone}
-      </span>
+      {
+        icon: <PhoneIcon size={12} />,
+        keyLabel: t('fields.phone'),
+        value: user.phone,
+      }
     ) : null,
-    loginLabel,
-    localeLabel || null,
-  ].filter(Boolean) as ReactNode[];
+    loginLabel ? (
+      {
+        icon: <UserIcon size={12} />,
+        keyLabel: t('fields.login'),
+        value: loginLabel,
+      }
+    ) : null,
+    localeLabel ? (
+      {
+        icon: <GlobeIcon size={12} />,
+        keyLabel: t('fields.locale'),
+        value: localeLabel,
+      }
+    ) : null,
+  ].filter(Boolean) as {
+    icon: React.ReactNode;
+    keyLabel?: string;
+    value: React.ReactNode;
+  }[];
 
   return (
     <EntityRow

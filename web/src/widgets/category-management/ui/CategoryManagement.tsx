@@ -9,6 +9,7 @@ import { getCategories, deleteCategory } from '@/entities/category/api/categoryA
 import type { Category } from '@/entities/category/model/category';
 import { CategoryForm } from './CategoryForm';
 import { CategoryTreeItem } from './CategoryTreeItem';
+import { ApiError } from '@/shared/services/api/client';
 
 interface CategoryManagementProps {
   isCreateModalOpen?: boolean;
@@ -37,10 +38,20 @@ export function CategoryManagement({
       const data = await getCategories({ parent: 0, include_tree: true });
       setCategories(data);
     } catch (err) {
-      // Global error handler already showed toast, just set local error state
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load categories';
-      setError(errorMessage);
-      showError(errorMessage);
+      const detail =
+        err instanceof ApiError && err.data && typeof err.data === 'object'
+          ? (err.data as { detail?: unknown }).detail
+          : null;
+      const detailMessage =
+        typeof detail === 'string'
+          ? detail
+          : detail !== null && detail !== undefined
+            ? String(detail)
+            : null;
+      const fallbackMessage = err instanceof Error ? err.message : 'Failed to load categories';
+      const finalMessage = detailMessage || fallbackMessage;
+      setError(finalMessage);
+      showError(finalMessage);
     } finally {
       setLoading(false);
     }

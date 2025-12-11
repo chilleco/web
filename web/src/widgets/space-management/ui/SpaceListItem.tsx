@@ -14,7 +14,8 @@ import {
   EditIcon,
   DeleteIcon,
   PhoneIcon,
-  MailIcon
+  MailIcon,
+  GlobeIcon
 } from '@/shared/ui/icons';
 
 interface SpaceListItemProps {
@@ -49,20 +50,32 @@ export function SpaceListItem({ space, onDelete }: SpaceListItemProps) {
     : null;
 
   const secondRowItems = [
-    entity,
-    space.phone ? (
-      <span className="inline-flex items-center gap-1">
-        <PhoneIcon size={12} />
-        {space.phone}
-      </span>
-    ) : null,
-    space.mail ? (
-      <span className="inline-flex items-center gap-1">
-        <MailIcon size={12} />
-        {space.mail}
-      </span>
-    ) : null
-  ].filter(Boolean);
+    entity
+      ? {
+          icon: <GlobeIcon size={12} />,
+          keyLabel: t('fields.entity'),
+          value: entity,
+        }
+      : null,
+    space.phone
+      ? {
+          icon: <PhoneIcon size={12} />,
+          keyLabel: t('fields.phone'),
+          value: space.phone,
+        }
+      : null,
+    space.mail
+      ? {
+          icon: <MailIcon size={12} />,
+          keyLabel: t('fields.mail'),
+          value: space.mail,
+        }
+      : null,
+  ].filter(Boolean) as {
+    icon: React.ReactNode;
+    keyLabel?: string;
+    value: React.ReactNode;
+  }[];
 
   return (
     <EntityRow
@@ -70,7 +83,7 @@ export function SpaceListItem({ space, onDelete }: SpaceListItemProps) {
       title={space.title}
       url={`spaces/${space.link}`}
       badges={[marginBadge]}
-      secondRowItems={secondRowItems as React.ReactNode[]}
+      secondRowItems={secondRowItems}
       leftSlot={
         <div className="relative w-12 h-12 rounded-[0.75rem] bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
           {space.logo ? (

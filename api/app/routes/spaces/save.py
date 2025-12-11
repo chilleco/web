@@ -125,13 +125,11 @@ async def handler(request: Request, data: SpaceSaveRequest = Body(...)):
         "link",
         "users",
     }
-    before_state = None
 
     if data.id or data.link:
         space = _get_space_for_update(data)
         if request.state.status < 4 and request.state.user not in (space.users or []):
             raise ErrorAccess("save")
-        before_state = space.json(fields=tracked_fields)
     else:
         if data.title is None:
             raise ErrorWrong("title")
@@ -174,8 +172,6 @@ async def handler(request: Request, data: SpaceSaveRequest = Body(...)):
         request=request,
         params={
             "id": space.id,
-            "before": before_state,
-            "after": space.json(fields=tracked_fields),
             "changes": changes,
         },
     )

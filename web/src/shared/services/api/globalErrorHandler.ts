@@ -14,6 +14,24 @@ let globalOptions: GlobalApiErrorHandlerOptions = {
   suppressDefaultToasts: false
 };
 
+const TOAST_DEDUP_MS = 1500;
+let lastToast: { message: string; endpoint?: string; ts: number } | null = null;
+
+function shouldShowToast(message: string, endpoint?: string) {
+  const now = Date.now();
+  if (
+    lastToast &&
+    lastToast.message === message &&
+    lastToast.endpoint === endpoint &&
+    now - lastToast.ts < TOAST_DEDUP_MS
+  ) {
+    return false;
+  }
+
+  lastToast = { message, endpoint, ts: now };
+  return true;
+}
+
 /**
  * Configure global API error handling behavior
  */
@@ -41,10 +59,12 @@ export function handleGlobalApiError(error: unknown, endpoint?: string): never {
   // Show toast notification if enabled and not suppressed
   if (globalOptions.enableToasts && !globalOptions.suppressDefaultToasts && typeof window !== 'undefined') {
     const errorMessage = getErrorMessage(error, endpoint);
-    toast.error(errorMessage, {
-      duration: 5000,
-      dismissible: true
-    });
+    if (shouldShowToast(errorMessage, endpoint)) {
+      toast.error(errorMessage, {
+        duration: 5000,
+        dismissible: true
+      });
+    }
   }
 
   // Re-throw the error so components can still handle it if needed
@@ -56,6 +76,12 @@ export function handleGlobalApiError(error: unknown, endpoint?: string): never {
  */
 function getErrorMessage(error: unknown, endpoint?: string): string {
   if (error instanceof ApiError) {
+    const data = (error as ApiError & { data?: { detail?: unknown } }).data;
+    const detail = data && typeof data === 'object' ? (data as { detail?: unknown }).detail : null;
+    if (typeof detail === 'string' && detail.trim().length > 0) {
+      return detail;
+    }
+
     // Handle specific HTTP status codes
     switch (error.status) {
       case 0:
@@ -80,7 +106,6 @@ function getErrorMessage(error: unknown, endpoint?: string): string {
   }
 
   if (error instanceof Error) {
-    // Handle specific error messages
     if (error.message === 'Failed to fetch') {
       return 'Network error - please check your internet connection';
     }

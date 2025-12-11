@@ -94,8 +94,7 @@ async def save_category(
     # if request.state.status < 5:
     #     raise ErrorAccess("save category")
 
-    new_category = not data.id
-    before_state = None
+    new = False
     tracked_fields = {
         "id",
         "title",
@@ -111,58 +110,48 @@ async def save_category(
         "user",
     }
 
-    if new_category:
-        if data.title is None:
+    if data.id:
+        category = Category.get(data.id)
+
+        if (
+            request.state.status < 6
+            and (not category.user or category.user != request.state.user)
+            and category.token != request.state.token
+        ):
+            raise ErrorAccess("save")
+
+    else:
+        if not data.title:
             raise ErrorWrong("title")
 
         category = Category(
             user=request.state.user,
-            title=data.title,
-            description=data.description,
-            data=data.data,
-            image=data.image,
-            parent=data.parent or 0,
-            status=data.status if data.status is not None else 1,
-            icon=data.icon,
-            color=data.color,
+            token=None if request.state.user else request.state.token,
         )
 
-        if data.url:
-            category.url = data.url
-        else:
-            category.url = to_url(data.title)
+        new = True
 
-    else:
-        category = Category.get(data.id)
-        if not category:
-            raise ErrorWrong("Category not found")
+    if data.title is not None:
+        category.title = data.title
+    if data.description is not None:
+        category.description = data.description
+    if data.data is not None:
+        category.data = data.data
+    if data.image is not None:
+        category.image = data.image
+    if data.parent is not None:
+        category.parent = data.parent
+    if data.status is not None:
+        category.status = data.status
+    if data.icon is not None:
+        category.icon = data.icon
+    if data.color is not None:
+        category.color = data.color
 
-        before_state = category.json(fields=tracked_fields)
-
-        if request.state.status < 6 and category.user != request.state.user:
-            raise ErrorAccess("save category")
-
-        if data.title is not None:
-            category.title = data.title
-        if data.description is not None:
-            category.description = data.description
-        if data.data is not None:
-            category.data = data.data
-        if data.image is not None:
-            category.image = data.image
-        if data.parent is not None:
-            category.parent = data.parent
-        if data.status is not None:
-            category.status = data.status
-        if data.icon is not None:
-            category.icon = data.icon
-        if data.color is not None:
-            category.color = data.color
-
-        if data.url is not None:
-            category.url = data.url
-        elif data.title is not None:
-            category.url = to_url(data.title)
+    if data.url is not None:
+        category.url = data.url
+    elif data.title is not None:
+        category.url = to_url(data.title)
 
     if data.locale is not None:
         if data.locale:
@@ -174,10 +163,10 @@ async def save_category(
     if category.url and category.url[-1].isdigit():
         category.url += "-x"
 
-    if new_category:
-        url_exists = Category.get(url=category.url, fields={})
+    if new:
+        url_exists = Category.count(url=category.url)
     else:
-        url_exists = Category.get(id={"$ne": category.id}, url=category.url, fields={})
+        url_exists = Category.count(id={"$ne": category.id}, url=category.url)
 
     if not category.url or url_exists:
         category.url = str(category.created)[-6:] + "-" + (category.url or "x")
@@ -189,20 +178,18 @@ async def save_category(
 
     Track.log(
         object=TrackObject.CATEGORY,
-        action=TrackAction.CREATE if new_category else TrackAction.UPDATE,
+        action=TrackAction.CREATE if new else TrackAction.UPDATE,
         user=request.state.user,
         token=request.state.token,
         request=request,
         params={
             "id": category.id,
-            "before": before_state,
             "changes": changes,
-            "after": category.json(fields=tracked_fields),
         },
     )
 
     log.success(
-        ("Created" if new_category else "Updated") + " category\n{}",
+        ("Created" if new else "Updated") + " category\n{}",
         {
             "category": category.id,
             "title": category.title,

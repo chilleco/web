@@ -40,7 +40,6 @@ async def handler(
 
     # Get
     new = False
-    before_state = None
     if data.id:
         comment = Comment.get(data.id)
 
@@ -50,7 +49,6 @@ async def handler(
             and comment.token != request.state.token
         ):
             raise ErrorAccess("save")
-        before_state = comment.json(fields={"id", "post", "status", "data"})
 
     else:
         comment = Comment(
@@ -78,8 +76,6 @@ async def handler(
         params={
             "id": comment.id,
             "post": comment.post,
-            "before": before_state,
-            "after": comment.json(fields={"id", "post", "status", "data"}),
             "changes": changes,
         },
     )

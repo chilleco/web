@@ -478,7 +478,14 @@
                     "next": "下一页"
                 },
                 "empty": "暂无活动",
-                "loadError": "加载活动失败"
+                "loadError": "加载活动失败",
+                "details": {
+                    "changes": "变更字段",
+                    "field": "字段",
+                    "old": "旧值",
+                    "new": "新值",
+                    "noChanges": "没有记录到更改"
+                }
             },
             "funnel": {
                 "title": "用户漏斗",
@@ -558,6 +565,13 @@
             "deleteSuccess": "分类\"{title}\"删除成功",
             "createTitle": "创建新分类",
             "editTitle": "编辑分类：{title}",
+            "errors": {
+                "id": "未找到分类",
+                "title": "请输入标题",
+                "url": "URL 无效或已被使用",
+                "parent": "父分类无效",
+                "generic": "无法保存分类"
+            },
             "form": {
                 "basicInfo": "基本信息",
                 "title": "标题",
@@ -666,6 +680,9 @@
             "loading": "正在加载空间...",
             "empty": "暂无空间",
             "fields": {
+                "entity": "实体",
+                "phone": "电话",
+                "mail": "邮箱",
                 "marginBadge": "+{value} 加价"
             },
             "actions": {

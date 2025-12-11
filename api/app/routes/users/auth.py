@@ -172,6 +172,8 @@ async def wrap_auth(*args, **kwargs):
         },
         params={
             "login": kwargs.get("login"),
+            "name": kwargs.get("name"),
+            "surname": kwargs.get("surname"),
             "utm": kwargs.get("utm"),
             "new": new_local,
             "status": user.get("status"),

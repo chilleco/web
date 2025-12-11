@@ -478,7 +478,14 @@
                     "next": "Siguiente"
                 },
                 "empty": "Aún no hay actividad",
-                "loadError": "No se pudo cargar la actividad"
+                "loadError": "No se pudo cargar la actividad",
+                "details": {
+                    "changes": "Campos modificados",
+                    "field": "Campo",
+                    "old": "Valor anterior",
+                    "new": "Valor nuevo",
+                    "noChanges": "Sin cambios registrados"
+                }
             },
             "funnel": {
                 "title": "Embudo de usuarios",
@@ -558,6 +565,13 @@
             "deleteSuccess": "Categoría \"{title}\" eliminada exitosamente",
             "createTitle": "Crear nueva categoría",
             "editTitle": "Editar categoría: {title}",
+            "errors": {
+                "id": "Categoría no encontrada",
+                "title": "Ingresa un título",
+                "url": "URL no válida o ya usada",
+                "parent": "Categoría padre no válida",
+                "generic": "No se pudo guardar la categoría"
+            },
             "form": {
                 "basicInfo": "Información básica",
                 "title": "Título",
@@ -666,6 +680,9 @@
             "loading": "Cargando espacios...",
             "empty": "Aún no hay espacios",
             "fields": {
+                "entity": "Entidad",
+                "phone": "Teléfono",
+                "mail": "Correo",
                 "marginBadge": "+{value} margen"
             },
             "actions": {
