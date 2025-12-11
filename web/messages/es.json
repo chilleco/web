@@ -1,1062 +1,1073 @@
 {
-    "counter": {
-        "title": "Demo Contador Redux",
-        "description": "Mostrando Redux Toolkit con componentes shadcn/ui",
-        "increment": "+1",
-        "decrement": "-1",
-        "incrementBy5": "+5",
-        "reset": "Reiniciar"
-    },
-    "multiFileUploadDemo": {
-        "title": "Demo de Carga de Múltiples Archivos",
-        "description": "Demostrar el componente MultiFileUpload con soporte de arrastrar y soltar para cualquier tipo de archivo",
-        "selectedFiles": "Seleccionado{plural} {count} archivo{plural}",
-        "clearAll": "Limpiar Todo",
-        "debugTitle": "Debug: Datos de Archivo",
-        "imagesOnly": "Solo Imágenes",
-        "documentsOnly": "Solo Documentos",
-        "anyFileType": "Cualquier Tipo de Archivo",
-        "currentFilter": "Filtro actual"
-    },
-    "userSettings": {
-        "title": "Demo de Configuraciones de Usuario",
-        "description": "Demostración de gestión de estado Redux con preferencias de usuario"
-    },
-    "theme": {
-        "light": "Claro",
-        "dark": "Oscuro",
-        "system": "Sistema"
-    },
-    "navigation": {
-        "posts": "Publicaciones",
-        "space": "Espacio",
-        "hub": "Centro",
-        "catalog": "Catálogo",
-        "home": "Inicio",
-        "sections": "Secciones"
-    },
-    "landing": {
-        "hero": {
-            "title": "Crea un landing que convierta desde el primer día",
-            "subtitle": "FastAPI, Next.js 15 y Telegram unificados con bloques adaptativos y llamadas API tipadas.",
-            "primaryCta": "Abrir catálogo",
-            "secondaryCta": "Leer posts",
-            "badge": "Starter full-stack",
-            "heading": "Lanza más rápido con un landing adaptativo y multilenguaje",
-            "body": "Cuenta la historia con hero, prueba social, catálogo y onboarding ya conectados a tu API y mensajería.",
-            "points": [
-                "Maquetado FSD listo para temas claro y oscuro",
-                "Datos estructurados, metadatos SEO y eventos listos para analítica",
-                "CTAs, toasts y hooks de Telegram listos para usar"
-            ],
-            "snapshot": {
-                "title": "Lanzamientos este mes",
-                "value": "37 proyectos entregados",
-                "cta": "Ver casos"
-            },
-            "stats": {
-                "uptime": {
-                    "label": "SLA de uptime",
-                    "value": "99.9%"
-                },
-                "response": {
-                    "label": "Respuesta media",
-                    "value": "180 ms"
-                },
-                "coverage": {
-                    "label": "Regiones",
-                    "value": "80+"
-                }
-            }
+  "counter": {
+    "title": "Demo Contador Redux",
+    "description": "Mostrando Redux Toolkit con componentes shadcn/ui",
+    "increment": "+1",
+    "decrement": "-1",
+    "incrementBy5": "+5",
+    "reset": "Reiniciar"
+  },
+  "multiFileUploadDemo": {
+    "title": "Demo de Carga de Múltiples Archivos",
+    "description": "Demostrar el componente MultiFileUpload con soporte de arrastrar y soltar para cualquier tipo de archivo",
+    "selectedFiles": "Seleccionado{plural} {count} archivo{plural}",
+    "clearAll": "Limpiar Todo",
+    "debugTitle": "Debug: Datos de Archivo",
+    "imagesOnly": "Solo Imágenes",
+    "documentsOnly": "Solo Documentos",
+    "anyFileType": "Cualquier Tipo de Archivo",
+    "currentFilter": "Filtro actual"
+  },
+  "userSettings": {
+    "title": "Demo de Configuraciones de Usuario",
+    "description": "Demostración de gestión de estado Redux con preferencias de usuario"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "navigation": {
+    "posts": "Publicaciones",
+    "space": "Espacio",
+    "hub": "Centro",
+    "catalog": "Catálogo",
+    "home": "Inicio",
+    "sections": "Secciones"
+  },
+  "landing": {
+    "hero": {
+      "title": "Crea un landing que convierta desde el primer día",
+      "subtitle": "FastAPI, Next.js 15 y Telegram unificados con bloques adaptativos y llamadas API tipadas.",
+      "primaryCta": "Abrir catálogo",
+      "secondaryCta": "Leer posts",
+      "badge": "Starter full-stack",
+      "heading": "Lanza más rápido con un landing adaptativo y multilenguaje",
+      "body": "Cuenta la historia con hero, prueba social, catálogo y onboarding ya conectados a tu API y mensajería.",
+      "points": [
+        "Maquetado FSD listo para temas claro y oscuro",
+        "Datos estructurados, metadatos SEO y eventos listos para analítica",
+        "CTAs, toasts y hooks de Telegram listos para usar"
+      ],
+      "snapshot": {
+        "title": "Lanzamientos este mes",
+        "value": "37 proyectos entregados",
+        "cta": "Ver casos"
+      },
+      "stats": {
+        "uptime": {
+          "label": "SLA de uptime",
+          "value": "99.9%"
         },
-        "howItWorks": {
-            "title": "Cómo funciona",
-            "description": "Guía al visitante de la primera impresión a la activación en tres pasos.",
-            "cta": "Ver recorrido",
-            "steps": {
-                "discover": {
-                    "title": "Descubrir",
-                    "description": "Hero, navegación y pruebas se adaptan al idioma y tema.",
-                    "badge": "Paso 01"
-                },
-                "decide": {
-                    "title": "Decidir",
-                    "description": "Posts y catálogo resaltan resultados, precios y etiquetas.",
-                    "badge": "Paso 02"
-                },
-                "act": {
-                    "title": "Actuar",
-                    "description": "Formularios, toasts y avisos en Telegram capturan la intención al instante.",
-                    "badge": "Paso 03"
-                }
-            }
+        "response": {
+          "label": "Respuesta media",
+          "value": "180 ms"
         },
-        "posts": {
-            "title": "Últimos posts",
-            "description": "Muestra ideas que refuercen la historia de tu producto.",
-            "viewAll": "Todos los posts",
-            "items": {
-                "first": {
-                    "title": "Diseñar embudos adaptativos",
-                    "description": "Une señales de marketing y producto con bloques reutilizables.",
-                    "category": "Producto",
-                    "date": "02.03.2024"
-                },
-                "second": {
-                    "title": "APIs tipadas para escalar",
-                    "description": "Mantén contratos FastAPI y esquemas generados en sincronía entre equipos.",
-                    "category": "Ingeniería",
-                    "date": "15.03.2024"
-                },
-                "third": {
-                    "title": "Playbooks de lanzamiento",
-                    "description": "Usa flujos listos para adquisición, onboarding y retención.",
-                    "category": "Crecimiento",
-                    "date": "22.03.2024"
-                }
-            }
-        },
-        "products": {
-            "title": "Productos destacados",
-            "description": "Muestra ofertas directo en el landing con valor y precio claros.",
-            "viewAll": "Abrir catálogo",
-            "currency": "$",
-            "cta": "Ver detalles",
-            "items": {
-                "starter": {
-                    "title": "Espacio Starter",
-                    "description": "Secciones esenciales con SEO, analítica y captación listas.",
-                    "price": "39",
-                    "tag": "Listo para lanzar",
-                    "discountType": "percent",
-                    "discountValue": "25"
-                },
-                "growth": {
-                    "title": "Stack de crecimiento",
-                    "description": "Catálogo, posts y automatización con conectores API tipados.",
-                    "price": "79",
-                    "tag": "Automatización",
-                    "discountType": "percent",
-                    "discountValue": "25"
-                },
-                "enterprise": {
-                    "title": "Suite Enterprise",
-                    "description": "Localización avanzada, control de acceso y observabilidad integrados.",
-                    "price": "129",
-                    "tag": "Enterprise",
-                    "discountType": "fixed",
-                    "discountValue": "30"
-                }
-            }
-        },
-        "advantages": {
-            "title": "Nuestras ventajas",
-            "description": "Motores de valor claros para visitantes y decisores.",
-            "items": {
-                "performance": {
-                    "title": "Rendimiento",
-                    "description": "SSR, caché en edge y assets listos para CDN mantienen la velocidad."
-                },
-                "design": {
-                    "title": "Sistema de diseño",
-                    "description": "Capas FSD, espaciados consistentes y componentes sensibles al tema."
-                },
-                "automation": {
-                    "title": "Listo para automatizar",
-                    "description": "Worker de Telegram, hooks tipados y toasts unen las señales al instante."
-                },
-                "support": {
-                    "title": "Fiabilidad",
-                    "description": "Logs estructurados, monitoreo y releases fáciles de revertir."
-                }
-            }
-        },
-        "reviews": {
-            "title": "Reseñas y rating",
-            "description": "Pruebas de equipos que ya usan este stack.",
-            "score": "4.9",
-            "total": "1.2k+",
-            "highlight": "Valorado por equipos de producto, growth y plataforma.",
-            "body": "Analítica integrada, esquemas tipados y hooks de Telegram hacen los lanzamientos predecibles.",
-            "role": "Reseña verificada",
-            "items": {
-                "first": {
-                    "name": "Olivia — Líder de Producto",
-                    "text": "Entregamos una semana de lanzamiento multilenguaje en días sin rediseños."
-                },
-                "second": {
-                    "name": "Mason — CTO",
-                    "text": "Helpers tipados y contratos FastAPI hacen las entregas sin dolor."
-                },
-                "third": {
-                    "name": "Lena — Growth",
-                    "text": "Landing, posts y catálogo nos dan experimentos sin reprocesos."
-                }
-            }
-        },
-        "contact": {
-            "title": "Enviar solicitud",
-            "description": "Cuéntanos de tu producto y armamos el playbook de lanzamiento.",
-            "pitch": "Comparte contexto, plazos e integraciones.",
-            "hint": "Respondemos en un día laboral con un plan acotado.",
-            "cards": {
-                "first": {
-                    "title": "Seguro y compliant",
-                    "text": "JWT, logs aptos para auditoría y privacidad por defecto."
-                },
-                "second": {
-                    "title": "Ciclo rápido",
-                    "text": "Plantillas, esquemas y scripts listos para CI aceleran la salida."
-                }
-            },
-            "fields": {
-                "name": "Nombre completo",
-                "namePlaceholder": "Tu nombre",
-                "emailPlaceholder": "you@company.com",
-                "messagePlaceholder": "Objetivos, plazos y métricas de éxito"
-            },
-            "cta": "Enviar solicitud",
-            "success": "Solicitud enviada. Te responderemos pronto."
-        },
-        "about": {
-            "title": "Sobre nosotros",
-            "description": "Equipo full-stack enfocado en lanzamientos previsibles.",
-            "heading": "Constructores API-first con flujos listos para Telegram",
-            "body": "Combinamos FastAPI, Next.js 15 y automatización en Telegram en un solo flujo. Cada bloque trae localización, metadatos para analítica y tipado estricto para lanzar sin retrabajo.",
-            "cards": {
-                "delivery": "Cultura de entrega",
-                "deliveryText": "Defaults opinados, revisiones en pareja y checklists medibles de release.",
-                "partners": "Alianzas",
-                "partnersText": "Nos alineamos con líderes de growth, producto y plataforma para mantener prioridades visibles."
-            },
-            "mission": {
-                "title": "Nuestra misión",
-                "text": "Entregar experiencias fiables con telemetría honesta, contratos claros e iteración rápida."
-            }
-        },
-        "faq": {
-            "title": "FAQ",
-            "description": "Respuestas para stakeholders y aprobadores.",
-            "items": {
-                "coverage": {
-                    "question": "¿Soportan varios idiomas?",
-                    "answer": "Sí. El enrutado por locale y los bundles de mensajes mantienen el contenido consistente."
-                },
-                "deployment": {
-                    "question": "¿Cómo funcionan los deploys?",
-                    "answer": "Docker, overlays de Compose y configs de NGINX listos para local, staging y producción."
-                },
-                "integrations": {
-                    "question": "¿Podemos usar nuestras APIs?",
-                    "answer": "Helpers tipados gestionan auth, caché y toasts para conectar endpoints sin código extra."
-                },
-                "analytics": {
-                    "question": "¿Y la analítica y el SEO?",
-                    "answer": "Datos estructurados, metadatos SEO y hooks de eventos vienen por defecto para tu stack de analítica."
-                }
-            }
+        "coverage": {
+          "label": "Regiones",
+          "value": "80+"
         }
+      }
     },
-    "system": {
-        "locale": "Idioma",
-        "worldwide": "En todo el mundo",
-        "sign_out": "Cerrar sesión",
-        "sign_in": "Iniciar sesión",
-        "sign_up": "Registrarse",
-        "search": "Buscar",
-        "online": "En línea",
-        "offline": "Fuera de línea",
-        "save": "Guardar",
-        "send": "Enviar",
-        "upload": "Cargar",
-        "profile": "Perfil",
-        "settings": "Configuraciones",
-        "admin": "Administrador",
-        "admin_panel": "Administrador",
-        "dashboard": "Resumen",
-        "analytics": "Analítica",
-        "billing": "Facturación",
-        "categories": "Categorías",
-        "spaces": "Spaces",
-        "users": "Usuarios",
-        "success": "Éxito",
-        "error": "Error",
-        "server_error": "Error del servidor",
-        "server_error_description": "Ocurrió un problema en el servidor. Intenta nuevamente o actualiza la página.",
-        "now": "ahora mismo",
-        "no_access": "Sin acceso",
-        "saved": "Guardado",
-        "deleted": "Eliminado",
-        "blocked": "Oculto",
-        "unblocked": "Abierto",
-        "guest": "Invitado",
-        "popular": "Popular",
-        "privacy": "Política de privacidad",
-        "offer": "Oferta",
-        "unsubscribe": "Cancelar suscripción",
-        "permission": "Política de procesamiento de datos",
-        "rates": "Tarifas",
-        "refund": "Reembolso",
-        "main": "Principal",
-        "menu": "Menú",
-        "close": "Cerrar",
-        "add": "Añadir",
-        "edit": "Editar",
-        "delete": "Eliminar",
-        "remove": "Eliminar",
-        "update": "Actualizar",
-        "loading": "Cargando",
-        "saving": "Guardando...",
-        "refresh": "Actualizar",
-        "cancel": "Cancelar",
-        "none": "Ninguna",
-        "yes": "Sí",
-        "no": "No",
-        "share": "Compartir",
-        "shareUnavailable": "El compartir no está disponible en este dispositivo"
-    },
-    "entities": {
-        "ooo": "LLC",
-        "ip": "Autónomo",
-        "fl": "Persona física",
-        "smz": "Autoempleado"
-    },
-    "brand": {
-        "name": "web",
-        "description": "Aplicación web de plantilla",
-        "tagline": "Aplicación web de plantilla",
-        "address": "San Petersburgo, Rusia"
-    },
-    "footer": {
-        "rights": "Todos los derechos reservados",
-        "contacts": "Contactos",
-        "address": "Dirección",
-        "mail": "Correo electrónico",
-        "phone": "Teléfono",
-        "links": "Enlaces",
-        "about": "Acerca de",
-        "feedback": "Comentarios y Problemas",
-        "rules": "Reglas",
-        "news": "Noticias",
-        "codex": "Código de Honor",
-        "white_paper": "Libro Blanco",
-        "vk": "VKontakte",
-        "fb": "Facebook",
-        "ig": "Instagram",
-        "twi": "X",
-        "yt": "YouTube",
-        "in": "LinkedIn",
-        "followUs": "Síguenos",
-        "jobs": "Empleos",
-        "partners": "Socios",
-        "faqSupport": "FAQ y Soporte",
-        "faq": "Preguntas Frecuentes",
-        "social": "Redes Sociales",
-        "location": "Ubicación",
-        "settings": "Configuración",
-        "legal": "Legal",
-        "company": "Empresa",
-        "support": "Soporte",
-        "privacy": "Política de Privacidad",
-        "cookies": "Política de Cookies",
-        "offer": "Términos de Servicio",
-        "userAgreement": "Acuerdo de Usuario",
-        "refund": "Política de Reembolso",
-        "rates": "Precios"
-    },
-    "spaces": {
-        "form": {
-            "titlePlaceholder": "Nombre del espacio",
-            "logo": "Logo",
-            "logoPlaceholder": "Sube un logo",
-            "entity": "Forma jurídica",
-            "entityPlaceholder": "Selecciona la forma jurídica",
-            "director": "Director",
-            "directorPlaceholder": "Nombre completo del director",
-            "inn": "NIF",
-            "innPlaceholder": "NIF",
-            "margin": "Margen",
-            "marginPlaceholder": "Introduce el porcentaje de margen",
-            "descriptionPlaceholder": "Descripción para socios",
-            "contactTitle": "Contactos",
-            "phonePlaceholder": "Teléfono",
-            "mailPlaceholder": "Correo electrónico",
-            "telegramPlaceholder": "Enlace de Telegram",
-            "countryPlaceholder": "País",
-            "region": "Región",
-            "regionPlaceholder": "Región / Estado",
-            "city": "Ciudad",
-            "cityPlaceholder": "Ciudad",
-            "logoUploaded": "Logo subido",
-            "saved": "Espacio guardado"
+    "howItWorks": {
+      "title": "Cómo funciona",
+      "description": "Guía al visitante de la primera impresión a la activación en tres pasos.",
+      "cta": "Ver recorrido",
+      "steps": {
+        "discover": {
+          "title": "Descubrir",
+          "description": "Hero, navegación y pruebas se adaptan al idioma y tema.",
+          "badge": "Paso 01"
         },
-        "selector": {
-            "title": "Espacios",
-            "create": "Crear espacio",
-            "defaultTitle": "Nuevo espacio",
-            "noSpace": "Sin espacio",
-            "placeholder": "Selecciona un espacio",
-            "empty": "Aún no hay espacios vinculados",
-            "created": "\"{title}\" creado"
+        "decide": {
+          "title": "Decidir",
+          "description": "Posts y catálogo resaltan resultados, precios y etiquetas.",
+          "badge": "Paso 02"
         },
-        "page": {
-            "title": "Espacio",
-            "description": "Gestiona la información de la empresa, contactos y margen.",
-            "notFound": "Espacio no encontrado"
+        "act": {
+          "title": "Actuar",
+          "description": "Formularios, toasts y avisos en Telegram capturan la intención al instante.",
+          "badge": "Paso 03"
         }
-    },
-    "admin": {
-        "dashboard": {
-            "description": "Resumen de métricas de la plataforma y actualizaciones recientes.",
-            "loadError": "No se pudieron cargar las estadísticas del panel",
-            "cards": {
-                "visits": "Visitas",
-                "visitsSubtitle": "Visitas registradas",
-                "users": "Usuarios registrados",
-                "payments": "Pagos",
-                "paymentsSubtitle": "Pagos exitosos",
-                "posts": "Publicaciones publicadas",
-                "products": "Productos activos",
-                "tasks": "Tareas",
-                "tasksSubtitle": "Tareas activas"
-            },
-            "activity": {
-                "title": "Actividad reciente",
-                "description": "Audita los últimos cambios en usuarios, posts, productos y pagos.",
-                "filters": {
-                    "user": "ID de usuario",
-                    "userPlaceholder": "ej. 42",
-                    "ip": "Dirección IP",
-                    "ipPlaceholder": "192.168.0.1",
-                    "object": "Entidad",
-                    "objectPlaceholder": "Selecciona una entidad",
-                    "objectAll": "Todas las entidades",
-                    "action": "Acción",
-                    "actionPlaceholder": "Selecciona una acción",
-                    "actionAll": "Todas las acciones",
-                    "dateFrom": "Desde",
-                    "dateTo": "Hasta",
-                    "apply": "Aplicar filtros",
-                    "reset": "Restablecer"
-                },
-                "objects": {
-                    "user": "Usuario",
-                    "post": "Publicación",
-                    "product": "Producto",
-                    "category": "Categoría",
-                    "comment": "Comentario",
-                    "space": "Espacio",
-                    "payment": "Pago",
-                    "session": "Sesión",
-                    "system": "Sistema"
-                },
-                "actions": {
-                    "create": "Crear",
-                    "update": "Actualizar",
-                    "remove": "Eliminar",
-                    "search": "Búsqueda",
-                    "view": "Vista",
-                    "disconnect": "Desconexión"
-                },
-                "sources": {
-                    "web": "Web",
-                    "api": "API",
-                    "tgBot": "Bot de Telegram",
-                    "tma": "Miniapp de Telegram",
-                    "direct": "Acceso directo"
-                },
-                "meta": {
-                    "user": "Usuario #{id}",
-                    "guest": "Invitado",
-                    "ip": "IP {value}",
-                    "source": "Origen: {value}",
-                    "token": "Token {value}"
-                },
-                "pagination": {
-                    "label": "Página {page} de {total}",
-                    "prev": "Anterior",
-                    "next": "Siguiente"
-                },
-                "empty": "Aún no hay actividad",
-                "loadError": "No se pudo cargar la actividad",
-                "details": {
-                    "changes": "Campos modificados",
-                    "field": "Campo",
-                    "old": "Valor anterior",
-                    "new": "Valor nuevo",
-                    "noChanges": "Sin cambios registrados"
-                }
-            },
-            "funnel": {
-                "title": "Embudo de usuarios",
-                "subtitle": "Ruta desde la visita hasta la recompra",
-                "units": "usuarios",
-                "relativeFirst": "{value} de las visitas",
-                "relativePrev": "{value} frente al paso previo",
-                "formulas": {
-                    "title": "Fórmulas",
-                    "subtitle": "Cálculos con datos actuales",
-                    "referral": {
-                        "title": "Tasa de referidos",
-                        "subtitle": "Conversión de registro a referente × invitaciones promedio",
-                        "conversion": "Registro → referente",
-                        "avgReferrals": "Referidos por referente",
-                        "result": "Coeficiente de viralidad",
-                        "example": "Ejemplo: {conversion} × {avg} = {rate}"
-                    },
-                    "economy": {
-                        "title": "Coeficiente económico",
-                        "subtitle": "Ticket promedio × conversión visita → pago / costo por lead",
-                        "averageReceipt": "Ticket promedio",
-                        "visitToPayment": "Visita → pago",
-                        "pricePerLead": "Costo por lead",
-                        "result": "Coeficiente económico",
-                        "example": "Ejemplo: {receipt} × {conversion} / {lead} = {rate}"
-                    }
-                },
-                "retention": {
-                    "title": "Retención por mes",
-                    "subtitle": "Tamaño de cohorte y porcentajes de retención",
-                    "month": "Mes",
-                    "cohort": "Cohorte",
-                    "m1": "M1",
-                    "m2": "M2",
-                    "m3": "M3",
-                    "m4": "M4",
-                    "m5": "M5",
-                    "m6": "M6"
-                },
-                "table": {
-                    "amount": "Cantidad",
-                    "absolute": "% de visitas",
-                    "relative": "% vs paso previo"
-                },
-                "stages": {
-                    "visit": "Visita",
-                    "registration": "Registro",
-                    "dataSubmission": "Completar datos",
-                    "engagement": "Interacción",
-                    "taskCompletion": "Finalización de tarea",
-                    "referralInvite": "Invitación de referido",
-                    "returningVisit": "Visita de retorno",
-                    "purchase": "Compra",
-                    "repeatPurchase": "Recompra"
-                }
-            }
-        },
-        "categories": {
-            "title": "Categorías",
-            "description": "Gestiona y organiza las categorías de tu sitio web con jerarquía anidada, iconos personalizados, colores e imágenes",
-            "add": "Añadir",
-            "edit": "Editar",
-            "delete": "Eliminar",
-            "addSub": "Añadir subcategoría",
-            "active": "Activa",
-            "inactive": "Inactiva",
-            "created": "Creado",
-            "updated": "Actualizado",
-            "subcategories": "subcategorías",
-            "subcategoriesCount": "Subcategorías: {count}",
-            "noCategories": "No se encontraron categorías. Crea tu primera categoría para comenzar.",
-            "loading": "Cargando categorías...",
-            "deleteConfirm": "¿Estás seguro de que quieres eliminar \"{title}\"? Esto también eliminará todas las subcategorías.",
-            "createSuccess": "Categoría \"{title}\" creada exitosamente",
-            "updateSuccess": "Categoría \"{title}\" actualizada exitosamente",
-            "deleteSuccess": "Categoría \"{title}\" eliminada exitosamente",
-            "createTitle": "Crear nueva categoría",
-            "editTitle": "Editar categoría: {title}",
-            "errors": {
-                "id": "Categoría no encontrada",
-                "title": "Ingresa un título",
-                "url": "URL no válida o ya usada",
-                "parent": "Categoría padre no válida",
-                "generic": "No se pudo guardar la categoría"
-            },
-            "form": {
-                "basicInfo": "Información básica",
-                "title": "Título",
-                "titlePlaceholder": "Ingresa el título de la categoría",
-                "url": "URL slug",
-                "urlPlaceholder": "categoria-url-slug",
-                "description": "Descripción",
-                "descriptionPlaceholder": "Ingresa la descripción de la categoría (opcional)",
-                "hierarchy": "Jerarquía y configuraciones",
-                "parent": "Categoría padre",
-                "parentPlaceholder": "Selecciona categoría padre",
-                "topLevel": "Nivel superior (sin padre)",
-                "status": "Estado",
-                "locale": "Idioma",
-                "customization": "Personalización visual",
-                "color": "Color de categoría",
-                "noColor": "Sin color",
-                "colorPlaceholder": "Opcional: #3b82f6",
-                "icon": "Icono (clave FontAwesome)",
-                "iconPlaceholder": "p.ej: user, home, star",
-                "iconDescription": "Ingresa una clave de icono FontAwesome (sin prefijo 'fa-'). Deja vacío para no usar icono.",
-                "browseIcons": "Explorar iconos FontAwesome",
-                "image": "Imagen de categoría",
-                "imageUpload": "Haz clic para subir imagen",
-                "preview": "Vista previa - Cómo aparecerá en la lista de categorías",
-                "save": "Guardar",
-                "cancel": "Cancelar",
-                "saving": "Guardando...",
-                "createCategory": "Crear categoría",
-                "updateCategory": "Actualizar categoría"
-            }
-        },
-        "products": {
-            "title": "Productos",
-            "description": "Crea y gestiona productos del catálogo",
-            "add": "Guardar producto",
-            "name": "Título",
-            "descriptionLabel": "Descripción",
-            "price": "Precio base",
-            "priceLabel": "Precio base",
-            "discountType": "Tipo de descuento",
-            "discountTypePercent": "Porcentaje",
-            "discountTypeFixed": "Importe fijo",
-            "discountValue": "Valor del descuento",
-            "discountValueLabel": "Descuento",
-            "finalPriceLabel": "Precio final",
-            "basePriceLabel": "Precio base",
-            "finalPricePreview": "Precio final: {value} {currency}",
-            "currency": "Moneda",
-            "category": "Categoría",
-            "categoryLabel": "Categoría",
-            "images": "Imágenes (URLs separadas por comas)",
-            "rating": "Valoración",
-            "ratingCount": "Número de valoraciones",
-            "discount": "Descuento",
-            "inStock": "En stock",
-            "isNew": "Nuevo",
-            "isFeatured": "Destacado",
-            "featuresTitle": "Características",
-            "featuresEmpty": "Sin características aún",
-            "featureKey": "Clave",
-            "featureValue": "Valor",
-            "featureType": "Tipo",
-            "featureTypeString": "Texto",
-            "featureTypeNumber": "Número",
-            "featureTypeBoolean": "Booleano",
-            "featuresLabel": "Características: {count}",
-            "status": "Estado",
-            "statusActive": "Activo",
-            "statusInactive": "Oculto",
-            "save": "Guardar producto",
-            "saving": "Guardando...",
-            "saved": "Producto guardado",
-            "error": "No se pudo guardar el producto",
-            "loading": "Cargando productos...",
-            "empty": "Aún no hay productos",
-            "edit": "Editar",
-            "editTitle": "Editar producto: {title}",
-            "cancel": "Cancelar",
-            "noCategory": "Sin categoría",
-            "delete": "Eliminar",
-            "deleteConfirm": "¿Eliminar \"{title}\"?",
-            "ratingLabel": "Valoración",
-            "ratingCountLabel": "Número de valoraciones",
-            "optionsTitle": "Opciones",
-            "addOption": "Agregar opción",
-            "optionsEmpty": "Aún no hay opciones",
-            "optionUntitled": "Opción sin nombre",
-            "optionName": "Nombre de opción",
-            "optionPrice": "Precio de opción",
-            "optionImages": "Imágenes de opción (URLs separadas por comas)",
-            "optionStockCount": "Cantidad en stock",
-            "optionAttributesTitle": "Atributos",
-            "optionAttributesEmpty": "Sin atributos",
-            "optionFeaturesTitle": "Características de opción",
-            "optionFeaturesEmpty": "Sin características de opción",
-            "optionsLabel": "Opciones: {count}",
-            "optionsRequired": "Agrega al menos una opción",
-            "priceFromLabel": "Precio desde",
-            "priceFromPreview": "Base desde: {value} {currency}"
-        },
-        "spaces": {
-            "title": "Espacios",
-            "description": "Gestiona espacios de socios, invitaciones y datos de contacto",
-            "defaultTitle": "Nuevo espacio",
-            "loading": "Cargando espacios...",
-            "empty": "Aún no hay espacios",
-            "fields": {
-                "entity": "Entidad",
-                "phone": "Teléfono",
-                "mail": "Correo",
-                "marginBadge": "+{value} margen"
-            },
-            "actions": {
-                "edit": "Editar",
-                "delete": "Eliminar",
-                "createSuccess": "\"{title}\" creado",
-                "deleteConfirm": "¿Eliminar \"{title}\"?",
-                "deleteSuccess": "\"{title}\" eliminado"
-            },
-            "errors": {
-                "load": "No se pudieron cargar los espacios",
-                "delete": "No se pudo eliminar el espacio"
-            }
-        },
-        "users": {
-            "title": "Usuarios",
-            "description": "Gestiona cuentas, balances y niveles de acceso.",
-            "loading": "Cargando usuarios...",
-            "empty": "No hay usuarios aún",
-            "loadError": "No se pudieron cargar los usuarios",
-            "saveSuccess": "Usuario actualizado",
-            "saveError": "No se pudo guardar el usuario",
-            "noChanges": "Sin cambios para guardar.",
-            "editTitle": "Editar usuario: {name}",
-            "titleFallback": "Usuario #{id}",
-            "balance": {
-                "label": "Saldo",
-                "placeholder": "Ingresa el saldo",
-                "badge": "Saldo: {value}"
-            },
-            "status": {
-                "label": "Estado",
-                "unset": "Conservar estado global",
-                "unknown": "Desconocido",
-                "active": "Activo",
-                "blocked": "Bloqueado",
-                "pending": "Pendiente",
-                "moderator": "Moderador",
-                "manager": "Gestor",
-                "admin": "Admin",
-                "owner": "Propietario",
-                "deleted": "Eliminado"
-            },
-            "actions": {
-                "ban": "Bloquear",
-                "unban": "Desbloquear",
-                "refresh": "Actualizar lista"
-            },
-            "toasts": {
-                "banned": "\"{name}\" bloqueado",
-                "unbanned": "\"{name}\" desbloqueado"
-            }
-        }
+      }
     },
     "posts": {
-        "title": "Título",
-        "description": "Descripción",
-        "empty": "Vacío",
-        "comments": "Comentarios",
-        "reply": "Responder",
-        "add": "Añadir",
-        "detail": {
-            "meta": "Información",
-            "publishedAt": "Publicado",
-            "updatedAt": "Actualizado",
-            "views": "Vistas",
-            "readTimeLabel": "Tiempo de lectura",
-            "readTimeValue": "{minutes} min",
-            "readTime": "{minutes} min de lectura",
-            "author": "Autor",
-            "category": "Categoría",
-            "related": "Publicaciones relacionadas",
-            "actions": {
-                "hide": "Ocultar",
-                "editDescription": "Actualiza el contenido de la publicación y guarda los cambios.",
-                "deleteConfirm": "¿Eliminar \"{title}\"?"
-            },
-            "view": "Vista previa"
+      "title": "Últimos posts",
+      "description": "Muestra ideas que refuercen la historia de tu producto.",
+      "viewAll": "Todos los posts",
+      "items": {
+        "first": {
+          "title": "Diseñar embudos adaptativos",
+          "description": "Une señales de marketing y producto con bloques reutilizables.",
+          "category": "Producto",
+          "date": "02.03.2024"
+        },
+        "second": {
+          "title": "APIs tipadas para escalar",
+          "description": "Mantén contratos FastAPI y esquemas generados en sincronía entre equipos.",
+          "category": "Ingeniería",
+          "date": "15.03.2024"
+        },
+        "third": {
+          "title": "Playbooks de lanzamiento",
+          "description": "Usa flujos listos para adquisición, onboarding y retención.",
+          "category": "Crecimiento",
+          "date": "22.03.2024"
         }
+      }
     },
-    "categories": {
-        "popup": {
-            "title": "Categorías",
-            "loading": "Cargando...",
-            "empty": "No hay categorías disponibles",
-            "viewAll": "Ver todas las {count} categorías"
+    "products": {
+      "title": "Productos destacados",
+      "description": "Muestra ofertas directo en el landing con valor y precio claros.",
+      "viewAll": "Abrir catálogo",
+      "currency": "$",
+      "cta": "Ver detalles",
+      "items": {
+        "starter": {
+          "title": "Espacio Starter",
+          "description": "Secciones esenciales con SEO, analítica y captación listas.",
+          "price": "39",
+          "tag": "Listo para lanzar",
+          "discountType": "percent",
+          "discountValue": "25"
+        },
+        "growth": {
+          "title": "Stack de crecimiento",
+          "description": "Catálogo, posts y automatización con conectores API tipados.",
+          "price": "79",
+          "tag": "Automatización",
+          "discountType": "percent",
+          "discountValue": "25"
+        },
+        "enterprise": {
+          "title": "Suite Enterprise",
+          "description": "Localización avanzada, control de acceso y observabilidad integrados.",
+          "price": "129",
+          "tag": "Enterprise",
+          "discountType": "fixed",
+          "discountValue": "30"
         }
+      }
     },
-    "businessSections": {
-        "companies": "Empresas",
-        "products": "Productos",
-        "contacts": "Contactos",
-        "customers": "Clientes",
-        "calendar": "Calendario",
-        "sales": "Ventas",
-        "analytics": "Análisis",
-        "promos": "Promociones",
-        "pays": "Pagos",
-        "support": "Soporte"
+    "advantages": {
+      "title": "Nuestras ventajas",
+      "description": "Motores de valor claros para visitantes y decisores.",
+      "items": {
+        "performance": {
+          "title": "Rendimiento",
+          "description": "SSR, caché en edge y assets listos para CDN mantienen la velocidad."
+        },
+        "design": {
+          "title": "Sistema de diseño",
+          "description": "Capas FSD, espaciados consistentes y componentes sensibles al tema."
+        },
+        "automation": {
+          "title": "Listo para automatizar",
+          "description": "Worker de Telegram, hooks tipados y toasts unen las señales al instante."
+        },
+        "support": {
+          "title": "Fiabilidad",
+          "description": "Logs estructurados, monitoreo y releases fáciles de revertir."
+        }
+      }
     },
-    "filters": {
-        "filters": "Filtros",
-        "timeRange": "Rango de tiempo",
-        "sortBy": "Ordenar por",
-        "today": "Hoy",
-        "yesterday": "Ayer",
-        "currentWeek": "Semana actual (Lun-Dom)",
-        "lastWeek": "Semana (7 días)",
-        "thisMonth": "Este mes",
-        "lastMonth": "Mes (30 días)",
-        "thisYear": "Este año",
-        "lastYear": "Año (365 días)",
-        "allTime": "Todo el tiempo",
-        "customRange": "Rango personalizado",
-        "fromDate": "Fecha desde",
-        "toDate": "Fecha hasta",
-        "selectDate": "Seleccionar fecha",
-        "priceRange": "Rango de precio",
-        "minPrice": "Precio mín",
-        "maxPrice": "Precio máx",
-        "price": "Precio",
-        "rating": "Calificación",
-        "ratingAndUp": "y más",
-        "categories": "Categorías",
-        "selectCategories": "Seleccionar categorías",
-        "allCategories": "Todas las categorías",
-        "clothingFootwear": "Ropa & Calzado",
-        "mensClothing": "Ropa de hombre",
-        "womensClothing": "Ropa de mujer",
-        "childrensClothing": "Ropa infantil",
-        "shoes": "Zapatos",
-        "sportswear": "Ropa deportiva",
-        "bagsAccessories": "Bolsos & Accesorios",
-        "handbags": "Bolsos de mano",
-        "backpacks": "Mochilas",
-        "jewelry": "Joyería",
-        "watches": "Relojes",
-        "sunglasses": "Gafas de sol",
-        "electronics": "Electrónicos",
-        "smartphones": "Teléfonos inteligentes",
-        "laptops": "Portátiles",
-        "tablets": "Tabletas",
-        "headphones": "Auriculares",
-        "cameras": "Cámaras",
-        "healthBeauty": "Salud & Belleza",
-        "skincare": "Cuidado de la piel",
-        "makeup": "Maquillaje",
-        "perfumes": "Perfumes",
-        "haircare": "Cuidado del cabello",
-        "supplements": "Suplementos",
-        "homeGarden": "Hogar & Jardín",
-        "furniture": "Muebles",
-        "decor": "Decoración del hogar",
-        "kitchenware": "Utensilios de cocina",
-        "gardenTools": "Herramientas de jardín",
-        "lighting": "Iluminación",
-        "autoMoto": "Auto & Moto",
-        "carAccessories": "Accesorios para automóvil",
-        "carParts": "Repuestos de automóvil",
-        "motorcycle": "Motocicletas",
-        "tools": "Herramientas",
-        "oils": "Aceites y fluidos",
-        "hobbiesCreativity": "Pasatiempos & Creatividad",
-        "artSupplies": "Suministros artísticos",
-        "crafts": "Manualidades",
-        "musicalInstruments": "Instrumentos musicales",
-        "collectibles": "Coleccionables",
-        "books": "Libros",
-        "foodBeverage": "Comida & Bebida",
-        "beverages": "Bebidas",
-        "snacks": "Bocadillos",
-        "organic": "Comida orgánica",
-        "spices": "Especias y condimentos",
-        "gourmet": "Comida gourmet",
-        "mostRecent": "Más recientes",
-        "mostPopular": "Más populares",
-        "trending": "Tendencia",
-        "clearFilters": "Limpiar filtros",
-        "quickSelect": "Selección Rápida",
-        "lastPeriods": "Últimos",
-        "currentPeriods": "Actuales",
-        "previousPeriods": "Anteriores",
-        "lastDay": "Día (24h)",
-        "currentWeekFromMonday": "Esta Semana (desde Lun)",
-        "previousWeek": "Semana Anterior",
-        "previousMonth": "Mes Anterior",
-        "previousYear": "Año Anterior",
-        "allPeriod": "Todo el Período",
-        "resetSelected": "Restablecer Selección",
-        "cancel": "Cancelar",
-        "apply": "Aplicar",
-        "reset": "Restablecer"
-    },
-    "actions": {
-        "fastActions": "Acciones rápidas",
-        "quickAccess": "Acceso rápido",
-        "createPost": "Crear publicación",
-        "search": "Buscar",
-        "bookmarks": "Marcadores",
-        "share": "Compartir",
-        "settings": "Configuración",
-        "saved": "Guardado",
-        "shared": "Compartido"
+    "reviews": {
+      "title": "Reseñas y rating",
+      "description": "Pruebas de equipos que ya usan este stack.",
+      "score": "4.9",
+      "total": "1.2k+",
+      "highlight": "Valorado por equipos de producto, growth y plataforma.",
+      "body": "Analítica integrada, esquemas tipados y hooks de Telegram hacen los lanzamientos predecibles.",
+      "role": "Reseña verificada",
+      "items": {
+        "first": {
+          "name": "Olivia — Líder de Producto",
+          "text": "Entregamos una semana de lanzamiento multilenguaje en días sin rediseños."
+        },
+        "second": {
+          "name": "Mason — CTO",
+          "text": "Helpers tipados y contratos FastAPI hacen las entregas sin dolor."
+        },
+        "third": {
+          "name": "Lena — Growth",
+          "text": "Landing, posts y catálogo nos dan experimentos sin reprocesos."
+        }
+      }
     },
     "contact": {
-        "contactUs": "Contáctanos",
-        "email": "Correo electrónico",
-        "emailPlaceholder": "tu.correo@ejemplo.com",
-        "message": "Mensaje",
-        "messagePlaceholder": "¿Cómo podemos ayudarte?",
-        "sendMessage": "Enviar mensaje",
-        "quickContact": "Contacto rápido",
-        "emailUs": "Escríbenos",
-        "callUs": "Llámanos"
-    },
-    "questionnaire": {
-        "feedback": "Comentarios",
-        "question": "Pregunta",
-        "howSatisfied": "¿Qué tan satisfecho estás con nuestra plataforma?",
-        "wouldRecommend": "¿Nos recomendarías a otros?",
-        "whatImprove": "¿Qué deberíamos mejorar?",
-        "performance": "Rendimiento",
-        "design": "Diseño",
-        "features": "Características",
-        "content": "Contenido",
-        "yes": "Sí",
-        "no": "No",
-        "previous": "Anterior",
-        "next": "Siguiente",
-        "submit": "Enviar",
-        "thankYou": "¡Gracias!",
-        "feedbackReceived": "Tu comentario ha sido recibido.",
-        "takeAgain": "Tomar de nuevo"
-    },
-    "catalog": {
-        "pages": {
-            "favorites": {
-                "title": "Favoritos",
-                "description": "Productos guardados para revisar más tarde.",
-                "openButton": "Abrir favoritos",
-                "emptyTitle": "Todavía no hay favoritos",
-                "emptyDescription": "Toca el corazón de un producto para guardarlo aquí.",
-                "countLabel": "{count} favoritos guardados",
-                "openCatalog": "Abrir catálogo",
-                "openCart": "Ir al carrito"
-            },
-            "cart": {
-                "title": "Carrito",
-                "description": "Productos que agregaste desde el catálogo y las fichas.",
-                "openButton": "Abrir carrito",
-                "emptyTitle": "Tu carrito está vacío",
-                "emptyDescription": "Añade productos del catálogo para revisarlos aquí.",
-                "countLabel": "{count} artículos en el carrito",
-                "openCatalog": "Abrir catálogo",
-                "openFavorites": "Abrir favoritos",
-                "removedToast": "{title} se quitó del carrito"
-            }
+      "title": "Enviar solicitud",
+      "description": "Cuéntanos de tu producto y armamos el playbook de lanzamiento.",
+      "pitch": "Comparte contexto, plazos e integraciones.",
+      "hint": "Respondemos en un día laboral con un plan acotado.",
+      "cards": {
+        "first": {
+          "title": "Seguro y compliant",
+          "text": "JWT, logs aptos para auditoría y privacidad por defecto."
         },
-        "product": {
-            "addToCart": "Agregar al Carrito",
-            "favorite": "Favoritos",
-            "cart": "Carrito",
-            "unavailable": "No Disponible",
-            "inCart": "En el Carrito",
-            "priceFrom": "Desde",
-            "loading": "Cargando producto...",
-            "optionsTitle": "Opciones",
-            "descriptionTitle": "Descripción",
-            "featuresTitle": "Especificaciones",
-            "featuresEmpty": "Sin especificaciones aún",
-            "optionFeaturesTitle": "Detalles de la opción",
-            "shareCopied": "Enlace copiado",
-            "optionAttributesTitle": "Atributos de opción",
-            "optionAttributesEmpty": "Sin atributos de opción",
-            "optionFeaturesEmpty": "Sin características de opción"
+        "second": {
+          "title": "Ciclo rápido",
+          "text": "Plantillas, esquemas y scripts listos para CI aceleran la salida."
         }
+      },
+      "fields": {
+        "name": "Nombre completo",
+        "namePlaceholder": "Tu nombre",
+        "emailPlaceholder": "you@company.com",
+        "messagePlaceholder": "Objetivos, plazos y métricas de éxito"
+      },
+      "cta": "Enviar solicitud",
+      "success": "Solicitud enviada. Te responderemos pronto."
     },
-    "search": {
-        "searchArea": "Área de búsqueda",
-        "placeholder": "Buscar...",
-        "searchInput": "Campo de búsqueda",
-        "clearSearch": "Limpiar búsqueda",
-        "search": "Buscar",
-        "searchButton": "Botón de búsqueda",
-        "filters": "Filtros",
-        "openFilters": "Abrir filtros",
-        "moreFilters": "Más filtros",
-        "advancedFilters": "Filtros Avanzados",
-        "activeFilters": "Filtros activos",
-        "apply": "Aplicar",
-        "priceFrom": "Desde",
-        "priceTo": "Hasta",
-        "promoCode": "Código Promocional",
-        "sortBy": "Ordenar por",
-        "category": "Categoría",
-        "priceRange": "Rango de Precio",
-        "sortOptions": {
-            "newest": "Más Recientes",
-            "oldest": "Más Antiguos",
-            "priceAsc": "Precio: Menor a Mayor",
-            "priceDesc": "Precio: Mayor a Menor",
-            "titleAsc": "Título A-Z",
-            "titleDesc": "Título Z-A",
-            "popular": "Más Populares",
-            "featured": "Destacados"
+    "about": {
+      "title": "Sobre nosotros",
+      "description": "Equipo full-stack enfocado en lanzamientos previsibles.",
+      "heading": "Constructores API-first con flujos listos para Telegram",
+      "body": "Combinamos FastAPI, Next.js 15 y automatización en Telegram en un solo flujo. Cada bloque trae localización, metadatos para analítica y tipado estricto para lanzar sin retrabajo.",
+      "cards": {
+        "delivery": "Cultura de entrega",
+        "deliveryText": "Defaults opinados, revisiones en pareja y checklists medibles de release.",
+        "partners": "Alianzas",
+        "partnersText": "Nos alineamos con líderes de growth, producto y plataforma para mantener prioridades visibles."
+      },
+      "mission": {
+        "title": "Nuestra misión",
+        "text": "Entregar experiencias fiables con telemetría honesta, contratos claros e iteración rápida."
+      }
+    },
+    "faq": {
+      "title": "FAQ",
+      "description": "Respuestas para stakeholders y aprobadores.",
+      "items": {
+        "coverage": {
+          "question": "¿Soportan varios idiomas?",
+          "answer": "Sí. El enrutado por locale y los bundles de mensajes mantienen el contenido consistente."
+        },
+        "deployment": {
+          "question": "¿Cómo funcionan los deploys?",
+          "answer": "Docker, overlays de Compose y configs de NGINX listos para local, staging y producción."
+        },
+        "integrations": {
+          "question": "¿Podemos usar nuestras APIs?",
+          "answer": "Helpers tipados gestionan auth, caché y toasts para conectar endpoints sin código extra."
+        },
+        "analytics": {
+          "question": "¿Y la analítica y el SEO?",
+          "answer": "Datos estructurados, metadatos SEO y hooks de eventos vienen por defecto para tu stack de analítica."
         }
-    },
-    "session": {
-        "tokenError": "No pudimos iniciar tu sesión. Actualiza la página."
-    },
-    "auth": {
-        "title": "Inicia sesión en tu cuenta",
-        "subtitle": "Elige cómo continuar",
-        "credentialsTitle": "Iniciar sesión",
-        "credentialsSubtitle": "Ingresa tus datos para continuar",
-        "continueWithEmail": "Continuar con correo",
-        "continueWithGoogle": "Continuar con Google",
-        "continueWithTelegram": "Continuar con Telegram",
-        "loginLabel": "Correo / Teléfono / Usuario",
-        "loginPlaceholder": "tu@ejemplo.com o +34123456789",
-        "passwordLabel": "Contraseña",
-        "passwordPlaceholder": "Ingresa tu contraseña",
-        "passwordTipLength": "Al menos 6 caracteres",
-        "passwordTipStrength": "Incluye letras y números",
-        "back": "Atrás",
-        "login": "Iniciar sesión",
-        "processing": "Ingresando...",
-        "loginSuccess": "¡Bienvenido de nuevo!",
-        "loginFailed": "No se pudo iniciar sesión. Verifica tus datos.",
-        "providerUnavailable": "Este método no está disponible ahora."
-    },
-    "profile": {
-        "description": "Administra tu información personal y preferencias de cuenta.",
-        "name": "Nombre",
-        "surname": "Apellido",
-        "phone": "Teléfono",
-        "login": "Usuario",
-        "mail": "Correo",
-        "password": "Contraseña",
-        "status": "Estado",
-        "statusUnknown": "Desconocido",
-        "statusValue": "Estado: {value}",
-        "id": "ID",
-        "network": "Red",
-        "networkWeb": "Web",
-        "loading": "Cargando",
-        "loaded": "Cargado",
-        "loadError": "No se pudo cargar el perfil.",
-        "noChanges": "No hay cambios para guardar.",
-        "saveSuccess": "Perfil guardado correctamente.",
-        "saveError": "No se pudo guardar el perfil.",
-        "locked": "Perfil bloqueado para edición"
-    },
-    "fileUpload": {
-        "clickToUpload": "Haga clic para cargar archivo",
-        "dragAndDrop": "o arrastre y suelte",
-        "supportedFormats": "Formatos admitidos: JPG, PNG, WEBP, GIF",
-        "maxSize": "Tamaño máximo: 5MB",
-        "uploading": "Cargando...",
-        "removeFile": "Eliminar archivo",
-        "changeFile": "Cambiar archivo",
-        "preview": "Vista previa del archivo",
-        "fileName": "Nombre del archivo",
-        "fileSize": "Tamaño del archivo"
-    },
-    "multiFileUpload": {
-        "title": "Galería de Archivos",
-        "addMore": "Agregar más archivos",
-        "addMoreRemaining": "Agregar más archivos ({remaining} restantes)",
-        "selectMultiple": "Seleccionar varios archivos",
-        "maxFilesReached": "Máximo {max} archivos permitidos",
-        "removeAll": "Eliminar todos los archivos",
-        "filesSelected": "{count} archivos seleccionados",
-        "dropMultipleFiles": "Soltar varios archivos aquí",
-        "clickToAddMore": "Haga clic para agregar más archivos"
+      }
     }
+  },
+  "system": {
+    "locale": "Idioma",
+    "worldwide": "En todo el mundo",
+    "sign_out": "Cerrar sesión",
+    "sign_in": "Iniciar sesión",
+    "sign_up": "Registrarse",
+    "search": "Buscar",
+    "online": "En línea",
+    "offline": "Fuera de línea",
+    "save": "Guardar",
+    "send": "Enviar",
+    "upload": "Cargar",
+    "profile": "Perfil",
+    "settings": "Configuraciones",
+    "admin": "Administrador",
+    "admin_panel": "Administrador",
+    "dashboard": "Resumen",
+    "analytics": "Analítica",
+    "billing": "Facturación",
+    "categories": "Categorías",
+    "spaces": "Spaces",
+    "users": "Usuarios",
+    "success": "Éxito",
+    "error": "Error",
+    "server_error": "Error del servidor",
+    "server_error_description": "Ocurrió un problema en el servidor. Intenta nuevamente o actualiza la página.",
+    "now": "ahora mismo",
+    "no_access": "Sin acceso",
+    "saved": "Guardado",
+    "deleted": "Eliminado",
+    "blocked": "Oculto",
+    "unblocked": "Abierto",
+    "guest": "Invitado",
+    "popular": "Popular",
+    "privacy": "Política de privacidad",
+    "offer": "Oferta",
+    "unsubscribe": "Cancelar suscripción",
+    "permission": "Política de procesamiento de datos",
+    "rates": "Tarifas",
+    "refund": "Reembolso",
+    "main": "Principal",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "add": "Añadir",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "remove": "Eliminar",
+    "update": "Actualizar",
+    "loading": "Cargando",
+    "saving": "Guardando...",
+    "refresh": "Actualizar",
+    "cancel": "Cancelar",
+    "none": "Ninguna",
+    "yes": "Sí",
+    "no": "No",
+    "share": "Compartir",
+    "shareUnavailable": "El compartir no está disponible en este dispositivo",
+    "item": "Elemento",
+    "processing": "Procesando",
+    "toast": {
+      "saveSuccess": "{item} guardado correctamente",
+      "saveError": "No se pudo guardar {item}",
+      "deleteSuccess": "{item} eliminado correctamente",
+      "deleteError": "No se pudo eliminar {item}",
+      "loading": "{operation}..."
+    }
+  },
+  "entities": {
+    "ooo": "LLC",
+    "ip": "Autónomo",
+    "fl": "Persona física",
+    "smz": "Autoempleado"
+  },
+  "brand": {
+    "name": "web",
+    "description": "Aplicación web de plantilla",
+    "tagline": "Aplicación web de plantilla",
+    "address": "San Petersburgo, Rusia"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados",
+    "contacts": "Contactos",
+    "address": "Dirección",
+    "mail": "Correo electrónico",
+    "phone": "Teléfono",
+    "links": "Enlaces",
+    "about": "Acerca de",
+    "feedback": "Comentarios y Problemas",
+    "rules": "Reglas",
+    "news": "Noticias",
+    "codex": "Código de Honor",
+    "white_paper": "Libro Blanco",
+    "vk": "VKontakte",
+    "fb": "Facebook",
+    "ig": "Instagram",
+    "twi": "X",
+    "yt": "YouTube",
+    "in": "LinkedIn",
+    "followUs": "Síguenos",
+    "jobs": "Empleos",
+    "partners": "Socios",
+    "faqSupport": "FAQ y Soporte",
+    "faq": "Preguntas Frecuentes",
+    "social": "Redes Sociales",
+    "location": "Ubicación",
+    "settings": "Configuración",
+    "legal": "Legal",
+    "company": "Empresa",
+    "support": "Soporte",
+    "privacy": "Política de Privacidad",
+    "cookies": "Política de Cookies",
+    "offer": "Términos de Servicio",
+    "userAgreement": "Acuerdo de Usuario",
+    "refund": "Política de Reembolso",
+    "rates": "Precios"
+  },
+  "spaces": {
+    "form": {
+      "titlePlaceholder": "Nombre del espacio",
+      "logo": "Logo",
+      "logoPlaceholder": "Sube un logo",
+      "entity": "Forma jurídica",
+      "entityPlaceholder": "Selecciona la forma jurídica",
+      "director": "Director",
+      "directorPlaceholder": "Nombre completo del director",
+      "inn": "NIF",
+      "innPlaceholder": "NIF",
+      "margin": "Margen",
+      "marginPlaceholder": "Introduce el porcentaje de margen",
+      "descriptionPlaceholder": "Descripción para socios",
+      "contactTitle": "Contactos",
+      "phonePlaceholder": "Teléfono",
+      "mailPlaceholder": "Correo electrónico",
+      "telegramPlaceholder": "Enlace de Telegram",
+      "countryPlaceholder": "País",
+      "region": "Región",
+      "regionPlaceholder": "Región / Estado",
+      "city": "Ciudad",
+      "cityPlaceholder": "Ciudad",
+      "logoUploaded": "Logo subido",
+      "saved": "Espacio guardado"
+    },
+    "selector": {
+      "title": "Espacios",
+      "create": "Crear espacio",
+      "defaultTitle": "Nuevo espacio",
+      "noSpace": "Sin espacio",
+      "placeholder": "Selecciona un espacio",
+      "empty": "Aún no hay espacios vinculados",
+      "created": "\"{title}\" creado"
+    },
+    "page": {
+      "title": "Espacio",
+      "description": "Gestiona la información de la empresa, contactos y margen.",
+      "notFound": "Espacio no encontrado"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "description": "Resumen de métricas de la plataforma y actualizaciones recientes.",
+      "loadError": "No se pudieron cargar las estadísticas del panel",
+      "cards": {
+        "visits": "Visitas",
+        "visitsSubtitle": "Visitas registradas",
+        "users": "Usuarios registrados",
+        "payments": "Pagos",
+        "paymentsSubtitle": "Pagos exitosos",
+        "posts": "Publicaciones publicadas",
+        "products": "Productos activos",
+        "tasks": "Tareas",
+        "tasksSubtitle": "Tareas activas"
+      },
+      "activity": {
+        "title": "Actividad reciente",
+        "description": "Audita los últimos cambios en usuarios, posts, productos y pagos.",
+        "filters": {
+          "user": "ID de usuario",
+          "userPlaceholder": "ej. 42",
+          "ip": "Dirección IP",
+          "ipPlaceholder": "192.168.0.1",
+          "object": "Entidad",
+          "objectPlaceholder": "Selecciona una entidad",
+          "objectAll": "Todas las entidades",
+          "action": "Acción",
+          "actionPlaceholder": "Selecciona una acción",
+          "actionAll": "Todas las acciones",
+          "dateFrom": "Desde",
+          "dateTo": "Hasta",
+          "apply": "Aplicar filtros",
+          "reset": "Restablecer"
+        },
+        "objects": {
+          "user": "Usuario",
+          "post": "Publicación",
+          "product": "Producto",
+          "category": "Categoría",
+          "comment": "Comentario",
+          "space": "Espacio",
+          "payment": "Pago",
+          "session": "Sesión",
+          "system": "Sistema"
+        },
+        "actions": {
+          "create": "Crear",
+          "update": "Actualizar",
+          "remove": "Eliminar",
+          "search": "Búsqueda",
+          "view": "Vista",
+          "disconnect": "Desconexión"
+        },
+        "sources": {
+          "web": "Web",
+          "api": "API",
+          "tgBot": "Bot de Telegram",
+          "tma": "Miniapp de Telegram",
+          "direct": "Acceso directo"
+        },
+        "meta": {
+          "user": "Usuario #{id}",
+          "guest": "Invitado",
+          "ip": "IP {value}",
+          "source": "Origen: {value}",
+          "token": "Token {value}"
+        },
+        "pagination": {
+          "label": "Página {page} de {total}",
+          "prev": "Anterior",
+          "next": "Siguiente"
+        },
+        "empty": "Aún no hay actividad",
+        "loadError": "No se pudo cargar la actividad",
+        "details": {
+          "changes": "Campos modificados",
+          "field": "Campo",
+          "old": "Valor anterior",
+          "new": "Valor nuevo",
+          "noChanges": "Sin cambios registrados"
+        }
+      },
+      "funnel": {
+        "title": "Embudo de usuarios",
+        "subtitle": "Ruta desde la visita hasta la recompra",
+        "units": "usuarios",
+        "relativeFirst": "{value} de las visitas",
+        "relativePrev": "{value} frente al paso previo",
+        "formulas": {
+          "title": "Fórmulas",
+          "subtitle": "Cálculos con datos actuales",
+          "referral": {
+            "title": "Tasa de referidos",
+            "subtitle": "Conversión de registro a referente × invitaciones promedio",
+            "conversion": "Registro → referente",
+            "avgReferrals": "Referidos por referente",
+            "result": "Coeficiente de viralidad",
+            "example": "Ejemplo: {conversion} × {avg} = {rate}"
+          },
+          "economy": {
+            "title": "Coeficiente económico",
+            "subtitle": "Ticket promedio × conversión visita → pago / costo por lead",
+            "averageReceipt": "Ticket promedio",
+            "visitToPayment": "Visita → pago",
+            "pricePerLead": "Costo por lead",
+            "result": "Coeficiente económico",
+            "example": "Ejemplo: {receipt} × {conversion} / {lead} = {rate}"
+          }
+        },
+        "retention": {
+          "title": "Retención por mes",
+          "subtitle": "Tamaño de cohorte y porcentajes de retención",
+          "month": "Mes",
+          "cohort": "Cohorte",
+          "m1": "M1",
+          "m2": "M2",
+          "m3": "M3",
+          "m4": "M4",
+          "m5": "M5",
+          "m6": "M6"
+        },
+        "table": {
+          "amount": "Cantidad",
+          "absolute": "% de visitas",
+          "relative": "% vs paso previo"
+        },
+        "stages": {
+          "visit": "Visita",
+          "registration": "Registro",
+          "dataSubmission": "Completar datos",
+          "engagement": "Interacción",
+          "taskCompletion": "Finalización de tarea",
+          "referralInvite": "Invitación de referido",
+          "returningVisit": "Visita de retorno",
+          "purchase": "Compra",
+          "repeatPurchase": "Recompra"
+        }
+      }
+    },
+    "categories": {
+      "title": "Categorías",
+      "description": "Gestiona y organiza las categorías de tu sitio web con jerarquía anidada, iconos personalizados, colores e imágenes",
+      "add": "Añadir",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "addSub": "Añadir subcategoría",
+      "active": "Activa",
+      "inactive": "Inactiva",
+      "created": "Creado",
+      "updated": "Actualizado",
+      "subcategories": "subcategorías",
+      "subcategoriesCount": "Subcategorías: {count}",
+      "noCategories": "No se encontraron categorías. Crea tu primera categoría para comenzar.",
+      "loading": "Cargando categorías...",
+      "deleteConfirm": "¿Estás seguro de que quieres eliminar \"{title}\"? Esto también eliminará todas las subcategorías.",
+      "createSuccess": "Categoría \"{title}\" creada exitosamente",
+      "updateSuccess": "Categoría \"{title}\" actualizada exitosamente",
+      "deleteSuccess": "Categoría \"{title}\" eliminada exitosamente",
+      "createTitle": "Crear nueva categoría",
+      "editTitle": "Editar categoría: {title}",
+      "errors": {
+        "id": "Categoría no encontrada",
+        "title": "Ingresa un título",
+        "url": "URL no válida o ya usada",
+        "parent": "Categoría padre no válida",
+        "generic": "No se pudo guardar la categoría"
+      },
+      "form": {
+        "basicInfo": "Información básica",
+        "title": "Título",
+        "titlePlaceholder": "Ingresa el título de la categoría",
+        "url": "URL slug",
+        "urlPlaceholder": "categoria-url-slug",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Ingresa la descripción de la categoría (opcional)",
+        "hierarchy": "Jerarquía y configuraciones",
+        "parent": "Categoría padre",
+        "parentPlaceholder": "Selecciona categoría padre",
+        "topLevel": "Nivel superior (sin padre)",
+        "status": "Estado",
+        "locale": "Idioma",
+        "customization": "Personalización visual",
+        "color": "Color de categoría",
+        "noColor": "Sin color",
+        "colorPlaceholder": "Opcional: #3b82f6",
+        "icon": "Icono (clave FontAwesome)",
+        "iconPlaceholder": "p.ej: user, home, star",
+        "iconDescription": "Ingresa una clave de icono FontAwesome (sin prefijo 'fa-'). Deja vacío para no usar icono.",
+        "browseIcons": "Explorar iconos FontAwesome",
+        "image": "Imagen de categoría",
+        "imageUpload": "Haz clic para subir imagen",
+        "preview": "Vista previa - Cómo aparecerá en la lista de categorías",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "saving": "Guardando...",
+        "createCategory": "Crear categoría",
+        "updateCategory": "Actualizar categoría",
+        "noteTitle": "Nota",
+        "imageUploadNotice": "La carga de imágenes se implementará en el siguiente paso"
+      }
+    },
+    "products": {
+      "title": "Productos",
+      "description": "Crea y gestiona productos del catálogo",
+      "add": "Guardar producto",
+      "name": "Título",
+      "descriptionLabel": "Descripción",
+      "price": "Precio base",
+      "priceLabel": "Precio base",
+      "discountType": "Tipo de descuento",
+      "discountTypePercent": "Porcentaje",
+      "discountTypeFixed": "Importe fijo",
+      "discountValue": "Valor del descuento",
+      "discountValueLabel": "Descuento",
+      "finalPriceLabel": "Precio final",
+      "basePriceLabel": "Precio base",
+      "finalPricePreview": "Precio final: {value} {currency}",
+      "currency": "Moneda",
+      "category": "Categoría",
+      "categoryLabel": "Categoría",
+      "images": "Imágenes (URLs separadas por comas)",
+      "rating": "Valoración",
+      "ratingCount": "Número de valoraciones",
+      "discount": "Descuento",
+      "inStock": "En stock",
+      "isNew": "Nuevo",
+      "isFeatured": "Destacado",
+      "featuresTitle": "Características",
+      "featuresEmpty": "Sin características aún",
+      "featureKey": "Clave",
+      "featureValue": "Valor",
+      "featureType": "Tipo",
+      "featureTypeString": "Texto",
+      "featureTypeNumber": "Número",
+      "featureTypeBoolean": "Booleano",
+      "featuresLabel": "Características: {count}",
+      "status": "Estado",
+      "statusActive": "Activo",
+      "statusInactive": "Oculto",
+      "save": "Guardar producto",
+      "saving": "Guardando...",
+      "saved": "Producto guardado",
+      "error": "No se pudo guardar el producto",
+      "loading": "Cargando productos...",
+      "empty": "Aún no hay productos",
+      "edit": "Editar",
+      "editTitle": "Editar producto: {title}",
+      "cancel": "Cancelar",
+      "noCategory": "Sin categoría",
+      "delete": "Eliminar",
+      "deleteConfirm": "¿Eliminar \"{title}\"?",
+      "ratingLabel": "Valoración",
+      "ratingCountLabel": "Número de valoraciones",
+      "optionsTitle": "Opciones",
+      "addOption": "Agregar opción",
+      "optionsEmpty": "Aún no hay opciones",
+      "optionUntitled": "Opción sin nombre",
+      "optionName": "Nombre de opción",
+      "optionPrice": "Precio de opción",
+      "optionImages": "Imágenes de opción (URLs separadas por comas)",
+      "optionStockCount": "Cantidad en stock",
+      "optionAttributesTitle": "Atributos",
+      "optionAttributesEmpty": "Sin atributos",
+      "optionFeaturesTitle": "Características de opción",
+      "optionFeaturesEmpty": "Sin características de opción",
+      "optionsLabel": "Opciones: {count}",
+      "optionsRequired": "Agrega al menos una opción",
+      "priceFromLabel": "Precio desde",
+      "priceFromPreview": "Base desde: {value} {currency}"
+    },
+    "spaces": {
+      "title": "Espacios",
+      "description": "Gestiona espacios de socios, invitaciones y datos de contacto",
+      "defaultTitle": "Nuevo espacio",
+      "loading": "Cargando espacios...",
+      "empty": "Aún no hay espacios",
+      "fields": {
+        "entity": "Entidad",
+        "phone": "Teléfono",
+        "mail": "Correo",
+        "marginBadge": "+{value} margen"
+      },
+      "actions": {
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "createSuccess": "\"{title}\" creado",
+        "deleteConfirm": "¿Eliminar \"{title}\"?",
+        "deleteSuccess": "\"{title}\" eliminado"
+      },
+      "errors": {
+        "load": "No se pudieron cargar los espacios",
+        "delete": "No se pudo eliminar el espacio"
+      }
+    },
+    "users": {
+      "title": "Usuarios",
+      "description": "Gestiona cuentas, balances y niveles de acceso.",
+      "loading": "Cargando usuarios...",
+      "empty": "No hay usuarios aún",
+      "loadError": "No se pudieron cargar los usuarios",
+      "saveSuccess": "Usuario actualizado",
+      "saveError": "No se pudo guardar el usuario",
+      "noChanges": "Sin cambios para guardar.",
+      "editTitle": "Editar usuario: {name}",
+      "titleFallback": "Usuario #{id}",
+      "balance": {
+        "label": "Saldo",
+        "placeholder": "Ingresa el saldo",
+        "badge": "Saldo: {value}"
+      },
+      "status": {
+        "label": "Estado",
+        "unset": "Conservar estado global",
+        "unknown": "Desconocido",
+        "active": "Activo",
+        "blocked": "Bloqueado",
+        "pending": "Pendiente",
+        "moderator": "Moderador",
+        "manager": "Gestor",
+        "admin": "Admin",
+        "owner": "Propietario",
+        "deleted": "Eliminado"
+      },
+      "actions": {
+        "ban": "Bloquear",
+        "unban": "Desbloquear",
+        "refresh": "Actualizar lista"
+      },
+      "toasts": {
+        "banned": "\"{name}\" bloqueado",
+        "unbanned": "\"{name}\" desbloqueado"
+      }
+    }
+  },
+  "posts": {
+    "title": "Título",
+    "description": "Descripción",
+    "empty": "Vacío",
+    "comments": "Comentarios",
+    "reply": "Responder",
+    "add": "Añadir",
+    "detail": {
+      "meta": "Información",
+      "publishedAt": "Publicado",
+      "updatedAt": "Actualizado",
+      "views": "Vistas",
+      "readTimeLabel": "Tiempo de lectura",
+      "readTimeValue": "{minutes} min",
+      "readTime": "{minutes} min de lectura",
+      "author": "Autor",
+      "category": "Categoría",
+      "related": "Publicaciones relacionadas",
+      "actions": {
+        "hide": "Ocultar",
+        "editDescription": "Actualiza el contenido de la publicación y guarda los cambios.",
+        "deleteConfirm": "¿Eliminar \"{title}\"?"
+      },
+      "view": "Vista previa"
+    }
+  },
+  "categories": {
+    "popup": {
+      "title": "Categorías",
+      "loading": "Cargando...",
+      "empty": "No hay categorías disponibles",
+      "viewAll": "Ver todas las {count} categorías"
+    }
+  },
+  "businessSections": {
+    "companies": "Empresas",
+    "products": "Productos",
+    "contacts": "Contactos",
+    "customers": "Clientes",
+    "calendar": "Calendario",
+    "sales": "Ventas",
+    "analytics": "Análisis",
+    "promos": "Promociones",
+    "pays": "Pagos",
+    "support": "Soporte"
+  },
+  "filters": {
+    "filters": "Filtros",
+    "timeRange": "Rango de tiempo",
+    "sortBy": "Ordenar por",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "currentWeek": "Semana actual (Lun-Dom)",
+    "lastWeek": "Semana (7 días)",
+    "thisMonth": "Este mes",
+    "lastMonth": "Mes (30 días)",
+    "thisYear": "Este año",
+    "lastYear": "Año (365 días)",
+    "allTime": "Todo el tiempo",
+    "customRange": "Rango personalizado",
+    "fromDate": "Fecha desde",
+    "toDate": "Fecha hasta",
+    "selectDate": "Seleccionar fecha",
+    "priceRange": "Rango de precio",
+    "minPrice": "Precio mín",
+    "maxPrice": "Precio máx",
+    "price": "Precio",
+    "rating": "Calificación",
+    "ratingAndUp": "y más",
+    "categories": "Categorías",
+    "selectCategories": "Seleccionar categorías",
+    "allCategories": "Todas las categorías",
+    "clothingFootwear": "Ropa & Calzado",
+    "mensClothing": "Ropa de hombre",
+    "womensClothing": "Ropa de mujer",
+    "childrensClothing": "Ropa infantil",
+    "shoes": "Zapatos",
+    "sportswear": "Ropa deportiva",
+    "bagsAccessories": "Bolsos & Accesorios",
+    "handbags": "Bolsos de mano",
+    "backpacks": "Mochilas",
+    "jewelry": "Joyería",
+    "watches": "Relojes",
+    "sunglasses": "Gafas de sol",
+    "electronics": "Electrónicos",
+    "smartphones": "Teléfonos inteligentes",
+    "laptops": "Portátiles",
+    "tablets": "Tabletas",
+    "headphones": "Auriculares",
+    "cameras": "Cámaras",
+    "healthBeauty": "Salud & Belleza",
+    "skincare": "Cuidado de la piel",
+    "makeup": "Maquillaje",
+    "perfumes": "Perfumes",
+    "haircare": "Cuidado del cabello",
+    "supplements": "Suplementos",
+    "homeGarden": "Hogar & Jardín",
+    "furniture": "Muebles",
+    "decor": "Decoración del hogar",
+    "kitchenware": "Utensilios de cocina",
+    "gardenTools": "Herramientas de jardín",
+    "lighting": "Iluminación",
+    "autoMoto": "Auto & Moto",
+    "carAccessories": "Accesorios para automóvil",
+    "carParts": "Repuestos de automóvil",
+    "motorcycle": "Motocicletas",
+    "tools": "Herramientas",
+    "oils": "Aceites y fluidos",
+    "hobbiesCreativity": "Pasatiempos & Creatividad",
+    "artSupplies": "Suministros artísticos",
+    "crafts": "Manualidades",
+    "musicalInstruments": "Instrumentos musicales",
+    "collectibles": "Coleccionables",
+    "books": "Libros",
+    "foodBeverage": "Comida & Bebida",
+    "beverages": "Bebidas",
+    "snacks": "Bocadillos",
+    "organic": "Comida orgánica",
+    "spices": "Especias y condimentos",
+    "gourmet": "Comida gourmet",
+    "mostRecent": "Más recientes",
+    "mostPopular": "Más populares",
+    "trending": "Tendencia",
+    "clearFilters": "Limpiar filtros",
+    "quickSelect": "Selección Rápida",
+    "lastPeriods": "Últimos",
+    "currentPeriods": "Actuales",
+    "previousPeriods": "Anteriores",
+    "lastDay": "Día (24h)",
+    "currentWeekFromMonday": "Esta Semana (desde Lun)",
+    "previousWeek": "Semana Anterior",
+    "previousMonth": "Mes Anterior",
+    "previousYear": "Año Anterior",
+    "allPeriod": "Todo el Período",
+    "resetSelected": "Restablecer Selección",
+    "cancel": "Cancelar",
+    "apply": "Aplicar",
+    "reset": "Restablecer"
+  },
+  "actions": {
+    "fastActions": "Acciones rápidas",
+    "quickAccess": "Acceso rápido",
+    "createPost": "Crear publicación",
+    "search": "Buscar",
+    "bookmarks": "Marcadores",
+    "share": "Compartir",
+    "settings": "Configuración",
+    "saved": "Guardado",
+    "shared": "Compartido"
+  },
+  "contact": {
+    "contactUs": "Contáctanos",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "tu.correo@ejemplo.com",
+    "message": "Mensaje",
+    "messagePlaceholder": "¿Cómo podemos ayudarte?",
+    "sendMessage": "Enviar mensaje",
+    "quickContact": "Contacto rápido",
+    "emailUs": "Escríbenos",
+    "callUs": "Llámanos"
+  },
+  "questionnaire": {
+    "feedback": "Comentarios",
+    "question": "Pregunta",
+    "howSatisfied": "¿Qué tan satisfecho estás con nuestra plataforma?",
+    "wouldRecommend": "¿Nos recomendarías a otros?",
+    "whatImprove": "¿Qué deberíamos mejorar?",
+    "performance": "Rendimiento",
+    "design": "Diseño",
+    "features": "Características",
+    "content": "Contenido",
+    "yes": "Sí",
+    "no": "No",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "submit": "Enviar",
+    "thankYou": "¡Gracias!",
+    "feedbackReceived": "Tu comentario ha sido recibido.",
+    "takeAgain": "Tomar de nuevo"
+  },
+  "catalog": {
+    "pages": {
+      "favorites": {
+        "title": "Favoritos",
+        "description": "Productos guardados para revisar más tarde.",
+        "openButton": "Abrir favoritos",
+        "emptyTitle": "Todavía no hay favoritos",
+        "emptyDescription": "Toca el corazón de un producto para guardarlo aquí.",
+        "countLabel": "{count} favoritos guardados",
+        "openCatalog": "Abrir catálogo",
+        "openCart": "Ir al carrito"
+      },
+      "cart": {
+        "title": "Carrito",
+        "description": "Productos que agregaste desde el catálogo y las fichas.",
+        "openButton": "Abrir carrito",
+        "emptyTitle": "Tu carrito está vacío",
+        "emptyDescription": "Añade productos del catálogo para revisarlos aquí.",
+        "countLabel": "{count} artículos en el carrito",
+        "openCatalog": "Abrir catálogo",
+        "openFavorites": "Abrir favoritos",
+        "removedToast": "{title} se quitó del carrito"
+      }
+    },
+    "product": {
+      "addToCart": "Agregar al Carrito",
+      "favorite": "Favoritos",
+      "cart": "Carrito",
+      "unavailable": "No Disponible",
+      "inCart": "En el Carrito",
+      "priceFrom": "Desde",
+      "loading": "Cargando producto...",
+      "optionsTitle": "Opciones",
+      "descriptionTitle": "Descripción",
+      "featuresTitle": "Especificaciones",
+      "featuresEmpty": "Sin especificaciones aún",
+      "optionFeaturesTitle": "Detalles de la opción",
+      "shareCopied": "Enlace copiado",
+      "optionAttributesTitle": "Atributos de opción",
+      "optionAttributesEmpty": "Sin atributos de opción",
+      "optionFeaturesEmpty": "Sin características de opción"
+    }
+  },
+  "search": {
+    "searchArea": "Área de búsqueda",
+    "placeholder": "Buscar...",
+    "searchInput": "Campo de búsqueda",
+    "clearSearch": "Limpiar búsqueda",
+    "search": "Buscar",
+    "searchButton": "Botón de búsqueda",
+    "filters": "Filtros",
+    "openFilters": "Abrir filtros",
+    "moreFilters": "Más filtros",
+    "advancedFilters": "Filtros Avanzados",
+    "activeFilters": "Filtros activos",
+    "apply": "Aplicar",
+    "priceFrom": "Desde",
+    "priceTo": "Hasta",
+    "promoCode": "Código Promocional",
+    "sortBy": "Ordenar por",
+    "category": "Categoría",
+    "priceRange": "Rango de Precio",
+    "sortOptions": {
+      "newest": "Más Recientes",
+      "oldest": "Más Antiguos",
+      "priceAsc": "Precio: Menor a Mayor",
+      "priceDesc": "Precio: Mayor a Menor",
+      "titleAsc": "Título A-Z",
+      "titleDesc": "Título Z-A",
+      "popular": "Más Populares",
+      "featured": "Destacados"
+    }
+  },
+  "session": {
+    "tokenError": "No pudimos iniciar tu sesión. Actualiza la página."
+  },
+  "auth": {
+    "title": "Inicia sesión en tu cuenta",
+    "subtitle": "Elige cómo continuar",
+    "credentialsTitle": "Iniciar sesión",
+    "credentialsSubtitle": "Ingresa tus datos para continuar",
+    "continueWithEmail": "Continuar con correo",
+    "continueWithGoogle": "Continuar con Google",
+    "continueWithTelegram": "Continuar con Telegram",
+    "loginLabel": "Correo / Teléfono / Usuario",
+    "loginPlaceholder": "tu@ejemplo.com o +34123456789",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "passwordTipLength": "Al menos 6 caracteres",
+    "passwordTipStrength": "Incluye letras y números",
+    "back": "Atrás",
+    "login": "Iniciar sesión",
+    "processing": "Ingresando...",
+    "loginSuccess": "¡Bienvenido de nuevo!",
+    "loginFailed": "No se pudo iniciar sesión. Verifica tus datos.",
+    "providerUnavailable": "Este método no está disponible ahora."
+  },
+  "profile": {
+    "description": "Administra tu información personal y preferencias de cuenta.",
+    "name": "Nombre",
+    "surname": "Apellido",
+    "phone": "Teléfono",
+    "login": "Usuario",
+    "mail": "Correo",
+    "password": "Contraseña",
+    "status": "Estado",
+    "statusUnknown": "Desconocido",
+    "statusValue": "Estado: {value}",
+    "id": "ID",
+    "network": "Red",
+    "networkWeb": "Web",
+    "loading": "Cargando",
+    "loaded": "Cargado",
+    "loadError": "No se pudo cargar el perfil.",
+    "noChanges": "No hay cambios para guardar.",
+    "saveSuccess": "Perfil guardado correctamente.",
+    "saveError": "No se pudo guardar el perfil.",
+    "locked": "Perfil bloqueado para edición"
+  },
+  "fileUpload": {
+    "clickToUpload": "Haga clic para cargar archivo",
+    "dragAndDrop": "o arrastre y suelte",
+    "supportedFormats": "Formatos admitidos: JPG, PNG, WEBP, GIF",
+    "maxSize": "Tamaño máximo: 5MB",
+    "uploading": "Cargando...",
+    "removeFile": "Eliminar archivo",
+    "changeFile": "Cambiar archivo",
+    "preview": "Vista previa del archivo",
+    "fileName": "Nombre del archivo",
+    "fileSize": "Tamaño del archivo"
+  },
+  "multiFileUpload": {
+    "title": "Galería de Archivos",
+    "addMore": "Agregar más archivos",
+    "addMoreRemaining": "Agregar más archivos ({remaining} restantes)",
+    "selectMultiple": "Seleccionar varios archivos",
+    "maxFilesReached": "Máximo {max} archivos permitidos",
+    "removeAll": "Eliminar todos los archivos",
+    "filesSelected": "{count} archivos seleccionados",
+    "dropMultipleFiles": "Soltar varios archivos aquí",
+    "clickToAddMore": "Haga clic para agregar más archivos"
+  }
 }

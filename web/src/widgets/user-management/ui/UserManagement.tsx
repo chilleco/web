@@ -86,14 +86,15 @@ export function UserManagement({ triggerRefresh }: UserManagementProps = {}) {
       loadingLabel={t('loading')}
       emptyLabel={t('empty')}
       renderList={() => (
-        <div className="space-y-3">
+        <div className="divide-y divide-border/50 px-2">
           {users.map((user) => (
-            <UserListItem
-              key={user.id}
-              user={user}
-              onEdit={(item) => setEditingUser(item)}
-              onToggleBlock={handleToggleBlock}
-            />
+            <div key={user.id} className="py-3">
+              <UserListItem
+                user={user}
+                onEdit={(item) => setEditingUser(item)}
+                onToggleBlock={handleToggleBlock}
+              />
+            </div>
           ))}
         </div>
       )}

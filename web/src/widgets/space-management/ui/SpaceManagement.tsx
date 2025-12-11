@@ -70,9 +70,11 @@ export function SpaceManagement({ triggerRefresh }: SpaceManagementProps = {}) {
       loadingLabel={t('loading')}
       emptyLabel={t('empty')}
       renderList={() => (
-        <div className="space-y-2">
+        <div className="divide-y divide-border/50 px-2">
           {spaces.map((space) => (
-            <SpaceListItem key={space.id} space={space} onDelete={handleDeleteSpace} />
+            <div key={space.id} className="py-3">
+              <SpaceListItem space={space} onDelete={handleDeleteSpace} />
+            </div>
           ))}
         </div>
       )}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { toast as sonnerToast } from 'sonner';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import {
@@ -224,7 +225,11 @@ export function useToast(): UseToastReturn {
 
 // Convenience hooks for specific toast types
 export const useToastActions = () => {
+    const t = useTranslations('system');
     const { success, error, warning, info, loading, promise } = useToast();
+
+    const resolveItem = (item?: string) => item?.trim() || t('item');
+    const resolveOperation = (operation?: string) => operation?.trim() || t('processing');
 
     return {
         success,
@@ -234,10 +239,10 @@ export const useToastActions = () => {
         loading,
         promise,
         // Common patterns
-        saveSuccess: (item = 'Item') => success(`${item} saved successfully!`),
-        saveError: (item = 'Item') => error(`Failed to save ${item.toLowerCase()}`),
-        deleteSuccess: (item = 'Item') => success(`${item} deleted successfully!`),
-        deleteError: (item = 'Item') => error(`Failed to delete ${item.toLowerCase()}`),
-        loadingOperation: (operation = 'Processing') => loading(`${operation}...`),
+        saveSuccess: (item?: string) => success(t('toast.saveSuccess', { item: resolveItem(item) })),
+        saveError: (item?: string) => error(t('toast.saveError', { item: resolveItem(item) })),
+        deleteSuccess: (item?: string) => success(t('toast.deleteSuccess', { item: resolveItem(item) })),
+        deleteError: (item?: string) => error(t('toast.deleteError', { item: resolveItem(item) })),
+        loadingOperation: (operation?: string) => loading(t('toast.loading', { operation: resolveOperation(operation) })),
     };
 };

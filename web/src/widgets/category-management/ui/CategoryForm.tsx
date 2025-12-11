@@ -245,19 +245,19 @@ export function CategoryForm({
       // For now, we'll skip image upload as it requires a separate endpoint
       if (categoryFileData?.file) {
         console.warn('Image upload not yet implemented');
-        info('Image upload will be implemented in the next step', {
-          title: 'Note'
+        info(t('form.imageUploadNotice'), {
+          title: t('form.noteTitle')
         });
       }
 
       if (category) {
         // Update existing category
         await updateCategory(category.id, requestData);
-        success(`Category "${data.title}" updated successfully`);
+        success(t('updateSuccess', { title: data.title }));
       } else {
         // Create new category
         await createCategory(requestData);
-        success(`Category "${data.title}" created successfully`);
+        success(t('createSuccess', { title: data.title }));
       }
 
       onSuccess();

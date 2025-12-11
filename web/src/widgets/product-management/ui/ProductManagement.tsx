@@ -85,14 +85,15 @@ export function ProductManagement({
       loadingLabel={t('loading')}
       emptyLabel={t('empty')}
       renderList={() => (
-        <div className="space-y-3">
+        <div className="divide-y divide-border/50 px-2">
           {products.map((product) => (
-            <ProductListItem
-              key={product.id}
-              product={product}
-              onEdit={(item) => setEditingProduct(item)}
-              onDelete={handleDelete}
-            />
+            <div key={product.id} className="py-3">
+              <ProductListItem
+                product={product}
+                onEdit={(item) => setEditingProduct(item)}
+                onDelete={handleDelete}
+              />
+            </div>
           ))}
         </div>
       )}

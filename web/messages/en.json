@@ -1,1094 +1,1105 @@
 {
-    "counter": {
-        "title": "Redux Counter Demo",
-        "description": "Showcasing Redux Toolkit with shadcn/ui components",
-        "increment": "+1",
-        "decrement": "-1",
-        "incrementBy5": "+5",
-        "reset": "Reset"
-    },
-    "multiFileUploadDemo": {
-        "title": "Multi File Upload Demo",
-        "description": "Showcase the MultiFileUpload component with drag & drop support for any file type",
-        "selectedFiles": "Selected {count} file{plural}",
-        "clearAll": "Clear All",
-        "debugTitle": "Debug: File Data",
-        "imagesOnly": "Images Only",
-        "documentsOnly": "Documents Only",
-        "anyFileType": "Any File Type",
-        "currentFilter": "Current filter"
-    },
-    "userSettings": {
-        "title": "User Settings Demo",
-        "description": "Demonstrating Redux state management with user preferences"
-    },
-    "theme": {
-        "light": "Light",
-        "dark": "Dark",
-        "system": "System"
-    },
-    "navigation": {
-        "posts": "Posts",
-        "space": "Space",
-        "hub": "Hub",
-        "catalog": "Catalog",
-        "products": "Products",
-        "home": "Home",
-        "sections": "Sections"
-    },
-    "landing": {
-        "hero": {
-            "title": "Build a landing that converts on day one",
-            "subtitle": "Unified FastAPI, Next.js 15, and Telegram toolkit with adaptive UI blocks and typed API calls.",
-            "primaryCta": "Open catalog",
-            "secondaryCta": "Read posts",
-            "badge": "Full-stack starter",
-            "heading": "Launch faster with an adaptive, multilingual landing template",
-            "body": "Ship a confident story with hero, proof, catalog, and onboarding flows connected to your API and messaging stack.",
-            "points": [
-                "FSD-driven layout with light & dark themes ready",
-                "Structured data, SEO metadata, and analytics-ready events",
-                "CTA buttons, toast feedback, and Telegram hooks out of the box"
-            ],
-            "snapshot": {
-                "title": "Live launches this month",
-                "value": "37 projects shipped",
-                "cta": "See stories"
-            },
-            "stats": {
-                "uptime": {
-                    "label": "Uptime SLA",
-                    "value": "99.9%"
-                },
-                "response": {
-                    "label": "Median response",
-                    "value": "180 ms"
-                },
-                "coverage": {
-                    "label": "Global regions",
-                    "value": "80+"
-                }
-            }
+  "counter": {
+    "title": "Redux Counter Demo",
+    "description": "Showcasing Redux Toolkit with shadcn/ui components",
+    "increment": "+1",
+    "decrement": "-1",
+    "incrementBy5": "+5",
+    "reset": "Reset"
+  },
+  "multiFileUploadDemo": {
+    "title": "Multi File Upload Demo",
+    "description": "Showcase the MultiFileUpload component with drag & drop support for any file type",
+    "selectedFiles": "Selected {count} file{plural}",
+    "clearAll": "Clear All",
+    "debugTitle": "Debug: File Data",
+    "imagesOnly": "Images Only",
+    "documentsOnly": "Documents Only",
+    "anyFileType": "Any File Type",
+    "currentFilter": "Current filter"
+  },
+  "userSettings": {
+    "title": "User Settings Demo",
+    "description": "Demonstrating Redux state management with user preferences"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "navigation": {
+    "posts": "Posts",
+    "space": "Space",
+    "hub": "Hub",
+    "catalog": "Catalog",
+    "products": "Products",
+    "home": "Home",
+    "sections": "Sections"
+  },
+  "landing": {
+    "hero": {
+      "title": "Build a landing that converts on day one",
+      "subtitle": "Unified FastAPI, Next.js 15, and Telegram toolkit with adaptive UI blocks and typed API calls.",
+      "primaryCta": "Open catalog",
+      "secondaryCta": "Read posts",
+      "badge": "Full-stack starter",
+      "heading": "Launch faster with an adaptive, multilingual landing template",
+      "body": "Ship a confident story with hero, proof, catalog, and onboarding flows connected to your API and messaging stack.",
+      "points": [
+        "FSD-driven layout with light & dark themes ready",
+        "Structured data, SEO metadata, and analytics-ready events",
+        "CTA buttons, toast feedback, and Telegram hooks out of the box"
+      ],
+      "snapshot": {
+        "title": "Live launches this month",
+        "value": "37 projects shipped",
+        "cta": "See stories"
+      },
+      "stats": {
+        "uptime": {
+          "label": "Uptime SLA",
+          "value": "99.9%"
         },
-        "howItWorks": {
-            "title": "How it works",
-            "description": "Guide visitors from first impression to activation with three focused steps.",
-            "cta": "View the journey",
-            "steps": {
-                "discover": {
-                    "title": "Discover",
-                    "description": "Hero banner, navigation, and proof points adapt to locale and theme.",
-                    "badge": "Step 01"
-                },
-                "decide": {
-                    "title": "Decide",
-                    "description": "Posts and catalog blocks spotlight outcomes, pricing, and tags.",
-                    "badge": "Step 02"
-                },
-                "act": {
-                    "title": "Act",
-                    "description": "Lead forms, toasts, and Telegram notifications capture intent immediately.",
-                    "badge": "Step 03"
-                }
-            }
+        "response": {
+          "label": "Median response",
+          "value": "180 ms"
         },
-        "posts": {
-            "title": "Latest posts",
-            "description": "Showcase insights that reinforce your product story.",
-            "viewAll": "All posts",
-            "items": {
-                "first": {
-                    "title": "Designing adaptive funnels",
-                    "description": "Blend marketing and product signals with reusable UI primitives.",
-                    "category": "Product",
-                    "date": "02.03.2024"
-                },
-                "second": {
-                    "title": "Typed APIs for scale",
-                    "description": "Keep FastAPI contracts and generated schemas in sync across teams.",
-                    "category": "Engineering",
-                    "date": "15.03.2024"
-                },
-                "third": {
-                    "title": "Launch playbooks",
-                    "description": "Use ready-made flows for acquisition, onboarding, and retention.",
-                    "category": "Growth",
-                    "date": "22.03.2024"
-                }
-            }
-        },
-        "products": {
-            "title": "Featured products",
-            "description": "Surface offers directly on the landing with clear value and pricing.",
-            "viewAll": "Open catalog",
-            "currency": "$",
-            "cta": "See details",
-            "items": {
-                "starter": {
-                    "title": "Starter workspace",
-                    "description": "Essential sections with SEO, analytics, and contact capture ready.",
-                    "price": "39",
-                    "tag": "Launch ready",
-                    "discountType": "percent",
-                    "discountValue": "25"
-                },
-                "growth": {
-                    "title": "Growth stack",
-                    "description": "Catalog, posts, and automation blocks with typed API connectors.",
-                    "price": "79",
-                    "tag": "Automation",
-                    "discountType": "percent",
-                    "discountValue": "25"
-                },
-                "enterprise": {
-                    "title": "Enterprise suite",
-                    "description": "Advanced localization, access control, and observability baked in.",
-                    "price": "129",
-                    "tag": "Enterprise",
-                    "discountType": "fixed",
-                    "discountValue": "30"
-                }
-            }
-        },
-        "advantages": {
-            "title": "Our advantages",
-            "description": "Clear value drivers for visitors and stakeholders.",
-            "items": {
-                "performance": {
-                    "title": "Performance-first",
-                    "description": "SSR, edge caching, and CDN-ready assets keep pages fast."
-                },
-                "design": {
-                    "title": "Design system",
-                    "description": "FSD layout, consistent spacing, and theme-aware components."
-                },
-                "automation": {
-                    "title": "Automation ready",
-                    "description": "Telegram worker, typed hooks, and toasts connect signals instantly."
-                },
-                "support": {
-                    "title": "Reliability",
-                    "description": "Structured logging, monitoring, and rollback-friendly releases."
-                }
-            }
-        },
-        "reviews": {
-            "title": "Reviews & rating",
-            "description": "Proof from teams using this stack today.",
-            "score": "4.9",
-            "total": "1.2k+",
-            "highlight": "Rated by product, growth, and platform teams.",
-            "body": "Built-in analytics, typed schemas, and Telegram hooks keep launches predictable.",
-            "role": "Verified review",
-            "items": {
-                "first": {
-                    "name": "Olivia — Product Lead",
-                    "text": "We shipped a multilingual launch week in days with zero redesigns."
-                },
-                "second": {
-                    "name": "Mason — CTO",
-                    "text": "Typed API helpers and FastAPI contracts make handoffs painless."
-                },
-                "third": {
-                    "name": "Lena — Growth",
-                    "text": "Landing, posts, and catalog blocks give us experiments without rework."
-                }
-            }
-        },
-        "contact": {
-            "title": "Submit an application",
-            "description": "Tell us about your product and we will shape the launch playbook.",
-            "pitch": "Share context, timelines, and integrations.",
-            "hint": "We reply within one business day with a scoped plan.",
-            "cards": {
-                "first": {
-                    "title": "Secure & compliant",
-                    "text": "JWT auth, audit-friendly logging, and privacy-safe defaults."
-                },
-                "second": {
-                    "title": "Fast turnaround",
-                    "text": "Templates, schemas, and CI-ready scripts accelerate rollout."
-                }
-            },
-            "fields": {
-                "name": "Full name",
-                "namePlaceholder": "Your name",
-                "emailPlaceholder": "you@company.com",
-                "messagePlaceholder": "Goals, timelines, and success metrics"
-            },
-            "cta": "Send application",
-            "success": "Application submitted. We will reply shortly."
-        },
-        "about": {
-            "title": "About us",
-            "description": "Full-stack team focused on predictable releases.",
-            "heading": "API-first builders with Telegram-ready flows",
-            "body": "We combine FastAPI, Next.js 15, and Telegram automation into one workflow. Every block ships with localization, analytics metadata, and strict typing so teams can launch without rewrites.",
-            "cards": {
-                "delivery": "Delivery culture",
-                "deliveryText": "Opinionated defaults, paired reviews, and measurable release checklists.",
-                "partners": "Partnerships",
-                "partnersText": "We align with growth, product, and platform leads to keep priorities visible."
-            },
-            "mission": {
-                "title": "Our mission",
-                "text": "Ship reliable experiences with honest telemetry, clear contracts, and fast iteration."
-            }
-        },
-        "faq": {
-            "title": "FAQ",
-            "description": "Answers for stakeholders and approvers.",
-            "items": {
-                "coverage": {
-                    "question": "Do you support multiple locales?",
-                    "answer": "Yes. Locale-aware routing and message bundles keep copy consistent across regions."
-                },
-                "deployment": {
-                    "question": "How do deployments work?",
-                    "answer": "Docker, Compose overlays, and NGINX configs are ready for local, staging, and production."
-                },
-                "integrations": {
-                    "question": "Can we use our existing APIs?",
-                    "answer": "Typed helpers handle auth, caching, and toasts so you can drop in endpoints without extra glue."
-                },
-                "analytics": {
-                    "question": "What about analytics and SEO?",
-                    "answer": "Structured data, SEO metadata, and event hooks ship by default for your analytics stack."
-                }
-            }
+        "coverage": {
+          "label": "Global regions",
+          "value": "80+"
         }
+      }
     },
-    "system": {
-        "locale": "Locale",
-        "worldwide": "Worldwide",
-        "sign_out": "Log Out",
-        "sign_in": "Log In",
-        "sign_up": "Sign Up",
-        "search": "Search",
-        "online": "Online",
-        "offline": "Offline",
-        "save": "Save",
-        "send": "Send",
-        "upload": "Upload",
-        "profile": "Profile",
-        "settings": "Settings",
-        "admin": "Admin",
-        "admin_panel": "Admin",
-        "dashboard": "Overview",
-        "analytics": "Analytics",
-        "billing": "Billing",
-        "categories": "Categories",
-        "spaces": "Spaces",
-        "users": "Users",
-        "success": "Success",
-        "error": "Error",
-        "server_error": "Server error",
-        "server_error_description": "Something went wrong on the server. Please try again or refresh the page.",
-        "now": "just now",
-        "no_access": "No access",
-        "saved": "Saved",
-        "deleted": "Deleted",
-        "blocked": "Hidden",
-        "unblocked": "Opened",
-        "guest": "Guest",
-        "popular": "Popular",
-        "privacy": "Privacy policy",
-        "offer": "Offer",
-        "unsubscribe": "Cancel subscription",
-        "permission": "Data Processing Policy",
-        "rates": "Rates",
-        "refund": "Refund",
-        "main": "Main",
-        "menu": "Menu",
-        "close": "Close",
-        "add": "Add",
-        "edit": "Edit",
-        "delete": "Delete",
-        "remove": "Remove",
-        "update": "Update",
-        "loading": "Loading",
-        "saving": "Saving...",
-        "refresh": "Refresh",
-        "cancel": "Cancel",
-        "none": "None",
-        "yes": "Yes",
-        "no": "No",
-        "share": "Share",
-        "shareUnavailable": "Sharing is not available on this device"
-    },
-    "entities": {
-        "ooo": "LLC",
-        "ip": "Sole proprietor",
-        "fl": "Individual",
-        "smz": "Self-employed"
-    },
-    "brand": {
-        "name": "web",
-        "description": "Template web app",
-        "tagline": "Template web app",
-        "address": "St. Petersburg, Russia"
-    },
-    "footer": {
-        "rights": "All rights reserved",
-        "contacts": "Contacts",
-        "address": "Address",
-        "mail": "Email",
-        "phone": "Phone",
-        "links": "Links",
-        "about": "About",
-        "feedback": "Feedbacks & Troubles",
-        "rules": "Rules",
-        "news": "News",
-        "codex": "Honor code",
-        "white_paper": "White Paper",
-        "vk": "VKontakte",
-        "fb": "Facebook",
-        "ig": "Instagram",
-        "twi": "X",
-        "yt": "YouTube",
-        "in": "LinkedIn",
-        "followUs": "Follow Us",
-        "jobs": "Jobs",
-        "partners": "Partners",
-        "faqSupport": "FAQ & Support",
-        "faq": "FAQ",
-        "social": "Social",
-        "location": "Location",
-        "settings": "Settings",
-        "legal": "Legal",
-        "company": "Company",
-        "support": "Support",
-        "privacy": "Privacy Policy",
-        "cookies": "Cookie Policy",
-        "offer": "Terms of Service",
-        "userAgreement": "User Agreement",
-        "refund": "Refund Policy",
-        "rates": "Pricing"
-    },
-    "spaces": {
-        "form": {
-            "titlePlaceholder": "Space title",
-            "logo": "Logo",
-            "logoPlaceholder": "Upload a logo",
-            "entity": "Entity",
-            "entityPlaceholder": "Select entity type",
-            "director": "Director",
-            "directorPlaceholder": "Director full name",
-            "inn": "INN",
-            "innPlaceholder": "Tax ID",
-            "margin": "Margin",
-            "marginPlaceholder": "Enter margin percentage",
-            "descriptionPlaceholder": "Description for partners",
-            "contactTitle": "Contacts",
-            "phonePlaceholder": "Phone",
-            "mailPlaceholder": "Email",
-            "telegramPlaceholder": "Telegram link",
-            "countryPlaceholder": "Country",
-            "region": "Region",
-            "regionPlaceholder": "Region / State",
-            "city": "City",
-            "cityPlaceholder": "City",
-            "logoUploaded": "Logo uploaded",
-            "saved": "Space saved"
+    "howItWorks": {
+      "title": "How it works",
+      "description": "Guide visitors from first impression to activation with three focused steps.",
+      "cta": "View the journey",
+      "steps": {
+        "discover": {
+          "title": "Discover",
+          "description": "Hero banner, navigation, and proof points adapt to locale and theme.",
+          "badge": "Step 01"
         },
-        "selector": {
-            "title": "Spaces",
-            "create": "Create space",
-            "defaultTitle": "New space",
-            "noSpace": "No space",
-            "placeholder": "Select space",
-            "empty": "No attached spaces yet",
-            "created": "\"{title}\" created"
+        "decide": {
+          "title": "Decide",
+          "description": "Posts and catalog blocks spotlight outcomes, pricing, and tags.",
+          "badge": "Step 02"
         },
-        "page": {
-            "title": "Space",
-            "description": "Manage company info, contacts, and pricing margin.",
-            "notFound": "Space not found"
+        "act": {
+          "title": "Act",
+          "description": "Lead forms, toasts, and Telegram notifications capture intent immediately.",
+          "badge": "Step 03"
         }
-    },
-    "admin": {
-        "dashboard": {
-            "description": "Overview of platform metrics and recent updates.",
-            "loadError": "Failed to load dashboard stats",
-            "cards": {
-                "visits": "Visits",
-                "visitsSubtitle": "Recorded visits",
-                "users": "Registered users",
-                "payments": "Payments",
-                "paymentsSubtitle": "Successful payments",
-                "posts": "Published posts",
-                "products": "Active products",
-                "tasks": "Tasks",
-                "tasksSubtitle": "Active tasks"
-            },
-            "activity": {
-                "title": "Recent activity",
-                "description": "Audit the latest changes across users, posts, products, and payments.",
-                "filters": {
-                    "user": "User ID",
-                    "userPlaceholder": "e.g. 42",
-                    "ip": "IP address",
-                    "ipPlaceholder": "192.168.0.1",
-                    "object": "Entity",
-                    "objectPlaceholder": "Select entity",
-                    "objectAll": "All entities",
-                    "action": "Action",
-                    "actionPlaceholder": "Select action",
-                    "actionAll": "All actions",
-                    "dateFrom": "From",
-                    "dateTo": "To",
-                    "apply": "Apply filters",
-                    "reset": "Reset"
-                },
-                "objects": {
-                    "user": "User",
-                    "post": "Post",
-                    "product": "Product",
-                    "category": "Category",
-                    "comment": "Comment",
-                    "space": "Space",
-                    "payment": "Payment",
-                    "session": "Session",
-                    "system": "System"
-                },
-                "actions": {
-                    "create": "Create",
-                    "update": "Update",
-                    "remove": "Remove",
-                    "search": "Search",
-                    "view": "View",
-                    "disconnect": "Disconnect"
-                },
-                "sources": {
-                    "web": "Web",
-                    "api": "API",
-                    "tgBot": "Telegram bot",
-                    "tma": "Telegram Mini App",
-                    "direct": "Direct"
-                },
-                "meta": {
-                    "user": "User #{id}",
-                    "guest": "Guest",
-                    "ip": "IP {value}",
-                    "source": "Source: {value}",
-                    "token": "Token {value}"
-                },
-                "pagination": {
-                    "label": "Page {page} of {total}",
-                    "prev": "Prev",
-                    "next": "Next"
-                },
-                "empty": "No activity yet",
-                "loadError": "Failed to load activity",
-                "details": {
-                    "changes": "Changed fields",
-                    "field": "Field",
-                    "old": "Old value",
-                    "new": "New value",
-                    "noChanges": "No changes recorded"
-                }
-            },
-            "funnel": {
-                "title": "User funnel",
-                "subtitle": "Path from visit to repeat purchase",
-                "units": "users",
-                "relativeFirst": "{value} of visits",
-                "relativePrev": "{value} vs previous",
-                "formulas": {
-                    "title": "Formula highlights",
-                    "subtitle": "Calculations based on current data",
-                    "referral": {
-                        "title": "Referral rate",
-                        "subtitle": "Conversion from registration to referrer × average invites",
-                        "conversion": "Registration → referrer",
-                        "avgReferrals": "Average referrals per referrer",
-                        "result": "Viral rate",
-                        "example": "Example: {conversion} × {avg} = {rate}"
-                    },
-                    "economy": {
-                        "title": "Economy rate",
-                        "subtitle": "Average receipt × conversion from visit to payment / price per lead",
-                        "averageReceipt": "Average receipt",
-                        "visitToPayment": "Visit → payment",
-                        "pricePerLead": "Price per lead",
-                        "result": "Economy rate",
-                        "example": "Example: {receipt} × {conversion} / {lead} = {rate}"
-                    }
-                },
-                "retention": {
-                    "title": "User retention by month",
-                    "subtitle": "Cohort sizes and retention percentages",
-                    "month": "Month",
-                    "cohort": "Cohort",
-                    "m1": "M1",
-                    "m2": "M2",
-                    "m3": "M3",
-                    "m4": "M4",
-                    "m5": "M5",
-                    "m6": "M6"
-                },
-                "table": {
-                    "amount": "Amount",
-                    "absolute": "% of visits",
-                    "relative": "% of previous"
-                },
-                "stages": {
-                    "visit": "Visit",
-                    "registration": "Registration",
-                    "dataSubmission": "Data completion",
-                    "engagement": "Interaction",
-                    "taskCompletion": "Task completion",
-                    "referralInvite": "Referral invite",
-                    "returningVisit": "Returning visit",
-                    "purchase": "Purchase",
-                    "repeatPurchase": "Repeat purchase"
-                }
-            }
-        },
-        "categories": {
-            "title": "Categories",
-            "description": "Manage and organize your website categories with nested hierarchy, custom icons, colors, and images",
-            "add": "Add",
-            "edit": "Edit",
-            "delete": "Delete",
-            "addSub": "Add Sub",
-            "active": "Active",
-            "inactive": "Inactive",
-            "created": "Created",
-            "updated": "Updated",
-            "subcategories": "subcategories",
-            "subcategoriesCount": "Subcategories: {count}",
-            "noCategories": "No categories found. Create your first category to get started.",
-            "loading": "Loading categories...",
-                "deleteConfirm": "Are you sure you want to delete \"{title}\"? This will also delete all subcategories.",
-                "createSuccess": "Category \"{title}\" created successfully",
-                "updateSuccess": "Category \"{title}\" updated successfully",
-                "deleteSuccess": "Category \"{title}\" deleted successfully",
-                "createTitle": "Create New Category",
-                "editTitle": "Edit Category: {title}",
-                "errors": {
-                    "id": "Category not found",
-                    "title": "Title is required",
-                    "url": "URL is invalid or already used",
-                    "parent": "Parent category is invalid",
-                    "generic": "Unable to save category"
-                },
-                "form": {
-                    "basicInfo": "Basic Information",
-                    "title": "Title",
-                "titlePlaceholder": "Enter category title",
-                "url": "URL Slug",
-                "urlPlaceholder": "category-url-slug",
-                "description": "Description",
-                "descriptionPlaceholder": "Enter category description (optional)",
-                "hierarchy": "Hierarchy & Settings",
-                "parent": "Parent Category",
-                "parentPlaceholder": "Select parent category",
-                "topLevel": "Top Level (No Parent)",
-                "status": "Status",
-                "locale": "Locale",
-                "customization": "Visual Customization",
-                "color": "Category Color",
-                "noColor": "No color",
-                "colorPlaceholder": "Optional: #3b82f6",
-                "icon": "Icon (FontAwesome Key)",
-                "iconPlaceholder": "e.g: user, home, star",
-                "iconDescription": "Enter a FontAwesome icon key (without 'fa-' prefix). Leave empty for no icon.",
-                "browseIcons": "Browse FontAwesome icons",
-                "image": "Category Image",
-                "imageUpload": "Click to upload image",
-                "preview": "Preview - How it will appear in the categories list",
-                "save": "Save",
-                "cancel": "Cancel",
-                "saving": "Saving...",
-                "createCategory": "Create Category",
-                "updateCategory": "Update Category"
-            }
-        },
-        "posts": {
-            "title": "Posts",
-            "description": "Create, edit and manage all website posts",
-            "loading": "Loading posts...",
-            "empty": "No posts yet",
-            "editTitle": "Edit Post: {title}",
-            "titleLabel": "Title",
-            "descriptionLabel": "Description",
-            "content": "Content",
-            "image": "Image URL"
-        },
-        "products": {
-            "title": "Products",
-            "description": "Create and manage products for the catalog",
-            "add": "Save Product",
-            "name": "Title",
-            "descriptionLabel": "Description",
-            "price": "Base Price",
-            "priceLabel": "Base Price",
-            "discountType": "Discount Type",
-            "discountTypePercent": "Percentage",
-            "discountTypeFixed": "Fixed amount",
-            "discountValue": "Discount Value",
-            "finalPriceLabel": "Final Price",
-            "basePriceLabel": "Base Price",
-            "discountValueLabel": "Discount",
-            "finalPricePreview": "Final price: {value} {currency}",
-            "currency": "Currency",
-            "category": "Category",
-            "categoryLabel": "Category",
-            "images": "Images (comma-separated URLs)",
-            "rating": "Rating",
-            "ratingCount": "Rating Count",
-            "discount": "Discount",
-            "inStock": "In Stock",
-            "isNew": "New",
-            "isFeatured": "Featured",
-            "featuresTitle": "Features",
-            "featuresEmpty": "No features added yet",
-            "featureKey": "Key",
-            "featureValue": "Value",
-            "featureType": "Type",
-            "featureTypeString": "Text",
-            "featureTypeNumber": "Number",
-            "featureTypeBoolean": "Boolean",
-            "featuresLabel": "Features: {count}",
-            "status": "Status",
-            "statusActive": "Active",
-            "statusInactive": "Hidden",
-            "save": "Save Product",
-            "saving": "Saving...",
-            "saved": "Product saved successfully",
-            "error": "Failed to save product",
-            "loading": "Loading products...",
-            "empty": "No products yet",
-            "edit": "Edit",
-            "editTitle": "Edit Product: {title}",
-            "cancel": "Cancel",
-            "noCategory": "No category",
-            "delete": "Delete",
-            "deleteConfirm": "Delete \"{title}\"?",
-            "ratingLabel": "Rating",
-            "ratingCountLabel": "Rating Count",
-            "optionsTitle": "Options",
-            "addOption": "Add option",
-            "optionsEmpty": "No options yet",
-            "optionUntitled": "Untitled option",
-            "optionName": "Option name",
-            "optionPrice": "Option price",
-            "optionImages": "Option images (comma-separated URLs)",
-            "optionStockCount": "Stock count",
-            "optionAttributesTitle": "Attributes",
-            "optionAttributesEmpty": "No attributes yet",
-            "optionFeaturesTitle": "Option features",
-            "optionFeaturesEmpty": "No option features yet",
-            "optionsLabel": "Options: {count}",
-            "optionsRequired": "Add at least one option",
-            "priceFromLabel": "Price from",
-            "priceFromPreview": "Base from: {value} {currency}"
-        },
-        "spaces": {
-            "title": "Spaces",
-            "description": "Manage partner spaces, invites, and contact details",
-            "defaultTitle": "New space",
-            "loading": "Loading spaces...",
-            "empty": "No spaces yet",
-            "entities": {
-                "ooo": "ООО",
-                "ip": "ИП",
-                "fl": "ФЛ",
-                "smz": "СМЗ"
-            },
-            "fields": {
-                "entity": "Entity",
-                "phone": "Phone",
-                "mail": "Email",
-                "marginBadge": "+{value} margin"
-            },
-            "actions": {
-                "edit": "Edit",
-                "delete": "Delete",
-                "createSuccess": "\"{title}\" created",
-                "deleteConfirm": "Delete \"{title}\"?",
-                "deleteSuccess": "\"{title}\" deleted"
-            },
-            "errors": {
-                "load": "Failed to load spaces",
-                "delete": "Failed to delete space"
-            }
-        },
-        "users": {
-            "title": "Users",
-            "description": "Manage accounts, balances, and access levels.",
-            "loading": "Loading users...",
-            "empty": "No users yet",
-            "loadError": "Failed to load users",
-            "saveSuccess": "User updated",
-            "saveError": "Failed to save user",
-            "noChanges": "No changes to save.",
-            "editTitle": "Edit user: {name}",
-            "titleFallback": "User #{id}",
-            "balance": {
-                "label": "Balance",
-                "placeholder": "Enter balance",
-                "badge": "Balance: {value}"
-            },
-            "status": {
-                "label": "Status",
-                "unset": "Keep global status",
-                "unknown": "Unknown",
-                "active": "Active",
-                "blocked": "Blocked",
-                "pending": "Pending",
-                "moderator": "Moderator",
-                "manager": "Manager",
-                "admin": "Admin",
-                "owner": "Owner",
-                "deleted": "Deleted"
-            },
-            "actions": {
-                "ban": "Ban",
-                "unban": "Unban",
-                "refresh": "Refresh list"
-            },
-            "toasts": {
-                "banned": "\"{name}\" blocked",
-                "unbanned": "\"{name}\" unblocked"
-            }
-        }
+      }
     },
     "posts": {
-        "title": "Title",
-        "description": "Description",
-        "empty": "Empty",
-        "comments": "Comments",
-        "reply": "Reply",
-        "add": "Add",
-        "detail": {
-            "meta": "Post info",
-            "publishedAt": "Published",
-            "updatedAt": "Updated",
-            "views": "Views",
-            "readTimeLabel": "Reading time",
-            "readTimeValue": "{minutes} min",
-            "readTime": "{minutes} min read",
-            "author": "Author",
-            "category": "Category",
-            "related": "Related posts",
-            "actions": {
-                "hide": "Hide",
-                "editDescription": "Update post content and save changes.",
-                "deleteConfirm": "Delete \"{title}\"?"
-            },
-            "view": "View"
+      "title": "Latest posts",
+      "description": "Showcase insights that reinforce your product story.",
+      "viewAll": "All posts",
+      "items": {
+        "first": {
+          "title": "Designing adaptive funnels",
+          "description": "Blend marketing and product signals with reusable UI primitives.",
+          "category": "Product",
+          "date": "02.03.2024"
+        },
+        "second": {
+          "title": "Typed APIs for scale",
+          "description": "Keep FastAPI contracts and generated schemas in sync across teams.",
+          "category": "Engineering",
+          "date": "15.03.2024"
+        },
+        "third": {
+          "title": "Launch playbooks",
+          "description": "Use ready-made flows for acquisition, onboarding, and retention.",
+          "category": "Growth",
+          "date": "22.03.2024"
         }
+      }
     },
-    "categories": {
-        "popup": {
-            "title": "Categories",
-            "loading": "Loading...",
-            "empty": "No categories available",
-            "viewAll": "View all {count} categories"
+    "products": {
+      "title": "Featured products",
+      "description": "Surface offers directly on the landing with clear value and pricing.",
+      "viewAll": "Open catalog",
+      "currency": "$",
+      "cta": "See details",
+      "items": {
+        "starter": {
+          "title": "Starter workspace",
+          "description": "Essential sections with SEO, analytics, and contact capture ready.",
+          "price": "39",
+          "tag": "Launch ready",
+          "discountType": "percent",
+          "discountValue": "25"
+        },
+        "growth": {
+          "title": "Growth stack",
+          "description": "Catalog, posts, and automation blocks with typed API connectors.",
+          "price": "79",
+          "tag": "Automation",
+          "discountType": "percent",
+          "discountValue": "25"
+        },
+        "enterprise": {
+          "title": "Enterprise suite",
+          "description": "Advanced localization, access control, and observability baked in.",
+          "price": "129",
+          "tag": "Enterprise",
+          "discountType": "fixed",
+          "discountValue": "30"
         }
+      }
     },
-    "businessSections": {
-        "companies": "Companies",
-        "products": "Products",
-        "contacts": "Contacts",
-        "customers": "Customers",
-        "calendar": "Calendar",
-        "sales": "Sales",
-        "analytics": "Analytics",
-        "promos": "Promos",
-        "pays": "Pays",
-        "support": "Support"
+    "advantages": {
+      "title": "Our advantages",
+      "description": "Clear value drivers for visitors and stakeholders.",
+      "items": {
+        "performance": {
+          "title": "Performance-first",
+          "description": "SSR, edge caching, and CDN-ready assets keep pages fast."
+        },
+        "design": {
+          "title": "Design system",
+          "description": "FSD layout, consistent spacing, and theme-aware components."
+        },
+        "automation": {
+          "title": "Automation ready",
+          "description": "Telegram worker, typed hooks, and toasts connect signals instantly."
+        },
+        "support": {
+          "title": "Reliability",
+          "description": "Structured logging, monitoring, and rollback-friendly releases."
+        }
+      }
     },
-    "filters": {
-        "filters": "Filters",
-        "timeRange": "Time Range",
-        "sortBy": "Sort By",
-        "today": "Today",
-        "yesterday": "Yesterday",
-        "currentWeek": "Current Week (Mon-Sun)",
-        "lastWeek": "Week (7 days)",
-        "thisMonth": "This Month",
-        "lastMonth": "Month (30 days)",
-        "thisYear": "This Year",
-        "lastYear": "Year (365 days)",
-        "allTime": "All Time",
-        "customRange": "Custom Range",
-        "fromDate": "From Date",
-        "toDate": "To Date",
-        "selectDate": "Select Date",
-        "priceRange": "Price Range",
-        "minPrice": "Min Price",
-        "maxPrice": "Max Price",
-        "price": "Price",
-        "rating": "Rating",
-        "ratingAndUp": "& up",
-        "categories": "Categories",
-        "selectCategories": "Select Categories",
-        "allCategories": "All Categories",
-        "clothingFootwear": "Clothing & Footwear",
-        "mensClothing": "Men's Clothing",
-        "womensClothing": "Women's Clothing",
-        "childrensClothing": "Children's Clothing",
-        "shoes": "Shoes",
-        "sportswear": "Sportswear",
-        "bagsAccessories": "Bags & Accessories",
-        "handbags": "Handbags",
-        "backpacks": "Backpacks",
-        "jewelry": "Jewelry",
-        "watches": "Watches",
-        "sunglasses": "Sunglasses",
-        "electronics": "Electronics",
-        "smartphones": "Smartphones",
-        "laptops": "Laptops",
-        "tablets": "Tablets",
-        "headphones": "Headphones",
-        "cameras": "Cameras",
-        "healthBeauty": "Health & Beauty",
-        "skincare": "Skincare",
-        "makeup": "Makeup",
-        "perfumes": "Perfumes",
-        "haircare": "Hair Care",
-        "supplements": "Supplements",
-        "homeGarden": "Home & Garden",
-        "furniture": "Furniture",
-        "decor": "Home Decor",
-        "kitchenware": "Kitchenware",
-        "gardenTools": "Garden Tools",
-        "lighting": "Lighting",
-        "autoMoto": "Auto & Moto",
-        "carAccessories": "Car Accessories",
-        "carParts": "Car Parts",
-        "motorcycle": "Motorcycle",
-        "tools": "Tools",
-        "oils": "Oils & Fluids",
-        "hobbiesCreativity": "Hobbies & Creativity",
-        "artSupplies": "Art Supplies",
-        "crafts": "Crafts",
-        "musicalInstruments": "Musical Instruments",
-        "collectibles": "Collectibles",
-        "books": "Books",
-        "foodBeverage": "Food & Beverage",
-        "beverages": "Beverages",
-        "snacks": "Snacks",
-        "organic": "Organic Food",
-        "spices": "Spices & Seasonings",
-        "gourmet": "Gourmet Food",
-        "mostRecent": "Most Recent",
-        "mostPopular": "Most Popular",
-        "trending": "Trending",
-        "clearFilters": "Clear Filters",
-        "quickSelect": "Quick Select",
-        "lastPeriods": "Last",
-        "currentPeriods": "Current",
-        "previousPeriods": "Previous",
-        "lastDay": "Day (24h)",
-        "currentWeekFromMonday": "This Week (from Mon)",
-        "previousWeek": "Previous Week",
-        "previousMonth": "Previous Month",
-        "previousYear": "Previous Year",
-        "allPeriod": "All Period",
-        "resetSelected": "Reset Selected",
-        "cancel": "Cancel",
-        "apply": "Apply",
-        "reset": "Reset"
-    },
-    "actions": {
-        "fastActions": "Fast Actions",
-        "quickAccess": "Quick Access",
-        "createPost": "Create Post",
-        "search": "Search",
-        "bookmarks": "Bookmarks",
-        "share": "Share",
-        "settings": "Settings",
-        "saved": "Saved",
-        "shared": "Shared"
+    "reviews": {
+      "title": "Reviews & rating",
+      "description": "Proof from teams using this stack today.",
+      "score": "4.9",
+      "total": "1.2k+",
+      "highlight": "Rated by product, growth, and platform teams.",
+      "body": "Built-in analytics, typed schemas, and Telegram hooks keep launches predictable.",
+      "role": "Verified review",
+      "items": {
+        "first": {
+          "name": "Olivia — Product Lead",
+          "text": "We shipped a multilingual launch week in days with zero redesigns."
+        },
+        "second": {
+          "name": "Mason — CTO",
+          "text": "Typed API helpers and FastAPI contracts make handoffs painless."
+        },
+        "third": {
+          "name": "Lena — Growth",
+          "text": "Landing, posts, and catalog blocks give us experiments without rework."
+        }
+      }
     },
     "contact": {
-        "contactUs": "Contact Us",
-        "email": "Email",
-        "emailPlaceholder": "your.email@example.com",
-        "message": "Message",
-        "messagePlaceholder": "How can we help you?",
-        "sendMessage": "Send Message",
-        "quickContact": "Quick Contact",
-        "emailUs": "Email us",
-        "callUs": "Call us"
-    },
-    "questionnaire": {
-        "feedback": "Feedback",
-        "question": "Question",
-        "howSatisfied": "How satisfied are you with our platform?",
-        "wouldRecommend": "Would you recommend us to others?",
-        "whatImprove": "What should we improve?",
-        "performance": "Performance",
-        "design": "Design",
-        "features": "Features",
-        "content": "Content",
-        "yes": "Yes",
-        "no": "No",
-        "previous": "Previous",
-        "next": "Next",
-        "submit": "Submit",
-        "thankYou": "Thank You!",
-        "feedbackReceived": "Your feedback has been received.",
-        "takeAgain": "Take Again"
-    },
-    "catalog": {
-        "description": "Discover our curated collection of products and services with advanced filtering and search capabilities.",
-        "pages": {
-            "favorites": {
-                "title": "Favorites",
-                "description": "Saved products to revisit later.",
-                "openButton": "Open favorites",
-                "emptyTitle": "No favorites yet",
-                "emptyDescription": "Tap the heart on a product to save it for later.",
-                "countLabel": "{count} favorites saved",
-                "openCatalog": "Open catalog",
-                "openCart": "Go to cart"
-            },
-            "cart": {
-                "title": "Cart",
-                "description": "Products you've added from the catalog and product pages.",
-                "openButton": "Open cart",
-                "emptyTitle": "Your cart is empty",
-                "emptyDescription": "Add products from the catalog to review them here.",
-                "countLabel": "{count} items in cart",
-                "openCatalog": "Open catalog",
-                "openFavorites": "Open favorites",
-                "removedToast": "{title} removed from cart"
-            }
+      "title": "Submit an application",
+      "description": "Tell us about your product and we will shape the launch playbook.",
+      "pitch": "Share context, timelines, and integrations.",
+      "hint": "We reply within one business day with a scoped plan.",
+      "cards": {
+        "first": {
+          "title": "Secure & compliant",
+          "text": "JWT auth, audit-friendly logging, and privacy-safe defaults."
         },
-        "product": {
-            "addToCart": "Add to Cart",
-            "favorite": "Favorites",
-            "cart": "Cart",
-            "unavailable": "Unavailable",
-            "inCart": "In Cart",
-            "tagNew": "New",
-            "tagFeatured": "Featured",
-            "tagOutOfStock": "Out of Stock",
-            "priceFrom": "From",
-            "loadError": "Failed to load products",
-            "retry": "Try Again",
-            "empty": "No products found",
-            "emptyHint": "Adjust filters or search terms to see more results",
-            "addedToCartToast": "{title} added to cart",
-            "removedFromCartToast": "{title} removed from cart",
-            "favoriteToggledToast": "Updated favorites for {title}",
-            "favoriteAddedToast": "{title} added to favorites",
-            "favoriteRemovedToast": "{title} removed from favorites",
-            "loading": "Loading product... ",
-            "optionsTitle": "Options",
-            "descriptionTitle": "Description",
-            "featuresTitle": "Specifications",
-            "featuresEmpty": "No specifications yet",
-            "optionFeaturesTitle": "Option details",
-            "shareCopied": "Link copied to clipboard",
-            "optionAttributesTitle": "Option attributes",
-            "optionAttributesEmpty": "No option attributes",
-            "optionFeaturesEmpty": "No option features"
+        "second": {
+          "title": "Fast turnaround",
+          "text": "Templates, schemas, and CI-ready scripts accelerate rollout."
         }
+      },
+      "fields": {
+        "name": "Full name",
+        "namePlaceholder": "Your name",
+        "emailPlaceholder": "you@company.com",
+        "messagePlaceholder": "Goals, timelines, and success metrics"
+      },
+      "cta": "Send application",
+      "success": "Application submitted. We will reply shortly."
     },
-    "search": {
-        "searchArea": "Search area",
-        "placeholder": "Search...",
-        "searchInput": "Search input",
-        "clearSearch": "Clear search",
-        "search": "Search",
-        "searchButton": "Search button",
-        "filters": "Filters",
-        "openFilters": "Open filters",
-        "moreFilters": "More filters",
-        "advancedFilters": "Advanced Filters",
-        "activeFilters": "Active filters",
-        "apply": "Apply",
-        "priceFrom": "From",
-        "priceTo": "To",
-        "promoCode": "Promo Code",
-        "promoPlaceholder": "SAVE20, DISCOUNT10, etc.",
-        "sortBy": "Sort by",
-        "category": "Category",
-        "priceRange": "Price Range",
-        "sortOptions": {
-            "newest": "Newest First",
-            "oldest": "Oldest First",
-            "priceAsc": "Price: Low to High",
-            "priceDesc": "Price: High to Low",
-            "titleAsc": "Title A-Z",
-            "titleDesc": "Title Z-A",
-            "popular": "Most Popular",
-            "featured": "Featured"
+    "about": {
+      "title": "About us",
+      "description": "Full-stack team focused on predictable releases.",
+      "heading": "API-first builders with Telegram-ready flows",
+      "body": "We combine FastAPI, Next.js 15, and Telegram automation into one workflow. Every block ships with localization, analytics metadata, and strict typing so teams can launch without rewrites.",
+      "cards": {
+        "delivery": "Delivery culture",
+        "deliveryText": "Opinionated defaults, paired reviews, and measurable release checklists.",
+        "partners": "Partnerships",
+        "partnersText": "We align with growth, product, and platform leads to keep priorities visible."
+      },
+      "mission": {
+        "title": "Our mission",
+        "text": "Ship reliable experiences with honest telemetry, clear contracts, and fast iteration."
+      }
+    },
+    "faq": {
+      "title": "FAQ",
+      "description": "Answers for stakeholders and approvers.",
+      "items": {
+        "coverage": {
+          "question": "Do you support multiple locales?",
+          "answer": "Yes. Locale-aware routing and message bundles keep copy consistent across regions."
+        },
+        "deployment": {
+          "question": "How do deployments work?",
+          "answer": "Docker, Compose overlays, and NGINX configs are ready for local, staging, and production."
+        },
+        "integrations": {
+          "question": "Can we use our existing APIs?",
+          "answer": "Typed helpers handle auth, caching, and toasts so you can drop in endpoints without extra glue."
+        },
+        "analytics": {
+          "question": "What about analytics and SEO?",
+          "answer": "Structured data, SEO metadata, and event hooks ship by default for your analytics stack."
         }
-    },
-    "session": {
-        "tokenError": "We couldn't start your session. Please refresh the page."
-    },
-    "auth": {
-        "title": "Log in to your account",
-        "subtitle": "Choose how you want to continue",
-        "credentialsTitle": "Log In",
-        "credentialsSubtitle": "Enter your credentials to continue",
-        "continueWithEmail": "Continue with email",
-        "continueWithGoogle": "Continue with Google",
-        "continueWithTelegram": "Continue with Telegram",
-        "loginLabel": "Email / Phone / Login",
-        "loginPlaceholder": "you@example.com or +1234567890",
-        "passwordLabel": "Password",
-        "passwordPlaceholder": "Enter your password",
-        "passwordTipLength": "At least 6 characters",
-        "passwordTipStrength": "Include letters and numbers",
-        "back": "Back",
-        "login": "Log In",
-        "processing": "Signing in...",
-        "loginSuccess": "Welcome back!",
-        "loginFailed": "Login failed. Check your credentials.",
-        "providerUnavailable": "This method is not available right now."
-    },
-    "profile": {
-        "description": "Manage your personal information and account preferences.",
-        "name": "First name",
-        "surname": "Last name",
-        "phone": "Phone",
-        "login": "Login",
-        "mail": "Email",
-        "password": "Password",
-        "status": "Status",
-        "statusUnknown": "Unknown",
-        "statusValue": "Status: {value}",
-        "id": "ID",
-        "network": "Network",
-        "networkWeb": "Web",
-        "loading": "Loading",
-        "loaded": "Loaded",
-        "loadError": "Failed to load profile data.",
-        "noChanges": "Nothing to save yet.",
-        "saveSuccess": "Profile saved successfully.",
-        "saveError": "Failed to save profile.",
-        "locked": "Profile locked"
-    },
-    "fileUpload": {
-        "clickToUpload": "Click to upload file",
-        "dragAndDrop": "or drag and drop",
-        "supportedFormats": "Supported formats: JPG, PNG, WEBP, GIF",
-        "maxSize": "Max size: 5MB",
-        "uploading": "Uploading...",
-        "removeFile": "Remove file",
-        "changeFile": "Change file",
-        "preview": "File preview",
-        "fileName": "File name",
-        "fileSize": "File size"
-    },
-    "multiFileUpload": {
-        "title": "File Gallery",
-        "addMore": "Add more files",
-        "addMoreRemaining": "Add more files ({remaining} remaining)",
-        "selectMultiple": "Select multiple files",
-        "maxFilesReached": "Maximum {max} files allowed",
-        "removeAll": "Remove all files",
-        "filesSelected": "{count} files selected",
-        "dropMultipleFiles": "Drop multiple files here",
-        "clickToAddMore": "Click to add more files"
+      }
     }
+  },
+  "system": {
+    "locale": "Locale",
+    "worldwide": "Worldwide",
+    "sign_out": "Log Out",
+    "sign_in": "Log In",
+    "sign_up": "Sign Up",
+    "search": "Search",
+    "online": "Online",
+    "offline": "Offline",
+    "save": "Save",
+    "send": "Send",
+    "upload": "Upload",
+    "profile": "Profile",
+    "settings": "Settings",
+    "admin": "Admin",
+    "admin_panel": "Admin",
+    "dashboard": "Overview",
+    "analytics": "Analytics",
+    "billing": "Billing",
+    "categories": "Categories",
+    "spaces": "Spaces",
+    "users": "Users",
+    "success": "Success",
+    "error": "Error",
+    "server_error": "Server error",
+    "server_error_description": "Something went wrong on the server. Please try again or refresh the page.",
+    "now": "just now",
+    "no_access": "No access",
+    "saved": "Saved",
+    "deleted": "Deleted",
+    "blocked": "Hidden",
+    "unblocked": "Opened",
+    "guest": "Guest",
+    "popular": "Popular",
+    "privacy": "Privacy policy",
+    "offer": "Offer",
+    "unsubscribe": "Cancel subscription",
+    "permission": "Data Processing Policy",
+    "rates": "Rates",
+    "refund": "Refund",
+    "main": "Main",
+    "menu": "Menu",
+    "close": "Close",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "update": "Update",
+    "loading": "Loading",
+    "saving": "Saving...",
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "share": "Share",
+    "shareUnavailable": "Sharing is not available on this device",
+    "item": "Item",
+    "processing": "Processing",
+    "toast": {
+      "saveSuccess": "{item} saved successfully",
+      "saveError": "Failed to save {item}",
+      "deleteSuccess": "{item} deleted successfully",
+      "deleteError": "Failed to delete {item}",
+      "loading": "{operation}..."
+    }
+  },
+  "entities": {
+    "ooo": "LLC",
+    "ip": "Sole proprietor",
+    "fl": "Individual",
+    "smz": "Self-employed"
+  },
+  "brand": {
+    "name": "web",
+    "description": "Template web app",
+    "tagline": "Template web app",
+    "address": "St. Petersburg, Russia"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "contacts": "Contacts",
+    "address": "Address",
+    "mail": "Email",
+    "phone": "Phone",
+    "links": "Links",
+    "about": "About",
+    "feedback": "Feedbacks & Troubles",
+    "rules": "Rules",
+    "news": "News",
+    "codex": "Honor code",
+    "white_paper": "White Paper",
+    "vk": "VKontakte",
+    "fb": "Facebook",
+    "ig": "Instagram",
+    "twi": "X",
+    "yt": "YouTube",
+    "in": "LinkedIn",
+    "followUs": "Follow Us",
+    "jobs": "Jobs",
+    "partners": "Partners",
+    "faqSupport": "FAQ & Support",
+    "faq": "FAQ",
+    "social": "Social",
+    "location": "Location",
+    "settings": "Settings",
+    "legal": "Legal",
+    "company": "Company",
+    "support": "Support",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "offer": "Terms of Service",
+    "userAgreement": "User Agreement",
+    "refund": "Refund Policy",
+    "rates": "Pricing"
+  },
+  "spaces": {
+    "form": {
+      "titlePlaceholder": "Space title",
+      "logo": "Logo",
+      "logoPlaceholder": "Upload a logo",
+      "entity": "Entity",
+      "entityPlaceholder": "Select entity type",
+      "director": "Director",
+      "directorPlaceholder": "Director full name",
+      "inn": "INN",
+      "innPlaceholder": "Tax ID",
+      "margin": "Margin",
+      "marginPlaceholder": "Enter margin percentage",
+      "descriptionPlaceholder": "Description for partners",
+      "contactTitle": "Contacts",
+      "phonePlaceholder": "Phone",
+      "mailPlaceholder": "Email",
+      "telegramPlaceholder": "Telegram link",
+      "countryPlaceholder": "Country",
+      "region": "Region",
+      "regionPlaceholder": "Region / State",
+      "city": "City",
+      "cityPlaceholder": "City",
+      "logoUploaded": "Logo uploaded",
+      "saved": "Space saved"
+    },
+    "selector": {
+      "title": "Spaces",
+      "create": "Create space",
+      "defaultTitle": "New space",
+      "noSpace": "No space",
+      "placeholder": "Select space",
+      "empty": "No attached spaces yet",
+      "created": "\"{title}\" created"
+    },
+    "page": {
+      "title": "Space",
+      "description": "Manage company info, contacts, and pricing margin.",
+      "notFound": "Space not found"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "description": "Overview of platform metrics and recent updates.",
+      "loadError": "Failed to load dashboard stats",
+      "cards": {
+        "visits": "Visits",
+        "visitsSubtitle": "Recorded visits",
+        "users": "Registered users",
+        "payments": "Payments",
+        "paymentsSubtitle": "Successful payments",
+        "posts": "Published posts",
+        "products": "Active products",
+        "tasks": "Tasks",
+        "tasksSubtitle": "Active tasks"
+      },
+      "activity": {
+        "title": "Recent activity",
+        "description": "Audit the latest changes across users, posts, products, and payments.",
+        "filters": {
+          "user": "User ID",
+          "userPlaceholder": "e.g. 42",
+          "ip": "IP address",
+          "ipPlaceholder": "192.168.0.1",
+          "object": "Entity",
+          "objectPlaceholder": "Select entity",
+          "objectAll": "All entities",
+          "action": "Action",
+          "actionPlaceholder": "Select action",
+          "actionAll": "All actions",
+          "dateFrom": "From",
+          "dateTo": "To",
+          "apply": "Apply filters",
+          "reset": "Reset"
+        },
+        "objects": {
+          "user": "User",
+          "post": "Post",
+          "product": "Product",
+          "category": "Category",
+          "comment": "Comment",
+          "space": "Space",
+          "payment": "Payment",
+          "session": "Session",
+          "system": "System"
+        },
+        "actions": {
+          "create": "Create",
+          "update": "Update",
+          "remove": "Remove",
+          "search": "Search",
+          "view": "View",
+          "disconnect": "Disconnect"
+        },
+        "sources": {
+          "web": "Web",
+          "api": "API",
+          "tgBot": "Telegram bot",
+          "tma": "Telegram Mini App",
+          "direct": "Direct"
+        },
+        "meta": {
+          "user": "User #{id}",
+          "guest": "Guest",
+          "ip": "IP {value}",
+          "source": "Source: {value}",
+          "token": "Token {value}"
+        },
+        "pagination": {
+          "label": "Page {page} of {total}",
+          "prev": "Prev",
+          "next": "Next"
+        },
+        "empty": "No activity yet",
+        "loadError": "Failed to load activity",
+        "details": {
+          "changes": "Changed fields",
+          "field": "Field",
+          "old": "Old value",
+          "new": "New value",
+          "noChanges": "No changes recorded"
+        }
+      },
+      "funnel": {
+        "title": "User funnel",
+        "subtitle": "Path from visit to repeat purchase",
+        "units": "users",
+        "relativeFirst": "{value} of visits",
+        "relativePrev": "{value} vs previous",
+        "formulas": {
+          "title": "Formula highlights",
+          "subtitle": "Calculations based on current data",
+          "referral": {
+            "title": "Referral rate",
+            "subtitle": "Conversion from registration to referrer × average invites",
+            "conversion": "Registration → referrer",
+            "avgReferrals": "Average referrals per referrer",
+            "result": "Viral rate",
+            "example": "Example: {conversion} × {avg} = {rate}"
+          },
+          "economy": {
+            "title": "Economy rate",
+            "subtitle": "Average receipt × conversion from visit to payment / price per lead",
+            "averageReceipt": "Average receipt",
+            "visitToPayment": "Visit → payment",
+            "pricePerLead": "Price per lead",
+            "result": "Economy rate",
+            "example": "Example: {receipt} × {conversion} / {lead} = {rate}"
+          }
+        },
+        "retention": {
+          "title": "User retention by month",
+          "subtitle": "Cohort sizes and retention percentages",
+          "month": "Month",
+          "cohort": "Cohort",
+          "m1": "M1",
+          "m2": "M2",
+          "m3": "M3",
+          "m4": "M4",
+          "m5": "M5",
+          "m6": "M6"
+        },
+        "table": {
+          "amount": "Amount",
+          "absolute": "% of visits",
+          "relative": "% of previous"
+        },
+        "stages": {
+          "visit": "Visit",
+          "registration": "Registration",
+          "dataSubmission": "Data completion",
+          "engagement": "Interaction",
+          "taskCompletion": "Task completion",
+          "referralInvite": "Referral invite",
+          "returningVisit": "Returning visit",
+          "purchase": "Purchase",
+          "repeatPurchase": "Repeat purchase"
+        }
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "description": "Manage and organize your website categories with nested hierarchy, custom icons, colors, and images",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "addSub": "Add Sub",
+      "active": "Active",
+      "inactive": "Inactive",
+      "created": "Created",
+      "updated": "Updated",
+      "subcategories": "subcategories",
+      "subcategoriesCount": "Subcategories: {count}",
+      "noCategories": "No categories found. Create your first category to get started.",
+      "loading": "Loading categories...",
+      "deleteConfirm": "Are you sure you want to delete \"{title}\"? This will also delete all subcategories.",
+      "createSuccess": "Category \"{title}\" created successfully",
+      "updateSuccess": "Category \"{title}\" updated successfully",
+      "deleteSuccess": "Category \"{title}\" deleted successfully",
+      "createTitle": "Create New Category",
+      "editTitle": "Edit Category: {title}",
+      "errors": {
+        "id": "Category not found",
+        "title": "Title is required",
+        "url": "URL is invalid or already used",
+        "parent": "Parent category is invalid",
+        "generic": "Unable to save category"
+      },
+      "form": {
+        "basicInfo": "Basic Information",
+        "title": "Title",
+        "titlePlaceholder": "Enter category title",
+        "url": "URL Slug",
+        "urlPlaceholder": "category-url-slug",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter category description (optional)",
+        "hierarchy": "Hierarchy & Settings",
+        "parent": "Parent Category",
+        "parentPlaceholder": "Select parent category",
+        "topLevel": "Top Level (No Parent)",
+        "status": "Status",
+        "locale": "Locale",
+        "customization": "Visual Customization",
+        "color": "Category Color",
+        "noColor": "No color",
+        "colorPlaceholder": "Optional: #3b82f6",
+        "icon": "Icon (FontAwesome Key)",
+        "iconPlaceholder": "e.g: user, home, star",
+        "iconDescription": "Enter a FontAwesome icon key (without 'fa-' prefix). Leave empty for no icon.",
+        "browseIcons": "Browse FontAwesome icons",
+        "image": "Category Image",
+        "imageUpload": "Click to upload image",
+        "preview": "Preview - How it will appear in the categories list",
+        "save": "Save",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "createCategory": "Create Category",
+        "updateCategory": "Update Category",
+        "noteTitle": "Note",
+        "imageUploadNotice": "Image upload will be implemented in the next step"
+      }
+    },
+    "posts": {
+      "title": "Posts",
+      "description": "Create, edit and manage all website posts",
+      "loading": "Loading posts...",
+      "empty": "No posts yet",
+      "editTitle": "Edit Post: {title}",
+      "titleLabel": "Title",
+      "descriptionLabel": "Description",
+      "content": "Content",
+      "image": "Image URL"
+    },
+    "products": {
+      "title": "Products",
+      "description": "Create and manage products for the catalog",
+      "add": "Save Product",
+      "name": "Title",
+      "descriptionLabel": "Description",
+      "price": "Base Price",
+      "priceLabel": "Base Price",
+      "discountType": "Discount Type",
+      "discountTypePercent": "Percentage",
+      "discountTypeFixed": "Fixed amount",
+      "discountValue": "Discount Value",
+      "finalPriceLabel": "Final Price",
+      "basePriceLabel": "Base Price",
+      "discountValueLabel": "Discount",
+      "finalPricePreview": "Final price: {value} {currency}",
+      "currency": "Currency",
+      "category": "Category",
+      "categoryLabel": "Category",
+      "images": "Images (comma-separated URLs)",
+      "rating": "Rating",
+      "ratingCount": "Rating Count",
+      "discount": "Discount",
+      "inStock": "In Stock",
+      "isNew": "New",
+      "isFeatured": "Featured",
+      "featuresTitle": "Features",
+      "featuresEmpty": "No features added yet",
+      "featureKey": "Key",
+      "featureValue": "Value",
+      "featureType": "Type",
+      "featureTypeString": "Text",
+      "featureTypeNumber": "Number",
+      "featureTypeBoolean": "Boolean",
+      "featuresLabel": "Features: {count}",
+      "status": "Status",
+      "statusActive": "Active",
+      "statusInactive": "Hidden",
+      "save": "Save Product",
+      "saving": "Saving...",
+      "saved": "Product saved successfully",
+      "error": "Failed to save product",
+      "loading": "Loading products...",
+      "empty": "No products yet",
+      "edit": "Edit",
+      "editTitle": "Edit Product: {title}",
+      "cancel": "Cancel",
+      "noCategory": "No category",
+      "delete": "Delete",
+      "deleteConfirm": "Delete \"{title}\"?",
+      "ratingLabel": "Rating",
+      "ratingCountLabel": "Rating Count",
+      "optionsTitle": "Options",
+      "addOption": "Add option",
+      "optionsEmpty": "No options yet",
+      "optionUntitled": "Untitled option",
+      "optionName": "Option name",
+      "optionPrice": "Option price",
+      "optionImages": "Option images (comma-separated URLs)",
+      "optionStockCount": "Stock count",
+      "optionAttributesTitle": "Attributes",
+      "optionAttributesEmpty": "No attributes yet",
+      "optionFeaturesTitle": "Option features",
+      "optionFeaturesEmpty": "No option features yet",
+      "optionsLabel": "Options: {count}",
+      "optionsRequired": "Add at least one option",
+      "priceFromLabel": "Price from",
+      "priceFromPreview": "Base from: {value} {currency}"
+    },
+    "spaces": {
+      "title": "Spaces",
+      "description": "Manage partner spaces, invites, and contact details",
+      "defaultTitle": "New space",
+      "loading": "Loading spaces...",
+      "empty": "No spaces yet",
+      "entities": {
+        "ooo": "ООО",
+        "ip": "ИП",
+        "fl": "ФЛ",
+        "smz": "СМЗ"
+      },
+      "fields": {
+        "entity": "Entity",
+        "phone": "Phone",
+        "mail": "Email",
+        "marginBadge": "+{value} margin"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "createSuccess": "\"{title}\" created",
+        "deleteConfirm": "Delete \"{title}\"?",
+        "deleteSuccess": "\"{title}\" deleted"
+      },
+      "errors": {
+        "load": "Failed to load spaces",
+        "delete": "Failed to delete space"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "description": "Manage accounts, balances, and access levels.",
+      "loading": "Loading users...",
+      "empty": "No users yet",
+      "loadError": "Failed to load users",
+      "saveSuccess": "User updated",
+      "saveError": "Failed to save user",
+      "noChanges": "No changes to save.",
+      "editTitle": "Edit user: {name}",
+      "titleFallback": "User #{id}",
+      "balance": {
+        "label": "Balance",
+        "placeholder": "Enter balance",
+        "badge": "Balance: {value}"
+      },
+      "status": {
+        "label": "Status",
+        "unset": "Keep global status",
+        "unknown": "Unknown",
+        "active": "Active",
+        "blocked": "Blocked",
+        "pending": "Pending",
+        "moderator": "Moderator",
+        "manager": "Manager",
+        "admin": "Admin",
+        "owner": "Owner",
+        "deleted": "Deleted"
+      },
+      "actions": {
+        "ban": "Ban",
+        "unban": "Unban",
+        "refresh": "Refresh list"
+      },
+      "toasts": {
+        "banned": "\"{name}\" blocked",
+        "unbanned": "\"{name}\" unblocked"
+      }
+    }
+  },
+  "posts": {
+    "title": "Title",
+    "description": "Description",
+    "empty": "Empty",
+    "comments": "Comments",
+    "reply": "Reply",
+    "add": "Add",
+    "detail": {
+      "meta": "Post info",
+      "publishedAt": "Published",
+      "updatedAt": "Updated",
+      "views": "Views",
+      "readTimeLabel": "Reading time",
+      "readTimeValue": "{minutes} min",
+      "readTime": "{minutes} min read",
+      "author": "Author",
+      "category": "Category",
+      "related": "Related posts",
+      "actions": {
+        "hide": "Hide",
+        "editDescription": "Update post content and save changes.",
+        "deleteConfirm": "Delete \"{title}\"?"
+      },
+      "view": "View"
+    }
+  },
+  "categories": {
+    "popup": {
+      "title": "Categories",
+      "loading": "Loading...",
+      "empty": "No categories available",
+      "viewAll": "View all {count} categories"
+    }
+  },
+  "businessSections": {
+    "companies": "Companies",
+    "products": "Products",
+    "contacts": "Contacts",
+    "customers": "Customers",
+    "calendar": "Calendar",
+    "sales": "Sales",
+    "analytics": "Analytics",
+    "promos": "Promos",
+    "pays": "Pays",
+    "support": "Support"
+  },
+  "filters": {
+    "filters": "Filters",
+    "timeRange": "Time Range",
+    "sortBy": "Sort By",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "currentWeek": "Current Week (Mon-Sun)",
+    "lastWeek": "Week (7 days)",
+    "thisMonth": "This Month",
+    "lastMonth": "Month (30 days)",
+    "thisYear": "This Year",
+    "lastYear": "Year (365 days)",
+    "allTime": "All Time",
+    "customRange": "Custom Range",
+    "fromDate": "From Date",
+    "toDate": "To Date",
+    "selectDate": "Select Date",
+    "priceRange": "Price Range",
+    "minPrice": "Min Price",
+    "maxPrice": "Max Price",
+    "price": "Price",
+    "rating": "Rating",
+    "ratingAndUp": "& up",
+    "categories": "Categories",
+    "selectCategories": "Select Categories",
+    "allCategories": "All Categories",
+    "clothingFootwear": "Clothing & Footwear",
+    "mensClothing": "Men's Clothing",
+    "womensClothing": "Women's Clothing",
+    "childrensClothing": "Children's Clothing",
+    "shoes": "Shoes",
+    "sportswear": "Sportswear",
+    "bagsAccessories": "Bags & Accessories",
+    "handbags": "Handbags",
+    "backpacks": "Backpacks",
+    "jewelry": "Jewelry",
+    "watches": "Watches",
+    "sunglasses": "Sunglasses",
+    "electronics": "Electronics",
+    "smartphones": "Smartphones",
+    "laptops": "Laptops",
+    "tablets": "Tablets",
+    "headphones": "Headphones",
+    "cameras": "Cameras",
+    "healthBeauty": "Health & Beauty",
+    "skincare": "Skincare",
+    "makeup": "Makeup",
+    "perfumes": "Perfumes",
+    "haircare": "Hair Care",
+    "supplements": "Supplements",
+    "homeGarden": "Home & Garden",
+    "furniture": "Furniture",
+    "decor": "Home Decor",
+    "kitchenware": "Kitchenware",
+    "gardenTools": "Garden Tools",
+    "lighting": "Lighting",
+    "autoMoto": "Auto & Moto",
+    "carAccessories": "Car Accessories",
+    "carParts": "Car Parts",
+    "motorcycle": "Motorcycle",
+    "tools": "Tools",
+    "oils": "Oils & Fluids",
+    "hobbiesCreativity": "Hobbies & Creativity",
+    "artSupplies": "Art Supplies",
+    "crafts": "Crafts",
+    "musicalInstruments": "Musical Instruments",
+    "collectibles": "Collectibles",
+    "books": "Books",
+    "foodBeverage": "Food & Beverage",
+    "beverages": "Beverages",
+    "snacks": "Snacks",
+    "organic": "Organic Food",
+    "spices": "Spices & Seasonings",
+    "gourmet": "Gourmet Food",
+    "mostRecent": "Most Recent",
+    "mostPopular": "Most Popular",
+    "trending": "Trending",
+    "clearFilters": "Clear Filters",
+    "quickSelect": "Quick Select",
+    "lastPeriods": "Last",
+    "currentPeriods": "Current",
+    "previousPeriods": "Previous",
+    "lastDay": "Day (24h)",
+    "currentWeekFromMonday": "This Week (from Mon)",
+    "previousWeek": "Previous Week",
+    "previousMonth": "Previous Month",
+    "previousYear": "Previous Year",
+    "allPeriod": "All Period",
+    "resetSelected": "Reset Selected",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "actions": {
+    "fastActions": "Fast Actions",
+    "quickAccess": "Quick Access",
+    "createPost": "Create Post",
+    "search": "Search",
+    "bookmarks": "Bookmarks",
+    "share": "Share",
+    "settings": "Settings",
+    "saved": "Saved",
+    "shared": "Shared"
+  },
+  "contact": {
+    "contactUs": "Contact Us",
+    "email": "Email",
+    "emailPlaceholder": "your.email@example.com",
+    "message": "Message",
+    "messagePlaceholder": "How can we help you?",
+    "sendMessage": "Send Message",
+    "quickContact": "Quick Contact",
+    "emailUs": "Email us",
+    "callUs": "Call us"
+  },
+  "questionnaire": {
+    "feedback": "Feedback",
+    "question": "Question",
+    "howSatisfied": "How satisfied are you with our platform?",
+    "wouldRecommend": "Would you recommend us to others?",
+    "whatImprove": "What should we improve?",
+    "performance": "Performance",
+    "design": "Design",
+    "features": "Features",
+    "content": "Content",
+    "yes": "Yes",
+    "no": "No",
+    "previous": "Previous",
+    "next": "Next",
+    "submit": "Submit",
+    "thankYou": "Thank You!",
+    "feedbackReceived": "Your feedback has been received.",
+    "takeAgain": "Take Again"
+  },
+  "catalog": {
+    "description": "Discover our curated collection of products and services with advanced filtering and search capabilities.",
+    "pages": {
+      "favorites": {
+        "title": "Favorites",
+        "description": "Saved products to revisit later.",
+        "openButton": "Open favorites",
+        "emptyTitle": "No favorites yet",
+        "emptyDescription": "Tap the heart on a product to save it for later.",
+        "countLabel": "{count} favorites saved",
+        "openCatalog": "Open catalog",
+        "openCart": "Go to cart"
+      },
+      "cart": {
+        "title": "Cart",
+        "description": "Products you've added from the catalog and product pages.",
+        "openButton": "Open cart",
+        "emptyTitle": "Your cart is empty",
+        "emptyDescription": "Add products from the catalog to review them here.",
+        "countLabel": "{count} items in cart",
+        "openCatalog": "Open catalog",
+        "openFavorites": "Open favorites",
+        "removedToast": "{title} removed from cart"
+      }
+    },
+    "product": {
+      "addToCart": "Add to Cart",
+      "favorite": "Favorites",
+      "cart": "Cart",
+      "unavailable": "Unavailable",
+      "inCart": "In Cart",
+      "tagNew": "New",
+      "tagFeatured": "Featured",
+      "tagOutOfStock": "Out of Stock",
+      "priceFrom": "From",
+      "loadError": "Failed to load products",
+      "retry": "Try Again",
+      "empty": "No products found",
+      "emptyHint": "Adjust filters or search terms to see more results",
+      "addedToCartToast": "{title} added to cart",
+      "removedFromCartToast": "{title} removed from cart",
+      "favoriteToggledToast": "Updated favorites for {title}",
+      "favoriteAddedToast": "{title} added to favorites",
+      "favoriteRemovedToast": "{title} removed from favorites",
+      "loading": "Loading product... ",
+      "optionsTitle": "Options",
+      "descriptionTitle": "Description",
+      "featuresTitle": "Specifications",
+      "featuresEmpty": "No specifications yet",
+      "optionFeaturesTitle": "Option details",
+      "shareCopied": "Link copied to clipboard",
+      "optionAttributesTitle": "Option attributes",
+      "optionAttributesEmpty": "No option attributes",
+      "optionFeaturesEmpty": "No option features"
+    }
+  },
+  "search": {
+    "searchArea": "Search area",
+    "placeholder": "Search...",
+    "searchInput": "Search input",
+    "clearSearch": "Clear search",
+    "search": "Search",
+    "searchButton": "Search button",
+    "filters": "Filters",
+    "openFilters": "Open filters",
+    "moreFilters": "More filters",
+    "advancedFilters": "Advanced Filters",
+    "activeFilters": "Active filters",
+    "apply": "Apply",
+    "priceFrom": "From",
+    "priceTo": "To",
+    "promoCode": "Promo Code",
+    "promoPlaceholder": "SAVE20, DISCOUNT10, etc.",
+    "sortBy": "Sort by",
+    "category": "Category",
+    "priceRange": "Price Range",
+    "sortOptions": {
+      "newest": "Newest First",
+      "oldest": "Oldest First",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low",
+      "titleAsc": "Title A-Z",
+      "titleDesc": "Title Z-A",
+      "popular": "Most Popular",
+      "featured": "Featured"
+    }
+  },
+  "session": {
+    "tokenError": "We couldn't start your session. Please refresh the page."
+  },
+  "auth": {
+    "title": "Log in to your account",
+    "subtitle": "Choose how you want to continue",
+    "credentialsTitle": "Log In",
+    "credentialsSubtitle": "Enter your credentials to continue",
+    "continueWithEmail": "Continue with email",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithTelegram": "Continue with Telegram",
+    "loginLabel": "Email / Phone / Login",
+    "loginPlaceholder": "you@example.com or +1234567890",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "passwordTipLength": "At least 6 characters",
+    "passwordTipStrength": "Include letters and numbers",
+    "back": "Back",
+    "login": "Log In",
+    "processing": "Signing in...",
+    "loginSuccess": "Welcome back!",
+    "loginFailed": "Login failed. Check your credentials.",
+    "providerUnavailable": "This method is not available right now."
+  },
+  "profile": {
+    "description": "Manage your personal information and account preferences.",
+    "name": "First name",
+    "surname": "Last name",
+    "phone": "Phone",
+    "login": "Login",
+    "mail": "Email",
+    "password": "Password",
+    "status": "Status",
+    "statusUnknown": "Unknown",
+    "statusValue": "Status: {value}",
+    "id": "ID",
+    "network": "Network",
+    "networkWeb": "Web",
+    "loading": "Loading",
+    "loaded": "Loaded",
+    "loadError": "Failed to load profile data.",
+    "noChanges": "Nothing to save yet.",
+    "saveSuccess": "Profile saved successfully.",
+    "saveError": "Failed to save profile.",
+    "locked": "Profile locked"
+  },
+  "fileUpload": {
+    "clickToUpload": "Click to upload file",
+    "dragAndDrop": "or drag and drop",
+    "supportedFormats": "Supported formats: JPG, PNG, WEBP, GIF",
+    "maxSize": "Max size: 5MB",
+    "uploading": "Uploading...",
+    "removeFile": "Remove file",
+    "changeFile": "Change file",
+    "preview": "File preview",
+    "fileName": "File name",
+    "fileSize": "File size"
+  },
+  "multiFileUpload": {
+    "title": "File Gallery",
+    "addMore": "Add more files",
+    "addMoreRemaining": "Add more files ({remaining} remaining)",
+    "selectMultiple": "Select multiple files",
+    "maxFilesReached": "Maximum {max} files allowed",
+    "removeAll": "Remove all files",
+    "filesSelected": "{count} files selected",
+    "dropMultipleFiles": "Drop multiple files here",
+    "clickToAddMore": "Click to add more files"
+  }
 }

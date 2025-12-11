@@ -67,13 +67,14 @@ export function PostManagement({
       loadingLabel={tAdmin('loading')}
       emptyLabel={tAdmin('empty')}
       renderList={() => (
-        <div className="space-y-3">
+        <div className="divide-y divide-border/50 px-2">
           {posts.map((post) => (
-            <PostListItem
-              key={post.id}
-              post={post}
-              onDelete={handleDelete}
-            />
+            <div key={post.id} className="py-3">
+              <PostListItem
+                post={post}
+                onDelete={handleDelete}
+              />
+            </div>
           ))}
         </div>
       )}
