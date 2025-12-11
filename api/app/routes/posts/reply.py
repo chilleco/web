@@ -9,7 +9,7 @@ from consys.errors import ErrorAccess
 from lib import report
 from models.post import Post
 from models.comment import Comment
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject, format_changes
 
 
 router = APIRouter()
@@ -40,6 +40,7 @@ async def handler(
 
     # Get
     new = False
+    before_state = None
     if data.id:
         comment = Comment.get(data.id)
 
@@ -49,6 +50,7 @@ async def handler(
             and comment.token != request.state.token
         ):
             raise ErrorAccess("save")
+        before_state = comment.json(fields={"id", "post", "status", "data"})
 
     else:
         comment = Comment(
@@ -63,20 +65,24 @@ async def handler(
     comment.status = data.status
 
     # Save
+    changes = format_changes(comment.get_changes())
     comment.save()
 
     # Track
-    Track(
-        title="comment_add" if new else "comment_edit",
-        data={
-            "id": comment.id,
-            "data": comment.data,
-            "status": comment.status,
-        },
+    Track.log(
+        object=TrackObject.COMMENT,
+        action=TrackAction.CREATE if new else TrackAction.UPDATE,
         user=request.state.user,
         token=request.state.token,
-        ip=request.state.ip,
-    ).save()
+        request=request,
+        params={
+            "id": comment.id,
+            "post": comment.post,
+            "before": before_state,
+            "after": comment.json(fields={"id", "post", "status", "data"}),
+            "changes": changes,
+        },
+    )
 
     # Report
     if new:

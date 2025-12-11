@@ -10,6 +10,7 @@ from userhub import auth, detect_type
 from consys.errors import ErrorInvalid, ErrorWrong
 
 from lib import cfg, log, report
+from models.track import Track, TrackAction, TrackObject, _resolve_source
 from models.user import (
     DEFAULT_BALANCE,
     UserLocal,
@@ -157,6 +158,27 @@ async def wrap_auth(*args, **kwargs):
             )
         except Exception as e:  # pylint: disable=broad-except
             print(e)
+
+    Track.log(
+        object=TrackObject.USER,
+        action=TrackAction.CREATE if new_local else TrackAction.UPDATE,
+        user=user["id"],
+        token=token_id,
+        context={
+            "source": _resolve_source(kwargs.get("network")),
+            "network": kwargs.get("network"),
+            "ip": kwargs.get("ip"),
+            "locale": kwargs.get("locale"),
+        },
+        params={
+            "login": kwargs.get("login"),
+            "utm": kwargs.get("utm"),
+            "new": new_local,
+            "status": user.get("status"),
+            "roles": user.get("roles"),
+            "referrer": global_referrer and get_name(global_referrer),
+        },
+    )
 
     response = JSONResponse(
         content={

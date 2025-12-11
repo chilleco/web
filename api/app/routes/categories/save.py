@@ -9,7 +9,7 @@ from consys.errors import ErrorAccess, ErrorWrong
 
 from lib import log
 from models.category import Category
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject, format_changes
 from services.auth import sign
 from services.cache import cache_categories
 
@@ -95,6 +95,21 @@ async def save_category(
     #     raise ErrorAccess("save category")
 
     new_category = not data.id
+    before_state = None
+    tracked_fields = {
+        "id",
+        "title",
+        "url",
+        "description",
+        "data",
+        "image",
+        "parent",
+        "locale",
+        "status",
+        "icon",
+        "color",
+        "user",
+    }
 
     if new_category:
         if data.title is None:
@@ -121,6 +136,8 @@ async def save_category(
         category = Category.get(data.id)
         if not category:
             raise ErrorWrong("Category not found")
+
+        before_state = category.json(fields=tracked_fields)
 
         if request.state.status < 6 and category.user != request.state.user:
             raise ErrorAccess("save category")
@@ -165,22 +182,24 @@ async def save_category(
     if not category.url or url_exists:
         category.url = str(category.created)[-6:] + "-" + (category.url or "x")
 
+    changes = format_changes(category.get_changes())
     category.save()
 
     cache_categories()
 
-    Track(
-        title="cat_create" if new_category else "cat_update",
-        data={
-            "id": category.id,
-            "title": category.title,
-            "data": category.data,
-            "image": category.image,
-        },
+    Track.log(
+        object=TrackObject.CATEGORY,
+        action=TrackAction.CREATE if new_category else TrackAction.UPDATE,
         user=request.state.user,
         token=request.state.token,
-        ip=request.state.ip,
-    ).save()
+        request=request,
+        params={
+            "id": category.id,
+            "before": before_state,
+            "changes": changes,
+            "after": category.json(fields=tracked_fields),
+        },
+    )
 
     log.success(
         ("Created" if new_category else "Updated") + " category\n{}",

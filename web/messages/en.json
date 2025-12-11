@@ -423,22 +423,63 @@
             },
             "activity": {
                 "title": "Recent activity",
-                "userRegistered": {
-                    "title": "New user registered",
-                    "subtitle": "Fresh account waiting for onboarding"
+                "description": "Audit the latest changes across users, posts, products, and payments.",
+                "filters": {
+                    "user": "User ID",
+                    "userPlaceholder": "e.g. 42",
+                    "ip": "IP address",
+                    "ipPlaceholder": "192.168.0.1",
+                    "object": "Entity",
+                    "objectPlaceholder": "Select entity",
+                    "objectAll": "All entities",
+                    "action": "Action",
+                    "actionPlaceholder": "Select action",
+                    "actionAll": "All actions",
+                    "dateFrom": "From",
+                    "dateTo": "To",
+                    "apply": "Apply filters",
+                    "reset": "Reset"
                 },
-                "postPublished": {
-                    "title": "Post published",
-                    "subtitle": "Content was promoted to the feed"
+                "objects": {
+                    "user": "User",
+                    "post": "Post",
+                    "product": "Product",
+                    "category": "Category",
+                    "comment": "Comment",
+                    "space": "Space",
+                    "payment": "Payment",
+                    "session": "Session",
+                    "system": "System"
                 },
-                "productUpdated": {
-                    "title": "Product updated",
-                    "subtitle": "Catalog inventory refreshed"
+                "actions": {
+                    "create": "Create",
+                    "update": "Update",
+                    "remove": "Remove",
+                    "search": "Search",
+                    "view": "View",
+                    "disconnect": "Disconnect"
                 },
-                "time": {
-                    "hoursAgo": "{value} hours ago",
-                    "dayAgo": "1 day ago"
-                }
+                "sources": {
+                    "web": "Web",
+                    "api": "API",
+                    "tgBot": "Telegram bot",
+                    "tma": "Telegram Mini App",
+                    "direct": "Direct"
+                },
+                "meta": {
+                    "user": "User #{id}",
+                    "guest": "Guest",
+                    "ip": "IP {value}",
+                    "source": "Source: {value}",
+                    "token": "Token {value}"
+                },
+                "pagination": {
+                    "label": "Page {page} of {total}",
+                    "prev": "Prev",
+                    "next": "Next"
+                },
+                "empty": "No activity yet",
+                "loadError": "Failed to load activity"
             },
             "funnel": {
                 "title": "User funnel",

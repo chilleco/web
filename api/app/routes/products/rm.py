@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from consys.errors import ErrorAccess
 
 from models.product import Product
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject
 
 
 router = APIRouter()
@@ -32,14 +32,26 @@ async def handler(
     if request.state.status < 6 and product.token != request.state.token:
         raise ErrorAccess("rm")
 
+    snapshot = product.json(
+        fields={
+            "id",
+            "title",
+            "price",
+            "currency",
+            "status",
+            "category",
+            "token",
+        }
+    )
     product.rm()
 
-    Track(
-        title="product_rm",
-        data={"id": data.id},
+    Track.log(
+        object=TrackObject.PRODUCT,
+        action=TrackAction.REMOVE,
         user=request.state.user,
         token=request.state.token,
-        ip=request.state.ip,
-    ).save()
+        request=request,
+        params={"before": snapshot},
+    )
 
     return {"status": "ok"}

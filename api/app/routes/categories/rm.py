@@ -8,7 +8,7 @@ from consys.errors import ErrorAccess
 
 from models.category import Category
 from models.post import Post
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject
 from services.cache import cache_categories
 
 
@@ -47,18 +47,22 @@ async def handler(
         post.save()
 
     # Delete
+    snapshot = category.json(
+        fields={"id", "title", "url", "locale", "status", "parent", "image"}
+    )
     category.rm()
 
     # Cache renewal
     cache_categories()
 
     # Track
-    Track(
-        title="cat_rm",
-        data={
-            "id": data.id,
-        },
+    Track.log(
+        object=TrackObject.CATEGORY,
+        action=TrackAction.REMOVE,
         user=request.state.user,
         token=request.state.token,
-        ip=request.state.ip,
-    ).save()
+        request=request,
+        params={
+            "before": snapshot,
+        },
+    )

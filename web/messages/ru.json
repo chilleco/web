@@ -423,22 +423,63 @@
             },
             "activity": {
                 "title": "Последние события",
-                "userRegistered": {
-                    "title": "Новый пользователь",
-                    "subtitle": "Новый аккаунт ждёт онбординга"
+                "description": "Аудит последних действий по пользователям, постам, товарам и платежам.",
+                "filters": {
+                    "user": "ID пользователя",
+                    "userPlaceholder": "например, 42",
+                    "ip": "IP-адрес",
+                    "ipPlaceholder": "192.168.0.1",
+                    "object": "Сущность",
+                    "objectPlaceholder": "Выберите сущность",
+                    "objectAll": "Все сущности",
+                    "action": "Действие",
+                    "actionPlaceholder": "Выберите действие",
+                    "actionAll": "Все действия",
+                    "dateFrom": "С",
+                    "dateTo": "По",
+                    "apply": "Применить фильтры",
+                    "reset": "Сбросить"
                 },
-                "postPublished": {
-                    "title": "Пост опубликован",
-                    "subtitle": "Контент появился в ленте"
+                "objects": {
+                    "user": "Пользователь",
+                    "post": "Пост",
+                    "product": "Товар",
+                    "category": "Категория",
+                    "comment": "Комментарий",
+                    "space": "Пространство",
+                    "payment": "Платёж",
+                    "session": "Сессия",
+                    "system": "Система"
                 },
-                "productUpdated": {
-                    "title": "Товар обновлён",
-                    "subtitle": "Каталог и остатки синхронизированы"
+                "actions": {
+                    "create": "Создание",
+                    "update": "Обновление",
+                    "remove": "Удаление",
+                    "search": "Поиск",
+                    "view": "Просмотр",
+                    "disconnect": "Отключение"
                 },
-                "time": {
-                    "hoursAgo": "{value} ч назад",
-                    "dayAgo": "1 день назад"
-                }
+                "sources": {
+                    "web": "Веб",
+                    "api": "API",
+                    "tgBot": "Telegram-бот",
+                    "tma": "Телеграм мини-приложение",
+                    "direct": "Прямой вызов"
+                },
+                "meta": {
+                    "user": "Пользователь №{id}",
+                    "guest": "Гость",
+                    "ip": "IP {value}",
+                    "source": "Источник: {value}",
+                    "token": "Токен {value}"
+                },
+                "pagination": {
+                    "label": "Страница {page} из {total}",
+                    "prev": "Назад",
+                    "next": "Вперед"
+                },
+                "empty": "Событий пока нет",
+                "loadError": "Не удалось загрузить активность"
             },
             "funnel": {
                 "title": "Воронка пользователей",

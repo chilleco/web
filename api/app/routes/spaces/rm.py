@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from consys.errors import ErrorAccess
 
 from models.space import Space
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject
 from .utils import detach_space_from_users
 
 
@@ -30,15 +30,17 @@ async def handler(request: Request, data: SpaceRemoveRequest = Body(...)):
     if request.state.status < 4 and request.state.user not in (space.users or []):
         raise ErrorAccess("rm")
 
+    snapshot = space.json(fields={"id", "title", "users"})
     detach_space_from_users(space)
     space.rm()
 
-    Track(
-        title="space_rm",
-        data={"id": data.id, "title": space.title},
+    Track.log(
+        object=TrackObject.SPACE,
+        action=TrackAction.REMOVE,
         user=request.state.user,
         token=request.state.token,
-        ip=request.state.ip,
-    ).save()
+        request=request,
+        params={"before": snapshot},
+    )
 
     return {"result": True}

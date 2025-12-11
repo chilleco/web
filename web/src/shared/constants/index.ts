@@ -65,6 +65,7 @@ export const API_ENDPOINTS = {
   },
   ADMIN: {
     STATS: '/admin/stats/',
+    ACTIVITY: '/admin/activity/',
   },
 } as const;
 

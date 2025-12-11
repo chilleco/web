@@ -8,7 +8,7 @@ from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
 from models.post import Post
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject, format_changes
 from lib import report
 
 
@@ -42,6 +42,17 @@ async def handler(
 
     # Get
     new = False
+    tracked_fields = {
+        "id",
+        "title",
+        "description",
+        "image",
+        "tags",
+        "category",
+        "status",
+        "locale",
+    }
+    before_state = None
     if data.id:
         post = Post.get(data.id)
 
@@ -51,6 +62,7 @@ async def handler(
             and post.token != request.state.token
         ):
             raise ErrorAccess("save")
+        before_state = post.json(fields=tracked_fields)
 
     else:
         post = Post(
@@ -73,23 +85,23 @@ async def handler(
         del post.locale
 
     # Save
+    changes = format_changes(post.get_changes())
     post.save()
 
     # Track
-    Track(
-        title="post_add" if new else "post_edit",
-        data={
-            "id": post.id,
-            "title": post.title,
-            "data": post.data,
-            "image": post.image,
-            "tags": post.tags,
-            "status": post.status,
-        },
+    Track.log(
+        object=TrackObject.POST,
+        action=TrackAction.CREATE if new else TrackAction.UPDATE,
         user=request.state.user,
         token=request.state.token,
-        ip=request.state.ip,
-    ).save()
+        request=request,
+        params={
+            "id": post.id,
+            "before": before_state,
+            "after": post.json(fields=tracked_fields),
+            "changes": changes,
+        },
+    )
 
     # Report
     if new:

@@ -10,6 +10,7 @@ from libdev.lang import to_url
 from consys.errors import ErrorAccess
 
 from models.product import Product
+from models.track import Track, TrackAction, TrackObject, format_changes
 from .get import ProductResponse, ProductFeature, serialize_product
 
 
@@ -211,8 +212,26 @@ async def handler(
         raise ErrorAccess("save")
 
     new = False
+    tracked_fields = {
+        "id",
+        "title",
+        "description",
+        "images",
+        "price",
+        "currency",
+        "category",
+        "in_stock",
+        "is_new",
+        "is_featured",
+        "features",
+        "options",
+        "status",
+        "token",
+    }
+    before_state = None
     if data.id:
         product = Product.get(data.id)
+        before_state = product.json(fields=tracked_fields)
     else:
         product = Product(
             token=request.state.token,
@@ -256,6 +275,7 @@ async def handler(
     product.options = prepared_options
     product.status = data.status
 
+    changes = format_changes(product.get_changes())
     product.save()
 
     # URL with id suffix for consistency
@@ -264,6 +284,20 @@ async def handler(
         url += "-"
     product.url = f"{url}{product.id}"
     product.save()
+
+    Track.log(
+        object=TrackObject.PRODUCT,
+        action=TrackAction.CREATE if new else TrackAction.UPDATE,
+        user=request.state.user,
+        token=request.state.token,
+        request=request,
+        params={
+            "id": product.id,
+            "before": before_state,
+            "after": product.json(fields=tracked_fields),
+            "changes": changes,
+        },
+    )
 
     return {
         "id": product.id,

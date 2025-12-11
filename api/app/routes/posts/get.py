@@ -13,7 +13,7 @@ from consys.errors import ErrorAccess
 from models.post import Post
 from models.comment import Comment
 from models.category import Category
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject
 from models.reaction import Reaction
 from lib.queue import get
 
@@ -48,13 +48,21 @@ async def handler(
 
     # Action tracking
     if data.search:
-        Track(
-            title="post_search",
-            data={"search": data.search},
+        Track.log(
+            object=TrackObject.POST,
+            action=TrackAction.SEARCH,
             user=request.state.user,
             token=request.state.token,
-            ip=request.state.ip,
-        ).save()
+            request=request,
+            params={
+                "search": data.search,
+                "limit": data.limit,
+                "offset": data.offset,
+                "category": data.category,
+                "locale": data.locale,
+                "personal": data.my,
+            },
+        )
 
     # Fields
     fields = {

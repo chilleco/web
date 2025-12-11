@@ -8,6 +8,7 @@ from libdev.crypt import encrypt
 from consys.errors import ErrorAccess, ErrorWrong
 
 from models.space import Space
+from models.track import Track, TrackAction, TrackObject, format_changes
 from .get import SpaceResponse, serialize_space
 from .utils import attach_user_to_space
 
@@ -105,11 +106,32 @@ async def handler(request: Request, data: SpaceSaveRequest = Body(...)):
         raise ErrorAccess("save")
 
     new = False
+    tracked_fields = {
+        "id",
+        "title",
+        "logo",
+        "description",
+        "entity",
+        "director",
+        "inn",
+        "margin",
+        "phone",
+        "mail",
+        "telegram",
+        "country",
+        "region",
+        "city",
+        "status",
+        "link",
+        "users",
+    }
+    before_state = None
 
     if data.id or data.link:
         space = _get_space_for_update(data)
         if request.state.status < 4 and request.state.user not in (space.users or []):
             raise ErrorAccess("save")
+        before_state = space.json(fields=tracked_fields)
     else:
         if data.title is None:
             raise ErrorWrong("title")
@@ -136,12 +158,27 @@ async def handler(request: Request, data: SpaceSaveRequest = Body(...)):
 
     _apply_space_fields(space, data)
 
+    changes = format_changes(space.get_changes())
     space.save()
     if not space.link:
         space.link = encrypt(space.id, 5)
         space.save()
 
     attach_user_to_space(space, request.state.user)
+
+    Track.log(
+        object=TrackObject.SPACE,
+        action=TrackAction.CREATE if new else TrackAction.UPDATE,
+        user=request.state.user,
+        token=request.state.token,
+        request=request,
+        params={
+            "id": space.id,
+            "before": before_state,
+            "after": space.json(fields=tracked_fields),
+            "changes": changes,
+        },
+    )
 
     return {
         "id": space.id,

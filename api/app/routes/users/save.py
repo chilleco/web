@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from consys.errors import ErrorAccess, ErrorInvalid, ErrorWrong
 
 from models.user import DEFAULT_BALANCE, User, UserLocal
+from models.track import Track, TrackAction, TrackObject, format_changes
 
 
 router = APIRouter()
@@ -161,6 +162,22 @@ async def handler(
         )
         created = True
 
+    tracked_fields = {
+        "id",
+        "login",
+        "name",
+        "surname",
+        "phone",
+        "mail",
+        "image",
+        "locale",
+        "mailing",
+        "wallet",
+        "balance",
+        "status",
+    }
+    before_state = None if created else user_local.json(fields=tracked_fields)
+
     payload = data.model_dump(exclude_unset=True)
     payload.pop("id", None)
 
@@ -188,7 +205,22 @@ async def handler(
         setattr(user_local, field, value)
 
     if created or payload:
+        changes = format_changes(user_local.get_changes())
         user_local.save()
+
+        Track.log(
+            object=TrackObject.USER,
+            action=TrackAction.CREATE if created else TrackAction.UPDATE,
+            user=request.state.user,
+            token=request.state.token,
+            request=request,
+            params={
+                "id": target_user_id,
+                "before": before_state,
+                "after": user_local.json(fields=tracked_fields),
+                "changes": changes,
+            },
+        )
 
     user_data = await User.complex(
         token=request.state.token,

@@ -422,22 +422,63 @@
             },
             "activity": {
                 "title": "Actividad reciente",
-                "userRegistered": {
-                    "title": "Nuevo usuario registrado",
-                    "subtitle": "Cuenta nueva en espera de onboarding"
+                "description": "Audita los últimos cambios en usuarios, posts, productos y pagos.",
+                "filters": {
+                    "user": "ID de usuario",
+                    "userPlaceholder": "ej. 42",
+                    "ip": "Dirección IP",
+                    "ipPlaceholder": "192.168.0.1",
+                    "object": "Entidad",
+                    "objectPlaceholder": "Selecciona una entidad",
+                    "objectAll": "Todas las entidades",
+                    "action": "Acción",
+                    "actionPlaceholder": "Selecciona una acción",
+                    "actionAll": "Todas las acciones",
+                    "dateFrom": "Desde",
+                    "dateTo": "Hasta",
+                    "apply": "Aplicar filtros",
+                    "reset": "Restablecer"
                 },
-                "postPublished": {
-                    "title": "Publicación publicada",
-                    "subtitle": "El contenido apareció en el feed"
+                "objects": {
+                    "user": "Usuario",
+                    "post": "Publicación",
+                    "product": "Producto",
+                    "category": "Categoría",
+                    "comment": "Comentario",
+                    "space": "Espacio",
+                    "payment": "Pago",
+                    "session": "Sesión",
+                    "system": "Sistema"
                 },
-                "productUpdated": {
-                    "title": "Producto actualizado",
-                    "subtitle": "Inventario del catálogo sincronizado"
+                "actions": {
+                    "create": "Crear",
+                    "update": "Actualizar",
+                    "remove": "Eliminar",
+                    "search": "Búsqueda",
+                    "view": "Vista",
+                    "disconnect": "Desconexión"
                 },
-                "time": {
-                    "hoursAgo": "Hace {value} horas",
-                    "dayAgo": "Hace 1 día"
-                }
+                "sources": {
+                    "web": "Web",
+                    "api": "API",
+                    "tgBot": "Bot de Telegram",
+                    "tma": "Miniapp de Telegram",
+                    "direct": "Acceso directo"
+                },
+                "meta": {
+                    "user": "Usuario #{id}",
+                    "guest": "Invitado",
+                    "ip": "IP {value}",
+                    "source": "Origen: {value}",
+                    "token": "Token {value}"
+                },
+                "pagination": {
+                    "label": "Página {page} de {total}",
+                    "prev": "Anterior",
+                    "next": "Siguiente"
+                },
+                "empty": "Aún no hay actividad",
+                "loadError": "No se pudo cargar la actividad"
             },
             "funnel": {
                 "title": "Embudo de usuarios",

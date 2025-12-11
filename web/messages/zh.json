@@ -422,22 +422,63 @@
             },
             "activity": {
                 "title": "最近动态",
-                "userRegistered": {
-                    "title": "新用户注册",
-                    "subtitle": "新账户等待引导"
+                "description": "审计用户、文章、商品和支付的最新操作。",
+                "filters": {
+                    "user": "用户ID",
+                    "userPlaceholder": "如 42",
+                    "ip": "IP 地址",
+                    "ipPlaceholder": "192.168.0.1",
+                    "object": "对象",
+                    "objectPlaceholder": "选择对象",
+                    "objectAll": "所有对象",
+                    "action": "操作",
+                    "actionPlaceholder": "选择操作",
+                    "actionAll": "所有操作",
+                    "dateFrom": "起始",
+                    "dateTo": "结束",
+                    "apply": "应用筛选",
+                    "reset": "重置"
                 },
-                "postPublished": {
-                    "title": "文章已发布",
-                    "subtitle": "内容已推送到信息流"
+                "objects": {
+                    "user": "用户",
+                    "post": "文章",
+                    "product": "商品",
+                    "category": "分类",
+                    "comment": "评论",
+                    "space": "空间",
+                    "payment": "支付",
+                    "session": "会话",
+                    "system": "系统"
                 },
-                "productUpdated": {
-                    "title": "商品已更新",
-                    "subtitle": "目录库存已刷新"
+                "actions": {
+                    "create": "创建",
+                    "update": "更新",
+                    "remove": "删除",
+                    "search": "搜索",
+                    "view": "查看",
+                    "disconnect": "断开"
                 },
-                "time": {
-                    "hoursAgo": "{value} 小时前",
-                    "dayAgo": "1 天前"
-                }
+                "sources": {
+                    "web": "网页",
+                    "api": "API",
+                    "tgBot": "Telegram 机器人",
+                    "tma": "Telegram 小程序",
+                    "direct": "直接调用"
+                },
+                "meta": {
+                    "user": "用户 #{id}",
+                    "guest": "游客",
+                    "ip": "IP {value}",
+                    "source": "来源：{value}",
+                    "token": "令牌 {value}"
+                },
+                "pagination": {
+                    "label": "第 {page} 页，共 {total} 页",
+                    "prev": "上一页",
+                    "next": "下一页"
+                },
+                "empty": "暂无活动",
+                "loadError": "加载活动失败"
             },
             "funnel": {
                 "title": "用户漏斗",

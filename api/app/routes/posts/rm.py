@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from consys.errors import ErrorAccess
 
 from models.post import Post
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject
 
 
 router = APIRouter()
@@ -40,15 +40,19 @@ async def handler(
         raise ErrorAccess("rm")
 
     # Delete
+    snapshot = post.json(
+        fields={"id", "title", "image", "locale", "category", "status", "token"}
+    )
     post.rm()
 
     # Track
-    Track(
-        title="post_rm",
-        data={
-            "id": data.id,
-        },
+    Track.log(
+        object=TrackObject.POST,
+        action=TrackAction.REMOVE,
         user=request.state.user,
         token=request.state.token,
-        ip=request.state.ip,
-    ).save()
+        request=request,
+        params={
+            "before": snapshot,
+        },
+    )

@@ -9,7 +9,7 @@ from consys.errors import ErrorWrong
 from lib import report
 from lib.sockets import sio
 from models.socket import Socket
-from models.track import Track
+from models.track import Track, TrackAction, TrackObject
 from routes.users.online import _other_sessions, _online_count
 
 
@@ -35,13 +35,21 @@ async def online_stop(socket_id, close=True):
     #     user.save()
 
     # Action tracking
-    Track(
-        title="online",
-        created=socket.created,
-        expired=now,
+    Track.log(
+        object=TrackObject.SESSION,
+        action=TrackAction.DISCONNECT,
         user=socket.user,
         token=socket.token,
-    ).save()
+        params={
+            "session": socket.id,
+            "started_at": socket.created,
+            "ended_at": now,
+            "duration": now - socket.created,
+        },
+        created=socket.created,
+        expired=now,
+        context={"source": "socket"},
+    )
 
     # Remove token / Reset user
     if close:
