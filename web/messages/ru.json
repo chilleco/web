@@ -1086,7 +1086,7 @@
   "fileUpload": {
     "clickToUpload": "Нажмите для загрузки файла",
     "dragAndDrop": "или перетащите файл",
-    "supportedFormats": "Поддерживаемые форматы: JPG, PNG, WEBP, GIF",
+    "supportedFormats": "Поддерживаемые форматы: JPG, PNG, WEBP, GIF, HEIC/HEIF",
     "maxSize": "Максимальный размер: 5MB",
     "uploading": "Загрузка...",
     "removeFile": "Удалить файл",

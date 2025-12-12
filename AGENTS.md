@@ -286,6 +286,7 @@ Depending on the project that develops based on this template, the entities of t
 8. **Run tests and linters**: Avoid extra layers unless justified.
 9. **Frontend prod parity**: Before merging, rerun frontend lint/build and fix all prod build errors (typed routes, lint violations). Ensure `npm run build` (or CI web-check job) passes without errors.
 10. **Local verification gate**: Always run `npm run lint` and `npm run build` (or `make lint-web`/`make lint-web-fix` + build) before handing off; if blocked by sandbox/network (e.g., Google Fonts fetch), report the failure reason explicitly in the summary and keep the TypeScript check clean.
+- On any dependency change, regenerate lockfiles: backend via `uv lock --python 3.13` in `api/`; frontend by refreshing the JS lockfile (`npm install` in `web/` to update `package-lock.json`).
 
 ## Commands
 - Frontend (`web/`): `npm install`; `npm run dev`; `npm run build`; `npm run start`; `npm run lint`.

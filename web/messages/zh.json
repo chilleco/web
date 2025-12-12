@@ -1054,7 +1054,7 @@
   "fileUpload": {
     "clickToUpload": "点击上传文件",
     "dragAndDrop": "或拖拽上传",
-    "supportedFormats": "支持格式：JPG、PNG、WEBP、GIF",
+    "supportedFormats": "支持格式：JPG、PNG、WEBP、GIF、HEIC/HEIF",
     "maxSize": "最大大小：5MB",
     "uploading": "上传中...",
     "removeFile": "删除文件",

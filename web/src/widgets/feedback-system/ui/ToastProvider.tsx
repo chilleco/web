@@ -7,7 +7,7 @@ import { cleanupExpiredToasts } from '@/shared/stores/toastSlice';
 
 export function ToastProvider() {
     const dispatch = useAppDispatch();
-    const { position, maxToasts } = useAppSelector((state) => state.toast);
+    const { position, maxToasts, defaultDuration } = useAppSelector((state) => state.toast);
 
     // Clean up expired toasts periodically
     useEffect(() => {
@@ -21,21 +21,24 @@ export function ToastProvider() {
     return (
         <Toaster
             position={position}
-            richColors={false}
+            richColors
             closeButton
             expand={true}
             visibleToasts={maxToasts}
             toastOptions={{
-                style: {
-                    background: 'var(--background)',
-                    color: 'var(--foreground)',
-                    border: '1px solid var(--border)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    backdropFilter: 'none',
-                    opacity: '1',
+                duration: defaultDuration,
+                classNames: {
+                    toast: 'feedback-toast',
+                    success: 'feedback-toast--success',
+                    error: 'feedback-toast--error',
+                    warning: 'feedback-toast--warning',
+                    info: 'feedback-toast--info',
+                    loading: 'feedback-toast--loading',
+                    title: 'feedback-toast__title',
+                    description: 'feedback-toast__description',
+                    actionButton: 'feedback-toast__action',
+                    cancelButton: 'feedback-toast__cancel',
                 },
-                className: 'sonner-toast',
-                duration: 4000,
                 unstyled: false,
             }}
             theme={undefined}

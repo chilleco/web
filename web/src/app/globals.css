@@ -76,6 +76,14 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --toast-success: oklch(0.72 0.2 145.66);
+  --toast-success-foreground: oklch(0.32 0.12 145.66);
+  --toast-warning: oklch(0.82 0.16 73.54);
+  --toast-warning-foreground: oklch(0.42 0.14 73.54);
+  --toast-error: oklch(0.65 0.24 25.07);
+  --toast-error-foreground: oklch(0.36 0.18 25.07);
+  --toast-info: oklch(0.68 0.11 230.63);
+  --toast-info-foreground: oklch(0.32 0.06 230.63);
 }
 
 .dark {
@@ -110,6 +118,14 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --toast-success: oklch(0.62 0.19 145.66);
+  --toast-success-foreground: oklch(0.9 0.12 145.66);
+  --toast-warning: oklch(0.68 0.16 73.54);
+  --toast-warning-foreground: oklch(0.94 0.07 73.54);
+  --toast-error: oklch(0.65 0.2 25.07);
+  --toast-error-foreground: oklch(0.95 0.12 25.07);
+  --toast-info: oklch(0.7 0.12 230.63);
+  --toast-info-foreground: oklch(0.95 0.05 230.63);
 }
 
 @layer base {
@@ -177,4 +193,82 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+}
+
+/* Toast styling */
+.feedback-toast {
+  border-radius: 0.75rem;
+  background: color-mix(in oklch, var(--background) 90%, var(--muted) 10%);
+  color: var(--foreground);
+  box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  border: none;
+}
+
+.dark .feedback-toast {
+  box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.25);
+}
+
+.feedback-toast__title {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.feedback-toast__description {
+  color: var(--muted-foreground);
+}
+
+.feedback-toast--success {
+  background: color-mix(in oklch, var(--background) 60%, var(--toast-success) 40%);
+  color: var(--toast-success-foreground);
+}
+
+.feedback-toast--warning {
+  background: color-mix(in oklch, var(--background) 60%, var(--toast-warning) 40%);
+  color: var(--toast-warning-foreground);
+}
+
+.feedback-toast--error {
+  background: color-mix(in oklch, var(--background) 55%, var(--toast-error) 45%);
+  color: var(--toast-error-foreground);
+}
+
+.feedback-toast--info,
+.feedback-toast--loading {
+  background: color-mix(in oklch, var(--background) 65%, var(--toast-info) 35%);
+  color: var(--toast-info-foreground);
+}
+
+.feedback-toast--success .feedback-toast__description {
+  color: color-mix(in oklch, var(--toast-success-foreground) 65%, var(--foreground) 35%);
+}
+
+.feedback-toast--warning .feedback-toast__description {
+  color: color-mix(in oklch, var(--toast-warning-foreground) 65%, var(--foreground) 35%);
+}
+
+.feedback-toast--error .feedback-toast__description {
+  color: color-mix(in oklch, var(--toast-error-foreground) 65%, var(--foreground) 35%);
+}
+
+.feedback-toast--info .feedback-toast__description,
+.feedback-toast--loading .feedback-toast__description {
+  color: color-mix(in oklch, var(--toast-info-foreground) 65%, var(--foreground) 35%);
+}
+
+.feedback-toast__action,
+.feedback-toast__cancel {
+  border-radius: 0.75rem;
+  background: color-mix(in oklch, var(--foreground) 8%, var(--background) 92%);
+  color: inherit;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  transition: background-color .2s ease, transform .2s ease;
+}
+
+.feedback-toast__action:hover,
+.feedback-toast__cancel:hover {
+  background: color-mix(in oklch, var(--foreground) 12%, var(--background) 88%);
+  transform: translateY(-1px);
 }

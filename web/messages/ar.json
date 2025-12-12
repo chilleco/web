@@ -1054,7 +1054,7 @@
   "fileUpload": {
     "clickToUpload": "انقر لتحميل الملف",
     "dragAndDrop": "أو اسحب وأفلت",
-    "supportedFormats": "التنسيقات المدعومة: JPG، PNG، WEBP، GIF",
+    "supportedFormats": "التنسيقات المدعومة: JPG، PNG، WEBP، GIF، HEIC/HEIF",
     "maxSize": "الحد الأقصى للحجم: 5 ميجابايت",
     "uploading": "جاري التحميل...",
     "removeFile": "إزالة الملف",

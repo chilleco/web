@@ -82,7 +82,7 @@ export function MobileBottomBar() {
     return (
         <>
             <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-[0_-0.25rem_1.5rem_rgba(0,0,0,0.12)]">
-                <div className="grid grid-cols-6 gap-1 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2">
+                <div className="grid grid-cols-6 gap-1 px-4">
                     {items.map(item => {
                         const Icon = item.icon;
                         const active = isActive(item.path);
@@ -101,13 +101,13 @@ export function MobileBottomBar() {
                                 key={item.key}
                                 type="button"
                                 className={cn(
-                                    'flex flex-col items-center justify-center gap-1 py-2 text-xs font-medium transition-colors cursor-pointer',
+                                    'flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors cursor-pointer',
                                     active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                                 )}
                                 onClick={handleClick}
                             >
                                 {item.isProfile && isAuthenticated && user?.image ? (
-                                    <Avatar className="h-10 w-10 rounded-[0.75rem]">
+                                    <Avatar className="h-8 w-8 rounded-[0.75rem]">
                                         <AvatarImage src={user.image} alt={user.name || tSystem('profile')} />
                                     </Avatar>
                                 ) : (

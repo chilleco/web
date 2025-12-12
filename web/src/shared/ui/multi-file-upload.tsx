@@ -267,7 +267,7 @@ export function MultiFileUpload({
       <input
         ref={multiFileInputRef}
         type="file"
-        accept={fileTypes === 'any' ? '*/*' : fileTypes === 'images' ? 'image/*' :
+        accept={fileTypes === 'any' ? '*/*' : fileTypes === 'images' ? 'image/*,.heic,.heif' :
                fileTypes === 'documents' ? '.doc,.docx,.pdf,.txt,.rtf,.odt' :
                fileTypes === 'media' ? 'video/*,audio/*' : '*/*'}
         multiple

@@ -1054,7 +1054,7 @@
   "fileUpload": {
     "clickToUpload": "Haga clic para cargar archivo",
     "dragAndDrop": "o arrastre y suelte",
-    "supportedFormats": "Formatos admitidos: JPG, PNG, WEBP, GIF",
+    "supportedFormats": "Formatos admitidos: JPG, PNG, WEBP, GIF, HEIC/HEIF",
     "maxSize": "Tamaño máximo: 5MB",
     "uploading": "Cargando...",
     "removeFile": "Eliminar archivo",

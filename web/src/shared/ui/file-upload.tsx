@@ -142,7 +142,7 @@ const getFileIcon = (fileType: FileData['type'], size: number = 24): React.React
 
 const getAcceptAttribute = (fileTypes: FileTypeFilter): string => {
   if (fileTypes === 'any') return '*/*';
-  if (fileTypes === 'images') return 'image/*';
+  if (fileTypes === 'images') return 'image/*,.heic,.heif';
   if (fileTypes === 'documents') return '.doc,.docx,.pdf,.txt,.rtf,.odt';
   if (fileTypes === 'media') return 'video/*,audio/*';
   if (fileTypes === 'archives') return '.zip,.rar,.7z,.tar,.gz,.bz2';
