@@ -283,6 +283,7 @@
     "error": "Error",
     "server_error": "Error del servidor",
     "server_error_description": "Ocurrió un problema en el servidor. Intenta nuevamente o actualiza la página.",
+    "error_code": "Código de error: {code}",
     "now": "ahora mismo",
     "no_access": "Sin acceso",
     "saved": "Guardado",

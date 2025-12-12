@@ -30,6 +30,10 @@ export default function LocaleError({
     }
   }, [error, showError, tSystem]);
 
+  const isInternalServerRenderError =
+    error.message?.toLowerCase().includes('server components render') ?? false;
+  const digestMessage = error.digest ? tSystem('error_code', { code: error.digest }) : null;
+
   const handleRefresh = () => {
     reset();
     router.refresh();
@@ -81,8 +85,11 @@ export default function LocaleError({
             <div className="space-y-1">
               <p className="text-base font-semibold text-foreground">{tSystem('server_error')}</p>
               <p className="text-sm text-muted-foreground">{tSystem('server_error_description')}</p>
-              {error.message && (
+              {!isInternalServerRenderError && error.message && (
                 <p className="text-xs text-muted-foreground break-words">{error.message}</p>
+              )}
+              {digestMessage && (isInternalServerRenderError || !error.message) && (
+                <p className="text-xs text-muted-foreground break-words">{digestMessage}</p>
               )}
             </div>
           </div>

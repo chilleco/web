@@ -103,7 +103,7 @@ export async function getPosts(params: PostsGetRequest = {}): Promise<PostsGetRe
 export async function getPost(id: number): Promise<Post> {
     const response = await getPosts({ id });
     if (!response.posts || response.posts.length === 0) {
-        throw new Error('Post not found');
+        throw new ApiError(404, 'post_not_found');
     }
     return response.posts[0];
 }

@@ -284,6 +284,7 @@
     "error": "Error",
     "server_error": "Server error",
     "server_error_description": "Something went wrong on the server. Please try again or refresh the page.",
+    "error_code": "Error code: {code}",
     "now": "just now",
     "no_access": "No access",
     "saved": "Saved",
