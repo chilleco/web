@@ -318,6 +318,9 @@
     "shareUnavailable": "Sharing is not available on this device",
     "item": "Item",
     "processing": "Processing",
+    "errors": {
+      "unsupportedImageFormat": "Unsupported image format. Please convert the file to JPG or PNG and try again."
+    },
     "toast": {
       "saveSuccess": "{item} saved successfully",
       "saveError": "Failed to save {item}",

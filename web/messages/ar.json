@@ -317,6 +317,9 @@
     "shareUnavailable": "المشاركة غير متاحة على هذا الجهاز",
     "item": "عنصر",
     "processing": "جارٍ المعالجة",
+    "errors": {
+      "unsupportedImageFormat": "تنسيق الصورة غير مدعوم. حوّل الملف إلى ‎JPG‎ أو ‎PNG‎ ثم حاول مرة أخرى."
+    },
     "toast": {
       "saveSuccess": "تم حفظ {item} بنجاح",
       "saveError": "فشل حفظ {item}",

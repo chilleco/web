@@ -7,6 +7,7 @@ import { PageHeader } from '@/shared/ui/page-header';
 import { Box } from '@/shared/ui/box';
 import { UserIcon, ShieldIcon, SaveIcon, RefreshIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { getUserById, updateUserProfile } from '@/entities/user/api/userApi';
 import type { User, UpdateProfileRequest } from '@/entities/user/model/user';
@@ -27,6 +28,7 @@ export default function ProfilePage() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const { success: showSuccess, error: showError, info: showInfo } = useToastActions();
+    const formatApiErrorMessage = useApiErrorMessage();
     const authUser = useAppSelector((state) => state.auth.user);
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -97,7 +99,9 @@ export default function ProfilePage() {
         }));
     }, []);
 
-    const handleFileChange = (file: File | null, preview: string | null, data: FileData | null) => {
+    const handleFileChange = (file: File | null, _preview: string | null, data: FileData | null) => {
+        const previousImage = formData.image;
+        const previousFileData = imageFileData;
         if (!file) {
             setImageFileData(null);
             setFormData((prev) => ({ ...prev, image: '' }));
@@ -107,18 +111,15 @@ export default function ProfilePage() {
         setUploadingImage(true);
         setImageFileData(data);
 
-        if (preview) {
-            setFormData((prev) => ({ ...prev, image: preview }));
-        }
-
         uploadFile(file)
             .then((url) => {
                 setFormData((prev) => ({ ...prev, image: url }));
                 setImageFileData(data ? { ...data, preview: url, type: 'image' as const } : null);
             })
             .catch((err) => {
-                const message = err instanceof Error ? err.message : tSystem('error');
-                showError(message);
+                setImageFileData(previousFileData ?? null);
+                setFormData((prev) => ({ ...prev, image: previousImage }));
+                showError(formatApiErrorMessage(err, tSystem('server_error')));
             })
             .finally(() => setUploadingImage(false));
     };

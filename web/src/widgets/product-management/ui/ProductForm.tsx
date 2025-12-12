@@ -7,6 +7,7 @@ import { Textarea } from '@/shared/ui/textarea';
 import { IconButton } from '@/shared/ui/icon-button';
 import { SaveIcon, LoadingIcon, PlusIcon, TrashIcon, CloseIcon, ChevronDownIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { Product, ProductFeature, ProductSaveRequest, saveProduct } from '@/entities/product';
 import { MultiFileUpload, FileData } from '@/shared/ui/multi-file-upload';
 import { uploadFile } from '@/shared/services/api/upload';
@@ -132,6 +133,7 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
   const t = useTranslations('admin.products');
   const tSystem = useTranslations('system');
   const { success, error } = useToastActions();
+  const formatApiErrorMessage = useApiErrorMessage();
   const [form, setForm] = useState<ProductFormState>({ ...defaultState, options: [createEmptyOption()] });
   const [saving, setSaving] = useState(false);
   const [files, setFiles] = useState<FileData[]>([]);
@@ -429,6 +431,8 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
   };
 
   const handleFilesChange = async (newFiles: FileData[]) => {
+    const previousFiles = files;
+    const previousImages = form.images ? [...form.images] : [];
     setFiles(newFiles);
     const staticUrls = newFiles.filter((f) => !f.file && f.preview).map((f) => String(f.preview));
     setForm((prev) => ({ ...prev, images: staticUrls }));
@@ -449,8 +453,9 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
       }
       setForm((prev) => ({ ...prev, images: [...staticUrls, ...uploaded] }));
     } catch (err) {
-      const message = err instanceof Error ? err.message : tSystem('error');
-      error(message);
+      setFiles(previousFiles);
+      setForm((prev) => ({ ...prev, images: previousImages }));
+      error(formatApiErrorMessage(err, tSystem('server_error')));
     } finally {
       setUploading(false);
     }
@@ -463,6 +468,9 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
   });
 
   const handleOptionFilesChange = async (optionId: string, newFiles: FileData[]) => {
+    const previousFiles = optionFiles[optionId] || [];
+    const previousOptionImages =
+      form.options.find((option) => option.id === optionId)?.images || [];
     setOptionFiles((prev) => ({ ...prev, [optionId]: newFiles }));
 
     const staticUrls = newFiles
@@ -502,8 +510,14 @@ export function ProductForm({ product, onSuccess, onCancel }: ProductFormProps) 
         ),
       }));
     } catch (err) {
-      const message = err instanceof Error ? err.message : tSystem('error');
-      error(message);
+      setOptionFiles((prev) => ({ ...prev, [optionId]: previousFiles }));
+      setForm((prev) => ({
+        ...prev,
+        options: prev.options.map((option) =>
+          option.id === optionId ? { ...option, images: previousOptionImages } : option
+        ),
+      }));
+      error(formatApiErrorMessage(err, tSystem('server_error')));
     } finally {
       setUploading(false);
     }

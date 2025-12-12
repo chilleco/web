@@ -25,6 +25,7 @@ Depending on the project that develops based on this template, the entities of t
 - **Explain the plan** (brief): research, make strategy and all steps of changing. compliance with the rules of the repository and the specifics of custom libraries and components
 - **Development**: Follow the **DevOps Principles** & **Backend Principles** & **Frontend Principles**
 - **Minimal, focused diffs**: change only what's necessary; Make minimal changes in relevant files & rows only
+- **Page blocks → components**: In `web/src/app/**/page.tsx`, extract each major UI block/section into a named component/function (keep `page.tsx` orchestration-focused; avoid huge JSX returns).
 - **Concise naming**: prefer short, laconic labels (e.g., `pays` over `payments/charges`, `ad` over `advertisement/promotion`, `post` over `article`, `tasks` over `schedules`, `infra` over `infrastructure`)
 - **Cursor pointer everywhere**: All clickable elements/blocks/links/pickers/sliders must explicitly set `cursor-pointer` for clear affordance
 - **Dialog affordance**: Dialog close buttons AND the dimmed overlay/backdrop used to close dialogs must have `cursor-pointer`
@@ -33,6 +34,7 @@ Depending on the project that develops based on this template, the entities of t
 - **Required fields UX**: For all forms mark required inputs with `*` and highlight missing/invalid required fields with a red focus/outline when the API returns validation errors (e.g., `detail` value). Keep visual feedback consistent across the app.
 - **Popups/Toasts**: Emit only one localized toast per error; map backend `detail`/field keys to translated messages and surface the exact field causing the issue (no duplicate global+local toasts).
 - **Error responses**: Backend errors follow `{"status":"error","error":"ErrorWrong","detail":"id"}` shape. Frontend popups must show the raw `detail` value (field/key) once, and optionally add a concise localized hint if available. Reuse this rule across all routes/components (not just categories) to avoid multiple generic popups.
+- **Backend error formatting**: Raise `BaseError(txt)` (from `consys.errors`) for any user-facing API error so `api/app/services/errors.py` middleware returns HTTP 400 with `{"status":"error","error":<ErrorClass>,"detail":txt}`. Do not leak stack traces/500s for validation/processing failures (including uploads); wrap unexpected processing errors into `BaseError` with a clean `detail`.
 - **Dialogs must scroll**: Large popups (forms/modals) must fit on mobile and small screens with max-height constraints and internal `overflow-y-auto` so content is scrollable without breaking layout.
 - **Mobile adaptive**: Every screen, table, and control layout must stay usable on small/mobile widths; add horizontal scroll containers for wide tables instead of letting them overflow.
 - **Shared translations first**: Use existing `system.*` translation keys for shared labels (loading, refresh, common actions) instead of introducing feature-specific duplicates; migrate simple words from feature scopes to `system.*` when touching those areas.

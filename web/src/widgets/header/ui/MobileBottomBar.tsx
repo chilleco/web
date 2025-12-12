@@ -1,13 +1,13 @@
 'use client';
 
-import { useMemo, type ComponentType } from 'react';
+import { useEffect, useMemo, useState, type ComponentType } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useNavigationItems } from '../model/navigationItems';
 import { HomeIcon, UserIcon } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib/utils';
 import { Avatar, AvatarImage } from '@/shared/ui/avatar';
-import { selectAuthUser, selectIsAuthenticated } from '@/features/auth';
+import { AuthModal, selectAuthUser, selectIsAuthenticated } from '@/features/auth';
 import { useAppSelector } from '@/shared/stores/store';
 
 type RouteHref = Parameters<ReturnType<typeof useRouter>['push']>[0];
@@ -30,6 +30,7 @@ export function MobileBottomBar() {
     const tSystem = useTranslations('system');
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const user = useAppSelector(selectAuthUser);
+    const [isAuthModalOpen, setAuthModalOpen] = useState(false);
 
     const items = useMemo<BottomNavItem[]>(
         () => [
@@ -47,14 +48,20 @@ export function MobileBottomBar() {
             })),
             {
                 key: 'profile',
-                label: tSystem('profile'),
+                label: isAuthenticated ? tSystem('profile') : tSystem('sign_in'),
                 path: '/profile' as RouteHref,
                 icon: UserIcon,
                 isProfile: true,
             },
         ],
-        [navigationItems, tNavigation, tSystem]
+        [isAuthenticated, navigationItems, tNavigation, tSystem]
     );
+
+    useEffect(() => {
+        if (isAuthenticated && isAuthModalOpen) {
+            setAuthModalOpen(false);
+        }
+    }, [isAuthenticated, isAuthModalOpen]);
 
     const handleNavigate = (path: RouteHref) => {
         router.push(path);
@@ -73,34 +80,46 @@ export function MobileBottomBar() {
     };
 
     return (
-        <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-[0_-0.25rem_1.5rem_rgba(0,0,0,0.12)]">
-            <div className="grid grid-cols-6 gap-1 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2">
-                {items.map(item => {
-                    const Icon = item.icon;
-                    const active = isActive(item.path);
+        <>
+            <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-[0_-0.25rem_1.5rem_rgba(0,0,0,0.12)]">
+                <div className="grid grid-cols-6 gap-1 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2">
+                    {items.map(item => {
+                        const Icon = item.icon;
+                        const active = isActive(item.path);
 
-                    return (
-                        <button
-                            key={item.key}
-                            type="button"
-                            className={cn(
-                                'flex flex-col items-center justify-center gap-1 py-2 text-xs font-medium transition-colors cursor-pointer',
-                                active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                            )}
-                            onClick={() => handleNavigate(item.path)}
-                        >
-                            {item.isProfile && isAuthenticated && user?.image ? (
-                                <Avatar className="h-10 w-10 rounded-[0.75rem]">
-                                    <AvatarImage src={user.image} alt={user.name || tSystem('profile')} />
-                                </Avatar>
-                            ) : (
-                                <Icon size={ICON_SIZE} className="shrink-0" />
-                            )}
-                            <span className="text-[11px] leading-4 text-current">{item.label}</span>
-                        </button>
-                    );
-                })}
-            </div>
-        </nav>
+                        const handleClick = () => {
+                            if (item.isProfile && !isAuthenticated) {
+                                setAuthModalOpen(true);
+                                return;
+                            }
+
+                            handleNavigate(item.path);
+                        };
+
+                        return (
+                            <button
+                                key={item.key}
+                                type="button"
+                                className={cn(
+                                    'flex flex-col items-center justify-center gap-1 py-2 text-xs font-medium transition-colors cursor-pointer',
+                                    active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                                )}
+                                onClick={handleClick}
+                            >
+                                {item.isProfile && isAuthenticated && user?.image ? (
+                                    <Avatar className="h-10 w-10 rounded-[0.75rem]">
+                                        <AvatarImage src={user.image} alt={user.name || tSystem('profile')} />
+                                    </Avatar>
+                                ) : (
+                                    <Icon size={ICON_SIZE} className="shrink-0" />
+                                )}
+                                <span className="text-[11px] leading-4 text-current">{item.label}</span>
+                            </button>
+                        );
+                    })}
+                </div>
+            </nav>
+            <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} />
+        </>
     );
 }

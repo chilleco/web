@@ -18,6 +18,7 @@ import {
   LocationIcon
 } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { uploadFile } from '@/shared/services/api/upload';
 import { saveSpace, type Space, type SpaceEntityType } from '@/entities/space';
 
@@ -70,6 +71,7 @@ export function SpaceForm({ space, onSaved, onCancel }: SpaceFormProps) {
   const t = useTranslations('spaces.form');
   const tSystem = useTranslations('system');
   const { success, error: showError } = useToastActions();
+  const formatApiErrorMessage = useApiErrorMessage();
   const [form, setForm] = useState<SpaceFormState>(defaultState);
   const [logoUrl, setLogoUrl] = useState<string>('');
   const [logoFile, setLogoFile] = useState<FileData | null>(null);
@@ -127,6 +129,8 @@ export function SpaceForm({ space, onSaved, onCancel }: SpaceFormProps) {
   };
 
   const handleLogoChange = async (file: File | null, _preview: string | null, fileData: FileData | null) => {
+    const previousLogoUrl = logoUrl;
+    const previousFileData = logoFile;
     setLogoFile(fileData);
 
     if (!file) {
@@ -140,8 +144,9 @@ export function SpaceForm({ space, onSaved, onCancel }: SpaceFormProps) {
       setLogoUrl(url);
       success(t('logoUploaded'));
     } catch (err) {
-      const message = err instanceof Error ? err.message : tSystem('error');
-      showError(message);
+      setLogoFile(previousFileData);
+      setLogoUrl(previousLogoUrl);
+      showError(formatApiErrorMessage(err, tSystem('server_error')));
     } finally {
       setUploadingLogo(false);
     }

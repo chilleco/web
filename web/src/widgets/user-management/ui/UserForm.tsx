@@ -6,6 +6,7 @@ import { ButtonGroup } from '@/shared/ui/button-group';
 import { IconButton } from '@/shared/ui/icon-button';
 import { SaveIcon, RefreshIcon } from '@/shared/ui/icons';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { saveUser } from '@/entities/user/api/userApi';
 import type { SaveUserRequest, User, UserStatus } from '@/entities/user';
 import { uploadFile } from '@/shared/services/api/upload';
@@ -28,6 +29,7 @@ export function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
   const tProfile = useTranslations('profile');
   const tSystem = useTranslations('system');
   const { success, error: showError, info: showInfo } = useToastActions();
+  const formatApiErrorMessage = useApiErrorMessage();
   const [formData, setFormData] = useState<UserFormState>(buildUserFormState(user));
   const [initialData, setInitialData] = useState<UserFormState>(buildUserFormState(user));
   const [imageFileData, setImageFileData] = useState<FileData | null>(null);
@@ -82,7 +84,9 @@ export function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
     }));
   };
 
-  const handleFileChange = (file: File | null, preview: string | null, data: FileData | null) => {
+  const handleFileChange = (file: File | null, _preview: string | null, data: FileData | null) => {
+    const previousImage = formData.image;
+    const previousFileData = imageFileData;
     if (!file) {
       setImageFileData(null);
       setFormData((prev) => ({ ...prev, image: '' }));
@@ -92,18 +96,15 @@ export function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
     setUploadingImage(true);
     setImageFileData(data);
 
-    if (preview) {
-      setFormData((prev) => ({ ...prev, image: preview }));
-    }
-
     uploadFile(file)
       .then((url) => {
         setFormData((prev) => ({ ...prev, image: url }));
         setImageFileData(data ? { ...data, preview: url, type: 'image' as const } : null);
       })
       .catch((err) => {
-        const message = err instanceof Error ? err.message : tSystem('error');
-        showError(message);
+        setFormData((prev) => ({ ...prev, image: previousImage }));
+        setImageFileData(previousFileData ?? null);
+        showError(formatApiErrorMessage(err, tSystem('server_error')));
       })
       .finally(() => setUploadingImage(false));
   };

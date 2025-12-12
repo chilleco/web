@@ -45,6 +45,7 @@ import {
   CloseIcon,
   LoadingIcon
 } from '@/shared/ui/icons';
+import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { PostActions } from './PostActions';
 
 interface BreadcrumbItem {
@@ -101,6 +102,7 @@ export function PostDetailClient({
   const router = useRouter();
   const tPosts = useTranslations('posts');
   const tSystem = useTranslations('system');
+  const formatApiErrorMessage = useApiErrorMessage();
   const { success, error: showError } = useToastActions();
 
   const [isEditing, setEditing] = useState(isNew || startEditing);
@@ -138,6 +140,8 @@ export function PostDetailClient({
   }, [locale, showError, tSystem]);
 
   const handleFileChange = (file: File | null, preview: string | null, data: FileData | null) => {
+    const previousImage = image;
+    const previousFileData = fileData;
     if (!file) {
       setFileData(null);
       setImage('');
@@ -154,8 +158,9 @@ export function PostDetailClient({
         setFileData(data ? { ...data, preview: url, type: 'image' } : null);
       })
       .catch((err) => {
-        const message = err instanceof Error ? err.message : tSystem('error');
-        showError(message);
+        setFileData(previousFileData);
+        setImage(previousImage);
+        showError(formatApiErrorMessage(err, tSystem('server_error')));
       })
       .finally(() => setUploadingImage(false));
   };

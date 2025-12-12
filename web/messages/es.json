@@ -317,6 +317,9 @@
     "shareUnavailable": "El compartir no está disponible en este dispositivo",
     "item": "Elemento",
     "processing": "Procesando",
+    "errors": {
+      "unsupportedImageFormat": "Formato de imagen no admitido. Convierte el archivo a JPG o PNG y vuelve a intentarlo."
+    },
     "toast": {
       "saveSuccess": "{item} guardado correctamente",
       "saveError": "No se pudo guardar {item}",

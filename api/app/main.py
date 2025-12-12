@@ -9,6 +9,7 @@ from starlette.middleware.errors import ServerErrorMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
+from consys.errors import BaseError
 from libdev.img import convert
 from libdev.s3 import upload
 
@@ -145,7 +146,13 @@ async def ping():
 @app.post("/upload/")
 async def uploader(data: bytes = File()):
     """Upload optimized images to S3"""
-    url = await upload(await convert(data), file_type="webp")
+    try:
+        converted = await convert(data)
+        url = await upload(converted, file_type="webp")
+    except Exception as exc:  # pylint: disable=broad-except
+        # Normalize to a BaseError so middleware returns a 400 with detail
+        raise BaseError(str(exc)) from exc
+
     return {
         "url": url,
     }
