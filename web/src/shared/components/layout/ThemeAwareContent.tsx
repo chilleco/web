@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useTheme } from '@/providers/ThemeProvider';
 import LoadingScreen from './LoadingScreen';
-import { Header } from '@/widgets/header';
+import { Header, MobileBottomBar } from '@/widgets/header';
 import { Footer } from '@/widgets/footer';
 
 interface ThemeAwareContentProps {
@@ -16,10 +15,11 @@ export default function ThemeAwareContent({ children }: ThemeAwareContentProps) 
     return (
         <LoadingScreen isLoading={!isInitialized}>
             <Header />
-            <main className="min-h-screen">
+            <main className="min-h-screen pb-24 sm:pb-0">
                 {children}
             </main>
             <Footer />
+            <MobileBottomBar />
         </LoadingScreen>
     );
 }
