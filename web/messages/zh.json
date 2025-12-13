@@ -32,8 +32,114 @@
     "space": "空间",
     "hub": "中心",
     "catalog": "目录",
+    "tasks": "任务",
     "home": "首页",
     "sections": "版块"
+  },
+  "tasksPage": {
+    "meta": {
+      "title": "病毒式任务",
+      "description": "为推广者提供可分享的任务，带来新用户并跟踪增长势头。"
+    },
+    "actions": {
+      "start": "立即开始",
+      "claim": "领取奖励"
+    },
+    "states": {
+      "in_progress": "进行中",
+      "ready": "可领取",
+      "claimed": "已完成"
+    },
+    "categories": {
+      "daily": "每日任务",
+      "seasonal": "季节性",
+      "referral": "拉新",
+      "bonus": "额外"
+    },
+    "progress": {
+      "counter": "{current} / {target}",
+      "single": "完成一次即可"
+    },
+    "rewards": {
+      "default": "奖励可领取"
+    },
+    "empty": {
+      "title": "暂无任务",
+      "subtitle": "很快会添加新任务，稍后再来看看。"
+    },
+    "header": {
+      "title": "病毒式任务",
+      "subtitle": "通过可分享的任务成长，并奖励每一次邀请。"
+    },
+    "cta": {
+      "primary": "分享邀请链接",
+      "secondary": "查看奖励规则"
+    },
+    "referral": {
+      "title": "邀新动能",
+      "description": "用快速的请求和清晰的承诺，让你的链接持续传播。",
+      "linkLabel": "邀请链接",
+      "linkValue": "https://chill.app/r/you",
+      "copy": "复制链接",
+      "copied": "已复制链接",
+      "copyError": "无法复制，请重试。",
+      "shareText": "来加入吧，一分钟解锁新手奖励。",
+      "shareSuccess": "邀请已准备好发送",
+      "statsTitle": "本周",
+      "stats": {
+        "sent": "已发送邀请",
+        "joined": "新增成员",
+        "bonus": "已解锁奖励"
+      },
+      "statsValues": {
+        "sent": "24",
+        "joined": "9",
+        "bonus": "15%"
+      }
+    },
+    "tasks": {
+      "title": "任务",
+      "subtitle": "完成快速动作，加速带来更多邀请。",
+      "action": "开始任务",
+      "items": {
+        "social": {
+          "title": "在聊天中放上链接",
+          "description": "在社群或故事里用一句话分享核心收益。",
+          "reward": "+3 积分/注册"
+        },
+        "story": {
+          "title": "录制短评",
+          "description": "发布一段 20 秒视频，为新人解释价值。",
+          "reward": "+1 增强奖励（每 5 次观看）"
+        },
+        "team": {
+          "title": "邀请同事",
+          "description": "给现在需要这个产品的同事发一条私信。",
+          "reward": "前 3 次邀请奖励翻倍"
+        }
+      }
+    },
+    "boosters": {
+      "title": "扩大覆盖",
+      "subtitle": "叠加小优化，让每个链接传播更远。",
+      "items": {
+        "timing": {
+          "title": "在高峰时段分享",
+          "description": "受众最活跃时发送，点击率更高。",
+          "cta": "查看时间建议"
+        },
+        "assets": {
+          "title": "使用现成素材",
+          "description": "使用已验证的横幅、文案和 CTA。",
+          "cta": "打开素材包"
+        },
+        "followUp": {
+          "title": "及时跟进",
+          "description": "在 24 小时内欢迎新用户，保持势头。",
+          "cta": "规划跟进"
+        }
+      }
+    }
   },
   "landing": {
     "hero": {

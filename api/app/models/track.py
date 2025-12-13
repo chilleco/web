@@ -14,6 +14,7 @@ class TrackObject(str, Enum):
     SPACE = "space"
     PAYMENT = "payment"
     SESSION = "session"
+    TASK = "task"
     SYSTEM = "system"
 
 

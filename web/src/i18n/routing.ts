@@ -17,6 +17,7 @@ export const routing = defineRouting({
         '/posts/[categoryUrl]': '/posts/[categoryUrl]',
         '/catalog/[id]': '/catalog/[id]',
         '/space': '/space', 
+        '/tasks': '/tasks',
         '/hub': '/hub',
         '/catalog': '/catalog',
         '/spaces': '/spaces',

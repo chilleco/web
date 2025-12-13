@@ -63,6 +63,10 @@ export const API_ENDPOINTS = {
     SAVE: '/spaces/save/',
     DELETE: '/spaces/rm/',
   },
+  TASKS: {
+    GET: '/tasks/get/',
+    SAVE: '/tasks/save/',
+  },
   ADMIN: {
     STATS: '/admin/stats/',
     ACTIVITY: '/admin/activity/',

@@ -3,10 +3,10 @@
 import { useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { type ComponentType } from 'react';
-import { CatalogIcon, HubIcon, PostsIcon, SpaceIcon } from '@/shared/ui/icons';
+import { BullhornIcon, CatalogIcon, HubIcon, PostsIcon } from '@/shared/ui/icons';
 
-type NavigationPath = '/posts' | '/catalog' | '/space' | '/hub';
-export type NavigationItemKey = 'posts' | 'catalog' | 'space' | 'hub';
+type NavigationPath = '/posts' | '/catalog' | '/tasks' | '/hub';
+export type NavigationItemKey = 'posts' | 'catalog' | 'tasks' | 'hub';
 
 type NavigationItemConfig = {
     key: NavigationItemKey;
@@ -28,9 +28,9 @@ const navigationConfig = [
         path: '/catalog',
     },
     {
-        key: 'space',
-        icon: SpaceIcon,
-        path: '/space',
+        key: 'tasks',
+        icon: BullhornIcon,
+        path: '/tasks',
     },
     {
         key: 'hub',

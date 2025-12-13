@@ -106,6 +106,7 @@ app.add_middleware(
         "/users/token/",
         "/posts/get/",
         "/categories/get/",
+        "/tasks/get/",
     },
 )
 

@@ -32,8 +32,114 @@
     "space": "Espacio",
     "hub": "Centro",
     "catalog": "Catálogo",
+    "tasks": "Tareas",
     "home": "Inicio",
     "sections": "Secciones"
+  },
+  "tasksPage": {
+    "meta": {
+      "title": "Tareas virales",
+      "description": "Dale a los embajadores misiones compartibles para invitar nuevos usuarios y seguir el impulso."
+    },
+    "actions": {
+      "start": "Vamos",
+      "claim": "Cobrar recompensa"
+    },
+    "states": {
+      "in_progress": "En progreso",
+      "ready": "Lista para reclamar",
+      "claimed": "Completada"
+    },
+    "categories": {
+      "daily": "Diarias",
+      "seasonal": "Temporales",
+      "referral": "Referidos",
+      "bonus": "Bonos"
+    },
+    "progress": {
+      "counter": "{current} / {target}",
+      "single": "Completar una vez"
+    },
+    "rewards": {
+      "default": "Recompensa disponible"
+    },
+    "empty": {
+      "title": "Sin tareas aún",
+      "subtitle": "Pronto añadiremos misiones nuevas — vuelve en un momento."
+    },
+    "header": {
+      "title": "Tareas virales",
+      "subtitle": "Crece con misiones compartibles y recompensa cada invitación."
+    },
+    "cta": {
+      "primary": "Compartir enlace de invitación",
+      "secondary": "Ver reglas de recompensas"
+    },
+    "referral": {
+      "title": "Impulso de referidos",
+      "description": "Mantén tu enlace circulando con peticiones rápidas y una promesa clara para quienes llegan.",
+      "linkLabel": "Enlace de invitación",
+      "linkValue": "https://chill.app/r/you",
+      "copy": "Copiar enlace",
+      "copied": "Enlace copiado",
+      "copyError": "No se pudo copiar. Inténtalo de nuevo.",
+      "shareText": "Únete y desbloquea los bonos iniciales en un minuto.",
+      "shareSuccess": "Invitación lista para enviar",
+      "statsTitle": "Esta semana",
+      "stats": {
+        "sent": "Invitaciones enviadas",
+        "joined": "Nuevos miembros",
+        "bonus": "Bono desbloqueado"
+      },
+      "statsValues": {
+        "sent": "24",
+        "joined": "9",
+        "bonus": "15%"
+      }
+    },
+    "tasks": {
+      "title": "Misiones",
+      "subtitle": "Completa acciones rápidas para acelerar tus referidos.",
+      "action": "Iniciar tarea",
+      "items": {
+        "social": {
+          "title": "Comparte el enlace en un chat",
+          "description": "Comparte un beneficio en una frase en tu comunidad o historia.",
+          "reward": "+3 créditos por alta"
+        },
+        "story": {
+          "title": "Graba una micro reseña",
+          "description": "Publica un clip de 20s explicando el valor para nuevos usuarios.",
+          "reward": "+1 potenciador por 5 visualizaciones"
+        },
+        "team": {
+          "title": "Invita a un compañero",
+          "description": "Envía una nota personal a quien más lo necesite ahora.",
+          "reward": "Recompensas dobles para las primeras 3 invitaciones"
+        }
+      }
+    },
+    "boosters": {
+      "title": "Impulsa el alcance",
+      "subtitle": "Suma optimizaciones pequeñas para que cada enlace viaje más lejos.",
+      "items": {
+        "timing": {
+          "title": "Comparte en horas pico",
+          "description": "Envía cuando tu audiencia esté más activa para más clics.",
+          "cta": "Ver horarios"
+        },
+        "assets": {
+          "title": "Usa recursos listos",
+          "description": "Toma banners, copys y CTAs que ya convierten.",
+          "cta": "Abrir kit"
+        },
+        "followUp": {
+          "title": "Haz seguimiento rápido",
+          "description": "Recibe a los nuevos en 24 horas para mantener el impulso.",
+          "cta": "Planear seguimiento"
+        }
+      }
+    }
   },
   "landing": {
     "hero": {

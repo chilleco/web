@@ -26,6 +26,7 @@ import {
   FaRotate,
   FaCartShopping,
   FaGear,
+  FaGift,
   FaCircleQuestion,
   FaFloppyDisk,
   FaQuoteRight,
@@ -93,6 +94,7 @@ import {
   FaXTwitter,
   FaReddit,
   FaCookie,
+  FaArrowTrendUp,
   FaCircleInfo,
   FaComments,
   FaDollarSign as FaMoneyIcon,
@@ -110,7 +112,8 @@ import {
   FaCar,
   FaUtensils,
   FaSprayCanSparkles,
-  FaGlobe
+  FaGlobe,
+  FaSnowflake
 } from "react-icons/fa6"
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
@@ -245,6 +248,10 @@ export function WhiteboardIcon({ size = 16, ...props }: IconProps) {
   return <FaChalkboard size={size} {...props} />
 }
 
+export function GiftIcon({ size = 16, ...props }: IconProps) {
+  return <FaGift size={size} {...props} />
+}
+
 // Tools and utilities icons
 export function PaletteIcon({ size = 16, ...props }: IconProps) {
   return <FaPalette size={size} {...props} />
@@ -264,6 +271,10 @@ export function ShieldIcon({ size = 16, ...props }: IconProps) {
 
 export function RocketIcon({ size = 16, ...props }: IconProps) {
   return <FaRocket size={size} {...props} />
+}
+
+export function TrendUpIcon({ size = 16, ...props }: IconProps) {
+  return <FaArrowTrendUp size={size} {...props} />
 }
 
 // Search and navigation icons
@@ -568,6 +579,10 @@ export function RatesIcon({ size = 16, ...props }: IconProps) {
 
 export function LocationIcon({ size = 16, ...props }: IconProps) {
   return <FaLocationDot size={size} {...props} />
+}
+
+export function SnowIcon({ size = 16, ...props }: IconProps) {
+  return <FaSnowflake size={size} {...props} />
 }
 
 // Category icons

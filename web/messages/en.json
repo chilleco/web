@@ -34,7 +34,113 @@
     "catalog": "Catalog",
     "products": "Products",
     "home": "Home",
+    "tasks": "Tasks",
     "sections": "Sections"
+  },
+  "tasksPage": {
+    "meta": {
+      "title": "Viral tasks",
+      "description": "Give ambassadors shareable missions to invite new users and track momentum."
+    },
+    "actions": {
+      "start": "Let's go",
+      "claim": "Claim reward"
+    },
+    "states": {
+      "in_progress": "In progress",
+      "ready": "Ready to claim",
+      "claimed": "Completed"
+    },
+    "categories": {
+      "daily": "Daily tasks",
+      "seasonal": "Seasonal",
+      "referral": "Referral",
+      "bonus": "Bonus"
+    },
+    "progress": {
+      "counter": "{current} / {target}",
+      "single": "Complete once"
+    },
+    "rewards": {
+      "default": "Reward available"
+    },
+    "empty": {
+      "title": "No tasks yet",
+      "subtitle": "We'll add new missions soon - check back in a moment."
+    },
+    "header": {
+      "title": "Viral tasks",
+      "subtitle": "Grow through shareable missions that reward every invite."
+    },
+    "cta": {
+      "primary": "Share invite link",
+      "secondary": "View reward rules"
+    },
+    "referral": {
+      "title": "Referral momentum",
+      "description": "Keep your link circulating with quick asks and a clear promise for newcomers.",
+      "linkLabel": "Referral link",
+      "linkValue": "https://chill.app/r/you",
+      "copy": "Copy link",
+      "copied": "Link copied",
+      "copyError": "Unable to copy. Try again.",
+      "shareText": "Join me and unlock the starter bonuses in a minute.",
+      "shareSuccess": "Invite ready to send",
+      "statsTitle": "This week",
+      "stats": {
+        "sent": "Invites sent",
+        "joined": "New members",
+        "bonus": "Bonus unlocked"
+      },
+      "statsValues": {
+        "sent": "24",
+        "joined": "9",
+        "bonus": "15%"
+      }
+    },
+    "tasks": {
+      "title": "Missions",
+      "subtitle": "Complete quick shares to unlock more referrals.",
+      "action": "Start task",
+      "items": {
+        "social": {
+          "title": "Drop the link in a chat",
+          "description": "Share a one-liner benefit in your community or story.",
+          "reward": "+3 credits per join"
+        },
+        "story": {
+          "title": "Record a micro review",
+          "description": "Post a 20s clip explaining the value for newcomers.",
+          "reward": "+1 booster for 5 views"
+        },
+        "team": {
+          "title": "Invite a teammate",
+          "description": "Send a personal note to colleagues who need this right now.",
+          "reward": "Double rewards for the first 3 invites"
+        }
+      }
+    },
+    "boosters": {
+      "title": "Boost reach",
+      "subtitle": "Stack small optimizations that make every share travel further.",
+      "items": {
+        "timing": {
+          "title": "Share at peak hours",
+          "description": "Send when your audience is most active for higher clicks.",
+          "cta": "See timing tips"
+        },
+        "assets": {
+          "title": "Use ready assets",
+          "description": "Grab banners, captions, and CTAs that already convert.",
+          "cta": "Open kit"
+        },
+        "followUp": {
+          "title": "Follow up fast",
+          "description": "Welcome new joins within 24 hours to keep momentum.",
+          "cta": "Plan follow-up"
+        }
+      }
+    }
   },
   "landing": {
     "hero": {
