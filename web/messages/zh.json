@@ -31,9 +31,18 @@
     "posts": "帖子",
     "space": "空间",
     "hub": "中心",
+    "tasks": "任务",
     "catalog": "目录",
     "home": "首页",
     "sections": "版块"
+  },
+  "tasks": {
+    "description": "完成任务以获得金币。",
+    "empty": "暂无可用任务。",
+    "balanceLabel": "余额",
+    "claimSuccess": "已领取 +{reward} 金币",
+    "claimNotReady": "任务尚未完成。",
+    "fallbackTitle": "任务 #{id}"
   },
   "landing": {
     "hero": {

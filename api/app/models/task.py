@@ -26,6 +26,7 @@ class Task(Base):
     button = Attribute(types=dict)
     link = Attribute(types=str)
     icon = Attribute(types=str)
+    size = Attribute(types=int)
     reward = Attribute(types=int)
     verify = Attribute(types=str)
     params = Attribute(types=dict)

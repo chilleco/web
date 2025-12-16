@@ -2,16 +2,12 @@ import importlib
 
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
-from prometheus_client import Counter
 
 from models.user import UserLocal
 from models.task import Task
 
 
 router = APIRouter()
-metric_tasks = Counter(
-    "tasks_completed", "Total number of completed tasks", ["task", "user"]
-)
 
 
 class Type(BaseModel):
@@ -44,7 +40,6 @@ async def handler(
         user.tasks.append(task.id)
         user.save()
 
-        metric_tasks.labels(task=task.id, user=user.id).inc()
         # await report.important(
         #     "Complete task",
         #     {

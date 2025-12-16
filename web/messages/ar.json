@@ -31,9 +31,18 @@
     "posts": "المنشورات",
     "space": "المساحة",
     "hub": "المركز",
+    "tasks": "المهام",
     "catalog": "الفهرس",
     "home": "الرئيسية",
     "sections": "الأقسام"
+  },
+  "tasks": {
+    "description": "أكمل المهام واربح عملات.",
+    "empty": "لا توجد مهام متاحة الآن.",
+    "balanceLabel": "الرصيد",
+    "claimSuccess": "تمت المطالبة بـ +{reward} عملة",
+    "claimNotReady": "المهمة لم تكتمل بعد.",
+    "fallbackTitle": "مهمة رقم {id}"
   },
   "landing": {
     "hero": {

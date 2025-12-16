@@ -31,9 +31,18 @@
     "posts": "Publicaciones",
     "space": "Espacio",
     "hub": "Centro",
+    "tasks": "Tareas",
     "catalog": "Catálogo",
     "home": "Inicio",
     "sections": "Secciones"
+  },
+  "tasks": {
+    "description": "Completa tareas y gana monedas.",
+    "empty": "No hay tareas disponibles ahora.",
+    "balanceLabel": "Saldo",
+    "claimSuccess": "Recibiste +{reward} monedas",
+    "claimNotReady": "La tarea aún no está completada.",
+    "fallbackTitle": "Tarea #{id}"
   },
   "landing": {
     "hero": {

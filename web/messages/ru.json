@@ -31,10 +31,19 @@
     "posts": "Посты",
     "space": "Пространство",
     "hub": "Хаб",
+    "tasks": "Задания",
     "catalog": "Каталог",
     "products": "Товары",
     "home": "Главная",
     "sections": "Разделы"
+  },
+  "tasks": {
+    "description": "Выполняй задания и получай монеты.",
+    "empty": "Сейчас нет доступных заданий.",
+    "balanceLabel": "Баланс",
+    "claimSuccess": "Получено +{reward} монет",
+    "claimNotReady": "Задание ещё не выполнено.",
+    "fallbackTitle": "Задание №{id}"
   },
   "landing": {
     "hero": {

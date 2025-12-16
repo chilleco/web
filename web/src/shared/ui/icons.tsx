@@ -88,6 +88,12 @@ import {
   FaCircleQuestion as FaFaqIcon,
   FaBriefcase,
   FaStar,
+  FaCoins,
+  FaGift,
+  FaGamepad,
+  FaListCheck,
+  FaPerson,
+  FaUserGroup,
   FaChevronLeft,
   FaNewspaper,
   FaXTwitter,
@@ -162,6 +168,10 @@ export function HubIcon({ size = 16, ...props }: IconProps) {
 
 export function SpaceIcon({ size = 16, ...props }: IconProps) {
   return <FaPaperclip size={size} {...props} />
+}
+
+export function TasksIcon({ size = 16, ...props }: IconProps) {
+  return <FaListCheck size={size} {...props} />
 }
 
 export function CatalogIcon({ size = 16, ...props }: IconProps) {
@@ -531,6 +541,26 @@ export function CompanyIcon({ size = 16, ...props }: IconProps) {
 
 export function StarIcon({ size = 16, ...props }: IconProps) {
   return <FaStar size={size} {...props} />
+}
+
+export function CoinsIcon({ size = 16, ...props }: IconProps) {
+  return <FaCoins size={size} {...props} />
+}
+
+export function GiftIcon({ size = 16, ...props }: IconProps) {
+  return <FaGift size={size} {...props} />
+}
+
+export function GamepadIcon({ size = 16, ...props }: IconProps) {
+  return <FaGamepad size={size} {...props} />
+}
+
+export function PersonIcon({ size = 16, ...props }: IconProps) {
+  return <FaPerson size={size} {...props} />
+}
+
+export function UserGroupIcon({ size = 16, ...props }: IconProps) {
+  return <FaUserGroup size={size} {...props} />
 }
 
 export function ChevronLeftIcon({ size = 16, ...props }: IconProps) {

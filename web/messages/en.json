@@ -31,10 +31,19 @@
     "posts": "Posts",
     "space": "Space",
     "hub": "Hub",
+    "tasks": "Tasks",
     "catalog": "Catalog",
     "products": "Products",
     "home": "Home",
     "sections": "Sections"
+  },
+  "tasks": {
+    "description": "Complete tasks to earn coins.",
+    "empty": "No tasks available right now.",
+    "balanceLabel": "Balance",
+    "claimSuccess": "Claimed +{reward} coins",
+    "claimNotReady": "Task is not completed yet.",
+    "fallbackTitle": "Task #{id}"
   },
   "landing": {
     "hero": {

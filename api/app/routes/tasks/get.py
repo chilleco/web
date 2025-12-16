@@ -12,7 +12,7 @@ router = APIRouter()
 
 class Type(BaseModel):
     id: int | list[int] | None = None
-    limit: int = 10
+    limit: int = 100
     offset: int | None = None
 
 
