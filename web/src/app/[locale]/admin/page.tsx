@@ -29,6 +29,7 @@ import {
   RefreshIcon,
   ShieldIcon,
   ShoppingIcon,
+  TasksIcon,
   UserIcon,
   UsersIcon,
 } from '@/shared/ui/icons';
@@ -53,6 +54,7 @@ type TrackObjectType =
   | 'category'
   | 'comment'
   | 'space'
+  | 'task'
   | 'payment'
   | 'session'
   | 'system';
@@ -136,6 +138,7 @@ export default function AdminPage() {
       category: t('activity.objects.category'),
       comment: t('activity.objects.comment'),
       space: t('activity.objects.space'),
+      task: t('activity.objects.task'),
       payment: t('activity.objects.payment'),
       session: t('activity.objects.session'),
       system: t('activity.objects.system'),
@@ -176,6 +179,7 @@ export default function AdminPage() {
         { value: 'category', label: activityObjectLabels.category },
         { value: 'comment', label: activityObjectLabels.comment },
         { value: 'space', label: activityObjectLabels.space },
+        { value: 'task', label: activityObjectLabels.task },
         { value: 'payment', label: activityObjectLabels.payment },
         { value: 'session', label: activityObjectLabels.session },
         { value: 'system', label: activityObjectLabels.system },
@@ -229,6 +233,11 @@ export default function AdminPage() {
           return {
             icon: <BoxIcon size={16} />,
             accent: 'bg-sky-500/15 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
+          };
+        case 'task':
+          return {
+            icon: <TasksIcon size={16} />,
+            accent: 'bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400',
           };
         case 'payment':
           return {

@@ -15,6 +15,26 @@ Depending on the project that develops based on this template, the entities of t
   - options (example for goods: product size variations on marketplaces, example for apartments: pricing plans)
 - users (main clients of the service + admins)
 
+## Tasks (Rewards)
+The "tasks" feature is a reward checklist that grants users inner coins after verification.
+
+### Backend
+- Model: `api/app/models/task.py` (`tasks` collection). Active tasks usually have no `status` field because ConSys strips defaults; `status=0` disables a task. Optional `expired` (unix seconds) hides tasks for users and blocks claiming.
+- Completion state: stored in `UserLocal.tasks` (`api/app/models/user.py`) as a list of completed task ids; user balance is `UserLocal.balance`.
+- Routes:
+  - `POST /tasks/get/` (`api/app/routes/tasks/get.py`): user list (active + not expired) with derived `status` (1/3) and link formatting; admin list with `{"admin": true}` returns raw definitions (requires `status>=6`).
+  - `POST /tasks/check/` (`api/app/routes/tasks/check.py`): runs `verify.<key>.check(user_id, params)` and, on status `3`, awards `reward` and persists completion.
+  - `POST /tasks/save/` (`api/app/routes/tasks/save.py`): admin-only create/update; audited via `TrackObject.TASK`.
+- Verify modules live in `api/app/verify/`:
+  - `simple`: always succeeds
+  - `channel`: requires `params.chat_id` and a `UserLocal.social` (Telegram user id)
+  - `invite`: requires `params.count` and checks referral count
+
+### Frontend
+- User page: `web/src/app/[locale]/tasks/page.tsx` (mobile nav entry only, header unchanged).
+- Admin page: `web/src/app/[locale]/admin/tasks/page.tsx` (CRUD + enable/disable).
+- Localization: `navigation.tasks`, `tasks.*`, `admin.tasks.*`. ICU gotcha: to show a literal `{}` in messages, quote it like `'{}'`, otherwise `next-intl` throws `INVALID_MESSAGE: EMPTY_ARGUMENT`.
+
 ## Environments
 - `.env` defines `MODE`: LOCAL / TEST / DEV / PRE / PROD; loaded in `api/`, `web/`, and `tg/` containers. Copy `base.env` → `.env`; merge `prod.env` values for production.
 - Base URLs: server-side requests must use `http://api:5000/` (internal Docker network); client-side requests must use `NEXT_PUBLIC_API` through nginx; do not add separate API base URL variables.
@@ -39,6 +59,7 @@ Depending on the project that develops based on this template, the entities of t
 - **Mobile adaptive**: Every screen, table, and control layout must stay usable on small/mobile widths; add horizontal scroll containers for wide tables instead of letting them overflow.
 - **Shared translations first**: Use existing `system.*` translation keys for shared labels (loading, refresh, common actions) instead of introducing feature-specific duplicates; migrate simple words from feature scopes to `system.*` when touching those areas.
   - When adding new locale strings, ensure non-English locales are translated (avoid copy-pasting English into `ru`/`es`/`ar`/`zh`).
+- **No duplicated UI/i18n**: If multiple screens/forms need the same control or helper text, extract a shared component in `web/src/shared/ui/` and move the strings to `system.*` (delete feature-scoped duplicates).
 - **Unit suffixes**: Show measurement units using right-side labels/suffix segments on inputs (e.g., %, kg, cm); keep left labels clean.
 - **Number inputs**: Hide browser stepper arrows and prevent scroll-wheel value changes; use shared Input defaults or equivalent handlers for any custom number fields.
 - **Allow clearing inputs**: Form fields (including numeric inputs) must allow users to clear the value with Backspace/Delete before retyping; do not force immediate fallback values while typing.
@@ -186,6 +207,9 @@ Depending on the project that develops based on this template, the entities of t
 - **Opacity Standards**: Background opacity 15% (light) / 20% (dark), icon/text at full opacity for proper contrast.
 - **Examples** (`web/src/shared/ui/icons.tsx`): Save <- `SaveIcon` <- `FaFloppyDisk`
 
+#### Badges
+- **Destructive badges**: Red/danger badges (e.g. `Badge` variant `destructive`) MUST render with white text (use `text-white`; avoid black text on red backgrounds).
+
 #### Feedback (Toasts / Popups)
 - Use `widgets/feedback-system` components for all user feedback.
 - Map severities to variants: `success`, `error`, `warning`, `info`.
@@ -264,6 +288,7 @@ Depending on the project that develops based on this template, the entities of t
 - Inline label rows: For compact inputs (e.g., category, price, login, phone), place the label text inside the input row (left prefix) with the same muted background as the input (bootstrap-style inline add-on, no alternate color), a subtle divider if needed, borderless controls, and pointer-only on interactive elements.
 - **Form components (use these first)**:
   - Inputs/Textareas: `@/shared/ui/input`, `@/shared/ui/textarea`. Both use muted backgrounds (light/dark) and no borders/shadows; do not wrap with extra borders. Keep placeholders localized. For inline rows keep label + control in the same muted surface.
+  - Icon keys (FontAwesome): `@/shared/ui/icon-key-input` — reuse this component (no per-feature duplicates), stores key-only values (e.g., `home`) and includes a browse link.
   - Selects/Pickers: `@/shared/ui/select` (Radix) with our trigger styling; avoid native `<select>` except inside `InlineSelect` wrappers that mirror the same muted background and custom chevron (as used in product form).
   - File uploads: `@/shared/ui/file-upload` for single image/avatar; `@/shared/ui/multi-file-upload` for multiple images (products, galleries). Always upload via `/upload/` and store returned URLs in form state.
   - Rich text: `@/shared/ui/editor` (CKEditor lazy-load wrapper) for WYSIWYG fields; keep placeholders/i18n and honor the light edit surface it applies.

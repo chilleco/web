@@ -1,70 +1,159 @@
-from fastapi import APIRouter, Body
-from pydantic import BaseModel
+"""
+Admin endpoint for creating/updating task definitions.
+
+Notes:
+- Admin-only (`request.state.status >= 6`) because tasks affect user rewards.
+- Acts as a PATCH-like endpoint: only fields provided (non-None) are applied.
+  (ConSys ignores `None` assignments; clearing/removing a field requires server-side `del task.<field>`.)
+- On create, `title` and `verify` are required.
+- Every write is audited via `Track` with `TrackObject.TASK`.
+"""
+
+from fastapi import APIRouter, Body, Request
+from pydantic import BaseModel, ConfigDict, Field
+from consys.errors import ErrorAccess, ErrorWrong
 
 from lib import report
 from models.task import Task
+from models.track import Track, TrackAction, TrackObject, format_changes
 
 
 router = APIRouter()
 
 
-class Type(BaseModel):
-    id: int | None = None
-    title: dict | None = None
-    data: dict | None = None
-    link: str | None = None
-    icon: str | None = None
-    size: int | None = None
-    expired: int | None = None
-    reward: int | None = None
-    verify: str | None = None
+class TaskSaveRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    id: int | None = Field(None, description="Task id for update", examples=[3])
+    title: dict | None = Field(
+        None,
+        description="Localized task title (e.g., {\"en\": \"Initial Bonus\", \"ru\": \"Начальный бонус\"})",
+        examples=[{"en": "Initial Bonus", "ru": "Начальный бонус"}],
+    )
+    data: dict | None = Field(
+        None,
+        description="Localized task description",
+        examples=[{"en": "Do something", "ru": "Сделай что-то"}],
+    )
+    button: dict | None = Field(
+        None,
+        description="Localized button label",
+        examples=[{"en": "Claim", "ru": "Получить"}],
+    )
+    link: str | None = Field(
+        None,
+        description="Task action link (may contain {} placeholder for user social id)",
+        examples=["https://t.me/share/url?url=https://t.me/bot?start={}", "story"],
+    )
+    icon: str | None = Field(
+        None,
+        description="FontAwesome icon key without prefix (e.g. `gift`, `home`)",
+        examples=["gift"],
+    )
+    color: str | None = Field(
+        None,
+        description="Color key used by the client (green/violet/blue/orange)",
+        examples=["green"],
+    )
+    size: int | None = Field(None, description="Optional size hint for the client", examples=[0])
+    expired: int | None = Field(None, description="Expiration timestamp (unix seconds)", examples=[1733962020])
+    reward: int | None = Field(None, ge=0, description="Reward amount in inner coins", examples=[1000])
+    verify: str | None = Field(
+        None,
+        description="Verify module key (api/app/verify/*.py)",
+        examples=["simple", "channel", "invite"],
+    )
+    params: dict | None = Field(
+        None,
+        description="Verify params payload for the verify module",
+        examples=[{"chat_id": -1002273788200}, {"count": 3}],
+    )
+    priority: int | None = Field(None, description="Sorting priority (DESC)", examples=[1000])
+    status: int | None = Field(None, description="0=disabled/cancelled, 1=active", examples=[0])
 
 
-@router.post("/save/")
+class TaskSaveResponse(BaseModel):
+    id: int
+    new: bool
+    task: dict
+
+
+@router.post("/save/", response_model=TaskSaveResponse, tags=["tasks"])
 async def handler(
-    data: Type = Body(...),
+    request: Request,
+    data: TaskSaveRequest = Body(...),
 ):
-    # # No access
-    # if request.state.status < 2:
-    #     raise ErrorAccess("save")
+    if request.state.status < 6:
+        raise ErrorAccess("save")
 
-    # Get
     new = False
     if data.id:
         task = Task.get(data.id)
     else:
-        task = Task(
-            # user=request.state.user,
-            # token=None if request.state.user else request.state.token,
-        )
+        if not data.title:
+            raise ErrorWrong("title")
+        if not data.verify:
+            raise ErrorWrong("verify")
+
+        task = Task()
         new = True
 
-    # Change fields
-    task.title = data.title
-    task.data = data.data
-    task.link = data.link
-    task.icon = data.icon
-    task.size = data.size
-    task.expired = data.expired
-    task.reward = data.reward
-    task.verify = data.verify
+    # Apply only provided fields (PATCH semantics).
+    if data.title is not None:
+        if not isinstance(data.title, dict) or not data.title:
+            raise ErrorWrong("title")
+        task.title = data.title
+    if data.data is not None:
+        task.data = data.data
+    if data.button is not None:
+        task.button = data.button
+    if data.link is not None:
+        task.link = data.link
+    if data.icon is not None:
+        task.icon = data.icon
+    if data.color is not None:
+        task.color = data.color
+    if data.size is not None:
+        task.size = data.size
+    if data.expired is not None:
+        task.expired = data.expired
+    if data.reward is not None:
+        task.reward = data.reward
+    if data.verify is not None:
+        task.verify = data.verify
+    if data.params is not None:
+        task.params = data.params
+    if data.priority is not None:
+        task.priority = data.priority
+    if data.status is not None:
+        task.status = int(data.status)
 
-    # Save
+    changes = format_changes(task.get_changes())
     task.save()
 
-    # Report
+    Track.log(
+        object=TrackObject.TASK,
+        action=TrackAction.CREATE if new else TrackAction.UPDATE,
+        user=request.state.user,
+        token=request.state.token,
+        request=request,
+        params={
+            "id": task.id,
+            "changes": changes,
+        },
+    )
+
     if new:
         await report.important(
             "New task",
             {
                 "task": task.id,
-                "title": task.title.get("en", f"Task #{task.id}"),
-                # "user": request.state.user,
+                "title": (task.title or {}).get("en", f"Task #{task.id}"),
             },
         )
 
-    # Response
     return {
         "id": task.id,
         "new": new,
+        "task": task.json(),
     }

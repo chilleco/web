@@ -28,6 +28,7 @@ export const routing = defineRouting({
         '/admin/products': '/admin/products',
         '/admin/spaces': '/admin/spaces',
         '/admin/users': '/admin/users',
+        '/admin/tasks': '/admin/tasks',
         '/profile': '/profile',
         '/callback': '/callback',
         '/posts/create': '/posts/create',

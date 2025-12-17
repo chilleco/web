@@ -66,6 +66,7 @@ export const API_ENDPOINTS = {
   TASKS: {
     GET: '/tasks/get/',
     CHECK: '/tasks/check/',
+    SAVE: '/tasks/save/',
   },
   ADMIN: {
     STATS: '/admin/stats/',

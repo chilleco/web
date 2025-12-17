@@ -325,6 +325,10 @@
     "no": "Нет",
     "share": "Поделиться",
     "shareUnavailable": "Поделиться недоступно на этом устройстве",
+    "browseIcons": "Просмотреть иконки FontAwesome",
+    "iconKeyLabel": "Иконка (ключ FontAwesome)",
+    "iconKeyPlaceholder": "home",
+    "iconKeyDescription": "Введите ключ иконки FontAwesome (без префикса 'fa-'). Оставьте пустым для отсутствия иконки.",
     "item": "Элемент",
     "processing": "Обработка",
     "errors": {
@@ -469,6 +473,7 @@
           "category": "Категория",
           "comment": "Комментарий",
           "space": "Пространство",
+          "task": "Задание",
           "payment": "Платёж",
           "session": "Сессия",
           "system": "Система"
@@ -613,10 +618,6 @@
         "color": "Цвет категории",
         "noColor": "Без цвета",
         "colorPlaceholder": "Опционально: #3b82f6",
-        "icon": "Иконка (ключ FontAwesome)",
-        "iconPlaceholder": "например: user, home, star",
-        "iconDescription": "Введите ключ иконки FontAwesome (без префикса 'fa-'). Оставьте пустым для отсутствия иконки.",
-        "browseIcons": "Просмотреть иконки FontAwesome",
         "image": "Изображение категории",
         "imageUpload": "Нажмите для загрузки изображения",
         "preview": "Предпросмотр - Как это будет выглядеть в списке категорий",
@@ -708,6 +709,76 @@
       "optionsRequired": "Добавьте хотя бы одну опцию",
       "priceFromLabel": "Цена от",
       "priceFromPreview": "База от: {value} {currency}"
+    },
+    "tasks": {
+      "title": "Задания",
+      "description": "Управление заданиями и наградами для пользователей.",
+      "loading": "Загружаем задания...",
+      "empty": "Пока нет заданий",
+      "createTitle": "Создать задание",
+      "editTitle": "Редактировать задание №{id}",
+      "status": {
+        "active": "Активно",
+        "inactive": "Неактивно"
+      },
+      "actions": {
+        "enable": "Включить",
+        "disable": "Выключить",
+        "enabled": "Задание включено",
+        "disabled": "Задание выключено",
+        "createSuccess": "Задание создано",
+        "updateSuccess": "Задание обновлено"
+      },
+      "fields": {
+        "title": "Название",
+        "verify": "Проверка",
+        "status": "Статус",
+        "reward": "Награда",
+        "priority": "Приоритет",
+        "color": "Цвет",
+        "expired": "Истекает",
+        "link": "Ссылка",
+        "params": "Параметры",
+        "data": "Описание",
+        "button": "Кнопка"
+      },
+      "placeholders": {
+        "title": "Название ({locale})",
+        "data": "Описание ({locale})",
+        "button": "Текст кнопки ({locale})",
+        "verify": "Выберите тип проверки",
+        "status": "Выберите статус",
+        "reward": "например 1000",
+        "priority": "например 800",
+        "color": "Выберите цвет",
+        "expired": "Unix-время (сек.)",
+        "link": "https://t.me/... или story",
+        "params": "'{\"chat_id\": -1002273788200}'"
+      },
+      "hints": {
+        "link": "Используйте '{}' для подстановки Telegram ID пользователя в ссылку.",
+        "params": "JSON-объект, который передаётся в verify-модуль (chat_id / count)."
+      },
+      "verify": {
+        "simple": "Простая",
+        "channel": "Канал/чат",
+        "invite": "Приглашения",
+        "value": "Проверка: {value}",
+        "empty": "Проверка: —"
+      },
+      "colors": {
+        "green": "Зелёный",
+        "violet": "Фиолетовый",
+        "blue": "Синий",
+        "orange": "Оранжевый"
+      },
+      "errors": {
+        "title": "Нужно заполнить название (EN)",
+        "verify": "Нужно выбрать проверку",
+        "params": "Параметры должны быть корректным JSON-объектом",
+        "load": "Не удалось загрузить задания",
+        "toggle": "Не удалось изменить статус задания"
+      }
     },
     "spaces": {
       "title": "Пространства",

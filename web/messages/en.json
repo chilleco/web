@@ -325,6 +325,10 @@
     "no": "No",
     "share": "Share",
     "shareUnavailable": "Sharing is not available on this device",
+    "browseIcons": "Browse FontAwesome icons",
+    "iconKeyLabel": "Icon (FontAwesome key)",
+    "iconKeyPlaceholder": "home",
+    "iconKeyDescription": "Enter a FontAwesome icon key (without 'fa-' prefix). Leave empty for no icon.",
     "item": "Item",
     "processing": "Processing",
     "errors": {
@@ -469,6 +473,7 @@
           "category": "Category",
           "comment": "Comment",
           "space": "Space",
+          "task": "Task",
           "payment": "Payment",
           "session": "Session",
           "system": "System"
@@ -613,10 +618,6 @@
         "color": "Category Color",
         "noColor": "No color",
         "colorPlaceholder": "Optional: #3b82f6",
-        "icon": "Icon (FontAwesome Key)",
-        "iconPlaceholder": "e.g: user, home, star",
-        "iconDescription": "Enter a FontAwesome icon key (without 'fa-' prefix). Leave empty for no icon.",
-        "browseIcons": "Browse FontAwesome icons",
         "image": "Category Image",
         "imageUpload": "Click to upload image",
         "preview": "Preview - How it will appear in the categories list",
@@ -708,6 +709,76 @@
       "optionsRequired": "Add at least one option",
       "priceFromLabel": "Price from",
       "priceFromPreview": "Base from: {value} {currency}"
+    },
+    "tasks": {
+      "title": "Tasks",
+      "description": "Manage user reward tasks.",
+      "loading": "Loading tasks...",
+      "empty": "No tasks yet",
+      "createTitle": "Create task",
+      "editTitle": "Edit task #{id}",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "actions": {
+        "enable": "Enable",
+        "disable": "Disable",
+        "enabled": "Task enabled",
+        "disabled": "Task disabled",
+        "createSuccess": "Task created",
+        "updateSuccess": "Task updated"
+      },
+      "fields": {
+        "title": "Title",
+        "verify": "Verify",
+        "status": "Status",
+        "reward": "Reward",
+        "priority": "Priority",
+        "color": "Color",
+        "expired": "Expires",
+        "link": "Link",
+        "params": "Params",
+        "data": "Description",
+        "button": "Button"
+      },
+      "placeholders": {
+        "title": "Title ({locale})",
+        "data": "Description ({locale})",
+        "button": "Button ({locale})",
+        "verify": "Select verify type",
+        "status": "Select status",
+        "reward": "e.g. 1000",
+        "priority": "e.g. 800",
+        "color": "Select color",
+        "expired": "Unix timestamp (s)",
+        "link": "https://t.me/... or story",
+        "params": "'{\"chat_id\": -1002273788200}'"
+      },
+      "hints": {
+        "link": "Use '{}' to inject user social id into links.",
+        "params": "JSON object passed to the verify module (chat_id / count)."
+      },
+      "verify": {
+        "simple": "Simple",
+        "channel": "Channel",
+        "invite": "Invite",
+        "value": "Verify: {value}",
+        "empty": "Verify: —"
+      },
+      "colors": {
+        "green": "Green",
+        "violet": "Violet",
+        "blue": "Blue",
+        "orange": "Orange"
+      },
+      "errors": {
+        "title": "Title (EN) is required",
+        "verify": "Verify is required",
+        "params": "Params must be a valid JSON object",
+        "load": "Failed to load tasks",
+        "toggle": "Failed to update task status"
+      }
     },
     "spaces": {
       "title": "Spaces",

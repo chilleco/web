@@ -41,7 +41,8 @@ class UserLocal(Base):
     # Cache
     locale = Attribute(types=str, default="en")
     social = Attribute(types=int)
-    tasks = Attribute(types=list)
+    # Completed task ids (used by `/tasks/get/` and `/tasks/check/`)
+    tasks = Attribute(types=list, default=list)
     # draws = Attribute(types=list)
     # pays = Attribute(types=list)
 

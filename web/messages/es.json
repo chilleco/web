@@ -324,6 +324,10 @@
     "no": "No",
     "share": "Compartir",
     "shareUnavailable": "El compartir no está disponible en este dispositivo",
+    "browseIcons": "Ver iconos de FontAwesome",
+    "iconKeyLabel": "Icono (clave FontAwesome)",
+    "iconKeyPlaceholder": "home",
+    "iconKeyDescription": "Ingresa una clave de icono FontAwesome (sin prefijo 'fa-'). Deja vacío para no usar icono.",
     "item": "Elemento",
     "processing": "Procesando",
     "errors": {
@@ -468,6 +472,7 @@
           "category": "Categoría",
           "comment": "Comentario",
           "space": "Espacio",
+          "task": "Tarea",
           "payment": "Pago",
           "session": "Sesión",
           "system": "Sistema"
@@ -612,10 +617,6 @@
         "color": "Color de categoría",
         "noColor": "Sin color",
         "colorPlaceholder": "Opcional: #3b82f6",
-        "icon": "Icono (clave FontAwesome)",
-        "iconPlaceholder": "p.ej: user, home, star",
-        "iconDescription": "Ingresa una clave de icono FontAwesome (sin prefijo 'fa-'). Deja vacío para no usar icono.",
-        "browseIcons": "Explorar iconos FontAwesome",
         "image": "Imagen de categoría",
         "imageUpload": "Haz clic para subir imagen",
         "preview": "Vista previa - Cómo aparecerá en la lista de categorías",
@@ -696,6 +697,76 @@
       "optionsRequired": "Agrega al menos una opción",
       "priceFromLabel": "Precio desde",
       "priceFromPreview": "Base desde: {value} {currency}"
+    },
+    "tasks": {
+      "title": "Tareas",
+      "description": "Gestiona las tareas con recompensa para los usuarios.",
+      "loading": "Cargando tareas...",
+      "empty": "Aún no hay tareas",
+      "createTitle": "Crear tarea",
+      "editTitle": "Editar tarea n.º {id}",
+      "status": {
+        "active": "Activa",
+        "inactive": "Inactiva"
+      },
+      "actions": {
+        "enable": "Activar",
+        "disable": "Desactivar",
+        "enabled": "Tarea activada",
+        "disabled": "Tarea desactivada",
+        "createSuccess": "Tarea creada",
+        "updateSuccess": "Tarea actualizada"
+      },
+      "fields": {
+        "title": "Título",
+        "verify": "Verificación",
+        "status": "Estado",
+        "reward": "Recompensa",
+        "priority": "Prioridad",
+        "color": "Color",
+        "expired": "Expira",
+        "link": "Enlace",
+        "params": "Parámetros",
+        "data": "Descripción",
+        "button": "Botón"
+      },
+      "placeholders": {
+        "title": "Título ({locale})",
+        "data": "Descripción ({locale})",
+        "button": "Texto del botón ({locale})",
+        "verify": "Elige verificación",
+        "status": "Elige estado",
+        "reward": "p. ej. 1000",
+        "priority": "p. ej. 800",
+        "color": "Elige color",
+        "expired": "Timestamp unix (s)",
+        "link": "https://t.me/... o story",
+        "params": "'{\"chat_id\": -1002273788200}'"
+      },
+      "hints": {
+        "link": "Usa '{}' para insertar el id social del usuario en el enlace.",
+        "params": "Objeto JSON que se pasa al módulo de verificación (chat_id / count)."
+      },
+      "verify": {
+        "simple": "Simple",
+        "channel": "Canal",
+        "invite": "Invitar",
+        "value": "Verificación: {value}",
+        "empty": "Verificación: —"
+      },
+      "colors": {
+        "green": "Verde",
+        "violet": "Violeta",
+        "blue": "Azul",
+        "orange": "Naranja"
+      },
+      "errors": {
+        "title": "El título (EN) es obligatorio",
+        "verify": "La verificación es obligatoria",
+        "params": "Los parámetros deben ser un objeto JSON válido",
+        "load": "No se pudieron cargar las tareas",
+        "toggle": "No se pudo actualizar el estado de la tarea"
+      }
     },
     "spaces": {
       "title": "Espacios",

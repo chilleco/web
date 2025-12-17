@@ -324,6 +324,10 @@
     "no": "否",
     "share": "分享",
     "shareUnavailable": "此设备不支持分享",
+    "browseIcons": "浏览 FontAwesome 图标",
+    "iconKeyLabel": "图标（FontAwesome 键）",
+    "iconKeyPlaceholder": "home",
+    "iconKeyDescription": "输入 FontAwesome 图标键（不含 'fa-' 前缀）。留空表示不使用图标。",
     "item": "项目",
     "processing": "处理中",
     "errors": {
@@ -468,6 +472,7 @@
           "category": "分类",
           "comment": "评论",
           "space": "空间",
+          "task": "任务",
           "payment": "支付",
           "session": "会话",
           "system": "系统"
@@ -612,10 +617,6 @@
         "color": "分类颜色",
         "noColor": "无颜色",
         "colorPlaceholder": "可选：#3b82f6",
-        "icon": "图标（FontAwesome键）",
-        "iconPlaceholder": "例如：user, home, star",
-        "iconDescription": "输入FontAwesome图标键（不含'fa-'前缀）。留空表示无图标。",
-        "browseIcons": "浏览FontAwesome图标",
         "image": "分类图片",
         "imageUpload": "点击上传图片",
         "preview": "预览 - 在分类列表中的显示效果",
@@ -696,6 +697,76 @@
       "optionsRequired": "请添加至少一个选项",
       "priceFromLabel": "起价",
       "priceFromPreview": "基础价格：{value} {currency}"
+    },
+    "tasks": {
+      "title": "任务",
+      "description": "管理用户可完成的奖励任务。",
+      "loading": "正在加载任务...",
+      "empty": "暂无任务",
+      "createTitle": "创建任务",
+      "editTitle": "编辑任务 #{id}",
+      "status": {
+        "active": "启用",
+        "inactive": "禁用"
+      },
+      "actions": {
+        "enable": "启用",
+        "disable": "禁用",
+        "enabled": "任务已启用",
+        "disabled": "任务已禁用",
+        "createSuccess": "任务已创建",
+        "updateSuccess": "任务已更新"
+      },
+      "fields": {
+        "title": "标题",
+        "verify": "验证",
+        "status": "状态",
+        "reward": "奖励",
+        "priority": "优先级",
+        "color": "颜色",
+        "expired": "到期时间",
+        "link": "链接",
+        "params": "参数",
+        "data": "描述",
+        "button": "按钮"
+      },
+      "placeholders": {
+        "title": "标题（{locale}）",
+        "data": "描述（{locale}）",
+        "button": "按钮文本（{locale}）",
+        "verify": "选择验证方式",
+        "status": "选择状态",
+        "reward": "例如 1000",
+        "priority": "例如 800",
+        "color": "选择颜色",
+        "expired": "Unix 时间戳（秒）",
+        "link": "https://t.me/... 或 story",
+        "params": "'{\"chat_id\": -1002273788200}'"
+      },
+      "hints": {
+        "link": "使用 '{}' 将用户的社交 id 注入到链接中。",
+        "params": "传递给验证模块的 JSON 对象（chat_id / count）。"
+      },
+      "verify": {
+        "simple": "简单",
+        "channel": "频道/群组",
+        "invite": "邀请",
+        "value": "验证：{value}",
+        "empty": "验证：—"
+      },
+      "colors": {
+        "green": "绿色",
+        "violet": "紫色",
+        "blue": "蓝色",
+        "orange": "橙色"
+      },
+      "errors": {
+        "title": "必须填写英文标题（EN）",
+        "verify": "必须选择验证方式",
+        "params": "参数必须是有效的 JSON 对象",
+        "load": "加载任务失败",
+        "toggle": "更新任务状态失败"
+      }
     },
     "spaces": {
       "title": "空间",

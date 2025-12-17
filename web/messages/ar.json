@@ -324,6 +324,10 @@
     "no": "لا",
     "share": "مشاركة",
     "shareUnavailable": "المشاركة غير متاحة على هذا الجهاز",
+    "browseIcons": "تصفح أيقونات FontAwesome",
+    "iconKeyLabel": "الأيقونة (مفتاح FontAwesome)",
+    "iconKeyPlaceholder": "home",
+    "iconKeyDescription": "أدخل مفتاح أيقونة FontAwesome (بدون بادئة 'fa-'). اتركه فارغاً لعدم استخدام أيقونة.",
     "item": "عنصر",
     "processing": "جارٍ المعالجة",
     "errors": {
@@ -468,6 +472,7 @@
           "category": "فئة",
           "comment": "تعليق",
           "space": "مساحة",
+          "task": "مهمة",
           "payment": "دفع",
           "session": "جلسة",
           "system": "النظام"
@@ -612,10 +617,6 @@
         "color": "لون الفئة",
         "noColor": "بدون لون",
         "colorPlaceholder": "اختياري: #3b82f6",
-        "icon": "الأيقونة (مفتاح FontAwesome)",
-        "iconPlaceholder": "مثال: user, home, star",
-        "iconDescription": "أدخل مفتاح أيقونة FontAwesome (بدون بادئة 'fa-'). اتركه فارغاً لعدم استخدام أيقونة.",
-        "browseIcons": "تصفح أيقونات FontAwesome",
         "image": "صورة الفئة",
         "imageUpload": "انقر لتحميل الصورة",
         "preview": "معاينة - كيف ستظهر في قائمة الفئات",
@@ -696,6 +697,76 @@
       "optionsRequired": "أضف خياراً واحداً على الأقل",
       "priceFromLabel": "السعر من",
       "priceFromPreview": "السعر الأساسي من: {value} {currency}"
+    },
+    "tasks": {
+      "title": "المهام",
+      "description": "إدارة مهام المكافآت للمستخدمين.",
+      "loading": "جارٍ تحميل المهام...",
+      "empty": "لا توجد مهام بعد",
+      "createTitle": "إنشاء مهمة",
+      "editTitle": "تعديل المهمة رقم {id}",
+      "status": {
+        "active": "نشطة",
+        "inactive": "غير نشطة"
+      },
+      "actions": {
+        "enable": "تفعيل",
+        "disable": "إيقاف",
+        "enabled": "تم تفعيل المهمة",
+        "disabled": "تم إيقاف المهمة",
+        "createSuccess": "تم إنشاء المهمة",
+        "updateSuccess": "تم تحديث المهمة"
+      },
+      "fields": {
+        "title": "العنوان",
+        "verify": "التحقق",
+        "status": "الحالة",
+        "reward": "المكافأة",
+        "priority": "الأولوية",
+        "color": "اللون",
+        "expired": "تنتهي في",
+        "link": "الرابط",
+        "params": "المعلمات",
+        "data": "الوصف",
+        "button": "زر"
+      },
+      "placeholders": {
+        "title": "العنوان ({locale})",
+        "data": "الوصف ({locale})",
+        "button": "نص الزر ({locale})",
+        "verify": "اختر نوع التحقق",
+        "status": "اختر الحالة",
+        "reward": "مثال: 1000",
+        "priority": "مثال: 800",
+        "color": "اختر اللون",
+        "expired": "طابع زمني Unix (ثوانٍ)",
+        "link": "https://t.me/... أو story",
+        "params": "'{\"chat_id\": -1002273788200}'"
+      },
+      "hints": {
+        "link": "استخدم '{}' لإدراج المعرّف الاجتماعي للمستخدم في الرابط.",
+        "params": "كائن JSON يُمرَّر لوحدة التحقق (chat_id / count)."
+      },
+      "verify": {
+        "simple": "بسيط",
+        "channel": "قناة",
+        "invite": "دعوة",
+        "value": "تحقق: {value}",
+        "empty": "تحقق: —"
+      },
+      "colors": {
+        "green": "أخضر",
+        "violet": "بنفسجي",
+        "blue": "أزرق",
+        "orange": "برتقالي"
+      },
+      "errors": {
+        "title": "العنوان (EN) مطلوب",
+        "verify": "التحقق مطلوب",
+        "params": "يجب أن تكون المعلمات كائن JSON صالح",
+        "load": "تعذر تحميل المهام",
+        "toggle": "تعذر تحديث حالة المهمة"
+      }
     },
     "spaces": {
       "title": "مساحات",

@@ -13,6 +13,7 @@ import { Label } from '@/shared/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { Box } from '@/shared/ui/box';
 import { FileUpload, FileData } from '@/shared/ui/file-upload';
+import { IconKeyInput } from '@/shared/ui/icon-key-input';
 import { SaveIcon, CancelIcon } from '@/shared/ui/icons';
 import { useToast } from '@/widgets/feedback-system';
 import { ApiError } from '@/shared/services/api/client';
@@ -439,26 +440,12 @@ export function CategoryForm({
           </div>
 
           {/* Icon Selection */}
-          <div className="space-y-2">
-            <Label>{t('form.icon')}</Label>
-            <Input
-              {...register('icon')}
-              placeholder={t('form.iconPlaceholder')}
-              className="w-48"
-            />
-            <p className="text-xs text-muted-foreground">
-              {t('form.iconDescription')}
-              <br />
-              <a
-                href="https://fontawesome.com/search?s=solid&ic=free&o=r"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                {t('form.browseIcons')} →
-              </a>
-            </p>
-          </div>
+          <IconKeyInput
+            inputProps={{
+              ...register('icon'),
+              className: 'w-48',
+            }}
+          />
 
           {/* Image Upload */}
           <FileUpload

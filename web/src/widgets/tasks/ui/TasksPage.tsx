@@ -5,22 +5,12 @@ import { useLocale, useTranslations } from 'next-intl';
 import { PageHeader } from '@/shared/ui/page-header';
 import { Box } from '@/shared/ui/box';
 import {
-    ArrowUpIcon,
-    BullhornIcon,
     CheckCircleIcon,
     ChevronRightIcon,
     CoinsIcon,
-    FeedbackIcon,
-    GamepadIcon,
-    GiftIcon,
     LoadingIcon,
-    MessageIcon,
-    PersonIcon,
     RefreshIcon,
-    StarIcon,
     TasksIcon,
-    UserGroupIcon,
-    UsersIcon,
 } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib/utils';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -28,65 +18,7 @@ import { useToastActions } from '@/shared/hooks/useToast';
 import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { checkTask, getTasks } from '@/entities/task/api/tasks';
 import type { Task } from '@/entities/task/model/task';
-
-type TaskColor = 'green' | 'violet' | 'blue' | 'orange' | string;
-
-type TaskColorStyles = {
-    iconContainer: string;
-    rewardText: string;
-};
-
-const taskColorStyles: Record<string, TaskColorStyles> = {
-    green: {
-        iconContainer: 'bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400',
-        rewardText: 'text-green-600 dark:text-green-400',
-    },
-    violet: {
-        iconContainer: 'bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400',
-        rewardText: 'text-purple-600 dark:text-purple-400',
-    },
-    blue: {
-        iconContainer: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
-        rewardText: 'text-blue-600 dark:text-blue-400',
-    },
-    orange: {
-        iconContainer: 'bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400',
-        rewardText: 'text-orange-600 dark:text-orange-400',
-    },
-};
-
-const defaultTaskColorStyles: TaskColorStyles = {
-    iconContainer: 'bg-muted text-muted-foreground',
-    rewardText: 'text-muted-foreground',
-};
-
-const resolveColorStyles = (color?: TaskColor): TaskColorStyles => {
-    if (!color) return defaultTaskColorStyles;
-    return taskColorStyles[color] ?? defaultTaskColorStyles;
-};
-
-const resolveLocalizedText = (value: Task['title'], locale: string) => {
-    if (!value) return '';
-    if (value[locale]) return value[locale];
-    if (value.en) return value.en;
-    const first = Object.values(value).find((item) => typeof item === 'string' && item.trim().length > 0);
-    return first ?? '';
-};
-
-const resolveTaskIcon = (icon?: string) => {
-    const normalized = icon?.toLowerCase() ?? '';
-    if (normalized.includes('fa-gift')) return <GiftIcon size={22} />;
-    if (normalized.includes('fa-gamepad')) return <GamepadIcon size={22} />;
-    if (normalized.includes('fa-bullhorn')) return <BullhornIcon size={22} />;
-    if (normalized.includes('fa-star')) return <StarIcon size={22} />;
-    if (normalized.includes('fa-user-group')) return <UserGroupIcon size={22} />;
-    if (normalized.includes('fa-users')) return <UsersIcon size={22} />;
-    if (normalized.includes('fa-person')) return <PersonIcon size={22} />;
-    if (normalized.includes('fa-comments')) return <FeedbackIcon size={22} />;
-    if (normalized.includes('fa-message')) return <MessageIcon size={22} />;
-    if (normalized.includes('fa-caret-up')) return <ArrowUpIcon size={22} />;
-    return <CheckCircleIcon size={22} />;
-};
+import { resolveLocalizedText, resolveTaskColorStyles, resolveTaskIcon } from '@/entities/task/lib/presentation';
 
 const shouldDelayCheck = (link?: string) => {
     if (!link) return false;
@@ -127,7 +59,7 @@ function TaskItem({
     onClick: (task: Task) => void;
 }) {
     const tTasks = useTranslations('tasks');
-    const { iconContainer, rewardText } = resolveColorStyles(task.color);
+    const { iconContainer, rewardText } = resolveTaskColorStyles(task.color);
 
     const title = resolveLocalizedText(task.title, locale);
     const description = resolveLocalizedText(task.data, locale);
@@ -317,7 +249,7 @@ export default function TasksPage() {
                         }
                     />
 
-                    <div size="lg" className="space-y-3">
+                    <div className="space-y-3">
                         {balance !== null && (
                             <div className="flex items-center justify-between gap-3">
                                 <div className="text-sm text-muted-foreground">{tTasks('balanceLabel')}</div>

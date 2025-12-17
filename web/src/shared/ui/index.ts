@@ -9,6 +9,7 @@ export * from './icon-button';
 export * from './icons';
 export * from './file-upload';
 export * from './input';
+export * from './icon-key-input';
 export * from './multi-file-upload';
 export * from './page-header';
 export * from './popover';
