@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useId, useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Label } from './label';
@@ -27,6 +27,8 @@ export type FileTypeFilter = 'any' | 'images' | 'documents' | 'media' | 'archive
 export interface FileData {
   file?: File;
   preview?: string;
+  name?: string;
+  size?: number;
   type: 'image' | 'pdf' | 'document' | 'excel' | 'powerpoint' | 'video' | 'audio' | 'archive' | 'code' | 'other';
   icon: React.ReactNode;
 }
@@ -179,10 +181,12 @@ export function FileUpload({
   maxSize = 5,
   showHints = true,
   className,
-  id = 'fileUpload',
+  id,
   error,
 }: FileUploadProps) {
   const t = useTranslations('fileUpload');
+  const generatedId = useId();
+  const inputId = id || `fileUpload_${generatedId}`;
   const [isDragOver, setIsDragOver] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -223,6 +227,8 @@ export function FileUpload({
 
     const newFileData: FileData = {
       file,
+      name: file.name,
+      size: file.size,
       type: fileType,
       icon,
     };
@@ -319,13 +325,13 @@ export function FileUpload({
           accept={accept}
           onChange={handleFileChange}
           className="hidden"
-          id={id}
+          id={inputId}
           disabled={disabled}
         />
 
         {/* Upload Label/Trigger */}
         <Label
-          htmlFor={id}
+          htmlFor={inputId}
           className={cn(
             'block w-full h-full group',
             disabled ? 'cursor-not-allowed' : 'cursor-pointer'
@@ -360,10 +366,14 @@ export function FileUpload({
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-foreground truncate w-20">
-                      {fileData?.file?.name || 'Unknown file'}
+                      {fileData?.file?.name || fileData?.name || 'Unknown file'}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {fileData?.file?.size ? formatFileSize(fileData.file.size) : ''}
+                      {fileData?.file?.size
+                        ? formatFileSize(fileData.file.size)
+                        : fileData?.size
+                          ? formatFileSize(fileData.size)
+                          : ''}
                     </p>
                   </div>
                   {/* Hover Overlay for non-images */}

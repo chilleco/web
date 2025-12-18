@@ -1,6 +1,8 @@
 import traceback
 
-from fastapi import FastAPI, Request, File
+from pathlib import Path
+
+from fastapi import FastAPI, Request, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -144,11 +146,32 @@ async def ping():
 
 
 @app.post("/upload/")
-async def uploader(data: bytes = File()):
-    """Upload optimized images to S3"""
+async def uploader(
+    data: bytes = File(),
+    name: str | None = Form(None),
+):
+    """Upload files to S3.
+
+    - Images are converted to webp before uploading.
+    - Non-images (or images that fail conversion) are uploaded as-is.
+    """
+    file_type = None
+    if name:
+        suffix = Path(name).suffix.lower().lstrip(".")
+        if suffix:
+            file_type = suffix
+
+    converted: bytes | None = None
     try:
         converted = await convert(data)
-        url = await upload(converted, file_type="webp")
+    except Exception:  # pylint: disable=broad-except
+        converted = None
+
+    try:
+        if converted:
+            url = await upload(converted, file_type="webp")
+        else:
+            url = await upload(data, file_type=file_type or "bin")
     except Exception as exc:  # pylint: disable=broad-except
         # Normalize to a BaseError so middleware returns a 400 with detail
         raise BaseError(str(exc)) from exc

@@ -19,6 +19,7 @@ const extractErrorDetail = (error: ApiError): string | undefined => {
 export async function uploadFile(file: File): Promise<string> {
   const formData = new FormData();
   formData.append('data', file);
+  formData.append('name', file.name);
 
   try {
     const response = await api.post<{ url: string }>('/upload/', formData, {

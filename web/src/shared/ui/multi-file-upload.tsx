@@ -144,6 +144,8 @@ export function MultiFileUpload({
       const fileType = getFileType(file);
       const fileData: FileData = {
         file,
+        name: file.name,
+        size: file.size,
         type: fileType,
         icon: getFileIcon(fileType),
       };
@@ -291,7 +293,10 @@ export function MultiFileUpload({
       >
         {/* Existing Files */}
         {value.map((fileData, index) => (
-          <div key={`${fileData.preview || fileData.file?.name || index}_${index}`} className="relative group aspect-square">
+          <div
+            key={`${fileData.preview || fileData.name || fileData.file?.name || index}_${index}`}
+            className="relative group aspect-square"
+          >
             <FileUpload
               value={fileData.preview || null}
               fileData={fileData}
@@ -303,7 +308,6 @@ export function MultiFileUpload({
               fileTypes={fileTypes}
               maxSize={maxSize}
               showHints={false}
-              id={`fileUpload_${index}`}
               className="h-full"
             />
           </div>
@@ -320,7 +324,6 @@ export function MultiFileUpload({
               fileTypes={fileTypes}
               maxSize={maxSize}
               showHints={false}
-              id="addMoreFileUpload"
               className="h-full"
             />
           </div>
