@@ -33,6 +33,8 @@
     "hub": "中心",
     "tasks": "任务",
     "catalog": "目录",
+    "products": "产品",
+    "feedback": "反馈",
     "home": "首页",
     "sections": "版块"
   },
@@ -246,6 +248,8 @@
     "faq": {
       "title": "FAQ",
       "description": "给决策者与审批人的解答。",
+      "askTitle": "没找到答案？",
+      "askDescription": "把问题发给我们，我们会尽快回复。",
       "items": {
         "coverage": {
           "question": "是否支持多语言？",
@@ -318,6 +322,9 @@
     "loading": "加载中",
     "saving": "保存中...",
     "refresh": "刷新",
+    "prev": "上一个",
+    "next": "下一个",
+    "download": "下载",
     "cancel": "取消",
     "none": "无",
     "yes": "是",
@@ -389,6 +396,25 @@
     "userAgreement": "用户协议",
     "refund": "退款政策",
     "rates": "价格"
+  },
+  "feedback": {
+    "title": "反馈",
+    "description": "问题、故障和改进建议。",
+    "types": {
+      "question": "问题",
+      "bug": "故障",
+      "request": "请求",
+      "improve": "改进"
+    },
+    "fields": {
+      "type": "类型",
+      "message": "内容",
+      "files": "附件"
+    },
+    "placeholders": {
+      "message": "描述问题或想法"
+    },
+    "success": "谢谢！我们已收到你的消息。"
   },
   "spaces": {
     "form": {
@@ -473,6 +499,7 @@
           "comment": "评论",
           "space": "空间",
           "task": "任务",
+          "feedback": "反馈",
           "payment": "支付",
           "session": "会话",
           "system": "系统"
@@ -570,6 +597,43 @@
           "repeatPurchase": "复购"
         }
       }
+    },
+    "feedback": {
+      "title": "反馈",
+      "description": "用户的问题、故障和请求。",
+      "loading": "正在加载反馈...",
+      "empty": "暂无反馈。",
+      "countLabel": "{count} 条",
+      "fallbackTitle": "反馈 #{id}",
+      "actions": {
+        "open": "打开"
+      },
+      "filters": {
+        "searchPlaceholder": "搜索反馈...",
+        "type": "类型",
+        "typeAll": "全部类型"
+      },
+      "types": {
+        "question": "问题",
+        "bug": "故障",
+        "request": "请求",
+        "improve": "改进"
+      },
+      "fields": {
+        "source": "来源",
+        "type": "类型",
+        "created": "创建时间",
+        "user": "用户",
+        "userStatus": "用户状态",
+        "network": "网络",
+        "token": "令牌"
+      },
+      "detailsTitle": "反馈 #{id}",
+      "detailsMeta": "详情",
+      "detailsMessage": "内容",
+      "detailsFiles": "附件",
+      "detailsTimeline": "最近活动（24小时）",
+      "timelineEmpty": "过去24小时无活动"
     },
     "categories": {
       "title": "类别",

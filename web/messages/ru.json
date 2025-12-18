@@ -32,6 +32,7 @@
     "space": "Пространство",
     "hub": "Хаб",
     "tasks": "Задания",
+    "feedback": "Обратная связь",
     "catalog": "Каталог",
     "products": "Товары",
     "home": "Главная",
@@ -247,6 +248,8 @@
     "faq": {
       "title": "FAQ",
       "description": "Ответы для стейкхолдеров и согласующих.",
+      "askTitle": "Не нашли ответ?",
+      "askDescription": "Напишите вопрос — мы ответим в ближайшее время.",
       "items": {
         "coverage": {
           "question": "Поддерживаете ли вы несколько языков?",
@@ -319,6 +322,9 @@
     "loading": "Загрузка",
     "saving": "Сохраняем...",
     "refresh": "Обновить",
+    "prev": "Назад",
+    "next": "Далее",
+    "download": "Скачать",
     "cancel": "Отмена",
     "none": "Нет",
     "yes": "Да",
@@ -390,6 +396,25 @@
     "userAgreement": "Пользовательское соглашение",
     "refund": "Возврат средств",
     "rates": "Тарифы"
+  },
+  "feedback": {
+    "title": "Обратная связь",
+    "description": "Вопросы, ошибки и предложения по улучшению.",
+    "types": {
+      "question": "Вопрос",
+      "bug": "Ошибка",
+      "request": "Запрос",
+      "improve": "Улучшение"
+    },
+    "fields": {
+      "type": "Тип",
+      "message": "Сообщение",
+      "files": "Файлы"
+    },
+    "placeholders": {
+      "message": "Опишите проблему или идею"
+    },
+    "success": "Спасибо! Мы получили ваше сообщение."
   },
   "spaces": {
     "form": {
@@ -474,6 +499,7 @@
           "comment": "Комментарий",
           "space": "Пространство",
           "task": "Задание",
+          "feedback": "Обратная связь",
           "payment": "Платёж",
           "session": "Сессия",
           "system": "Система"
@@ -571,6 +597,43 @@
           "repeatPurchase": "Повторная покупка"
         }
       }
+    },
+    "feedback": {
+      "title": "Обратная связь",
+      "description": "Вопросы, ошибки и запросы пользователей.",
+      "loading": "Загружаем обращения...",
+      "empty": "Пока нет обращений.",
+      "countLabel": "{count} обращений",
+      "fallbackTitle": "Обращение #{id}",
+      "actions": {
+        "open": "Открыть"
+      },
+      "filters": {
+        "searchPlaceholder": "Поиск по тексту...",
+        "type": "Тип",
+        "typeAll": "Все типы"
+      },
+      "types": {
+        "question": "Вопрос",
+        "bug": "Ошибка",
+        "request": "Запрос",
+        "improve": "Улучшение"
+      },
+      "fields": {
+        "source": "Источник",
+        "type": "Тип",
+        "created": "Создано",
+        "user": "Пользователь",
+        "userStatus": "Статус пользователя",
+        "network": "Сеть",
+        "token": "Токен"
+      },
+      "detailsTitle": "Обращение #{id}",
+      "detailsMeta": "Детали",
+      "detailsMessage": "Сообщение",
+      "detailsFiles": "Файлы",
+      "detailsTimeline": "Активность (24ч)",
+      "timelineEmpty": "Нет активности за последние 24 часа"
     },
     "categories": {
       "title": "Категории",

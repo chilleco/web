@@ -33,6 +33,8 @@
     "hub": "Centro",
     "tasks": "Tareas",
     "catalog": "Catálogo",
+    "products": "Productos",
+    "feedback": "Comentarios",
     "home": "Inicio",
     "sections": "Secciones"
   },
@@ -246,6 +248,8 @@
     "faq": {
       "title": "FAQ",
       "description": "Respuestas para stakeholders y aprobadores.",
+      "askTitle": "¿No encontraste la respuesta?",
+      "askDescription": "Envíanos tu pregunta y te responderemos pronto.",
       "items": {
         "coverage": {
           "question": "¿Soportan varios idiomas?",
@@ -318,6 +322,9 @@
     "loading": "Cargando",
     "saving": "Guardando...",
     "refresh": "Actualizar",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "download": "Descargar",
     "cancel": "Cancelar",
     "none": "Ninguna",
     "yes": "Sí",
@@ -389,6 +396,25 @@
     "userAgreement": "Acuerdo de Usuario",
     "refund": "Política de Reembolso",
     "rates": "Precios"
+  },
+  "feedback": {
+    "title": "Comentarios",
+    "description": "Preguntas, errores y solicitudes de mejora.",
+    "types": {
+      "question": "Pregunta",
+      "bug": "Error",
+      "request": "Solicitud",
+      "improve": "Mejora"
+    },
+    "fields": {
+      "type": "Tipo",
+      "message": "Mensaje",
+      "files": "Archivos"
+    },
+    "placeholders": {
+      "message": "Describe el problema o la idea"
+    },
+    "success": "¡Gracias! Hemos recibido tu mensaje."
   },
   "spaces": {
     "form": {
@@ -473,6 +499,7 @@
           "comment": "Comentario",
           "space": "Espacio",
           "task": "Tarea",
+          "feedback": "Comentarios",
           "payment": "Pago",
           "session": "Sesión",
           "system": "Sistema"
@@ -570,6 +597,43 @@
           "repeatPurchase": "Recompra"
         }
       }
+    },
+    "feedback": {
+      "title": "Comentarios",
+      "description": "Preguntas, errores y solicitudes de los usuarios.",
+      "loading": "Cargando comentarios...",
+      "empty": "Aún no hay comentarios.",
+      "countLabel": "{count} elementos",
+      "fallbackTitle": "Comentario #{id}",
+      "actions": {
+        "open": "Abrir"
+      },
+      "filters": {
+        "searchPlaceholder": "Buscar en comentarios...",
+        "type": "Tipo",
+        "typeAll": "Todos los tipos"
+      },
+      "types": {
+        "question": "Pregunta",
+        "bug": "Error",
+        "request": "Solicitud",
+        "improve": "Mejora"
+      },
+      "fields": {
+        "source": "Origen",
+        "type": "Tipo",
+        "created": "Creado",
+        "user": "Usuario",
+        "userStatus": "Estado del usuario",
+        "network": "Red",
+        "token": "Token"
+      },
+      "detailsTitle": "Comentario #{id}",
+      "detailsMeta": "Detalles",
+      "detailsMessage": "Mensaje",
+      "detailsFiles": "Archivos",
+      "detailsTimeline": "Actividad (24h)",
+      "timelineEmpty": "Sin actividad en las últimas 24h"
     },
     "categories": {
       "title": "Categorías",

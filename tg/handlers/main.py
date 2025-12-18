@@ -4,8 +4,9 @@ Main commands handler
 
 import jwt
 from libdev.codes import get_flag
+from aiogram.utils.exceptions import MessageCantBeForwarded
 
-from lib import api, cfg, report, locales, user_logins, user_titles
+from lib import api, cfg, locales, user_logins, user_titles
 from lib.tg import tg
 from lib.queue import save
 from middlewares.prepare_message import prepare_message
@@ -192,15 +193,21 @@ async def echo(message):
         save(chat.id, cache)
         return
 
-    await report.important(
-        "Feedback",
+    await api(
+        chat,
+        "feedback.save",
         {
-            "text": text,
-            "locale": locale,
-            **cache,
+            "type": "question",
+            "data": text,
+            "files": [],
+            "source": "tg",
         },
+        locale=locale,
     )
-    await tg.forward(cfg("bug_chat"), chat.id, message.message_id)
+    try:
+        await tg.forward(cfg("bug_chat"), chat.id, message.message_id)
+    except MessageCantBeForwarded:
+        pass
 
     text = "Передал твой фидбек!"
     message_id = await tg.send(

@@ -13,6 +13,7 @@ class TrackObject(str, Enum):
     COMMENT = "comment"
     SPACE = "space"
     TASK = "task"
+    FEEDBACK = "feedback"
     PAYMENT = "payment"
     SESSION = "session"
     SYSTEM = "system"

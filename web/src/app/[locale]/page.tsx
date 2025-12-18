@@ -17,6 +17,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/ui
 import { useToastActions } from '@/shared/hooks/useToast';
 import { PostCard } from '@/widgets/posts-list';
 import { ProductCard } from '@/widgets/product-card';
+import { FeedbackForm } from '@/features/feedback';
 import {
     RocketIcon,
     ShieldIcon,
@@ -784,7 +785,7 @@ function FaqSection({
     faqs: Array<ListItem & { question: string; answer: string }>;
 }) {
     return (
-        <section className="space-y-4">
+        <section id="faq" className="space-y-4 scroll-mt-24">
             <PageHeader
                 icon={<QuestionIcon size={24} />}
                 iconClassName="bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400"
@@ -811,6 +812,14 @@ function FaqSection({
                     </Collapsible>
                 ))}
             </div>
+
+            <Box variant="muted" className="space-y-4">
+                <div className="space-y-1">
+                    <h3 className="text-lg font-semibold text-foreground">{t('faq.askTitle')}</h3>
+                    <p className="text-sm text-muted-foreground">{t('faq.askDescription')}</p>
+                </div>
+                <FeedbackForm initialType="question" typeLocked source="faq" />
+            </Box>
         </section>
     );
 }

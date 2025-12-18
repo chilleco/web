@@ -68,6 +68,11 @@ export const API_ENDPOINTS = {
     CHECK: '/tasks/check/',
     SAVE: '/tasks/save/',
   },
+  FEEDBACK: {
+    SAVE: '/feedback/save/',
+    GET: '/feedback/get/',
+    RM: '/feedback/rm/',
+  },
   ADMIN: {
     STATS: '/admin/stats/',
     ACTIVITY: '/admin/activity/',

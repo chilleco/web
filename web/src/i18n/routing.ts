@@ -26,6 +26,7 @@ export const routing = defineRouting({
         '/admin/categories': '/admin/categories',
         '/admin/posts': '/admin/posts',
         '/admin/products': '/admin/products',
+        '/admin/feedback': '/admin/feedback',
         '/admin/spaces': '/admin/spaces',
         '/admin/users': '/admin/users',
         '/admin/tasks': '/admin/tasks',

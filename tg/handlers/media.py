@@ -61,14 +61,26 @@ async def handle_photo(message):
         save(chat.id, cache)
 
     else:
-        await report.important(
-            "Feedback",
+        uploaded = None
+        try:
+            uploaded = await upload(chat, image.getvalue())
+        except Exception as exc:  # pylint: disable=broad-except
+            await report.error(exc, error=exc)
+
+        await api(
+            chat,
+            "feedback.save",
             {
-                "text": "Photo",
-                **cache,
+                "type": "bug",
+                "data": text or "Photo",
+                "files": [uploaded] if uploaded else [],
+                "source": "tg",
             },
         )
-        await tg.forward(cfg("bug_chat"), chat.id, message.message_id)
+        try:
+            await tg.forward(cfg("bug_chat"), chat.id, message.message_id)
+        except MessageCantBeForwarded:
+            log.warning(chat.id, message.message_id)
 
         text = "Передал твой запрос!"
         message_id = await tg.send(
@@ -175,11 +187,21 @@ async def handle_doc(message):
         save(chat.id, cache)
 
     else:
-        await report.important(
-            "Feedback",
+        uploaded = None
+        if mime and mime.startswith("image/") and image:
+            try:
+                uploaded = await upload(chat, image.getvalue())
+            except Exception as exc:  # pylint: disable=broad-except
+                await report.error(exc, error=exc)
+
+        await api(
+            chat,
+            "feedback.save",
             {
-                "text": "Document",
-                **cache,
+                "type": "bug",
+                "data": text or "Document",
+                "files": [uploaded] if uploaded else [],
+                "source": "tg",
             },
         )
 

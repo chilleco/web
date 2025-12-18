@@ -32,6 +32,7 @@
     "space": "Space",
     "hub": "Hub",
     "tasks": "Tasks",
+    "feedback": "Feedback",
     "catalog": "Catalog",
     "products": "Products",
     "home": "Home",
@@ -247,6 +248,8 @@
     "faq": {
       "title": "FAQ",
       "description": "Answers for stakeholders and approvers.",
+      "askTitle": "Didn't find an answer?",
+      "askDescription": "Send us your question and we’ll get back soon.",
       "items": {
         "coverage": {
           "question": "Do you support multiple locales?",
@@ -319,6 +322,9 @@
     "loading": "Loading",
     "saving": "Saving...",
     "refresh": "Refresh",
+    "prev": "Prev",
+    "next": "Next",
+    "download": "Download",
     "cancel": "Cancel",
     "none": "None",
     "yes": "Yes",
@@ -390,6 +396,25 @@
     "userAgreement": "User Agreement",
     "refund": "Refund Policy",
     "rates": "Pricing"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "description": "Questions, bugs, and improvement requests.",
+    "types": {
+      "question": "Question",
+      "bug": "Bug",
+      "request": "Request",
+      "improve": "Improve"
+    },
+    "fields": {
+      "type": "Type",
+      "message": "Message",
+      "files": "Attachments"
+    },
+    "placeholders": {
+      "message": "Describe the issue or idea"
+    },
+    "success": "Thanks! We received your message."
   },
   "spaces": {
     "form": {
@@ -474,6 +499,7 @@
           "comment": "Comment",
           "space": "Space",
           "task": "Task",
+          "feedback": "Feedback",
           "payment": "Payment",
           "session": "Session",
           "system": "System"
@@ -571,6 +597,43 @@
           "repeatPurchase": "Repeat purchase"
         }
       }
+    },
+    "feedback": {
+      "title": "Feedback",
+      "description": "User questions, bugs, and requests.",
+      "loading": "Loading feedback...",
+      "empty": "No feedback yet.",
+      "countLabel": "{count} items",
+      "fallbackTitle": "Feedback #{id}",
+      "actions": {
+        "open": "Open"
+      },
+      "filters": {
+        "searchPlaceholder": "Search feedback...",
+        "type": "Type",
+        "typeAll": "All types"
+      },
+      "types": {
+        "question": "Question",
+        "bug": "Bug",
+        "request": "Request",
+        "improve": "Improve"
+      },
+      "fields": {
+        "source": "Source",
+        "type": "Type",
+        "created": "Created",
+        "user": "User",
+        "userStatus": "User status",
+        "network": "Network",
+        "token": "Token"
+      },
+      "detailsTitle": "Feedback #{id}",
+      "detailsMeta": "Details",
+      "detailsMessage": "Message",
+      "detailsFiles": "Files",
+      "detailsTimeline": "Activity (24h)",
+      "timelineEmpty": "No activity in the last 24h"
     },
     "categories": {
       "title": "Categories",

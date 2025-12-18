@@ -33,6 +33,8 @@
     "hub": "المركز",
     "tasks": "المهام",
     "catalog": "الفهرس",
+    "products": "المنتجات",
+    "feedback": "ملاحظات",
     "home": "الرئيسية",
     "sections": "الأقسام"
   },
@@ -246,6 +248,8 @@
     "faq": {
       "title": "FAQ",
       "description": "إجابات لأصحاب المصلحة والموافقين.",
+      "askTitle": "لم تجد الإجابة؟",
+      "askDescription": "أرسل سؤالك وسنرد عليك قريبًا.",
       "items": {
         "coverage": {
           "question": "هل تدعمون لغات متعددة؟",
@@ -318,6 +322,9 @@
     "loading": "جارٍ التحميل",
     "saving": "جارٍ الحفظ...",
     "refresh": "تحديث",
+    "prev": "السابق",
+    "next": "التالي",
+    "download": "تحميل",
     "cancel": "إلغاء",
     "none": "لا يوجد",
     "yes": "نعم",
@@ -389,6 +396,25 @@
     "userAgreement": "اتفاقية المستخدم",
     "refund": "سياسة الاسترداد",
     "rates": "الأسعار"
+  },
+  "feedback": {
+    "title": "ملاحظات",
+    "description": "أسئلة، أخطاء، واقتراحات للتحسين.",
+    "types": {
+      "question": "سؤال",
+      "bug": "خلل",
+      "request": "طلب",
+      "improve": "تحسين"
+    },
+    "fields": {
+      "type": "النوع",
+      "message": "الرسالة",
+      "files": "مرفقات"
+    },
+    "placeholders": {
+      "message": "صف المشكلة أو الفكرة"
+    },
+    "success": "شكرًا! تم استلام رسالتك."
   },
   "spaces": {
     "form": {
@@ -473,6 +499,7 @@
           "comment": "تعليق",
           "space": "مساحة",
           "task": "مهمة",
+          "feedback": "ملاحظات",
           "payment": "دفع",
           "session": "جلسة",
           "system": "النظام"
@@ -570,6 +597,43 @@
           "repeatPurchase": "شراء متكرر"
         }
       }
+    },
+    "feedback": {
+      "title": "ملاحظات",
+      "description": "أسئلة المستخدمين وأخطاؤهم وطلبات التحسين.",
+      "loading": "جارٍ تحميل الملاحظات...",
+      "empty": "لا توجد ملاحظات بعد.",
+      "countLabel": "الإجمالي: {count}",
+      "fallbackTitle": "ملاحظة #{id}",
+      "actions": {
+        "open": "فتح"
+      },
+      "filters": {
+        "searchPlaceholder": "ابحث في الملاحظات...",
+        "type": "النوع",
+        "typeAll": "كل الأنواع"
+      },
+      "types": {
+        "question": "سؤال",
+        "bug": "خلل",
+        "request": "طلب",
+        "improve": "تحسين"
+      },
+      "fields": {
+        "source": "المصدر",
+        "type": "النوع",
+        "created": "تاريخ الإنشاء",
+        "user": "المستخدم",
+        "userStatus": "حالة المستخدم",
+        "network": "الشبكة",
+        "token": "رمز"
+      },
+      "detailsTitle": "ملاحظة #{id}",
+      "detailsMeta": "تفاصيل",
+      "detailsMessage": "الرسالة",
+      "detailsFiles": "المرفقات",
+      "detailsTimeline": "النشاط (24 ساعة)",
+      "timelineEmpty": "لا يوجد نشاط خلال آخر 24 ساعة"
     },
     "categories": {
       "title": "الفئات",

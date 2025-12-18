@@ -21,6 +21,7 @@ import {
   ClockIcon,
   DollarIcon,
   EyeIcon,
+  FeedbackIcon,
   FilterIcon,
   GlobeIcon,
   LocationIcon,
@@ -55,6 +56,7 @@ type TrackObjectType =
   | 'comment'
   | 'space'
   | 'task'
+  | 'feedback'
   | 'payment'
   | 'session'
   | 'system';
@@ -139,6 +141,7 @@ export default function AdminPage() {
       comment: t('activity.objects.comment'),
       space: t('activity.objects.space'),
       task: t('activity.objects.task'),
+      feedback: t('activity.objects.feedback'),
       payment: t('activity.objects.payment'),
       session: t('activity.objects.session'),
       system: t('activity.objects.system'),
@@ -180,6 +183,7 @@ export default function AdminPage() {
         { value: 'comment', label: activityObjectLabels.comment },
         { value: 'space', label: activityObjectLabels.space },
         { value: 'task', label: activityObjectLabels.task },
+        { value: 'feedback', label: activityObjectLabels.feedback },
         { value: 'payment', label: activityObjectLabels.payment },
         { value: 'session', label: activityObjectLabels.session },
         { value: 'system', label: activityObjectLabels.system },
@@ -238,6 +242,11 @@ export default function AdminPage() {
           return {
             icon: <TasksIcon size={16} />,
             accent: 'bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400',
+          };
+        case 'feedback':
+          return {
+            icon: <FeedbackIcon size={16} />,
+            accent: 'bg-teal-500/15 text-teal-600 dark:bg-teal-500/20 dark:text-teal-400',
           };
         case 'payment':
           return {

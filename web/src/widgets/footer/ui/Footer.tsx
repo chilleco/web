@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Logo } from '@/shared/components/layout';
 import { ThemeSwitcher } from '@/shared/components/layout';
 import LanguageSwitcher from '@/features/navigation/components/LanguageSwitcher';
+import { Link } from '@/i18n/routing';
 import {
   TelegramIcon,
   TiktokIcon,
@@ -27,6 +29,8 @@ import {
   RatesIcon,
   LocationIcon
 } from '@/shared/ui/icons';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
+import { FeedbackForm } from '@/features/feedback';
 
 const currentYear = new Date().getFullYear();
 
@@ -45,6 +49,8 @@ const socialLinks = [
 export function Footer() {
   const t = useTranslations('footer');
   const tBrand = useTranslations('brand');
+  const tFeedback = useTranslations('feedback');
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   return (
     <footer className="bg-background border-t">
@@ -144,14 +150,21 @@ export function Footer() {
               {t('support')}
             </h3>
             <nav className="flex flex-col space-y-2">
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer flex items-center gap-2">
+              <Link
+                href={{ pathname: '/', hash: 'faq' }}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer flex items-center gap-2"
+              >
                 <FaqIcon size={12} />
                 {t('faq')}
-              </a>
-              <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer flex items-center gap-2">
+              </Link>
+              <button
+                type="button"
+                onClick={() => setIsFeedbackOpen(true)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer flex items-center gap-2 text-left"
+              >
                 <FeedbackIcon size={12} />
                 {t('feedback')}
-              </a>
+              </button>
               <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer flex items-center gap-2">
                 <RatesIcon size={12} />
                 {t('rates')}
@@ -191,6 +204,16 @@ export function Footer() {
           </div>
         </div>
       </div>
+
+      <Dialog open={isFeedbackOpen} onOpenChange={setIsFeedbackOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{tFeedback('title')}</DialogTitle>
+            <DialogDescription>{tFeedback('description')}</DialogDescription>
+          </DialogHeader>
+          <FeedbackForm initialType="bug" source="footer" />
+        </DialogContent>
+      </Dialog>
     </footer>
   );
 }
