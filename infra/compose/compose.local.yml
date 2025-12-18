@@ -35,36 +35,19 @@ services:
     #   start_period: 180s
     #   retries: 180
 
-  # jobs:
-  #   image: ${PROJECT_NAME}/jobs
-  #   build: ./api
-  #   restart: unless-stopped
-  #   environment:
-  #     API: http://localhost/api/
-  #     WEB: http://localhost/
-  #   volumes:
-  #     - ${DATA_PATH}/load:/data/load
-  #     - ${DATA_PATH}/backup:/backup
-  #     - ./scripts:/app/scripts
-  #     # For hot reload
-  #     - ./api:/app
-  #     # For logs
-  #     - ${DATA_PATH}/logs/jobs.err:/app/app.err
-  #     - ${DATA_PATH}/logs/jobs.log:/app/app.log
-  #     # For sitemap
-  #     - ${DATA_PATH}/sitemaps:/data/sitemaps
-  #     - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
-  #     - ${DATA_PATH}/robots.txt:/data/robots.txt
-  #   command: bash -c "cd /app && dramatiq --verbose tasks"
+  worker:
+    depends_on:
+      - db
+    volumes:
+      # For hot reload
+      - ../../api/app:/app
 
-  # cron:
-  #   image: ${PROJECT_NAME}/cron
-  #   build: ./api
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - jobs
-  #   env_file: .env
-  #   command: bash -c "cd /app && python cron.py"
+  scheduler:
+    depends_on:
+      - db
+    volumes:
+      # For hot reload
+      - ../../api/app:/app
 
   web:
     build:

@@ -20,16 +20,63 @@ services:
     environment:
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
+      LOG_FILE: /logs/api.log
+      ERR_FILE: /logs/api.err
     volumes:
       - ../../api/scripts:/app/scripts
       # For data
       - ${DATA_PATH}/load:/data/load
       - ${DATA_PATH}/backup:/backup
       # For logs
-      - ${DATA_PATH}/logs/api.log:/logs/app.log
-      - ${DATA_PATH}/logs/api.err:/logs/app.err
+      - ${DATA_PATH}/logs:/logs
     depends_on:
       - mq
+
+  worker:
+    image: ${PROJECT_NAME}/api
+    build:
+      context: ../../api
+      target: final
+    restart: unless-stopped
+    env_file: ../../.env
+    environment:
+      API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
+      WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
+      LOG_FILE: /logs/worker.log
+      ERR_FILE: /logs/worker.err
+    volumes:
+      - ../../api/scripts:/app/scripts
+      # For data
+      - ${DATA_PATH}/load:/data/load
+      - ${DATA_PATH}/backup:/backup
+      # For sitemap
+      - ${DATA_PATH}/sitemaps:/data/sitemaps
+      - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
+      - ${DATA_PATH}/robots.txt:/data/robots.txt
+      # For logs
+      - ${DATA_PATH}/logs:/logs
+    depends_on:
+      - mq
+    command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks --workers 2 --log-level INFO"
+
+  scheduler:
+    image: ${PROJECT_NAME}/api
+    build:
+      context: ../../api
+      target: final
+    restart: unless-stopped
+    env_file: ../../.env
+    environment:
+      API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
+      WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
+      LOG_FILE: /logs/scheduler.log
+      ERR_FILE: /logs/scheduler.err
+    volumes:
+      # For logs
+      - ${DATA_PATH}/logs:/logs
+    depends_on:
+      - mq
+    command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks --log-level INFO"
 
   web:
     image: ${PROJECT_NAME}/web

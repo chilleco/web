@@ -10,6 +10,6 @@ report = Report(
     cfg("mode"),
     cfg("tg.token"),
     cfg("bug_chat"),
-    log_file="/logs/app.log",
-    err_file="/logs/app.err",
+    log_file=cfg("log_file", "/logs/app.log"),
+    err_file=cfg("err_file", "/logs/app.err"),
 )

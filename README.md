@@ -1,6 +1,11 @@
 # Template Web App
 Modern full-stack web application with Python FastAPI backend, Next.js frontend, Telegram bot. Built with Docker containers and featuring multilingual support, and production-ready flow.
 
+## Background tasks (Taskiq)
+- Worker: `uv run taskiq worker tasks.broker:broker tasks`
+- Scheduler: `uv run taskiq scheduler tasks.scheduler:scheduler tasks`
+- Fixed-delay periodic jobs (cycle after finish): trigger once, e.g. `await run_periodic.kiq("cache_categories")`
+
 ## Run
 [Before starting, you can learn how to configure the server →](https://github.com/kosyachniy/dev/blob/main/server/SERVER.md)
 

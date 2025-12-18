@@ -52,8 +52,11 @@ logs-local:
 logs-api:
 	tail -f ${DATA_PATH}/logs/api.log
 
-logs-jobs:
-	tail -f ${DATA_PATH}/logs/jobs.log
+logs-worker:
+	tail -f ${DATA_PATH}/logs/worker.log
+
+logs-scheduler:
+	tail -f ${DATA_PATH}/logs/scheduler.log
 
 logs-tg:
 	tail -f ${DATA_PATH}/logs/tg.log
@@ -131,7 +134,7 @@ clean-venv:
 clean-logs:
 	rm -rf ${DATA_PATH}/logs/
 	mkdir ${DATA_PATH}/logs/
-	touch ${DATA_PATH}/logs/jobs.log ${DATA_PATH}/logs/jobs.err ${DATA_PATH}/logs/api.log ${DATA_PATH}/logs/api.err ${DATA_PATH}/logs/tg.err ${DATA_PATH}/logs/tg.log ${DATA_PATH}/logs/nginx.log ${DATA_PATH}/logs/nginx.err ${DATA_PATH}/logs/mongodb.log
+	touch ${DATA_PATH}/logs/worker.log ${DATA_PATH}/logs/worker.err ${DATA_PATH}/logs/scheduler.log ${DATA_PATH}/logs/scheduler.err ${DATA_PATH}/logs/api.log ${DATA_PATH}/logs/api.err ${DATA_PATH}/logs/tg.err ${DATA_PATH}/logs/tg.log ${DATA_PATH}/logs/nginx.log ${DATA_PATH}/logs/nginx.err ${DATA_PATH}/logs/mongodb.log
 
 clean:
 	make clean-venv

@@ -1,4 +1,5 @@
-from callbacks import Callback
+from callbacks.base import Callback
+from callbacks.registry import on_change
 
 # import tasks
 # from tasks import bonus_referrer
@@ -7,15 +8,16 @@ from callbacks import Callback
 FRENS_BONUS = 10000
 
 
+@on_change(model="users", field="referrer")
 class BonusReferrer(Callback):
-    def validate(self):
+    async def validate(self):
         if self.old or not self.new:
             return False
         if not self.entity.referrer:
             return False
         return True
 
-    def _execute(self):
+    async def _execute(self):
         referrer = self.entity.get(self.entity.referrer)
         referrer.balance += FRENS_BONUS
         referrer.save()

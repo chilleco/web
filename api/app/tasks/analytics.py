@@ -2,12 +2,10 @@
 Analytics
 """
 
-import dramatiq
 from libdev.time import get_time
 
 from lib import cfg, handle_tasks
-
-from lib.docs import Sheets
+from tasks.broker import broker
 
 # from models.user import User
 from models.post import Post
@@ -21,9 +19,6 @@ STEPS = [
     "Not added second",
     "Everything done",
 ]
-
-
-sheets = Sheets(cfg("ANALYTICS_SHEET")).get_sheets()
 
 
 def get_funnel(users_reg, users_fill, users_save, users_second, utm=None):
@@ -71,10 +66,24 @@ def get_funnel(users_reg, users_fill, users_save, users_second, utm=None):
 
 
 # pylint: disable=too-many-branches
-@dramatiq.actor
+@broker.task(
+    schedule=(
+        [{"cron": "0 0 * * *"}]  # daily at 00:00 UTC
+        if cfg("mode") in {"PRE", "PROD"}
+        else []
+    ),
+)
 @handle_tasks
 async def analytics():
     """Get funnel"""
+
+    sheets_id = cfg("ANALYTICS_SHEET")
+    if not sheets_id:
+        return
+
+    from lib.docs import Sheets  # lazy import (requires google credentials)
+
+    sheets = Sheets(sheets_id).get_sheets()
 
     utms = set()
     users = {}

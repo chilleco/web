@@ -6,6 +6,7 @@ https://github.com/nithinmurali/pygsheets
 """
 
 import re
+from functools import lru_cache
 
 from google.oauth2.service_account import Credentials
 from libdev.cfg import cfg
@@ -15,14 +16,20 @@ from pygsheets.custom_types import VerticalAlignment, HorizontalAlignment
 import pandas as pd
 
 
-credentials = Credentials.from_service_account_info(
-    cfg("google.credentials"),
-    scopes=[
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive",
-    ],
-)
-gc = pygsheets.authorize(custom_credentials=credentials)
+@lru_cache(maxsize=1)
+def _get_gc():
+    credentials_data = cfg("google.credentials")
+    if not credentials_data:
+        raise ValueError("google.credentials")
+
+    credentials = Credentials.from_service_account_info(
+        credentials_data,
+        scopes=[
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive",
+        ],
+    )
+    return pygsheets.authorize(custom_credentials=credentials)
 
 
 # pylint: disable=too-many-public-methods
@@ -67,7 +74,7 @@ class Sheets:
     def create(cls, title, subtitle=None, mail=None):
         """Create a spreadsheet"""
 
-        sh = gc.create(title)
+        sh = _get_gc().create(title)
         if mail:
             sh.share(mail, role="writer")
 
@@ -87,7 +94,7 @@ class Sheets:
     @classmethod
     def _open(cls, key):
         """Open a spreadsheet"""
-        return gc.open_by_key(key)
+        return _get_gc().open_by_key(key)
 
     @classmethod
     def open_sheets(cls, key):

@@ -13,8 +13,8 @@ dependencies = [
     "slowapi==0.1.9",
 
     # Jobs
-    "dramatiq==2.0.0",
-    "APScheduler==3.11.1",
+    "taskiq==0.12.1",
+    "taskiq-redis==1.2.0",
 
     # Users
     "userhub==0.15",
@@ -23,7 +23,7 @@ dependencies = [
     "consys==0.44",
 
     # MQ
-    "redis==7.1.0",
+    "redis==7.0.0",
 
     # Sockets
     "python-socketio==5.15.0",

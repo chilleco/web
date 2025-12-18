@@ -7,12 +7,12 @@ import datetime
 import gzip
 import shutil
 
-import dramatiq
 from libdev.codes import LOCALES
 
 from lib import cfg, handle_tasks
 from models.category import Category
 from models.post import Post
+from tasks.broker import broker
 
 
 FILE_LINKS_LIMIT = None  # 2500
@@ -107,7 +107,13 @@ async def generate_file(links, locale=None, kind=None, ind=None):
     return sitemap_name
 
 
-@dramatiq.actor
+@broker.task(
+    schedule=(
+        [{"cron": "0 * * * *"}]  # hourly at minute 0
+        if cfg("mode") in {"PRE", "PROD"}
+        else []
+    ),
+)
 @handle_tasks
 async def sitemap():
     """Update sitemap.xml"""
