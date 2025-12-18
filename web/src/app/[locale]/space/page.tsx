@@ -22,7 +22,7 @@ export default async function SpacePage() {
                 <div className="max-w-6xl mx-auto">
                     <PageHeader
                         icon={<SpaceIcon size={24} />}
-                        iconClassName="bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400"
+                        iconClassName="bg-[var(--bg-violet)] text-[var(--font-violet)]"
                         title={t('space')}
                         description="Common spaces for user interaction, collaboration, and real-time communication."
                     />
@@ -31,7 +31,7 @@ export default async function SpacePage() {
                         {/* Whiteboard */}
                         <Box size="lg">
                             <div className="flex items-center mb-4">
-                                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4">
+                                <div className="w-12 h-12 bg-[var(--bg-blue)] text-[var(--font-blue)] rounded-[0.75rem] flex items-center justify-center mr-4">
                                     <WhiteboardIcon size={24} />
                                 </div>
                                 <div>
@@ -50,7 +50,7 @@ export default async function SpacePage() {
                         {/* Video Chat */}
                         <Box size="lg">
                             <div className="flex items-center mb-4">
-                                <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4">
+                                <div className="w-12 h-12 bg-[var(--bg-green)] text-[var(--font-green)] rounded-[0.75rem] flex items-center justify-center mr-4">
                                     <VideoIcon size={24} />
                                 </div>
                                 <div>
@@ -69,7 +69,7 @@ export default async function SpacePage() {
                         {/* Messenger */}
                         <Box size="lg">
                             <div className="flex items-center mb-4">
-                                <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mr-4">
+                                <div className="w-12 h-12 bg-[var(--bg-violet)] text-[var(--font-violet)] rounded-[0.75rem] flex items-center justify-center mr-4">
                                     <MessageIcon size={24} />
                                 </div>
                                 <div>
@@ -88,7 +88,7 @@ export default async function SpacePage() {
                         {/* Shared Workspace */}
                         <Box size="lg">
                             <div className="flex items-center mb-4">
-                                <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mr-4">
+                                <div className="w-12 h-12 bg-[var(--bg-orange)] text-[var(--font-orange)] rounded-[0.75rem] flex items-center justify-center mr-4">
                                     <BuildingIcon size={24} />
                                 </div>
                                 <div>

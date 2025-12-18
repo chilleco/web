@@ -59,7 +59,7 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
         [
           product.rating
             ? {
-                icon: <StarIcon size={12} className="text-amber-500" />,
+                icon: <StarIcon size={12} className="text-[var(--font-yellow)]" />,
                 keyLabel: t('rating'),
                 value: product.rating,
               }

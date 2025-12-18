@@ -143,11 +143,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                         />
                         <div className="space-y-1 text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
-                                {isPasswordLongEnough ? <CheckIcon className="text-green-600 dark:text-green-400" size={14} /> : <XIcon className="text-red-500" size={14} />}
+                                {isPasswordLongEnough ? <CheckIcon className="text-[var(--font-green)]" size={14} /> : <XIcon className="text-destructive" size={14} />}
                                 <span>{t('passwordTipLength')}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                {hasLettersAndNumbers ? <CheckIcon className="text-green-600 dark:text-green-400" size={14} /> : <XIcon className="text-red-500" size={14} />}
+                                {hasLettersAndNumbers ? <CheckIcon className="text-[var(--font-green)]" size={14} /> : <XIcon className="text-destructive" size={14} />}
                                 <span>{t('passwordTipStrength')}</span>
                             </div>
                         </div>

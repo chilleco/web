@@ -25,7 +25,7 @@ export function AnalyticsFunnel() {
   return (
     <Box size="lg" className="space-y-4">
       <div className="flex items-center gap-3">
-        <span className="inline-flex items-center justify-center rounded-[0.75rem] bg-blue-500/15 p-2 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+        <span className="inline-flex items-center justify-center rounded-[0.75rem] bg-[var(--bg-blue)] p-2 text-[var(--font-blue)]">
           <FilterIcon size={18} />
         </span>
         <div>

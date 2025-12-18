@@ -41,7 +41,7 @@ export default function AdminSpacesPage() {
     <div className="space-y-6">
       <PageHeader
         icon={<BuildingIcon size={24} />}
-        iconClassName="bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400"
+        iconClassName="bg-[var(--bg-violet)] text-[var(--font-violet)]"
         title={t('title')}
         description={t('description')}
         actions={

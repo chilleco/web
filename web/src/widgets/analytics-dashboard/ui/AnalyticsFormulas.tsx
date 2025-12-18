@@ -64,12 +64,12 @@ export function AnalyticsFormulas() {
 
   const getZoneClass = useCallback((value: number) => {
     if (value > 1) {
-      return 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400';
+      return 'bg-[var(--bg-green)] text-[var(--font-green)]';
     }
     if (Math.abs(value - 1) < 0.0001) {
-      return 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400';
+      return 'bg-[var(--bg-yellow)] text-[var(--font-yellow)]';
     }
-    return 'bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400';
+    return 'bg-[var(--bg-red)] text-[var(--font-red)]';
   }, []);
 
   const formulaRows = useMemo(
@@ -147,7 +147,7 @@ export function AnalyticsFormulas() {
   return (
     <Box size="lg" className="space-y-4">
       <div className="flex items-center gap-3">
-        <span className="inline-flex items-center justify-center rounded-[0.75rem] bg-purple-500/15 p-2 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
+        <span className="inline-flex items-center justify-center rounded-[0.75rem] bg-[var(--bg-violet)] p-2 text-[var(--font-violet)]">
           <ChartIcon size={18} />
         </span>
         <div>

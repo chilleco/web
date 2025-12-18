@@ -115,17 +115,17 @@ export default function Home() {
                 {
                     key: 'uptime',
                     icon: <ShieldIcon size={18} />,
-                    color: 'bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400',
+                    color: 'bg-[var(--bg-green)] text-[var(--font-green)]',
                 },
                 {
                     key: 'response',
                     icon: <ClockIcon size={18} />,
-                    color: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+                    color: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
                 },
                 {
                     key: 'coverage',
                     icon: <GlobeIcon size={18} />,
-                    color: 'bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400',
+                    color: 'bg-[var(--bg-violet)] text-[var(--font-violet)]',
                 },
             ].map((item) => ({
                 ...item,
@@ -146,17 +146,17 @@ export default function Home() {
                 {
                     key: 'discover',
                     icon: <BookIcon size={18} />,
-                    color: 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
+                    color: 'bg-[var(--bg-yellow)] text-[var(--font-yellow)]',
                 },
                 {
                     key: 'decide',
                     icon: <TrendingIcon size={18} />,
-                    color: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+                    color: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
                 },
                 {
                     key: 'act',
                     icon: <CheckCircleIcon size={18} />,
-                    color: 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+                    color: 'bg-[var(--bg-green)] text-[var(--font-green)]',
                 },
             ].map((step) => ({
                 ...step,
@@ -174,22 +174,22 @@ export default function Home() {
                     {
                         key: 'performance',
                         icon: <RocketIcon size={18} />,
-                        color: 'bg-sky-500/15 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
+                        color: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
                     },
                     {
                         key: 'design',
                         icon: <ShieldIcon size={18} />,
-                        color: 'bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400',
+                        color: 'bg-[var(--bg-violet)] text-[var(--font-violet)]',
                     },
                     {
                         key: 'automation',
                         icon: <BullhornIcon size={18} />,
-                        color: 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+                        color: 'bg-[var(--bg-green)] text-[var(--font-green)]',
                     },
                     {
                         key: 'support',
                         icon: <HandshakeIcon size={18} />,
-                        color: 'bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400',
+                        color: 'bg-[var(--bg-orange)] text-[var(--font-orange)]',
                     },
                 ].map((item) => ({
                     ...item,
@@ -299,7 +299,7 @@ function HeroSection({
         <section className="space-y-4">
             <PageHeader
                 icon={<RocketIcon size={24} />}
-                iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
+                iconClassName="bg-[var(--bg-blue)] text-[var(--font-blue)]"
                 title={t('hero.title')}
                 description={t('hero.subtitle')}
                 actions={
@@ -316,7 +316,7 @@ function HeroSection({
             <Box className="bg-gradient-to-br from-primary/10 via-background to-background">
                 <div className="grid lg:grid-cols-2 gap-10 items-center">
                     <div className="space-y-6">
-                        <div className="inline-flex items-center gap-2 rounded-[0.75rem] bg-green-500/15 text-green-700 dark:text-green-300 dark:bg-green-500/20 px-3 py-1 text-xs font-semibold w-fit">
+                        <div className="inline-flex items-center gap-2 rounded-[0.75rem] bg-[var(--bg-green)] text-[var(--font-green)] px-3 py-1 text-xs font-semibold w-fit">
                             <CheckCircleIcon size={14} />
                             {t('hero.badge')}
                         </div>
@@ -347,7 +347,7 @@ function HeroSection({
                         >
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-[0.75rem] bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 flex items-center justify-center">
+                                    <div className="w-12 h-12 rounded-[0.75rem] bg-[var(--bg-blue)] text-[var(--font-blue)] flex items-center justify-center">
                                         <BullhornIcon size={18} />
                                     </div>
                                     <div>
@@ -402,7 +402,7 @@ function HowItWorksSection({
         <section className="space-y-4">
             <PageHeader
                 icon={<BookIcon size={24} />}
-                iconClassName="bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400"
+                iconClassName="bg-[var(--bg-yellow)] text-[var(--font-yellow)]"
                 title={t('howItWorks.title')}
                 description={t('howItWorks.description')}
                 actions={
@@ -452,7 +452,7 @@ function PostsSection({
         <section className="space-y-4">
             <PageHeader
                 icon={<PostsIcon size={24} />}
-                iconClassName="bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400"
+                iconClassName="bg-[var(--bg-green)] text-[var(--font-green)]"
                 title={t('posts.title')}
                 description={t('posts.description')}
                 actions={
@@ -495,7 +495,7 @@ function ProductsSection({
         <section className="space-y-4">
             <PageHeader
                 icon={<ShoppingIcon size={24} />}
-                iconClassName="bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400"
+                iconClassName="bg-[var(--bg-violet)] text-[var(--font-violet)]"
                 title={t('products.title')}
                 description={t('products.description')}
                 actions={
@@ -538,7 +538,7 @@ function AdvantagesSection({
         <section className="space-y-4">
             <PageHeader
                 icon={<ShieldIcon size={24} />}
-                iconClassName="bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400"
+                iconClassName="bg-[var(--bg-violet)] text-[var(--font-violet)]"
                 title={t('advantages.title')}
                 description={t('advantages.description')}
             />
@@ -578,14 +578,14 @@ function ReviewsSection({
         <section className="space-y-4">
             <PageHeader
                 icon={<ReviewsIcon size={24} />}
-                iconClassName="bg-pink-500/15 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400"
+                iconClassName="bg-[var(--bg-red)] text-[var(--font-red)]"
                 title={t('reviews.title')}
                 description={t('reviews.description')}
             />
             <div className="grid lg:grid-cols-3 gap-6 items-center">
                 <div className="lg:col-span-1 space-y-3 rounded-[1rem] bg-muted/50 p-5 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)]">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-[0.75rem] bg-pink-500/15 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-[0.75rem] bg-[var(--bg-red)] text-[var(--font-red)] flex items-center justify-center">
                             <StarIcon size={18} />
                         </div>
                         <div>
@@ -598,7 +598,7 @@ function ReviewsSection({
                             <StarIcon
                                 key={index}
                                 size={16}
-                                className={index < Math.round(ratingScore) ? 'text-yellow-500' : 'text-muted-foreground'}
+                                className={index < Math.round(ratingScore) ? 'text-[var(--font-yellow)]' : 'text-muted-foreground'}
                             />
                         ))}
                         <span className="text-sm text-muted-foreground">{ratingCount}</span>
@@ -646,7 +646,7 @@ function ContactSection({
         <section className="space-y-4">
             <PageHeader
                 icon={<MailIcon size={24} />}
-                iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
+                iconClassName="bg-[var(--bg-blue)] text-[var(--font-blue)]"
                 title={t('contact.title')}
                 description={t('contact.description')}
             />
@@ -656,14 +656,14 @@ function ContactSection({
                     <p className="text-sm text-muted-foreground leading-relaxed">{t('contact.hint')}</p>
                     <div className="grid sm:grid-cols-2 gap-3">
                         <div className="rounded-[1rem] bg-muted/50 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-2">
-                            <div className="w-10 h-10 rounded-[0.75rem] bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-[0.75rem] bg-[var(--bg-green)] text-[var(--font-green)] flex items-center justify-center">
                                 <ShieldIcon size={16} />
                             </div>
                             <p className="text-sm text-foreground font-semibold">{t('contact.cards.first.title')}</p>
                             <p className="text-xs text-muted-foreground">{t('contact.cards.first.text')}</p>
                         </div>
                         <div className="rounded-[1rem] bg-muted/50 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-2">
-                            <div className="w-10 h-10 rounded-[0.75rem] bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-[0.75rem] bg-[var(--bg-yellow)] text-[var(--font-yellow)] flex items-center justify-center">
                                 <ClockIcon size={16} />
                             </div>
                             <p className="text-sm text-foreground font-semibold">{t('contact.cards.second.title')}</p>
@@ -738,7 +738,7 @@ function AboutSection({ t }: { t: TFunction }) {
         <section className="space-y-4">
             <PageHeader
                 icon={<QuestionIcon size={24} />}
-                iconClassName="bg-teal-500/15 text-teal-600 dark:bg-teal-500/20 dark:text-teal-400"
+                iconClassName="bg-[var(--bg-blue)] text-[var(--font-blue)]"
                 title={t('about.title')}
                 description={t('about.description')}
             />
@@ -755,7 +755,7 @@ function AboutSection({ t }: { t: TFunction }) {
                             <p className="text-xs text-muted-foreground">{t('about.cards.deliveryText')}</p>
                         </div>
                         <div className="rounded-[1rem] bg-muted/50 p-4 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-2">
-                            <div className="w-10 h-10 rounded-[0.75rem] bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-[0.75rem] bg-[var(--bg-green)] text-[var(--font-green)] flex items-center justify-center">
                                 <HandshakeIcon size={16} />
                             </div>
                             <p className="text-sm text-foreground font-semibold">{t('about.cards.partners')}</p>
@@ -765,7 +765,7 @@ function AboutSection({ t }: { t: TFunction }) {
                 </div>
                 <div className="lg:col-span-1 rounded-[1rem] bg-muted/50 p-5 shadow-[0_0.25rem_1.5rem_rgba(0,0,0,0.12)] space-y-3">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-[0.75rem] bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-[0.75rem] bg-[var(--bg-violet)] text-[var(--font-violet)] flex items-center justify-center">
                             <ShieldIcon size={16} />
                         </div>
                         <p className="text-sm font-semibold text-foreground">{t('about.mission.title')}</p>
@@ -788,7 +788,7 @@ function FaqSection({
         <section id="faq" className="space-y-4 scroll-mt-24">
             <PageHeader
                 icon={<QuestionIcon size={24} />}
-                iconClassName="bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400"
+                iconClassName="bg-[var(--bg-orange)] text-[var(--font-orange)]"
                 title={t('faq.title')}
                 description={t('faq.description')}
             />

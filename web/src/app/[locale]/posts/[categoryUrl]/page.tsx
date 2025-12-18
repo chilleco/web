@@ -214,7 +214,7 @@ function CategoryContent({
       );
     }
     return (
-      <div className="w-12 h-12 flex items-center justify-center rounded-[0.75rem] mt-1 bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400">
+      <div className="w-12 h-12 flex items-center justify-center rounded-[0.75rem] mt-1 bg-[var(--bg-green)] text-[var(--font-green)]">
         <PostsIcon size={24} />
       </div>
     );

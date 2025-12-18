@@ -254,7 +254,7 @@ export function PostDetailClient({
       <div className="container mx-auto px-4 pt-6">
         <PageHeader
           icon={<PostsIcon size={24} />}
-          iconClassName="bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400"
+          iconClassName="bg-[var(--bg-green)] text-[var(--font-green)]"
           title={pageTitle}
           description={<BreadcrumbDescription breadcrumbs={breadcrumbs} />}
           actions={headerActions}
@@ -290,7 +290,7 @@ export function PostDetailClient({
                     className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2 transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:scale-[1.01]"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-[var(--bg-violet)] text-[var(--font-violet)]">
                         <TagIcon size={16} />
                       </div>
                       <div className="text-sm text-muted-foreground">{tPosts('detail.category')}</div>
@@ -301,7 +301,7 @@ export function PostDetailClient({
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
                   <div className="flex flex-1 min-w-0 items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-[var(--bg-blue)] text-[var(--font-blue)]">
                       <CalendarIcon size={16} />
                     </div>
                     <div className="text-sm text-muted-foreground truncate">{tPosts('detail.publishedAt')}</div>
@@ -323,7 +323,7 @@ export function PostDetailClient({
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
                   <div className="flex flex-1 min-w-0 items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-300">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-[var(--bg-yellow)] text-[var(--font-yellow)]">
                       <ClockIcon size={16} />
                     </div>
                     <div className="text-sm text-muted-foreground truncate">{readTimeLabel}</div>
@@ -333,7 +333,7 @@ export function PostDetailClient({
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
                   <div className="flex flex-1 min-w-0 items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-[var(--bg-green)] text-[var(--font-green)]">
                       <EyeIcon size={16} />
                     </div>
                     <div className="text-sm text-muted-foreground truncate">{tPosts('detail.views')}</div>
@@ -343,7 +343,7 @@ export function PostDetailClient({
 
                 <div className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2">
                   <div className="flex flex-1 min-w-0 items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-300">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-[0.75rem] bg-[var(--bg-violet)] text-[var(--font-violet)]">
                       <MessageIcon size={16} />
                     </div>
                     <div className="text-sm text-muted-foreground truncate">{tPosts('comments')}</div>
@@ -491,7 +491,7 @@ export function PostDetailClient({
                     href={categoryLink}
                     className="inline-flex items-center gap-2 rounded-[0.75rem] bg-muted/60 px-3 py-2 transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:scale-[1.01]"
                   >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-[0.75rem] bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-[0.75rem] bg-[var(--bg-violet)] text-[var(--font-violet)]">
                       <TagIcon size={14} />
                     </div>
                     <span className="font-medium text-foreground">{post.category_data.title}</span>

@@ -71,7 +71,7 @@ export function AnalyticsStats({ stats, isLoading }: AnalyticsStatsProps) {
         subtitle: t('cards.visitsSubtitle'),
         value: stats.visits ? numberFormatter.format(stats.visits) : '–',
         icon: <EyeIcon size={20} />,
-        accentClassName: 'bg-sky-500/15 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
+        accentClassName: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
       },
       {
         key: 'users',
@@ -79,7 +79,7 @@ export function AnalyticsStats({ stats, isLoading }: AnalyticsStatsProps) {
         subtitle: t('cards.users'),
         value: numberFormatter.format(stats.users ?? 0),
         icon: <UsersIcon size={20} />,
-        accentClassName: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+        accentClassName: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
       },
       {
         key: 'payments',
@@ -87,7 +87,7 @@ export function AnalyticsStats({ stats, isLoading }: AnalyticsStatsProps) {
         subtitle: t('cards.paymentsSubtitle'),
         value: numberFormatter.format(stats.payments ?? 0),
         icon: <DollarIcon size={20} />,
-        accentClassName: 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
+        accentClassName: 'bg-[var(--bg-yellow)] text-[var(--font-yellow)]',
       },
       {
         key: 'posts',
@@ -95,7 +95,7 @@ export function AnalyticsStats({ stats, isLoading }: AnalyticsStatsProps) {
         subtitle: t('cards.posts'),
         value: numberFormatter.format(stats.posts ?? 0),
         icon: <PostsIcon size={20} />,
-        accentClassName: 'bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400',
+        accentClassName: 'bg-[var(--bg-violet)] text-[var(--font-violet)]',
       },
       {
         key: 'products',
@@ -104,7 +104,7 @@ export function AnalyticsStats({ stats, isLoading }: AnalyticsStatsProps) {
         value: numberFormatter.format(stats.products ?? 0),
         icon: <ShoppingIcon size={20} />,
         accentClassName:
-          'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+          'bg-[var(--bg-green)] text-[var(--font-green)]',
       },
       {
         key: 'tasks',

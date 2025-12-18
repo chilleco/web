@@ -13,15 +13,15 @@ import { useTranslations } from 'next-intl';
 function getSortIcon(sortValue: string) {
   switch (sortValue) {
     case 'featured':
-      return <StarIcon size={12} className="text-amber-500" />;
+      return <StarIcon size={12} className="text-[var(--font-yellow)]" />;
     case 'priceAsc':
-      return <ArrowUpIcon size={12} className="text-green-500" />;
+      return <ArrowUpIcon size={12} className="text-[var(--font-green)]" />;
     case 'priceDesc':
-      return <ArrowDownIcon size={12} className="text-red-500" />;
+      return <ArrowDownIcon size={12} className="text-[var(--font-red)]" />;
     case 'newest':
-      return <ClockIcon size={12} className="text-blue-500" />;
+      return <ClockIcon size={12} className="text-[var(--font-blue)]" />;
     case 'popular':
-      return <TrendingIcon size={12} className="text-orange-500" />;
+      return <TrendingIcon size={12} className="text-[var(--font-orange)]" />;
     default:
       return <StarIcon size={12} className="text-muted-foreground" />;
   }

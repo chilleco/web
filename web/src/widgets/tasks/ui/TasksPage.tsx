@@ -107,7 +107,7 @@ function TaskItem({
                                 {isChecking ? (
                                     <LoadingIcon size={18} className="animate-spin" />
                                 ) : isCompleted ? (
-                                    <CheckCircleIcon size={18} className="text-green-600 dark:text-green-400" />
+                                    <CheckCircleIcon size={18} className="text-[var(--font-green)]" />
                                 ) : (
                                     <ChevronRightIcon size={18} />
                                 )}
@@ -233,7 +233,7 @@ export default function TasksPage() {
                 <div className="max-w-3xl mx-auto">
                     <PageHeader
                         icon={<TasksIcon size={24} />}
-                        iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
+                        iconClassName="bg-[var(--bg-blue)] text-[var(--font-blue)]"
                         title={tNavigation('tasks')}
                         description={tTasks('description')}
                         actions={

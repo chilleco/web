@@ -275,7 +275,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 {favoritesCount > 0 && (
                   <Badge
                     variant="destructive"
-                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-red-500 border-red-500 pointer-events-none z-10"
+                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-[var(--btn-red)] border-[var(--btn-red)] pointer-events-none z-10"
                   >
                     {favoritesCount}
                   </Badge>
@@ -292,7 +292,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 {cartCount > 0 && (
                   <Badge
                     variant="destructive"
-                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-red-500 border-red-500 pointer-events-none z-10"
+                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-[var(--btn-red)] border-[var(--btn-red)] pointer-events-none z-10"
                   >
                     {cartCount}
                   </Badge>
@@ -320,7 +320,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 {cartCount > 0 && (
                   <Badge
                     variant="destructive"
-                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-red-500 border-red-500 pointer-events-none z-10"
+                    className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-[var(--btn-red)] border-[var(--btn-red)] pointer-events-none z-10"
                   >
                     {cartCount}
                   </Badge>
@@ -340,7 +340,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               <Pricing price={finalPrice} basePrice={basePrice} currency={product.currency} pricePrefix={pricePrefix} />
               {product.rating ? (
                 <Badge variant="outline" className="inline-flex items-center gap-1">
-                  <StarIcon size={14} className="text-amber-500" /> {product.rating.toFixed(1)}
+                  <StarIcon size={14} className="text-[var(--font-yellow)]" /> {product.rating.toFixed(1)}
                 </Badge>
               ) : null}
               {product.ratingCount ? (

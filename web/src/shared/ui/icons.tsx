@@ -100,6 +100,7 @@ import {
   FaReddit,
   FaCookie,
   FaCircleInfo,
+  FaInfo,
   FaComments,
   FaDollarSign as FaMoneyIcon,
   FaRotateLeft,
@@ -578,6 +579,10 @@ export function CookieIcon({ size = 16, ...props }: IconProps) {
 
 export function AboutIcon({ size = 16, ...props }: IconProps) {
   return <FaCircleInfo size={size} {...props} />
+}
+
+export function InfoIcon({ size = 16, ...props }: IconProps) {
+  return <FaInfo size={size} {...props} />
 }
 
 export function FeedbackIcon({ size = 16, ...props }: IconProps) {

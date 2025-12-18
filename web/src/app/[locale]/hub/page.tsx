@@ -22,7 +22,7 @@ export default async function HubPage() {
                 <div className="max-w-6xl mx-auto">
                     <PageHeader
                         icon={<HubIcon size={24} />}
-                        iconClassName="bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400"
+                        iconClassName="bg-[var(--bg-orange)] text-[var(--font-orange)]"
                         title={t('hub')}
                         description="Community forum for user-generated content, discussions, and knowledge sharing."
                     />
@@ -37,7 +37,7 @@ export default async function HubPage() {
                                 <Box size="lg">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
-                                            <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-[var(--bg-blue)] text-[var(--font-blue)] rounded-[0.75rem] flex items-center justify-center">
                                                 <MessageIcon size={24} />
                                             </div>
                                             <div>
@@ -56,7 +56,7 @@ export default async function HubPage() {
                                 <Box size="lg">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
-                                            <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-[var(--bg-green)] text-[var(--font-green)] rounded-[0.75rem] flex items-center justify-center">
                                                 <QuestionIcon size={24} />
                                             </div>
                                             <div>
@@ -75,7 +75,7 @@ export default async function HubPage() {
                                 <Box size="lg">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
-                                            <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-[var(--bg-violet)] text-[var(--font-violet)] rounded-[0.75rem] flex items-center justify-center">
                                                 <BookIcon size={24} />
                                             </div>
                                             <div>
@@ -94,7 +94,7 @@ export default async function HubPage() {
                                 <Box size="lg">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
-                                            <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-[var(--bg-orange)] text-[var(--font-orange)] rounded-[0.75rem] flex items-center justify-center">
                                                 <PaletteIcon size={24} />
                                             </div>
                                             <div>
@@ -132,7 +132,7 @@ export default async function HubPage() {
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-muted-foreground">Online</span>
-                                            <span className="font-medium text-green-600">234</span>
+                                            <span className="font-medium text-[var(--font-green)]">234</span>
                                         </div>
                                     </div>
                                 </Box>

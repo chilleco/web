@@ -46,89 +46,158 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --toast-success: oklch(0.72 0.2 145.66);
-  --toast-success-foreground: oklch(0.32 0.12 145.66);
-  --toast-warning: oklch(0.82 0.16 73.54);
-  --toast-warning-foreground: oklch(0.42 0.14 73.54);
-  --toast-error: oklch(0.65 0.24 25.07);
-  --toast-error-foreground: oklch(0.36 0.18 25.07);
-  --toast-info: oklch(0.68 0.11 230.63);
-  --toast-info-foreground: oklch(0.32 0.06 230.63);
+
+  /* Links */
+  --link: #336fee;
+  --link-hover: #1f50ba;
+
+  /* Tables */
+  --table-head: #f7f7f9;
+  --table-head-line: #dee2e6;
+  --table-line: #dee2e6;
+  --table-hover: #f8fafd;
+
+  /* Light */
+  --bg: #fff;
+  --block: #fff;
+  --font: #212529;
+  --font-light: #212529;
+
+  /* Dark */
+  --font-dark: #fff;
+
+  /* Violet */
+  --bg-violet: #f0e7ff;
+  --font-violet: #c3a3f2;
+
+  /* Blue */
+  --bg-blue: rgb(240 246 255);
+  --font-blue: rgb(56 97 251);
+
+  /* Green */
+  --bg-green: rgb(223 243 227);
+  --font-green: rgb(110 197 121);
+  --btn-green: #5cb254;
+  --btn-hover-green: #50a04b;
+
+  /* Red */
+  --bg-red: rgb(249 226 226);
+  --font-red: rgb(232 119 115);
+  --btn-red: #dc3545;
+  --btn-red-hover: #bb2d3b;
+
+  /* Orange */
+  --bg-orange: #fff5ec;
+  --font-orange: rgb(255 155 64);
+  --btn-orange: #ecac41;
+  --btn-hover-orange: #e09a38;
+
+  /* Yellow */
+  --bg-yellow: rgb(249 242 214);
+  --font-yellow: rgb(228 193 75);
+  --btn-yellow: #fedd2c;
+  --btn-hover-yellow: #ffcc33;
+
+  /* Tailwind/Shadcn tokens */
+  --background: var(--bg);
+  --foreground: var(--font);
+  --card: var(--block);
+  --card-foreground: var(--font);
+  --popover: var(--block);
+  --popover-foreground: var(--font);
+  --primary: var(--link);
+  --primary-hover: var(--link-hover);
+  --primary-foreground: #fff;
+  --secondary: var(--table-head);
+  --secondary-foreground: var(--font);
+  --muted: var(--table-head);
+  --muted-foreground: color-mix(in srgb, var(--font) 55%, #fff);
+  --accent: var(--table-hover);
+  --accent-foreground: var(--font);
+  --destructive: var(--btn-red);
+  --destructive-hover: var(--btn-red-hover);
+  --destructive-foreground: #fff;
+  --border: var(--table-line);
+  --input: var(--table-head-line);
+  --ring: var(--link);
+  --chart-1: var(--font-blue);
+  --chart-2: var(--font-green);
+  --chart-3: var(--font-violet);
+  --chart-4: var(--font-orange);
+  --chart-5: var(--font-yellow);
+  --sidebar: var(--bg);
+  --sidebar-foreground: var(--font);
+  --sidebar-primary: var(--link);
+  --sidebar-primary-foreground: #fff;
+  --sidebar-accent: var(--table-hover);
+  --sidebar-accent-foreground: var(--font);
+  --sidebar-border: var(--table-line);
+  --sidebar-ring: var(--link);
+
+  /* Toast tones */
+  --toast-success: var(--bg-green);
+  --toast-success-foreground: var(--font-green);
+  --toast-warning: var(--bg-orange);
+  --toast-warning-foreground: var(--font-orange);
+  --toast-error: var(--bg-red);
+  --toast-error-foreground: var(--font-red);
+  --toast-info: var(--bg-blue);
+  --toast-info-foreground: var(--font-blue);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --bg: oklch(0.145 0 0);
+  --block: oklch(0.205 0 0);
+  --font: var(--font-dark);
+
+  --table-head: color-mix(in srgb, var(--bg) 88%, #fff);
+  --table-head-line: rgb(255 255 255 / 12%);
+  --table-line: rgb(255 255 255 / 10%);
+  --table-hover: color-mix(in srgb, var(--bg) 82%, #fff);
+
+  --background: var(--bg);
+  --foreground: var(--font);
+  --card: var(--block);
+  --card-foreground: var(--font);
+  --popover: var(--block);
+  --popover-foreground: var(--font);
+  --primary: var(--link);
+  --primary-hover: var(--link-hover);
+  --primary-foreground: #fff;
   --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary-foreground: var(--font);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --accent-foreground: var(--font);
+  --destructive: var(--btn-red);
+  --destructive-hover: var(--btn-red-hover);
+  --destructive-foreground: #fff;
+  --border: rgb(255 255 255 / 10%);
+  --input: rgb(255 255 255 / 15%);
+  --ring: var(--link);
+  --chart-1: var(--font-blue);
+  --chart-2: var(--font-green);
+  --chart-3: var(--font-violet);
+  --chart-4: var(--font-orange);
+  --chart-5: var(--font-yellow);
+  --sidebar: var(--block);
+  --sidebar-foreground: var(--font);
+  --sidebar-primary: var(--link);
+  --sidebar-primary-foreground: #fff;
   --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-  --toast-success: oklch(0.62 0.19 145.66);
-  --toast-success-foreground: oklch(0.9 0.12 145.66);
-  --toast-warning: oklch(0.68 0.16 73.54);
-  --toast-warning-foreground: oklch(0.94 0.07 73.54);
-  --toast-error: oklch(0.65 0.2 25.07);
-  --toast-error-foreground: oklch(0.95 0.12 25.07);
-  --toast-info: oklch(0.7 0.12 230.63);
-  --toast-info-foreground: oklch(0.95 0.05 230.63);
+  --sidebar-accent-foreground: var(--font);
+  --sidebar-border: rgb(255 255 255 / 10%);
+  --sidebar-ring: var(--link);
+
+  --toast-success: var(--bg-green);
+  --toast-success-foreground: var(--font-green);
+  --toast-warning: var(--bg-orange);
+  --toast-warning-foreground: var(--font-orange);
+  --toast-error: var(--bg-red);
+  --toast-error-foreground: var(--font-red);
+  --toast-info: var(--bg-blue);
+  --toast-info-foreground: var(--font-blue);
 }
 
 @layer base {
@@ -138,6 +207,15 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  a {
+    color: var(--link);
+    cursor: pointer;
+  }
+
+  a:hover {
+    color: var(--link-hover);
   }
 
   input[type="number"]::-webkit-inner-spin-button,
@@ -201,7 +279,7 @@
 /* Toast styling */
 .feedback-toast {
   border-radius: 0.75rem;
-  background: color-mix(in oklch, var(--background) 90%, var(--muted) 10%);
+  background: var(--block);
   color: var(--foreground);
   box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.12);
   cursor: pointer;
@@ -243,45 +321,49 @@
 [data-sonner-toast][data-styled='true'].feedback-toast [data-icon] svg {
   width: 18px;
   height: 18px;
-  color: currentColor;
+  color: #fff;
 }
 
 .feedback-toast--success {
-  background: color-mix(in oklch, var(--background) 60%, var(--toast-success) 40%);
+  background: var(--toast-success);
   color: var(--toast-success-foreground);
+  border-color: var(--toast-success-foreground);
 }
 
 .feedback-toast--warning {
-  background: color-mix(in oklch, var(--background) 60%, var(--toast-warning) 40%);
+  background: var(--toast-warning);
   color: var(--toast-warning-foreground);
+  border-color: var(--toast-warning-foreground);
 }
 
 .feedback-toast--error {
-  background: color-mix(in oklch, var(--background) 55%, var(--toast-error) 45%);
+  background: var(--toast-error);
   color: var(--toast-error-foreground);
+  border-color: var(--toast-error-foreground);
 }
 
 .feedback-toast--info,
 .feedback-toast--loading {
-  background: color-mix(in oklch, var(--background) 65%, var(--toast-info) 35%);
+  background: var(--toast-info);
   color: var(--toast-info-foreground);
+  border-color: var(--toast-info-foreground);
 }
 
 .feedback-toast--success .feedback-toast__description {
-  color: color-mix(in oklch, var(--toast-success-foreground) 65%, var(--foreground) 35%);
+  color: color-mix(in srgb, var(--toast-success-foreground) 70%, var(--foreground) 30%);
 }
 
 .feedback-toast--warning .feedback-toast__description {
-  color: color-mix(in oklch, var(--toast-warning-foreground) 65%, var(--foreground) 35%);
+  color: color-mix(in srgb, var(--toast-warning-foreground) 70%, var(--foreground) 30%);
 }
 
 .feedback-toast--error .feedback-toast__description {
-  color: color-mix(in oklch, var(--toast-error-foreground) 65%, var(--foreground) 35%);
+  color: color-mix(in srgb, var(--toast-error-foreground) 70%, var(--foreground) 30%);
 }
 
 .feedback-toast--info .feedback-toast__description,
 .feedback-toast--loading .feedback-toast__description {
-  color: color-mix(in oklch, var(--toast-info-foreground) 65%, var(--foreground) 35%);
+  color: color-mix(in srgb, var(--toast-info-foreground) 70%, var(--foreground) 30%);
 }
 
 .feedback-toast__action,

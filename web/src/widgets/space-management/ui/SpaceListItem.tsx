@@ -40,7 +40,7 @@ export function SpaceListItem({ space, onDelete }: SpaceListItemProps) {
     [t]
   );
   const marginBadge = (
-    <Badge key="margin" variant="outline" className="bg-amber-500/10 text-amber-700 dark:text-amber-300">
+    <Badge key="margin" variant="outline" className="bg-[var(--bg-yellow)] text-[var(--font-yellow)]">
       {t('fields.marginBadge', { value: formatMargin(space.margin) })}
     </Badge>
   );

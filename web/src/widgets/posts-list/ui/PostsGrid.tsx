@@ -114,7 +114,7 @@ export function PostsGrid({
     if (error && postsToRender.length === 0) {
         return (
             <div className="text-center py-12">
-                <div className="text-red-500 mb-4">
+                <div className="text-destructive mb-4">
                     <AlertIcon size={48} className="mx-auto mb-4" />
                     <p className="text-lg font-medium">Failed to load posts</p>
                     <p className="text-sm text-muted-foreground mt-2">{error}</p>

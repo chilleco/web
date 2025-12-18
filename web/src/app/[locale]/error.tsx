@@ -49,7 +49,7 @@ export default function LocaleError({
       <div className="container mx-auto px-4 pt-6">
         <PageHeader
           icon={<AlertIcon size={24} />}
-          iconClassName="bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400"
+          iconClassName="bg-[var(--bg-red)] text-[var(--font-red)]"
           title={tSystem('server_error')}
           description={tSystem('server_error_description')}
           actions={
@@ -78,8 +78,8 @@ export default function LocaleError({
 
       <div className="container mx-auto px-4 pb-10">
         <Box className="space-y-3">
-          <div className="flex items-center gap-3 rounded-[0.75rem] bg-red-500/10 px-4 py-3 dark:bg-red-500/15">
-            <div className="flex h-10 w-10 items-center justify-center rounded-[0.75rem] bg-red-500/20 text-red-600 dark:bg-red-500/25 dark:text-red-300">
+          <div className="flex items-center gap-3 rounded-[0.75rem] bg-[var(--bg-red)] px-4 py-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-[0.75rem] bg-[var(--bg-red)] text-[var(--font-red)]">
               <AlertIcon size={18} />
             </div>
             <div className="space-y-1">

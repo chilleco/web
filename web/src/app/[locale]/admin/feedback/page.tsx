@@ -16,7 +16,7 @@ export default function AdminFeedbackPage() {
     <div className="space-y-6">
       <PageHeader
         icon={<FeedbackIcon size={24} />}
-        iconClassName="bg-teal-500/15 text-teal-600 dark:bg-teal-500/20 dark:text-teal-400"
+        iconClassName="bg-[var(--bg-blue)] text-[var(--font-blue)]"
         title={t('title')}
         description={t('description')}
         actions={
@@ -35,4 +35,3 @@ export default function AdminFeedbackPage() {
     </div>
   );
 }
-

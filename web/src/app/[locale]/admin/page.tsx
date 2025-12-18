@@ -211,22 +211,22 @@ export default function AdminPage() {
         case 'user':
           return {
             icon: <UsersIcon size={16} />,
-            accent: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+            accent: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
           };
         case 'post':
           return {
             icon: <PostsIcon size={16} />,
-            accent: 'bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400',
+            accent: 'bg-[var(--bg-violet)] text-[var(--font-violet)]',
           };
         case 'product':
           return {
             icon: <ShoppingIcon size={16} />,
-            accent: 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+            accent: 'bg-[var(--bg-green)] text-[var(--font-green)]',
           };
         case 'category':
           return {
             icon: <CategoriesIcon size={16} />,
-            accent: 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
+            accent: 'bg-[var(--bg-yellow)] text-[var(--font-yellow)]',
           };
         case 'comment':
           return {
@@ -236,22 +236,22 @@ export default function AdminPage() {
         case 'space':
           return {
             icon: <BoxIcon size={16} />,
-            accent: 'bg-sky-500/15 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
+            accent: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
           };
         case 'task':
           return {
             icon: <TasksIcon size={16} />,
-            accent: 'bg-indigo-500/15 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400',
+            accent: 'bg-[var(--bg-violet)] text-[var(--font-violet)]',
           };
         case 'feedback':
           return {
             icon: <FeedbackIcon size={16} />,
-            accent: 'bg-teal-500/15 text-teal-600 dark:bg-teal-500/20 dark:text-teal-400',
+            accent: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
           };
         case 'payment':
           return {
             icon: <DollarIcon size={16} />,
-            accent: 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
+            accent: 'bg-[var(--bg-yellow)] text-[var(--font-yellow)]',
           };
         case 'session':
           return {

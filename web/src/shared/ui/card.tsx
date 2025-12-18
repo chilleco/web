@@ -98,7 +98,7 @@ function ImageSlider({
             'absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-sm cursor-pointer',
             'opacity-80 hover:opacity-100 hover:scale-110',
             isLiked
-              ? 'bg-red-500 text-white'
+              ? 'bg-[var(--btn-red)] text-white'
               : 'bg-white/80 text-gray-600 hover:bg-white'
           )}
         >
@@ -166,9 +166,9 @@ function InfoBadge({ icon, label, count, variant = 'default' }: InfoBadgeProps) 
   const variants = {
     default: 'bg-muted text-muted-foreground',
     primary: 'bg-primary/10 text-primary',
-    success: 'bg-green-500/10 text-green-600 dark:text-green-400',
-    warning: 'bg-orange-500/10 text-orange-600 dark:text-orange-400',
-    destructive: 'bg-destructive/10 text-destructive',
+    success: 'bg-[var(--bg-green)] text-[var(--font-green)]',
+    warning: 'bg-[var(--bg-orange)] text-[var(--font-orange)]',
+    destructive: 'bg-[var(--bg-red)] text-[var(--font-red)]',
   };
 
   return (

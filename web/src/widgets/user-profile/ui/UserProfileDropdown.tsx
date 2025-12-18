@@ -169,7 +169,7 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
                         </>
                     )}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 dark:text-red-400">
+                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
                         <LogoutIcon size={16} />
                         <span className="ml-2">{t('sign_out')}</span>
                     </DropdownMenuItem>

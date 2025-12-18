@@ -114,11 +114,11 @@ export function CategoryPreview({
 
     // Default colors based on level with proper Tailwind classes
     const colorClasses = [
-      'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
-      'bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400',
-      'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
-      'bg-red-500/15 text-red-600 dark:bg-red-500/20 dark:text-red-400',
-      'bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400'
+      'bg-[var(--bg-blue)] text-[var(--font-blue)]',
+      'bg-[var(--bg-green)] text-[var(--font-green)]',
+      'bg-[var(--bg-yellow)] text-[var(--font-yellow)]',
+      'bg-[var(--bg-red)] text-[var(--font-red)]',
+      'bg-[var(--bg-violet)] text-[var(--font-violet)]'
     ];
     return { className: colorClasses[level % colorClasses.length] };
   };

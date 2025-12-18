@@ -181,7 +181,7 @@ export default function QuestionnaireSidebar({ className }: QuestionnaireSidebar
           </>
         ) : (
           <div className="text-center space-y-4">
-            <CheckCircleIcon size={48} className="mx-auto text-green-500" />
+            <CheckCircleIcon size={48} className="mx-auto text-[var(--font-green)]" />
             <div>
               <h4 className="font-medium">{t('thankYou')}</h4>
               <p className="text-sm text-muted-foreground">{t('feedbackReceived')}</p>

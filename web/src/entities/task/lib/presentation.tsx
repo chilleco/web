@@ -9,20 +9,20 @@ export type TaskColorStyles = {
 
 const taskColorStyles: Record<string, TaskColorStyles> = {
   green: {
-    iconContainer: 'bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400',
-    rewardText: 'text-green-600 dark:text-green-400',
+    iconContainer: 'bg-[var(--bg-green)] text-[var(--font-green)]',
+    rewardText: 'text-[var(--font-green)]',
   },
   violet: {
-    iconContainer: 'bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400',
-    rewardText: 'text-purple-600 dark:text-purple-400',
+    iconContainer: 'bg-[var(--bg-violet)] text-[var(--font-violet)]',
+    rewardText: 'text-[var(--font-violet)]',
   },
   blue: {
-    iconContainer: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
-    rewardText: 'text-blue-600 dark:text-blue-400',
+    iconContainer: 'bg-[var(--bg-blue)] text-[var(--font-blue)]',
+    rewardText: 'text-[var(--font-blue)]',
   },
   orange: {
-    iconContainer: 'bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400',
-    rewardText: 'text-orange-600 dark:text-orange-400',
+    iconContainer: 'bg-[var(--bg-orange)] text-[var(--font-orange)]',
+    rewardText: 'text-[var(--font-orange)]',
   },
 };
 

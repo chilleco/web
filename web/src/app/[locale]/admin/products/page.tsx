@@ -25,7 +25,7 @@ export default function AdminProductsPage() {
     <div className="space-y-6">
       <PageHeader
         icon={<ShoppingIcon size={24} />}
-        iconClassName="bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400"
+        iconClassName="bg-[var(--bg-yellow)] text-[var(--font-yellow)]"
         title={t('title')}
         description={t('description')}
         actions={

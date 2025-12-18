@@ -186,7 +186,7 @@ export default function ProfilePage() {
             <div className="container mx-auto px-4 py-8">
                 <PageHeader
                     icon={<UserIcon size={24} />}
-                    iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
+                    iconClassName="bg-[var(--bg-blue)] text-[var(--font-blue)]"
                     title={tSystem('profile')}
                     description={tProfile('description')}
                     actions={

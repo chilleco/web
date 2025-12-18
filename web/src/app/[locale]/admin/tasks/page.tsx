@@ -25,7 +25,7 @@ export default function AdminTasksPage() {
     <div className="space-y-6">
       <PageHeader
         icon={<TasksIcon size={24} />}
-        iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
+        iconClassName="bg-[var(--bg-blue)] text-[var(--font-blue)]"
         title={t('title')}
         description={t('description')}
         actions={
@@ -48,4 +48,3 @@ export default function AdminTasksPage() {
     </div>
   );
 }
-

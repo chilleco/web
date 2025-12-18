@@ -64,7 +64,7 @@ export default function CartPage() {
         <div className="container mx-auto px-4 py-10 space-y-6">
             <PageHeader
                 icon={<ShoppingIcon size={24} />}
-                iconClassName="bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400"
+                iconClassName="bg-[var(--bg-green)] text-[var(--font-green)]"
                 title={tCartPage('title')}
                 description={tCartPage('description')}
                 actions={

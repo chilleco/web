@@ -64,7 +64,7 @@ export default function FavoritesPage() {
         <div className="container mx-auto px-4 py-10 space-y-6">
             <PageHeader
                 icon={<HeartIcon size={24} />}
-                iconClassName="bg-pink-500/15 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400"
+                iconClassName="bg-[var(--bg-red)] text-[var(--font-red)]"
                 title={tFavorites('title')}
                 description={tFavorites('description')}
                 actions={

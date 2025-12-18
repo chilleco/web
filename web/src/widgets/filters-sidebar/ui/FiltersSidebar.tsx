@@ -560,7 +560,7 @@ export default function FiltersSidebar({ className }: FiltersSidebarProps) {
                 {selectedRating === rating ? (
                   <StarIcon size={12} className="text-primary-foreground" />
                 ) : (
-                  <StarIcon size={12} className="text-yellow-500" />
+                  <StarIcon size={12} className="text-[var(--font-yellow)]" />
                 )}
                 <span>⩾{rating.toFixed(1)}</span>
               </button>

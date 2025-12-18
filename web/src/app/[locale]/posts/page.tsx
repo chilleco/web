@@ -59,7 +59,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
                 <div className="max-w-6xl mx-auto">
                     <PageHeader
                         icon={<PostsIcon size={24} />}
-                        iconClassName="bg-green-500/15 text-green-600 dark:bg-green-500/20 dark:text-green-400"
+                        iconClassName="bg-[var(--bg-green)] text-[var(--font-green)]"
                         title={t('posts')}
                         description="Browse and discover posts organized by categories. Find content that interests you most."
                         actions={

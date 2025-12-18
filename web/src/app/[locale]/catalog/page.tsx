@@ -157,7 +157,7 @@ export default function CatalogPage() {
                 <div className="max-w-7xl mx-auto">
                     <PageHeader
                         icon={headerIcon}
-                        iconClassName="bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400"
+                        iconClassName="bg-[var(--bg-blue)] text-[var(--font-blue)]"
                         title={headerTitle}
                         description={dealerLoading ? tSystem('loading') : headerDescription}
                         actions={
@@ -173,7 +173,7 @@ export default function CatalogPage() {
                                     {favoriteItems.size > 0 && (
                                         <Badge
                                             variant="destructive"
-                                            className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-red-500 border-red-500 pointer-events-none z-10"
+                                            className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-[var(--btn-red)] border-[var(--btn-red)] pointer-events-none z-10"
                                         >
                                             {favoriteItems.size}
                                         </Badge>
@@ -191,7 +191,7 @@ export default function CatalogPage() {
                                     {cartItems.size > 0 && (
                                         <Badge
                                             variant="destructive"
-                                            className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-red-500 border-red-500 pointer-events-none z-10"
+                                            className="absolute -top-1 -right-1 min-w-[1rem] h-4 flex items-center justify-center p-0 text-[10px] text-white bg-[var(--btn-red)] border-[var(--btn-red)] pointer-events-none z-10"
                                         >
                                             {cartItems.size}
                                         </Badge>
