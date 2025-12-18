@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { PageHeader } from '@/shared/ui/page-header';
 import { Box } from '@/shared/ui/box';
 import { HubIcon, MessageIcon, QuestionIcon, BookIcon, PaletteIcon, ConstructionIcon } from '@/shared/ui/icons';
+import { HubToastDemo } from './_components/HubToastDemo';
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations('navigation');
@@ -114,6 +115,7 @@ export default async function HubPage() {
                         {/* Sidebar */}
                         <div className="lg:col-span-1">
                             <div className="space-y-6">
+                                <HubToastDemo />
                                 {/* Community Stats */}
                                 <Box size="lg">
                                     <h3 className="font-semibold mb-4">Community Stats</h3>

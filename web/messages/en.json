@@ -38,6 +38,23 @@
     "home": "Home",
     "sections": "Sections"
   },
+  "hub": {
+    "toastDemo": {
+      "title": "Toasts",
+      "description": "Trigger each toast variant to verify styling.",
+      "actions": {
+        "default": "Default"
+      },
+      "messages": {
+        "default": "This is a default toast",
+        "success": "This is a success toast",
+        "error": "This is an error toast",
+        "warning": "This is a warning toast",
+        "info": "This is an info toast",
+        "loading": "Loading..."
+      }
+    }
+  },
   "tasks": {
     "description": "Complete tasks to earn coins.",
     "empty": "No tasks available right now.",
@@ -294,6 +311,8 @@
     "users": "Users",
     "success": "Success",
     "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
     "server_error": "Server error",
     "server_error_description": "Something went wrong on the server. Please try again or refresh the page.",
     "error_code": "Error code: {code}",

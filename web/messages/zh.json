@@ -38,6 +38,23 @@
     "home": "首页",
     "sections": "版块"
   },
+  "hub": {
+    "toastDemo": {
+      "title": "通知",
+      "description": "触发各类 Toast 以检查样式。",
+      "actions": {
+        "default": "默认"
+      },
+      "messages": {
+        "default": "默认提示",
+        "success": "成功提示",
+        "error": "错误提示",
+        "warning": "警告提示",
+        "info": "信息提示",
+        "loading": "加载中..."
+      }
+    }
+  },
   "tasks": {
     "description": "完成任务以获得金币。",
     "empty": "暂无可用任务。",
@@ -294,6 +311,8 @@
     "users": "用户",
     "success": "成功",
     "error": "错误",
+    "warning": "警告",
+    "info": "信息",
     "server_error": "服务器错误",
     "server_error_description": "服务器出现问题。请重试或刷新页面。",
     "error_code": "错误代码：{code}",

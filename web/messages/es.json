@@ -38,6 +38,23 @@
     "home": "Inicio",
     "sections": "Secciones"
   },
+  "hub": {
+    "toastDemo": {
+      "title": "Notificaciones",
+      "description": "Activa cada variante de toast para comprobar el estilo.",
+      "actions": {
+        "default": "Predeterminado"
+      },
+      "messages": {
+        "default": "Notificación predeterminada",
+        "success": "Notificación de éxito",
+        "error": "Notificación de error",
+        "warning": "Notificación de advertencia",
+        "info": "Notificación informativa",
+        "loading": "Cargando..."
+      }
+    }
+  },
   "tasks": {
     "description": "Completa tareas y gana monedas.",
     "empty": "No hay tareas disponibles ahora.",
@@ -294,6 +311,8 @@
     "users": "Usuarios",
     "success": "Éxito",
     "error": "Error",
+    "warning": "Advertencia",
+    "info": "Información",
     "server_error": "Error del servidor",
     "server_error_description": "Ocurrió un problema en el servidor. Intenta nuevamente o actualiza la página.",
     "error_code": "Código de error: {code}",
