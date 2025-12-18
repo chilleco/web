@@ -24,7 +24,7 @@ import {
 import { IconButton } from '@/shared/ui/icon-button';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { AuthModal, logout, selectAuthUser, selectIsAuthenticated } from '@/features/auth';
-import { useToastActions } from '@/shared/hooks/useToast';
+import { useToast } from '@/shared/hooks/useToast';
 import { SpacesSelector } from '@/features/spaces';
 
 interface UserProfileDropdownProps {
@@ -35,7 +35,7 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
     const t = useTranslations('system');
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const { success, error } = useToastActions();
+    const { toast, error } = useToast();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const user = useAppSelector(selectAuthUser);
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
@@ -81,7 +81,7 @@ export default function UserProfileDropdown({ className }: UserProfileDropdownPr
     const handleSignOut = async () => {
         try {
             await dispatch(logout()).unwrap();
-            success(t('sign_out'));
+            toast(t('sign_out'));
         } catch (err) {
             const message = err instanceof Error ? err.message : t('error');
             error(message);

@@ -111,13 +111,16 @@ export async function ensureAuthToken(): Promise<string> {
             throw new ApiError(500, 'session_init_failed', responseData ?? undefined);
         })
         .catch((error) => {
-            authInitPromise = null;
-
             if (error instanceof ApiError) {
                 throw error;
             }
 
             throw new ApiError(0, error instanceof Error ? error.message : 'session_init_failed');
+        })
+        .finally(() => {
+            // Keep the promise only while the init request is in-flight.
+            // If `authToken` later gets cleared (logout/manual clear), we must be able to re-init again.
+            authInitPromise = null;
         });
 
     return authInitPromise;

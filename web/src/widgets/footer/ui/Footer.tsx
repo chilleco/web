@@ -211,7 +211,11 @@ export function Footer() {
             <DialogTitle>{tFeedback('title')}</DialogTitle>
             <DialogDescription>{tFeedback('description')}</DialogDescription>
           </DialogHeader>
-          <FeedbackForm initialType="bug" source="footer" />
+          <FeedbackForm
+            initialType="bug"
+            source="footer"
+            onSubmitted={() => setIsFeedbackOpen(false)}
+          />
         </DialogContent>
       </Dialog>
     </footer>

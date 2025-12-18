@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/shared/ui/input';
 import { useTranslations } from 'next-intl';
 import { ThemeSwitcher } from '@/shared/components/layout';
@@ -10,13 +10,18 @@ import MobileNavigation from './MobileNavigation';
 import MobileMenuContent from './MobileMenuContent';
 import DesktopNavigation from './DesktopNavigation';
 import { Logo } from '@/shared/components/layout';
-import { useRouter } from '@/i18n/routing';
+import { usePathname, useRouter } from '@/i18n/routing';
 import { SearchIcon } from '@/shared/ui/icons';
 
 export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const t = useTranslations('system');
     const router = useRouter();
+    const pathname = usePathname();
+
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
 
     const handleLogoClick = () => {
         router.push('/');

@@ -8,7 +8,6 @@ import { apiWithoutGlobalErrors } from '@/shared/services/api/client';
 import { cn } from '@/shared/lib/utils';
 import { EntityManagement, EntityRow } from '@/shared/ui/entity-management';
 import { Badge } from '@/shared/ui/badge';
-import { ButtonGroup } from '@/shared/ui/button-group';
 import { IconButton } from '@/shared/ui/icon-button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
@@ -611,7 +610,13 @@ export function FeedbackManagement({ triggerRefresh }: FeedbackManagementProps) 
                   item.type === 'bug' ? 'destructive' : item.type === 'request' ? 'secondary' : 'default';
 
                 return (
-                  <div key={item.id} className="py-3">
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setSelected(item)}
+                    aria-label={t('actions.open')}
+                    className="block w-full py-3 text-left cursor-pointer rounded-[0.75rem] transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:bg-muted/40 hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  >
                     <EntityRow
                       id={item.id}
                       title={item.title || t('fallbackTitle', { id: item.id })}
@@ -631,20 +636,12 @@ export function FeedbackManagement({ triggerRefresh }: FeedbackManagementProps) 
                         { icon: <UserIcon size={12} />, keyLabel: t('fields.user'), value: item.user ? `#${item.user}` : tSystem('guest') },
                       ]}
                       rightActions={
-                        <ButtonGroup>
-                          <IconButton
-                            type="button"
-                            variant="outline"
-                            icon={<ChevronRightIcon size={14} />}
-                            responsive
-                            onClick={() => setSelected(item)}
-                          >
-                            {t('actions.open')}
-                          </IconButton>
-                        </ButtonGroup>
+                        <div className="text-muted-foreground">
+                          <ChevronRightIcon size={14} />
+                        </div>
                       }
                     />
-                  </div>
+                  </button>
                 );
               })}
             </div>
