@@ -2,8 +2,8 @@
 Modern full-stack web application with Python FastAPI backend, Next.js frontend, Telegram bot. Built with Docker containers and featuring multilingual support, and production-ready flow.
 
 ## Background tasks (Taskiq)
-- Worker: `uv run taskiq worker tasks.broker:broker tasks`
-- Scheduler: `uv run taskiq scheduler tasks.scheduler:scheduler tasks`
+- Worker: `uv run taskiq worker tasks.broker:broker tasks.registry`
+- Scheduler: `uv run taskiq scheduler tasks.scheduler:scheduler tasks.registry`
 - Fixed-delay periodic jobs (cycle after finish): trigger once, e.g. `await run_periodic.kiq("cache_categories")`
 
 ## Run

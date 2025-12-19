@@ -57,7 +57,7 @@ services:
       - ${DATA_PATH}/logs:/logs
     depends_on:
       - mq
-    command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks --workers 2 --log-level INFO"
+    command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks.registry --workers 2 --log-level INFO"
 
   scheduler:
     image: ${PROJECT_NAME}/api
@@ -76,7 +76,7 @@ services:
       - ${DATA_PATH}/logs:/logs
     depends_on:
       - mq
-    command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks --log-level INFO"
+    command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks.registry --log-level INFO"
 
   web:
     image: ${PROJECT_NAME}/web

@@ -1,8 +1,5 @@
 """
-Task callback exports.
-
-Use in API code:
-`from tasks import <callback_task>`.
+Callback tasks (triggered by API/webhooks/startup events).
 """
 
 from tasks.callbacks.model_events import process_model_callback_event
@@ -12,3 +9,4 @@ __all__ = (
     "process_model_callback_event",
     "reset_online_users",
 )
+

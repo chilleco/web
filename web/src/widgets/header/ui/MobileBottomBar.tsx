@@ -115,7 +115,7 @@ export function MobileBottomBar() {
                     ref={navRef}
                     className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-[0_-0.25rem_1.5rem_rgba(0,0,0,0.12)]"
                 >
-                    <div className="grid grid-cols-5 gap-1 px-4 pb-[env(safe-area-inset-bottom)]">
+                    <div className="grid grid-flow-col auto-cols-fr gap-1 px-4 pb-[env(safe-area-inset-bottom)]">
                         {items.map(item => {
                             const Icon = item.icon;
                             const active = isActive(item.path);

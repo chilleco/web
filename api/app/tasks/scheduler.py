@@ -2,7 +2,7 @@
 Taskiq scheduler configuration.
 
 Run with:
-`taskiq scheduler tasks.scheduler:scheduler tasks`
+`taskiq scheduler tasks.scheduler:scheduler tasks.registry`
 """
 
 from __future__ import annotations
@@ -35,4 +35,3 @@ __all__ = (
     "redis_source",
     "scheduler",
 )
-

@@ -1,7 +1,7 @@
 """
 Queue callback events for background processing.
 
-Prefer sending Taskiq tasks when an event loop is available; fall back to a Redis list.
+Prefer sending Taskiq tasks when an event loop is available; otherwise enqueue synchronously.
 """
 
 from __future__ import annotations
@@ -22,24 +22,24 @@ def enqueue(event: Dict[str, Any]) -> None:
     except RuntimeError:
         loop = None
 
-    if loop is None:
-        from callbacks.queue import push
-
-        push(event)
-        return
-
     async def _send() -> None:
-        from callbacks.queue import push
-        from tasks.callbacks import process_model_callback_event
+        from tasks import process_model_callback_event
 
         try:
             await process_model_callback_event.kiq(event)
         except Exception as exc:  # pylint: disable=broad-except
             log.error(
-                "Taskiq enqueue failed, fallback to queue: {}",
+                "Taskiq enqueue failed: {}",
                 {"error": str(exc), "event": event},
             )
-            push(event)
+            raise
 
-    loop.create_task(_send())
+    if loop is not None:
+        loop.create_task(_send())
+        return
 
+    try:
+        asyncio.run(_send())
+    except Exception:  # pylint: disable=broad-except
+        # `.save()` should never crash because callbacks cannot be enqueued.
+        return

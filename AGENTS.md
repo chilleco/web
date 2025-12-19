@@ -7,6 +7,12 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - Services: `api/` FastAPI backend; `web/` Next.js 15 + TypeScript (dirs: `src/app`, `entities`, `features`, `widgets`, `shared`, `i18n`, `styles`); `tg/` Telegram worker; `infra/` Docker Compose; `data/` runtime storage.
 - Localization: bundles in `web/messages/*.json`; per-locale routing under `web/src/app/[locale]/**`. All user-facing text must use locale files.
 
+## Background Jobs (Taskiq)
+- Core Taskiq files live in `api/app/tasks/`: `broker.py`, `scheduler.py`, `system.py`, and `__init__.py`.
+- Task definitions are grouped under `api/app/tasks/periodic/`, `api/app/tasks/scheduled/`, and `api/app/tasks/callbacks/`.
+- Taskiq workers/scheduler should import `api/app/tasks/registry.py` (registers all tasks).
+- Import callback tasks via `from tasks import <task_name>` (no `tasks.callbacks.*`); `api/app/routes/tasks/__init__.py` should only import callback tasks.
+
 ## Entities
 Depending on the project that develops based on this template, the entities of this template can be reused as follows:
 - spaces (switch environment: like Slack workspaces)
