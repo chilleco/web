@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
+import { useEffect, useMemo, useRef, type ComponentType } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useBottomNavigationItems } from '../model/bottomNavigationItems';
 import { HomeIcon, UserIcon } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib/utils';
 import { Avatar, AvatarImage } from '@/shared/ui/avatar';
-import { AuthModal, selectAuthUser, selectIsAuthenticated } from '@/features/auth';
+import { selectAuthUser, selectIsAuthenticated } from '@/features/auth';
 import { useAppSelector } from '@/shared/stores/store';
 import { selectIsMobileBottomBarEnabled } from '@/shared/stores/layoutSlice';
 
@@ -33,7 +33,6 @@ export function MobileBottomBar() {
     const isMobileBottomBarEnabled = useAppSelector(selectIsMobileBottomBarEnabled);
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const user = useAppSelector(selectAuthUser);
-    const [isAuthModalOpen, setAuthModalOpen] = useState(false);
     const navRef = useRef<HTMLElement | null>(null);
 
     const items = useMemo<BottomNavItem[]>(
@@ -51,21 +50,15 @@ export function MobileBottomBar() {
                 icon: item.icon,
             })),
             {
-                key: 'profile',
-                label: isAuthenticated ? tSystem('profile') : tSystem('sign_in'),
-                path: '/profile' as RouteHref,
+                key: 'settings',
+                label: tSystem('settings'),
+                path: '/settings' as RouteHref,
                 icon: UserIcon,
                 isProfile: true,
             },
         ],
-        [isAuthenticated, navigationItems, tNavigation, tSystem]
+        [navigationItems, tNavigation, tSystem]
     );
-
-    useEffect(() => {
-        if (isAuthenticated && isAuthModalOpen) {
-            setAuthModalOpen(false);
-        }
-    }, [isAuthenticated, isAuthModalOpen]);
 
     useEffect(() => {
         const nav = navRef.current;
@@ -128,11 +121,6 @@ export function MobileBottomBar() {
                             const active = isActive(item.path);
 
                             const handleClick = () => {
-                                if (item.isProfile && !isAuthenticated) {
-                                    setAuthModalOpen(true);
-                                    return;
-                                }
-
                                 handleNavigate(item.path);
                             };
 
@@ -160,7 +148,6 @@ export function MobileBottomBar() {
                     </div>
                 </nav>
             ) : null}
-            <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} />
         </>
     );
 }

@@ -55,20 +55,29 @@ function PageHeader({
   actions,
   ...props
 }: PageHeaderProps) {
+  const hasDescription = Boolean(description)
+
   return (
     <header
       data-slot="page-header"
-      className={cn(pageHeaderVariants({ size }), className)}
+      className={cn(pageHeaderVariants({ size }), !hasDescription && "items-center", className)}
       {...props}
     >
-      <div className="flex items-start gap-4 flex-1 min-w-0">
+      <div className={cn("flex items-start gap-4 flex-1 min-w-0", !hasDescription && "items-center")}>
         {icon && (
-          <div className={cn(iconContainerVariants({ size }), iconClassName)}>
+          <div
+            className={cn(iconContainerVariants({ size }), !hasDescription && "mt-0", iconClassName)}
+          >
             {icon}
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold text-foreground mb-0.5 truncate">
+          <h1
+            className={cn(
+              "text-2xl font-bold text-foreground truncate",
+              hasDescription ? "mb-0.5" : "mb-0"
+            )}
+          >
             {title}
           </h1>
           {description && (
@@ -79,7 +88,7 @@ function PageHeader({
         </div>
       </div>
       {actions && (
-        <div className="flex items-center gap-2 shrink-0 mt-2.5">
+        <div className={cn("flex items-center gap-2 shrink-0 mt-2.5", !hasDescription && "mt-0")}>
           {actions}
         </div>
       )}
