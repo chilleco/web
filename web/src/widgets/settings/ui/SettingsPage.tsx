@@ -1,9 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
-import { PageHeader } from '@/shared/ui/page-header';
 import { Box } from '@/shared/ui/box';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -26,6 +25,7 @@ import { AuthModal, logout, selectAuthUser, selectIsAuthenticated } from '@/feat
 import { SpacesSelector } from '@/features/spaces';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { useNavigationItems } from '@/widgets/header/model/navigationItems';
+import { Avatar, AvatarImage } from '@/shared/ui/avatar';
 
 type RouteHref = Parameters<ReturnType<typeof useRouter>['push']>[0];
 
@@ -122,72 +122,89 @@ function AccountBlock({
     const user = useAppSelector(selectAuthUser);
     const isAdmin = Boolean(user?.status !== undefined && user.status >= 4);
 
-    if (!isAuthenticated) {
-        return (
-            <div className="space-y-3">
-                <Button variant="outline" className="w-full justify-start gap-3 h-12" onClick={onSignIn}>
-                    <LoginIcon size={18} />
-                    <span>{tSystem('sign_in')}</span>
-                </Button>
-            </div>
-        );
-    }
+    const fullName = [user?.name, user?.surname].filter(Boolean).join(' ').trim();
+    const profileLabel = isAuthenticated
+        ? fullName || tSystem('open_profile')
+        : tSystem('sign_in');
 
     return (
         <div className="space-y-4">
-            <Button variant="outline" className="w-full justify-start gap-3 h-12" onClick={onOpenProfile}>
-                <UserIcon size={18} />
-                <span>{tSystem('open_profile')}</span>
-            </Button>
-
-            <SpacesSelector userId={user?.id} navigateOnSelect={false} />
-
             <div className="space-y-2">
                 <Button
                     variant="outline"
                     className="w-full justify-start gap-3 h-12"
-                    onClick={() => onNavigate('/settings')}
+                    onClick={isAuthenticated ? onOpenProfile : onSignIn}
                 >
-                    <SettingsIcon size={18} />
-                    <span>{tSystem('settings')}</span>
+                    {isAuthenticated ? (
+                        user?.image ? (
+                            <Avatar className="h-8 w-8 rounded-[0.75rem]">
+                                <AvatarImage src={user.image} alt={fullName || tSystem('profile')} />
+                            </Avatar>
+                        ) : (
+                            <UserIcon size={18} />
+                        )
+                    ) : (
+                        <LoginIcon size={18} />
+                    )}
+                    <span>{profileLabel}</span>
                 </Button>
-                <Button
-                    variant="outline"
-                    className="w-full justify-start gap-3 h-12"
-                    onClick={() => onNavigate('/billing')}
-                >
-                    <CreditCardIcon size={18} />
-                    <span>{tSystem('billing')}</span>
-                </Button>
-                {isAdmin ? (
-                    <>
-                        <Button
-                            variant="outline"
-                            className="w-full justify-start gap-3 h-12"
-                            onClick={() => onNavigate('/analytics')}
-                        >
-                            <ChartIcon size={18} />
-                            <span>{tSystem('analytics')}</span>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            className="w-full justify-start gap-3 h-12"
-                            onClick={() => onNavigate('/admin')}
-                        >
-                            <ShieldIcon size={18} />
-                            <span>{tSystem('admin_panel')}</span>
-                        </Button>
-                    </>
+
+                {isAuthenticated ? (
+                    <Button
+                        variant="destructive"
+                        className="w-full justify-start gap-3 h-12"
+                        onClick={onSignOut}
+                    >
+                        <LogoutIcon size={18} />
+                        <span>{tSystem('sign_out')}</span>
+                    </Button>
                 ) : null}
-                <Button
-                    variant="destructive"
-                    className="w-full justify-start gap-3 h-12"
-                    onClick={onSignOut}
-                >
-                    <LogoutIcon size={18} />
-                    <span>{tSystem('sign_out')}</span>
-                </Button>
             </div>
+
+            {!isAuthenticated ? null : (
+                <>
+                    <SpacesSelector userId={user?.id} navigateOnSelect={false} />
+
+                    <div className="space-y-2">
+                        <Button
+                            variant="outline"
+                            className="w-full justify-start gap-3 h-12"
+                            onClick={() => onNavigate('/settings')}
+                        >
+                            <SettingsIcon size={18} />
+                            <span>{tSystem('settings')}</span>
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="w-full justify-start gap-3 h-12"
+                            onClick={() => onNavigate('/billing')}
+                        >
+                            <CreditCardIcon size={18} />
+                            <span>{tSystem('billing')}</span>
+                        </Button>
+                        {isAdmin ? (
+                            <>
+                                <Button
+                                    variant="outline"
+                                    className="w-full justify-start gap-3 h-12"
+                                    onClick={() => onNavigate('/analytics')}
+                                >
+                                    <ChartIcon size={18} />
+                                    <span>{tSystem('analytics')}</span>
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    className="w-full justify-start gap-3 h-12"
+                                    onClick={() => onNavigate('/admin')}
+                                >
+                                    <ShieldIcon size={18} />
+                                    <span>{tSystem('admin_panel')}</span>
+                                </Button>
+                            </>
+                        ) : null}
+                    </div>
+                </>
+            )}
         </div>
     );
 }
@@ -215,13 +232,7 @@ export default function SettingsPage() {
         }
     };
 
-    const handleOpenProfile = () => {
-        if (!isAuthenticated) {
-            setAuthModalOpen(true);
-            return;
-        }
-        handleNavigate('/profile');
-    };
+    const handleOpenProfile = () => handleNavigate('/profile');
 
     const handleSignOut = async () => {
         try {
@@ -233,21 +244,19 @@ export default function SettingsPage() {
         }
     };
 
-    const settingsIcon = useMemo(() => <SettingsIcon size={24} />, []);
-
     return (
         <div className="min-h-screen bg-background">
             <div className="container mx-auto px-4 py-8">
                 <div className="max-w-3xl mx-auto space-y-6">
-                    <PageHeader
+                    <LogoBlock onHome={handleHome} />
+
+                    {/* <PageHeader
                         icon={settingsIcon}
                         iconClassName="bg-muted text-foreground"
                         title={tSystem('settings')}
-                    />
+                    /> */}
 
                     <Box size="lg" className="space-y-8">
-                        <LogoBlock onHome={handleHome} />
-
                         <SearchBlock onSubmit={handleSearchSubmit} />
 
                         <SectionsBlock onNavigate={handleNavigate} />
