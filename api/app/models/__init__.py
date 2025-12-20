@@ -13,7 +13,7 @@ _ConSysBase = make_base(
 
 class Base(_ConSysBase):
     """
-    Project-wide base model with callback dispatch on `.save()`.
+    Project-wide base model with event dispatch on `.save()`.
     """
 
     def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
@@ -33,8 +33,8 @@ class Base(_ConSysBase):
             if not changes:
                 return result
 
-            from callbacks.enqueue import enqueue
-            from callbacks.registry import has_callbacks
+            from tasks.event_enqueue import enqueue
+            from tasks.event_registry import has_handlers
 
             entity_id = getattr(self, "id", None)
             updated = getattr(self, "updated", None)
@@ -47,7 +47,7 @@ class Base(_ConSysBase):
                 if field in {"updated"}:
                     continue
 
-                if not has_callbacks(model=model_name, field=field):
+                if not has_handlers(model=model_name, field=field):
                     continue
 
                 old = None
@@ -74,7 +74,7 @@ class Base(_ConSysBase):
             from lib import log
 
             log.error(
-                "Callback dispatch on save failed: {}",
+                "Event dispatch on save failed: {}",
                 {"model": getattr(self, "_name", None), "id": getattr(self, "id", None), "error": str(exc)},
             )
 

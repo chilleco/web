@@ -1,5 +1,5 @@
 """
-Callback event dispatcher.
+Event dispatcher.
 
 Executed by Taskiq workers.
 """
@@ -9,7 +9,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Any, Dict, Type
 
-from callbacks.registry import get_callbacks
+from tasks.event_registry import get_handlers
 from lib import log
 from lib.queue import redis
 from models import Base
@@ -19,13 +19,13 @@ def _claim_event(event_id: str, *, ttl_seconds: int = 60 * 60 * 24 * 7) -> bool:
     """
     Best-effort idempotency guard.
 
-    Uses Redis SET NX to prevent double execution of the same callback event.
+    Uses Redis SET NX to prevent double execution of the same event.
     """
 
     if not event_id:
         return True
 
-    key = f"callback:done:{event_id}"
+    key = f"event:done:{event_id}"
     try:
         return bool(redis.set(key, 1, nx=True, ex=ttl_seconds))
     except Exception:  # pylint: disable=broad-except
@@ -73,17 +73,17 @@ async def dispatch_event(event: Dict[str, Any]) -> None:
 
     model_cls = _get_model_cls(model_name)
     if not model_cls or not entity_id or not field:
-        log.error("Invalid callback event: {}", event)
+        log.error("Invalid event: {}", event)
         return
 
-    callbacks = get_callbacks(model=model_name, field=field)
-    if not callbacks:
+    handlers = get_handlers(model=model_name, field=field)
+    if not handlers:
         return
 
     entity = model_cls.get(int(entity_id))
 
-    for callback_cls in callbacks:
-        callback = callback_cls(
+    for handler_cls in handlers:
+        handler = handler_cls(
             entity,
             field,
             event.get("old"),
@@ -91,5 +91,4 @@ async def dispatch_event(event: Dict[str, Any]) -> None:
             updated=event.get("updated"),
             event_id=event_id,
         )
-        await callback.execute()
-
+        await handler.execute()

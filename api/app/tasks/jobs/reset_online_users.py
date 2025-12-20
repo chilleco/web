@@ -1,5 +1,5 @@
 """
-Reset online users callback task.
+Reset online users job task.
 """
 
 from __future__ import annotations

@@ -5,7 +5,7 @@ from abc import ABCMeta, abstractmethod
 from lib import log
 
 
-class Callback(metaclass=ABCMeta):
+class EventHandler(metaclass=ABCMeta):
     def __init__(self, entity, key, old, new, **kwargs):
         self.entity = entity
         self.key = key
@@ -26,4 +26,3 @@ class Callback(metaclass=ABCMeta):
             log.info(f"Validated {self.__class__.__name__}")
             await self._execute()
         log.info(f"Executed {self.__class__.__name__}")
-

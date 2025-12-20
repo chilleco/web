@@ -9,9 +9,11 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 
 ## Background Jobs (Taskiq)
 - Core Taskiq files live in `api/app/tasks/`: `broker.py`, `scheduler.py`, `system.py`, and `__init__.py`.
-- Task definitions are grouped under `api/app/tasks/periodic/`, `api/app/tasks/scheduled/`, and `api/app/tasks/callbacks/`.
+- Task definitions are grouped under `api/app/tasks/periodic/`, `api/app/tasks/scheduled/`, and `api/app/tasks/jobs/`.
+- Model change hooks/events live under `api/app/tasks/events/` (handlers only).
+- Event system files live in `api/app/tasks/`: `event_base.py`, `event_registry.py`, `event_dispatcher.py`, `event_enqueue.py`.
 - Taskiq workers/scheduler should import `api/app/tasks/registry.py` (registers all tasks).
-- Import callback tasks via `from tasks import <task_name>` (no `tasks.callbacks.*`); `api/app/routes/tasks/__init__.py` should only import callback tasks.
+- Import job tasks via `from tasks import <task_name>` (no `tasks.jobs.*`); `api/app/routes/tasks/__init__.py` should only import job tasks.
 
 ## Entities
 Depending on the project that develops based on this template, the entities of this template can be reused as follows:

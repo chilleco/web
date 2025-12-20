@@ -1,5 +1,5 @@
-from callbacks.base import Callback
-from callbacks.registry import on_change
+from tasks.event_base import EventHandler
+from tasks.event_registry import on_change
 
 # import tasks
 # from tasks import bonus_referrer
@@ -9,7 +9,7 @@ FRENS_BONUS = 10000
 
 
 @on_change(model="users", field="referrer")
-class BonusReferrer(Callback):
+class BonusReferrer(EventHandler):
     async def validate(self):
         if self.old or not self.new:
             return False

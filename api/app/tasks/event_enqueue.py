@@ -1,5 +1,5 @@
 """
-Queue callback events for background processing.
+Queue event jobs for background processing.
 
 Prefer sending Taskiq tasks when an event loop is available; otherwise enqueue synchronously.
 """
@@ -14,7 +14,7 @@ from lib import log
 
 def enqueue(event: Dict[str, Any]) -> None:
     """
-    Enqueue a callback event without blocking the caller.
+    Enqueue an event without blocking the caller.
     """
 
     try:
@@ -23,10 +23,10 @@ def enqueue(event: Dict[str, Any]) -> None:
         loop = None
 
     async def _send() -> None:
-        from tasks import process_model_callback_event
+        from tasks import process_model_event
 
         try:
-            await process_model_callback_event.kiq(event)
+            await process_model_event.kiq(event)
         except Exception as exc:  # pylint: disable=broad-except
             log.error(
                 "Taskiq enqueue failed: {}",
@@ -41,5 +41,5 @@ def enqueue(event: Dict[str, Any]) -> None:
     try:
         asyncio.run(_send())
     except Exception:  # pylint: disable=broad-except
-        # `.save()` should never crash because callbacks cannot be enqueued.
+        # `.save()` should never crash because events cannot be enqueued.
         return

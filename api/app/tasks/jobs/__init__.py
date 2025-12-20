@@ -1,8 +1,5 @@
 """
-Job task exports.
-
-Use in API code:
-`from tasks import <job_task>`.
+Queued job tasks (triggered by API/webhooks/startup events).
 """
 
 from tasks.jobs.model_events import process_model_event

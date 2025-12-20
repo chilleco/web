@@ -1,7 +1,7 @@
 """
-Tasks responsible for model callbacks.
+Tasks responsible for model event jobs.
 
-Model `.save()` calls enqueue callback events which are executed here by workers.
+Model `.save()` calls enqueue events which are executed here by workers.
 """
 
 from __future__ import annotations
@@ -13,9 +13,9 @@ from tasks.broker import broker
 
 
 @broker.task
-async def process_model_callback_event(event: Dict[str, Any]) -> None:
+async def process_model_event(event: Dict[str, Any]) -> None:
     """
-    Execute callbacks for a single model-change event.
+    Execute handlers for a single model-change event.
 
     Event shape (dict):
     - id: str (idempotency key)
@@ -27,10 +27,10 @@ async def process_model_callback_event(event: Dict[str, Any]) -> None:
     - new: Any
     """
 
-    from callbacks.dispatcher import dispatch_event  # lazy import to avoid cycles
+    from tasks.event_dispatcher import dispatch_event  # lazy import to avoid cycles
 
     try:
         await dispatch_event(event)
     except Exception as exc:  # pylint: disable=broad-except
-        log.error("Callback processing failed: {}", {"event": event, "error": str(exc)})
+        log.error("Model event processing failed: {}", {"event": event, "error": str(exc)})
         raise
