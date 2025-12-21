@@ -1,6 +1,5 @@
 # Pull base image
-# TODO: update to 3.12
-FROM python:3.10
+FROM python:3.11-slim
 
 # Set work directory
 WORKDIR /app

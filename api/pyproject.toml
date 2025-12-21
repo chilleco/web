@@ -5,16 +5,16 @@ requires-python = ">=3.10,<3.15"
 dependencies = [
     # App
     "libdev==0.99",
-    "fastapi==0.123.0",
+    "fastapi==0.126.0",
     "httptools==0.7.1",  # NOTE: for routing
     "uvicorn==0.38.0",
     "PyJWT==2.10.1",
-    "python-multipart==0.0.20",  # NOTE: for file upload
+    "python-multipart==0.0.21",  # NOTE: for file upload
     "slowapi==0.1.9",
 
     # Jobs
     "taskiq==0.12.1",
-    "taskiq-redis==1.2.0",
+    "taskiq-redis==1.2.1",
 
     # Users
     "userhub==0.15",
@@ -23,10 +23,10 @@ dependencies = [
     "consys==0.44",
 
     # MQ
-    "redis==7.0.0",
+    "redis==7.1.0",
 
     # Sockets
-    "python-socketio==5.15.0",
+    "python-socketio==5.15.1",
     "websockets==15.0.1",  # NOTE: for Socket.IO
 
     # Monitoring
@@ -40,7 +40,7 @@ dependencies = [
     "tgreports==0.19.0",
 
     # Docs
-    "google-auth==2.43.0",
+    "google-auth==2.45.0",
     "pygsheets==2.0.6",
     "pandas==2.3.3",
 
