@@ -32,6 +32,7 @@
     "space": "空间",
     "hub": "中心",
     "tasks": "任务",
+    "frens": "好友",
     "catalog": "目录",
     "products": "产品",
     "feedback": "反馈",
@@ -62,6 +63,21 @@
     "claimSuccess": "已领取 +{reward} 金币",
     "claimNotReady": "任务尚未完成。",
     "fallbackTitle": "任务 #{id}"
+  },
+  "social": {
+    "description": "查看你的好友和推荐奖励。",
+    "referralHint": "你可以获得推荐好友金币的 {percent}%。",
+    "countLabel": "好友总数",
+    "empty": "还没有好友。",
+    "addFriends": "添加好友",
+    "shareTitle": "邀请好友",
+    "referralMissing": "推荐码暂不可用。",
+    "nameFallback": "用户 #{id}",
+    "relation": {
+      "referral": "被推荐",
+      "referrer": "推荐人",
+      "friend": "好友"
+    }
   },
   "landing": {
     "hero": {
@@ -351,6 +367,7 @@
     "yes": "是",
     "no": "否",
     "share": "分享",
+    "shareCopied": "链接已复制到剪贴板",
     "shareUnavailable": "此设备不支持分享",
     "browseIcons": "浏览 FontAwesome 图标",
     "iconKeyLabel": "图标（FontAwesome 键）",
@@ -1134,7 +1151,6 @@
       "featuresTitle": "规格",
       "featuresEmpty": "暂无规格",
       "optionFeaturesTitle": "选项详情",
-      "shareCopied": "链接已复制",
       "optionAttributesTitle": "选项属性",
       "optionAttributesEmpty": "暂无选项属性",
       "optionFeaturesEmpty": "暂无选项特性"

@@ -2,10 +2,10 @@
 
 import { useMemo, type ComponentType } from 'react';
 import { useTranslations } from 'next-intl';
-import { CatalogIcon, PostsIcon, TasksIcon } from '@/shared/ui/icons';
+import { CatalogIcon, PostsIcon, TasksIcon, UserGroupIcon } from '@/shared/ui/icons';
 
-type NavigationItemKey = 'posts' | 'catalog' | 'tasks';
-type NavigationPath = '/posts' | '/catalog' | '/tasks';
+type NavigationItemKey = 'posts' | 'catalog' | 'tasks' | 'frens';
+type NavigationPath = '/posts' | '/catalog' | '/tasks' | '/social';
 
 type BottomNavigationItemConfig = {
     key: NavigationItemKey;
@@ -29,6 +29,11 @@ const bottomNavigationConfig = [
         icon: TasksIcon,
         path: '/tasks',
     },
+    {
+        key: 'frens',
+        icon: UserGroupIcon,
+        path: '/social',
+    },
 ] as const satisfies ReadonlyArray<BottomNavigationItemConfig>;
 
 export type BottomNavigationItem = BottomNavigationItemConfig & { label: string };
@@ -45,4 +50,3 @@ export const useBottomNavigationItems = () => {
         [t]
     );
 };
-

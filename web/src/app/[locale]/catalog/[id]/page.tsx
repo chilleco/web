@@ -77,7 +77,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   const shareUrl = useMemo(() => (typeof window !== 'undefined' ? window.location.href : ''), []);
   const selectedSpace = useAppSelector(selectSelectedSpace);
   const { share, sharing, available: shareAvailable } = useShare({
-    shareMessage: t('shareCopied'),
+    shareMessage: tSystem('shareCopied'),
     unavailableMessage: tSystem('shareUnavailable'),
     errorMessage: tSystem('error'),
   });

@@ -34,6 +34,7 @@ class UserLocal(Base):
     spaces = Attribute(types=list, default=list)
 
     # Referral
+    link = Attribute(types=str)
     referrer = Attribute(types=int)
     frens = Attribute(types=list)
     utm = Attribute(types=str)
@@ -134,9 +135,13 @@ async def fetch_user_profiles(
             fields=list(global_fields or {"id", "login", "name", "surname", "title"}),
         )
         if global_users:
-            for user in global_users if isinstance(global_users, list) else [global_users]:
+            for user in (
+                global_users if isinstance(global_users, list) else [global_users]
+            ):
                 if isinstance(user, dict) and user.get("id") is not None:
-                    profiles[user["id"]] = {key: value for key, value in user.items() if value is not None}
+                    profiles[user["id"]] = {
+                        key: value for key, value in user.items() if value is not None
+                    }
     except Exception:  # pylint: disable=broad-except
         profiles = {}
 

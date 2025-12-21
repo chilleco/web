@@ -37,7 +37,8 @@ export const routing = defineRouting({
         '/billing': '/billing',
         '/analytics': '/analytics',
         '/favorites': '/favorites',
-        '/cart': '/cart'
+        '/cart': '/cart',
+        '/social': '/social'
         // You can add more custom pathnames here if needed
     },
 

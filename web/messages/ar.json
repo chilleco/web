@@ -32,6 +32,7 @@
     "space": "المساحة",
     "hub": "المركز",
     "tasks": "المهام",
+    "frens": "الأصدقاء",
     "catalog": "الفهرس",
     "products": "المنتجات",
     "feedback": "ملاحظات",
@@ -62,6 +63,21 @@
     "claimSuccess": "تمت المطالبة بـ +{reward} عملة",
     "claimNotReady": "المهمة لم تكتمل بعد.",
     "fallbackTitle": "مهمة رقم {id}"
+  },
+  "social": {
+    "description": "تابع أصدقاءك ومكافآت الإحالة.",
+    "referralHint": "تكسب {percent}% من عملات المُحالين لديك.",
+    "countLabel": "إجمالي الأصدقاء",
+    "empty": "لا يوجد أصدقاء بعد.",
+    "addFriends": "إضافة أصدقاء",
+    "shareTitle": "دعوة أصدقاء",
+    "referralMissing": "رمز الإحالة غير متاح بعد.",
+    "nameFallback": "المستخدم #{id}",
+    "relation": {
+      "referral": "محال",
+      "referrer": "مُحيل",
+      "friend": "صديق"
+    }
   },
   "landing": {
     "hero": {
@@ -351,6 +367,7 @@
     "yes": "نعم",
     "no": "لا",
     "share": "مشاركة",
+    "shareCopied": "تم نسخ الرابط إلى الحافظة",
     "shareUnavailable": "المشاركة غير متاحة على هذا الجهاز",
     "browseIcons": "تصفح أيقونات FontAwesome",
     "iconKeyLabel": "الأيقونة (مفتاح FontAwesome)",
@@ -1134,7 +1151,6 @@
       "featuresTitle": "المواصفات",
       "featuresEmpty": "لا توجد مواصفات بعد",
       "optionFeaturesTitle": "تفاصيل الخيار",
-      "shareCopied": "تم نسخ الرابط",
       "optionAttributesTitle": "سمات الخيار",
       "optionAttributesEmpty": "لا سمات للخيار",
       "optionFeaturesEmpty": "لا ميزات للخيار"

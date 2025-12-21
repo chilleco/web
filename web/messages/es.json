@@ -32,6 +32,7 @@
     "space": "Espacio",
     "hub": "Centro",
     "tasks": "Tareas",
+    "frens": "Amigos",
     "catalog": "Catálogo",
     "products": "Productos",
     "feedback": "Comentarios",
@@ -62,6 +63,21 @@
     "claimSuccess": "Recibiste +{reward} monedas",
     "claimNotReady": "La tarea aún no está completada.",
     "fallbackTitle": "Tarea #{id}"
+  },
+  "social": {
+    "description": "Sigue a tus amigos y recompensas por referidos.",
+    "referralHint": "Ganas el {percent}% de las monedas de tus referidos.",
+    "countLabel": "Total de amigos",
+    "empty": "Aún no hay amigos.",
+    "addFriends": "Agregar amigos",
+    "shareTitle": "Invitar amigos",
+    "referralMissing": "El código de referido aún no está disponible.",
+    "nameFallback": "Usuario #{id}",
+    "relation": {
+      "referral": "Referido",
+      "referrer": "Referente",
+      "friend": "Amigo"
+    }
   },
   "landing": {
     "hero": {
@@ -351,6 +367,7 @@
     "yes": "Sí",
     "no": "No",
     "share": "Compartir",
+    "shareCopied": "Enlace copiado al portapapeles",
     "shareUnavailable": "El compartir no está disponible en este dispositivo",
     "browseIcons": "Ver iconos de FontAwesome",
     "iconKeyLabel": "Icono (clave FontAwesome)",
@@ -1134,7 +1151,6 @@
       "featuresTitle": "Especificaciones",
       "featuresEmpty": "Sin especificaciones aún",
       "optionFeaturesTitle": "Detalles de la opción",
-      "shareCopied": "Enlace copiado",
       "optionAttributesTitle": "Atributos de opción",
       "optionAttributesEmpty": "Sin atributos de opción",
       "optionFeaturesEmpty": "Sin características de opción"

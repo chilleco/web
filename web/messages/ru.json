@@ -32,6 +32,7 @@
     "space": "Пространство",
     "hub": "Хаб",
     "tasks": "Задания",
+    "frens": "Друзья",
     "feedback": "Обратная связь",
     "catalog": "Каталог",
     "products": "Товары",
@@ -62,6 +63,21 @@
     "claimSuccess": "Получено +{reward} монет",
     "claimNotReady": "Задание ещё не выполнено.",
     "fallbackTitle": "Задание №{id}"
+  },
+  "social": {
+    "description": "Следи за друзьями и реферальными наградами.",
+    "referralHint": "Ты получаешь {percent}% монет твоих рефералов.",
+    "countLabel": "Всего друзей",
+    "empty": "Пока нет друзей.",
+    "addFriends": "Добавить друзей",
+    "shareTitle": "Пригласить друзей",
+    "referralMissing": "Реферальный код пока недоступен.",
+    "nameFallback": "Пользователь #{id}",
+    "relation": {
+      "referral": "Реферал",
+      "referrer": "Реферер",
+      "friend": "Друг"
+    }
   },
   "landing": {
     "hero": {
@@ -351,6 +367,7 @@
     "yes": "Да",
     "no": "Нет",
     "share": "Поделиться",
+    "shareCopied": "Ссылка скопирована в буфер обмена",
     "shareUnavailable": "Поделиться недоступно на этом устройстве",
     "browseIcons": "Просмотреть иконки FontAwesome",
     "iconKeyLabel": "Иконка (ключ FontAwesome)",
@@ -1164,7 +1181,6 @@
       "featuresTitle": "Характеристики",
       "featuresEmpty": "Характеристики не указаны",
       "optionFeaturesTitle": "Особенности опции",
-      "shareCopied": "Ссылка скопирована",
       "optionAttributesTitle": "Параметры опции",
       "optionAttributesEmpty": "Нет параметров опции",
       "optionFeaturesEmpty": "Особенности опции не указаны"

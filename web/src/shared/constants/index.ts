@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
     EXIT: '/users/exit/',
     APP_TG: '/users/app/tg/',
     SOCIAL: '/users/social/',
+    FRENS: '/users/frens/',
   },
   POSTS: {
     LIST: '/posts/',

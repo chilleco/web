@@ -1,6 +1,13 @@
 import { API_ENDPOINTS } from '@/shared/constants';
-import { api } from '@/shared/services/api/client';
-import type { User, LoginRequest, LoginResponse, RegisterRequest, SaveUserRequest } from '../model/user';
+import { api, apiWithoutGlobalErrors } from '@/shared/services/api/client';
+import type {
+  User,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  SaveUserRequest,
+  FrensResponse,
+} from '../model/user';
 
 export async function loginUser(credentials: LoginRequest): Promise<LoginResponse> {
   return api.post<LoginResponse>('/auth/login/', credentials);
@@ -53,4 +60,13 @@ export async function getUserById(id: number): Promise<User> {
 export async function saveUser(data: SaveUserRequest): Promise<User> {
   const response = await api.post<{ user: User }>(API_ENDPOINTS.USERS.SAVE, data);
   return response.user;
+}
+
+export interface GetFrensParams {
+  limit?: number;
+  offset?: number;
+}
+
+export async function getFrens(params: GetFrensParams = {}): Promise<FrensResponse> {
+  return apiWithoutGlobalErrors.post<FrensResponse>(API_ENDPOINTS.USERS.FRENS, params);
 }

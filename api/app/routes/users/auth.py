@@ -8,13 +8,14 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from userhub import auth, detect_type
 from consys.errors import ErrorInvalid, ErrorWrong
+from libdev.crypt import decrypt, encrypt
 
 from lib import cfg, log, report
 from models.track import Track, TrackAction, TrackObject, _resolve_source
 from models.user import (
     DEFAULT_BALANCE,
     UserLocal,
-    complex_global_user_by_social,
+    complex_global_users,
     get_name,
     get_social,
 )
@@ -59,10 +60,16 @@ def get_user(global_user, **kwargs):
             spaces=[],
         )
         user.save()
+        if not user.link:
+            user.link = encrypt(user.id, 8)
+            user.save()
         new = True
     else:
         if user.spaces is None:
             user.spaces = []
+            user.save()
+        if not user.link:
+            user.link = encrypt(user.id, 8)
             user.save()
         if user.locale and kwargs.get("locale") and user.locale != kwargs["locale"]:
             user.locale = kwargs["locale"]
@@ -75,18 +82,27 @@ async def update_utm(user, global_user, utm):
     if not utm:
         return user, None, None
 
-    if not utm.isdigit():
+    try:
+        referrer_id = decrypt(utm)
+    except Exception:  # pylint: disable=broad-except
+        referrer_id = None
+
+    global_referrer = None
+    if isinstance(referrer_id, int) and referrer_id > 0:
+        try:
+            global_referrer = await complex_global_users(
+                ids=referrer_id,
+                fields=USER_FIELDS,
+            )
+        except Exception:  # pylint: disable=broad-except
+            global_referrer = None
+
+    if not global_referrer:
         if user.utm:
             return user, None, None
 
         user.utm = utm
         user.save()
-        return user, None, None
-
-    try:
-        global_referrer = await complex_global_user_by_social(int(utm))
-    except ErrorWrong:
-        await report.error("No referral", {"utm": utm})
         return user, None, None
 
     referrer, _ = get_user(global_referrer)

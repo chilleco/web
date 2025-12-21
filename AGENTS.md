@@ -43,6 +43,11 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - Admin page: `web/src/app/[locale]/admin/tasks/page.tsx` (CRUD + enable/disable).
 - Localization: `navigation.tasks`, `tasks.*`, `admin.tasks.*`. ICU gotcha: to show a literal `{}` in messages, quote it like `'{}'`, otherwise `next-intl` throws `INVALID_MESSAGE: EMPTY_ARGUMENT`.
 
+## Referrals (Frens)
+- Backend: `POST /users/frens/` returns the current user's frens list (sorted by balance) with relation labels and `referral_link` (plus legacy `referral_code`).
+- Referral key: `UserLocal.link` is generated via `encrypt(user.id, 8)` and decoded with `decrypt()` in `routes/users/auth.update_utm` to resolve referrers.
+- Frontend: `web/src/app/[locale]/social/page.tsx` renders the frens list and uses `navigation.frens` + `social.*` i18n; mobile bottom bar includes the frens entry linking to `/social`.
+
 ## Environments
 - `.env` defines `MODE`: LOCAL / TEST / DEV / PRE / PROD; loaded in `api/`, `web/`, and `tg/` containers. Copy `base.env` → `.env`; merge `prod.env` values for production.
 - Base URLs: server-side requests must use `http://api:5000/` (internal Docker network); client-side requests must use `NEXT_PUBLIC_API` through nginx; do not add separate API base URL variables.

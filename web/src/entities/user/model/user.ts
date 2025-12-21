@@ -21,6 +21,7 @@ export interface User {
   utm?: string | null;
   referrer?: number | null;
   frens?: number[] | null;
+  link?: string | null;
   social?: number | null;
   spaces?: number[] | null;
 }
@@ -74,4 +75,24 @@ export interface SaveUserRequest extends UpdateProfileRequest {
   id?: number;
   status?: UserStatus | null;
   balance?: number | null;
+}
+
+export type FrenRelation = 'referral' | 'referrer' | 'friend';
+
+export interface FrenProfile {
+  id: number;
+  login?: string | null;
+  name?: string | null;
+  surname?: string | null;
+  title?: string | null;
+  image?: string | null;
+  balance?: number | null;
+  relation?: FrenRelation | null;
+}
+
+export interface FrensResponse {
+  frens: FrenProfile[];
+  count: number;
+  referral_link?: string | null;
+  referral_code?: number | null;
 }
