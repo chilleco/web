@@ -138,6 +138,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
     - all main commands are stored here
 - NGINX (infra/nginx/)
     - use http://localhost/ for local frontend test and http://localhost/api/ for local api requests (managed by compose.local.yml)
+    - prod WebApp embed: ensure CSP `frame-ancestors` allows Telegram Web (`web.telegram.org`, `*.telegram.org`, `t.me`) and strip upstream CSP/X-Frame-Options in proxy
 - Docker & Docker Compose & Docker Swarm (infra/compose/)
     - all compose files are overwrites of the base `infra/compose.yml` (for example of run: `docker compose -f compose.yml -f compose.local.yml`)
 

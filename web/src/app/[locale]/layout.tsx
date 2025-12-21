@@ -131,7 +131,7 @@ export default async function LocaleLayout({
     return (
         <>
             <StructuredData />
-            <Script src="https://telegram.org/js/telegram-web-app.js" strategy="afterInteractive" />
+            <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
             <Script src="//cdn.jsdelivr.net/npm/eruda" strategy="afterInteractive" />
             <Script id="eruda-init" strategy="afterInteractive">
                 {`if (typeof eruda !== 'undefined') { eruda.init(); }`}
