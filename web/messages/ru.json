@@ -319,6 +319,7 @@
     "error_code": "Код ошибки: {code}",
     "now": "сейчас",
     "no_access": "Нет прав",
+    "no_access_to": "Нет доступа к {item}",
     "saved": "Сохранено",
     "deleted": "Удалено",
     "blocked": "Скрыто",

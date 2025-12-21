@@ -319,6 +319,7 @@
     "error_code": "Código de error: {code}",
     "now": "ahora mismo",
     "no_access": "Sin acceso",
+    "no_access_to": "Sin acceso a {item}",
     "saved": "Guardado",
     "deleted": "Eliminado",
     "blocked": "Oculto",

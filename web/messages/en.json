@@ -319,6 +319,7 @@
     "error_code": "Error code: {code}",
     "now": "just now",
     "no_access": "No access",
+    "no_access_to": "No access to {item}",
     "saved": "Saved",
     "deleted": "Deleted",
     "blocked": "Hidden",

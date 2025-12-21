@@ -319,6 +319,7 @@
     "error_code": "错误代码：{code}",
     "now": "刚刚",
     "no_access": "无权访问",
+    "no_access_to": "无权访问{item}",
     "saved": "已保存",
     "deleted": "已删除",
     "blocked": "已隐藏",

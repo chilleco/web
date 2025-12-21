@@ -24,16 +24,39 @@ const isUnsupportedImageMessage = (message?: string) => {
 
 export function useApiErrorMessage() {
   const tSystem = useTranslations('system');
+  const tNavigation = useTranslations('navigation');
 
   return useCallback((error: unknown, fallbackMessage?: string) => {
     const apiError = error instanceof ApiError ? error : null;
-    const detail = apiError?.data && typeof apiError.data === 'object'
-      ? (apiError.data as { detail?: unknown }).detail
+    const data = apiError?.data && typeof apiError.data === 'object'
+      ? (apiError.data as { detail?: unknown; error?: unknown })
       : undefined;
+    const detail = data?.detail;
+    const errorCode = typeof data?.error === 'string' ? data.error : undefined;
 
     const detailMessage = normalizeMessage(detail);
     const baseMessage = normalizeMessage(detailMessage || apiError?.message || (error instanceof Error ? error.message : undefined));
     const fallback = fallbackMessage || tSystem('server_error');
+
+    if (errorCode === 'ErrorAccess') {
+      const accessLabels: Record<string, string> = {
+        tasks: tNavigation('tasks'),
+        posts: tNavigation('posts'),
+        products: tNavigation('products'),
+        feedback: tNavigation('feedback'),
+        categories: tSystem('categories'),
+        spaces: tSystem('spaces'),
+        users: tSystem('users'),
+      };
+
+      const normalizedDetail = detailMessage?.toLowerCase();
+      const accessLabel = normalizedDetail ? accessLabels[normalizedDetail] : undefined;
+      const itemLabel = accessLabel || detailMessage;
+      if (itemLabel) {
+        return tSystem('no_access_to', { item: itemLabel });
+      }
+      return tSystem('no_access');
+    }
 
     if (!baseMessage) {
       return fallback;
@@ -44,5 +67,5 @@ export function useApiErrorMessage() {
       : undefined;
 
     return hint ? `${baseMessage} — ${hint}` : baseMessage;
-  }, [tSystem]);
+  }, [tNavigation, tSystem]);
 }

@@ -14,16 +14,16 @@ type BottomNavigationItemConfig = {
 };
 
 const bottomNavigationConfig = [
-    {
-        key: 'posts',
-        icon: PostsIcon,
-        path: '/posts',
-    },
-    {
-        key: 'catalog',
-        icon: CatalogIcon,
-        path: '/catalog',
-    },
+    // {
+    //     key: 'posts',
+    //     icon: PostsIcon,
+    //     path: '/posts',
+    // },
+    // {
+    //     key: 'catalog',
+    //     icon: CatalogIcon,
+    //     path: '/catalog',
+    // },
     {
         key: 'tasks',
         icon: TasksIcon,

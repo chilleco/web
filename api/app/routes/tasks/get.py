@@ -67,6 +67,9 @@ async def handler(
             "tasks": tasks,
         }
 
+    if request.state.status < 3:
+        raise ErrorAccess("tasks")
+
     user = UserLocal.get(request.state.user)
 
     def handle(task):

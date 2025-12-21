@@ -319,6 +319,7 @@
     "error_code": "رمز الخطأ: {code}",
     "now": "الآن",
     "no_access": "لا يوجد صلاحية",
+    "no_access_to": "لا يوجد صلاحية للوصول إلى {item}",
     "saved": "تم الحفظ",
     "deleted": "تم الحذف",
     "blocked": "مخفي",

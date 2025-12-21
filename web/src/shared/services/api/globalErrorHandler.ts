@@ -2,6 +2,11 @@
 
 import { toast } from 'sonner';
 import { ApiError } from './client';
+import messagesEn from '../../../../messages/en.json';
+import messagesRu from '../../../../messages/ru.json';
+import messagesEs from '../../../../messages/es.json';
+import messagesAr from '../../../../messages/ar.json';
+import messagesZh from '../../../../messages/zh.json';
 
 interface GlobalApiErrorHandlerOptions {
   enableToasts?: boolean;
@@ -12,6 +17,83 @@ interface GlobalApiErrorHandlerOptions {
 let globalOptions: GlobalApiErrorHandlerOptions = {
   enableToasts: true,
   suppressDefaultToasts: false
+};
+
+type Locale = 'en' | 'ru' | 'es' | 'ar' | 'zh';
+type MessageMap = Record<string, unknown>;
+
+const messagesByLocale: Record<Locale, MessageMap> = {
+  en: messagesEn as MessageMap,
+  ru: messagesRu as MessageMap,
+  es: messagesEs as MessageMap,
+  ar: messagesAr as MessageMap,
+  zh: messagesZh as MessageMap,
+};
+
+const readCookie = (name: string): string | undefined => {
+  if (typeof document === 'undefined') return undefined;
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return match ? decodeURIComponent(match[1]) : undefined;
+};
+
+const resolveLocale = (): Locale => {
+  if (typeof window === 'undefined') return 'en';
+  let stored: string | null = null;
+  try {
+    stored = localStorage.getItem('userLanguage');
+  } catch {
+    stored = null;
+  }
+  const cookieLocale = readCookie('NEXT_LOCALE');
+  const navigatorLocale = navigator.language?.split('-')[0];
+  const candidate = stored || cookieLocale || navigatorLocale;
+  if (candidate && candidate in messagesByLocale) {
+    return candidate as Locale;
+  }
+  return 'en';
+};
+
+const getMessageValue = (messages: MessageMap, key: string): unknown => {
+  return key.split('.').reduce<unknown>((acc, part) => {
+    if (!acc || typeof acc !== 'object') return undefined;
+    return (acc as Record<string, unknown>)[part];
+  }, messages);
+};
+
+const formatMessage = (template: string, values?: Record<string, string>): string => {
+  if (!values) return template;
+  return template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? `{${key}}`);
+};
+
+const getLocalizedMessage = (key: string, values?: Record<string, string>): string => {
+  const locale = resolveLocale();
+  const messages = messagesByLocale[locale] ?? messagesByLocale.en;
+  const raw = getMessageValue(messages, key) ?? getMessageValue(messagesByLocale.en, key);
+  if (typeof raw === 'string') {
+    return formatMessage(raw, values);
+  }
+  return key;
+};
+
+const accessLabelKeys: Record<string, { scope: 'navigation' | 'system'; key: string }> = {
+  tasks: { scope: 'navigation', key: 'tasks' },
+  posts: { scope: 'navigation', key: 'posts' },
+  products: { scope: 'navigation', key: 'products' },
+  feedback: { scope: 'navigation', key: 'feedback' },
+  categories: { scope: 'system', key: 'categories' },
+  spaces: { scope: 'system', key: 'spaces' },
+  users: { scope: 'system', key: 'users' },
+};
+
+const resolveAccessMessage = (detail?: string): string => {
+  const normalized = detail?.trim().toLowerCase();
+  const labelKey = normalized ? accessLabelKeys[normalized] : undefined;
+  const label = labelKey ? getLocalizedMessage(`${labelKey.scope}.${labelKey.key}`) : undefined;
+  const itemLabel = label || detail;
+  if (itemLabel) {
+    return getLocalizedMessage('system.no_access_to', { item: itemLabel });
+  }
+  return getLocalizedMessage('system.no_access');
 };
 
 const TOAST_DEDUP_MS = 1500;
@@ -76,10 +158,18 @@ export function handleGlobalApiError(error: unknown, endpoint?: string): never {
  */
 function getErrorMessage(error: unknown, endpoint?: string): string {
   if (error instanceof ApiError) {
-    const data = (error as ApiError & { data?: { detail?: unknown } }).data;
+    const data = (error as ApiError & { data?: { detail?: unknown; error?: unknown } }).data;
     const detail = data && typeof data === 'object' ? (data as { detail?: unknown }).detail : null;
-    if (typeof detail === 'string' && detail.trim().length > 0) {
-      return detail;
+    const errorCode = data && typeof data === 'object' ? (data as { error?: unknown }).error : null;
+    const detailMessage = typeof detail === 'string' ? detail.trim() : null;
+    const normalizedErrorCode = typeof errorCode === 'string' ? errorCode : null;
+
+    if (normalizedErrorCode === 'ErrorAccess') {
+      return resolveAccessMessage(detailMessage || undefined);
+    }
+
+    if (detailMessage && detailMessage.length > 0) {
+      return detailMessage;
     }
 
     // Handle specific HTTP status codes
