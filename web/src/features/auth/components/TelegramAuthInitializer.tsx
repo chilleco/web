@@ -30,7 +30,7 @@ export default function TelegramAuthInitializer() {
     const hasAttempted = useRef(false);
     const inFlightRef = useRef(false);
     const attemptsRef = useRef(0);
-    const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const retryTimerRef = useRef<number | null>(null);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
