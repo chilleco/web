@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { STORAGE_KEYS } from '@/shared/constants';
+import { syncAuthCookie } from '@/shared/lib/auth';
 import { initializeSession, setUtm } from '../stores/sessionSlice';
 
 export default function SessionInitializer() {
@@ -13,6 +14,7 @@ export default function SessionInitializer() {
     const searchParams = useSearchParams();
     const t = useTranslations('session');
     const { status } = useAppSelector((state) => state.session);
+    const authToken = useAppSelector((state) => state.session.authToken);
     const { error: showError } = useToastActions();
 
     const utmParam = useMemo(() => searchParams?.get('utm') || null, [searchParams]);
@@ -35,6 +37,12 @@ export default function SessionInitializer() {
             dispatch(initializeSession({ utm: utmParam }));
         }
     }, [dispatch, status, utmParam]);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const storedAuthToken = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+        syncAuthCookie(authToken || storedAuthToken);
+    }, [authToken]);
 
     useEffect(() => {
         if (status === 'failed') {

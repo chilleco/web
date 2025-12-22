@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction, type AnyAction } from '@reduxjs/toolkit';
 import { STORAGE_KEYS } from '@/shared/constants';
+import { syncAuthCookie } from '@/shared/lib/auth';
 import { initializeSession, resetSession, setAuthToken } from '@/features/session/stores/sessionSlice';
 import { loginWithCredentialsApi, loginWithTelegramAppApi, loginWithSocialApi, logoutApi, type AuthUser, type CredentialsAuthRequest, type TelegramAppAuthRequest, type SocialAuthRequest } from '../api/authApi';
 
@@ -38,6 +39,7 @@ const persistAuthToken = (token: string | null) => {
     } else {
         localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     }
+    syncAuthCookie(token);
 };
 
 export const loginWithCredentials = createAsyncThunk<
