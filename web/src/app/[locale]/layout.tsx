@@ -118,6 +118,7 @@ export default async function LocaleLayout({
     params: Promise<{ locale: string }>;
 }) {
     const { locale } = await params;
+    const enableEruda = ["LOCAL", "DEV", "TEST"].includes(process.env.NEXT_PUBLIC_MODE ?? "");
 
     // Ensure that the incoming `locale` is valid
     if (!routing.locales.includes(locale as Locale)) {
@@ -131,11 +132,30 @@ export default async function LocaleLayout({
     return (
         <>
             <StructuredData />
+
+            {/* Telegram Mini Apps */}
             <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
-            <Script src="//cdn.jsdelivr.net/npm/eruda" strategy="afterInteractive" />
-            <Script id="eruda-init" strategy="afterInteractive">
-                {`if (typeof eruda !== 'undefined') { eruda.init(); }`}
-            </Script>
+            {enableEruda ? (
+                <Script id="eruda-loader" strategy="afterInteractive">
+                    {`
+                        (function () {
+                            if (window.eruda) {
+                                window.eruda.init();
+                                return;
+                            }
+                            var script = document.createElement('script');
+                            script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+                            script.onload = function () {
+                                if (window.eruda) {
+                                    window.eruda.init();
+                                }
+                            };
+                            document.head.appendChild(script);
+                        })();
+                    `}
+                </Script>
+            ) : null}
+
             <div
                 lang={locale}
                 dir={locale === 'ar' ? 'rtl' : 'ltr'}

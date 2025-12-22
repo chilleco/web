@@ -94,5 +94,4 @@ export interface FrensResponse {
   frens: FrenProfile[];
   count: number;
   referral_link?: string | null;
-  referral_code?: number | null;
 }

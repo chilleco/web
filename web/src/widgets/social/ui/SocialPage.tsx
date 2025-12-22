@@ -218,7 +218,6 @@ export default function SocialPage() {
             setFrens(Array.isArray(response.frens) ? response.frens : []);
             setCount(typeof response.count === 'number' ? response.count : 0);
             setReferralLink(typeof response.referral_link === 'string' ? response.referral_link : null);
-            setReferralCode(typeof response.referral_code === 'number' ? response.referral_code : null);
         } catch (err) {
             showError(formatApiErrorMessage(err, tSystem('server_error')));
         } finally {

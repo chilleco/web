@@ -35,7 +35,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
   - `POST /tasks/save/` (`api/app/routes/tasks/save.py`): admin-only create/update; audited via `TrackObject.TASK`.
 - Verify modules live in `api/app/verify/`:
   - `simple`: always succeeds
-  - `channel`: requires `params.chat_id` and a `UserLocal.social` (Telegram user id)
+  - `channel`: requires `params.chat_id` and a `UserLocal.social_user` (Telegram user id)
   - `invite`: requires `params.count` and checks referral count
 
 ### Frontend
@@ -44,7 +44,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - Localization: `navigation.tasks`, `tasks.*`, `admin.tasks.*`. ICU gotcha: to show a literal `{}` in messages, quote it like `'{}'`, otherwise `next-intl` throws `INVALID_MESSAGE: EMPTY_ARGUMENT`.
 
 ## Referrals (Frens)
-- Backend: `POST /users/frens/` returns the current user's frens list (sorted by balance) with relation labels and `referral_link` (plus legacy `referral_code`).
+- Backend: `POST /users/frens/` returns the current user's frens list (sorted by balance) with relation labels and `referral_link`.
 - Referral key: `UserLocal.link` is generated via `encrypt(user.id, 8)` and decoded with `decrypt()` in `routes/users/auth.update_utm` to resolve referrers.
 - Frontend: `web/src/app/[locale]/social/page.tsx` renders the frens list and uses `navigation.frens` + `social.*` i18n; mobile bottom bar includes the frens entry linking to `/social`.
 

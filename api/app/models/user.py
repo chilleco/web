@@ -41,7 +41,7 @@ class UserLocal(Base):
 
     # Cache
     locale = Attribute(types=str, default="en")
-    social = Attribute(types=int)
+    social_user = Attribute(types=int)
     # Completed task ids (used by `/tasks/get/` and `/tasks/check/`)
     tasks = Attribute(types=list, default=list)
     # draws = Attribute(types=list)
@@ -64,7 +64,7 @@ def get_social(obj, social):
                 "locale": i.get("locale") or cfg("locale", "en"),
                 "title": f"{i.get('name') or ''} {i.get('surname') or ''}".strip(),
             }
-    return None
+    return {}
 
 
 def get_name(obj):
@@ -76,7 +76,7 @@ def get_name(obj):
     if login:
         login = f"@{login.lower()}"
 
-    title = obj.get("title") or social.get("title")
+    title = obj.get("title") or social.get("title") or ""
     title = title.replace("None", "").strip()
 
     locale = obj.get("locale") or social.get("locale")

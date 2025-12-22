@@ -55,7 +55,7 @@ def get_user(global_user, **kwargs):
         user = UserLocal(
             id=global_user["id"],
             balance=DEFAULT_BALANCE,
-            social=social.get("id"),
+            social_user=social.get("id"),
             locale=kwargs.get("locale"),
             spaces=[],
         )

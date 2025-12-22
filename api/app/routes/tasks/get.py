@@ -83,7 +83,9 @@ async def handler(
         task["status"] = 3 if task["id"] in user.tasks else 1
         if task.get("link") and "{}" in task["link"]:
             # Keep DB value as literal `'{}'` and inject user social id only in user mode.
-            task["link"] = task["link"].format(user.social)
+            task["link"] = task["link"].format(
+                user.link
+            )  # FIXME: or user.social_user ???
         return task
 
     tasks = Task.complex(

@@ -39,8 +39,14 @@ class FrenItem(BaseModel):
     login: str | None = Field(None, description="Login handle", examples=["jdoe"])
     name: str | None = Field(None, description="First name", examples=["John"])
     surname: str | None = Field(None, description="Last name", examples=["Doe"])
-    title: str | None = Field(None, description="Display name/title", examples=["John Doe"])
-    image: str | None = Field(None, description="Avatar image URL", examples=["https://cdn.example.com/avatar.png"])
+    title: str | None = Field(
+        None, description="Display name/title", examples=["John Doe"]
+    )
+    image: str | None = Field(
+        None,
+        description="Avatar image URL",
+        examples=["https://cdn.example.com/avatar.png"],
+    )
     balance: int | None = Field(None, description="Coin balance", examples=[1500])
     relation: FrenRelation = Field(
         ...,
@@ -56,11 +62,6 @@ class FrensResponse(BaseModel):
         None,
         description="Encoded referral link key",
         examples=["aB12cD34"],
-    )
-    referral_code: int | None = Field(
-        None,
-        description="Legacy referral code (social id when available)",
-        examples=[123456789],
     )
 
 
@@ -92,7 +93,6 @@ async def handler(
             "frens": [],
             "count": 0,
             "referral_link": user.link,
-            "referral_code": user.social,
         }
 
     profiles = await fetch_user_profiles(
@@ -130,7 +130,9 @@ async def handler(
             }
         )
 
-    frens.sort(key=lambda item: (item.get("balance") or 0, item.get("id") or 0), reverse=True)
+    frens.sort(
+        key=lambda item: (item.get("balance") or 0, item.get("id") or 0), reverse=True
+    )
     total = len(fren_ids)
 
     offset = data.offset or 0
@@ -144,5 +146,4 @@ async def handler(
         "frens": frens,
         "count": total,
         "referral_link": user.link,
-        "referral_code": user.social,
     }

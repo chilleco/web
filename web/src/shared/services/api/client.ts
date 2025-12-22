@@ -5,6 +5,7 @@
 
 import { handleGlobalApiError } from './globalErrorHandler';
 import { API_ENDPOINTS, STORAGE_KEYS } from '@/shared/constants';
+import { getClientNetwork } from '@/shared/lib/telegram';
 
 // Use different base URLs for server-side vs client-side requests
 const getApiBaseUrl = () => {
@@ -72,7 +73,7 @@ export async function ensureAuthToken(): Promise<string> {
 
     const payload = {
         token: clientToken,
-        network: 'web',
+        network: getClientNetwork(),
         extra: {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             languages: navigator.languages,

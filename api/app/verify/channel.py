@@ -11,12 +11,12 @@ async def check(user_id, params):
         raise ErrorWrong("chat_id")
 
     user = UserLocal.get(user_id)
-    if not user.social:
+    if not user.social_user:
         raise ErrorWrong("id")
 
     try:
         response = await tg.bot.get_chat_member(
-            chat_id=params["chat_id"], user_id=user.social
+            chat_id=params["chat_id"], user_id=user.social_user
         )
     except Exception as e:
         await report.error(
@@ -24,7 +24,7 @@ async def check(user_id, params):
             {
                 "user": user_id,
                 "chat_id": params["chat_id"],
-                "user_id": user.social,
+                "user_id": user.social_user,
             },
             error=e,
         )
