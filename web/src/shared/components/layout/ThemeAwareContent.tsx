@@ -1,11 +1,13 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useTheme } from '@/providers/ThemeProvider';
 import LoadingScreen from './LoadingScreen';
 import { Header, MobileBottomBar } from '@/widgets/header';
 import { Footer } from '@/widgets/footer';
-import { useAppSelector } from '@/shared/stores/store';
-import { selectIsMobileBottomBarEnabled } from '@/shared/stores/layoutSlice';
+import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
+import { selectIsApp, setIsApp } from '@/shared/stores/layoutSlice';
+import { isApp as detectIsApp } from '@/shared/lib/telegram';
 import { cn } from '@/shared/lib/utils';
 
 interface ThemeAwareContentProps {
@@ -14,26 +16,32 @@ interface ThemeAwareContentProps {
 
 export default function ThemeAwareContent({ children }: ThemeAwareContentProps) {
     const { isInitialized } = useTheme();
-    const isMobileBottomBarEnabled = useAppSelector(selectIsMobileBottomBarEnabled);
+    const dispatch = useAppDispatch();
+    const isApp = useAppSelector(selectIsApp);
+    const isAppDetected = detectIsApp();
+    const shouldUseAppShell = isApp || isAppDetected;
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (isApp !== isAppDetected) {
+            dispatch(setIsApp(isAppDetected));
+        }
+    }, [dispatch, isApp, isAppDetected]);
 
     return (
         <LoadingScreen isLoading={!isInitialized}>
-            <div className={cn(isMobileBottomBarEnabled ? 'hidden sm:block' : undefined)}>
-                <Header />
-            </div>
+            {shouldUseAppShell ? null : <Header />}
             <div
                 className={cn(
-                    isMobileBottomBarEnabled ? 'pb-[calc(6rem+env(safe-area-inset-bottom))] sm:pb-0' : undefined
+                    shouldUseAppShell ? 'pb-[calc(6rem+env(safe-area-inset-bottom))]' : undefined
                 )}
             >
                 <main className="min-h-screen">
                     {children}
                 </main>
-                <div className={cn(isMobileBottomBarEnabled ? 'hidden sm:block' : undefined)}>
-                    <Footer />
-                </div>
+                {shouldUseAppShell ? null : <Footer />}
             </div>
-            <MobileBottomBar />
+            {shouldUseAppShell ? <MobileBottomBar /> : null}
         </LoadingScreen>
     );
 }

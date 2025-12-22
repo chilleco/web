@@ -9,7 +9,8 @@ import { cn } from '@/shared/lib/utils';
 import { Avatar, AvatarImage } from '@/shared/ui/avatar';
 import { selectAuthUser, selectIsAuthenticated } from '@/features/auth';
 import { useAppSelector } from '@/shared/stores/store';
-import { selectIsMobileBottomBarEnabled } from '@/shared/stores/layoutSlice';
+import { selectIsApp } from '@/shared/stores/layoutSlice';
+import { isApp as detectIsApp } from '@/shared/lib/telegram';
 
 type RouteHref = Parameters<ReturnType<typeof useRouter>['push']>[0];
 
@@ -30,7 +31,9 @@ export function MobileBottomBar() {
     const navigationItems = useBottomNavigationItems();
     const tNavigation = useTranslations('navigation');
     const tSystem = useTranslations('system');
-    const isMobileBottomBarEnabled = useAppSelector(selectIsMobileBottomBarEnabled);
+    const isApp = useAppSelector(selectIsApp);
+    const isAppDetected = detectIsApp();
+    const shouldShowBar = isApp || isAppDetected;
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const user = useAppSelector(selectAuthUser);
     const navRef = useRef<HTMLElement | null>(null);
@@ -63,7 +66,7 @@ export function MobileBottomBar() {
     useEffect(() => {
         const nav = navRef.current;
         const root = document.documentElement;
-        if (!isMobileBottomBarEnabled || !nav) {
+        if (!shouldShowBar || !nav) {
             root.style.removeProperty(MOBILE_BOTTOM_BAR_OFFSET_VAR);
             return;
         }
@@ -90,7 +93,7 @@ export function MobileBottomBar() {
             window.removeEventListener('resize', updateOffset);
             root.style.removeProperty(MOBILE_BOTTOM_BAR_OFFSET_VAR);
         };
-    }, [isMobileBottomBarEnabled]);
+    }, [shouldShowBar]);
 
     const handleNavigate = (path: RouteHref) => {
         router.push(path);
@@ -110,10 +113,10 @@ export function MobileBottomBar() {
 
     return (
         <>
-            {isMobileBottomBarEnabled ? (
+            {shouldShowBar ? (
                 <nav
                     ref={navRef}
-                    className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-[0_-0.25rem_1.5rem_rgba(0,0,0,0.12)]"
+                    className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-[0_-0.25rem_1.5rem_rgba(0,0,0,0.12)]"
                 >
                     <div className="grid grid-flow-col auto-cols-fr gap-1 px-4 pb-[env(safe-area-inset-bottom)]">
                         {items.map(item => {

@@ -26,3 +26,5 @@ export const isTelegramMiniApp = () => {
 };
 
 export const getClientNetwork = (): 'web' | 'tg' => (isTelegramMiniApp() ? 'tg' : 'web');
+
+export const isApp = () => getClientNetwork() !== 'web';

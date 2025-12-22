@@ -1,29 +1,30 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { isApp } from '@/shared/lib/telegram'
 
 export type LayoutState = {
-    isMobileBottomBarEnabled: boolean
+    isApp: boolean
 }
 
 const initialState: LayoutState = {
-    isMobileBottomBarEnabled: true,
+    isApp: isApp(),
 }
 
 export const layoutSlice = createSlice({
     name: 'layout',
     initialState,
     reducers: {
-        setMobileBottomBarEnabled: (state, action: PayloadAction<boolean>) => {
-            state.isMobileBottomBarEnabled = action.payload
+        setIsApp: (state, action: PayloadAction<boolean>) => {
+            state.isApp = action.payload
         },
-        toggleMobileBottomBarEnabled: (state) => {
-            state.isMobileBottomBarEnabled = !state.isMobileBottomBarEnabled
+        toggleIsApp: (state) => {
+            state.isApp = !state.isApp
         },
     },
 })
 
-export const { setMobileBottomBarEnabled, toggleMobileBottomBarEnabled } = layoutSlice.actions
+export const { setIsApp, toggleIsApp } = layoutSlice.actions
 
-export const selectIsMobileBottomBarEnabled = (state: { layout: LayoutState }) =>
-    state.layout.isMobileBottomBarEnabled
+export const selectIsApp = (state: { layout: LayoutState }) =>
+    state.layout.isApp
 
 export default layoutSlice.reducer
