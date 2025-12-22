@@ -38,6 +38,15 @@ export async function loginWithTelegramAppApi(data: TelegramAppAuthRequest): Pro
     return apiWithoutGlobalErrors.post<AuthUser>(API_ENDPOINTS.USERS.APP_TG, data);
 }
 
+export interface VkAppAuthRequest {
+    url: string;
+    utm?: string | null;
+}
+
+export async function loginWithVkAppApi(data: VkAppAuthRequest): Promise<AuthUser> {
+    return apiWithoutGlobalErrors.post<AuthUser>(API_ENDPOINTS.USERS.APP_VK, data);
+}
+
 export interface SocialAuthRequest {
     social: string | number;
     code: string;

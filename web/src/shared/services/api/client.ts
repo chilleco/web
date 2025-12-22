@@ -5,7 +5,7 @@
 
 import { handleGlobalApiError } from './globalErrorHandler';
 import { API_ENDPOINTS, STORAGE_KEYS } from '@/shared/constants';
-import { getClientNetwork } from '@/shared/lib/telegram';
+import { getClientNetwork } from '@/shared/lib/app';
 
 // Use different base URLs for server-side vs client-side requests
 const getApiBaseUrl = () => {

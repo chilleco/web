@@ -7,7 +7,7 @@ import { Header, MobileBottomBar } from '@/widgets/header';
 import { Footer } from '@/widgets/footer';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { selectIsApp, setIsApp } from '@/shared/stores/layoutSlice';
-import { isApp as detectIsApp } from '@/shared/lib/telegram';
+import { isApp as detectIsApp } from '@/shared/lib/app';
 import { cn } from '@/shared/lib/utils';
 
 interface ThemeAwareContentProps {

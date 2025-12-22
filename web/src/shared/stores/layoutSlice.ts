@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { isApp } from '@/shared/lib/telegram'
+import { isApp } from '@/shared/lib/app'
 
 export type LayoutState = {
     isApp: boolean

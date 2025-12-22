@@ -3,6 +3,7 @@ export {
     authSlice,
     loginWithCredentials,
     loginWithTelegramApp,
+    loginWithVkApp,
     loginWithSocial,
     logout,
     selectAuthUser,
@@ -12,3 +13,4 @@ export {
     clearError,
 } from './stores/authSlice';
 export { default as TelegramAuthInitializer } from './components/TelegramAuthInitializer';
+export { default as VkAuthInitializer } from './components/VkAuthInitializer';

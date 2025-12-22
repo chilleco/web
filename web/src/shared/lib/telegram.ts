@@ -24,7 +24,3 @@ export const isTelegramMiniApp = () => {
 
     return Boolean(tma.initDataUnsafe?.user);
 };
-
-export const getClientNetwork = (): 'web' | 'tg' => (isTelegramMiniApp() ? 'tg' : 'web');
-
-export const isApp = () => getClientNetwork() !== 'web';

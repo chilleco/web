@@ -10,7 +10,7 @@ import { Avatar, AvatarImage } from '@/shared/ui/avatar';
 import { selectAuthUser, selectIsAuthenticated } from '@/features/auth';
 import { useAppSelector } from '@/shared/stores/store';
 import { selectIsApp } from '@/shared/stores/layoutSlice';
-import { isApp as detectIsApp } from '@/shared/lib/telegram';
+import { isApp as detectIsApp } from '@/shared/lib/app';
 
 type RouteHref = Parameters<ReturnType<typeof useRouter>['push']>[0];
 
