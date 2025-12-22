@@ -1,6 +1,6 @@
 aiogram==2.25.2
 tgio==0.9
 tgreports==0.17
-libdev==0.99
+libdev==0.100
 redis==7.1.0
 PyJWT==2.10.1

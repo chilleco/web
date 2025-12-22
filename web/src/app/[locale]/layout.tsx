@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation';
 import { routing, type Locale } from '@/i18n/routing';
 import { UserSettingsInitializer } from '@/features/user';
 import { SessionInitializer } from '@/features/session';
-import { TelegramAuthInitializer, VkAuthInitializer } from '@/features/auth';
+import { TelegramAuthInitializer, VkAuthInitializer, MaxAuthInitializer } from '@/features/auth';
 import { ThemeProvider } from '@/providers';
 import { PopupProvider } from '@/widgets/feedback-system';
 import { ToastProvider } from '@/widgets/feedback-system';
@@ -136,6 +136,8 @@ export default async function LocaleLayout({
             <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
             {/* VK Mini Apps */}
             <Script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js" strategy="beforeInteractive" />
+            {/* MAX Mini Apps */}
+            <Script src="https://st.max.ru/js/max-web-app.js" strategy="beforeInteractive" />
             {enableEruda ? (
                 <Script id="eruda-loader" strategy="afterInteractive">
                     {`
@@ -171,6 +173,7 @@ export default async function LocaleLayout({
                                 <SessionInitializer />
                                 <TelegramAuthInitializer />
                                 <VkAuthInitializer />
+                                <MaxAuthInitializer />
                                 <UserSettingsInitializer />
                                 <ThemeAwareContent>
                                     {children}

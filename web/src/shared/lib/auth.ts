@@ -1,3 +1,5 @@
+import { getClientNetwork } from '@/shared/lib/app';
+
 type JwtPayload = {
     user?: number;
     status?: number;
@@ -39,8 +41,11 @@ const isAuthenticatedPayload = (payload: JwtPayload | null) => {
 export const syncAuthCookie = (token: string | null) => {
     if (typeof document === 'undefined') return;
 
-    const secure = typeof window !== 'undefined' && window.location.protocol === 'https:' ? '; Secure' : '';
-    const cookieBase = `path=/; SameSite=Lax${secure}`;
+    const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
+    const isAppClient = typeof window !== 'undefined' && getClientNetwork() !== 'web';
+    const sameSite = isAppClient && isSecure ? 'None' : 'Lax';
+    const secure = isSecure ? '; Secure' : '';
+    const cookieBase = `path=/; SameSite=${sameSite}${secure}`;
 
     if (!token) {
         document.cookie = `${AUTH_COOKIE_KEY}=; Max-Age=0; ${cookieBase}`;

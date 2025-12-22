@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction, type AnyAction } from '@r
 import { STORAGE_KEYS } from '@/shared/constants';
 import { syncAuthCookie } from '@/shared/lib/auth';
 import { initializeSession, resetSession, setAuthToken } from '@/features/session/stores/sessionSlice';
-import { loginWithCredentialsApi, loginWithTelegramAppApi, loginWithVkAppApi, loginWithSocialApi, logoutApi, type AuthUser, type CredentialsAuthRequest, type TelegramAppAuthRequest, type VkAppAuthRequest, type SocialAuthRequest } from '../api/authApi';
+import { loginWithCredentialsApi, loginWithTelegramAppApi, loginWithVkAppApi, loginWithMaxAppApi, loginWithSocialApi, logoutApi, type AuthUser, type CredentialsAuthRequest, type TelegramAppAuthRequest, type VkAppAuthRequest, type MaxAppAuthRequest, type SocialAuthRequest } from '../api/authApi';
 
 export interface AuthProfile {
     id: number;
@@ -94,6 +94,25 @@ export const loginWithVkApp = createAsyncThunk<
             return response;
         } catch (error) {
             const message = error instanceof Error ? error.message : 'auth_vk_failed';
+            return rejectWithValue(message);
+        }
+    }
+);
+
+export const loginWithMaxApp = createAsyncThunk<
+    AuthUser,
+    MaxAppAuthRequest,
+    { rejectValue: string }
+>(
+    'auth/loginWithMaxApp',
+    async (payload, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await loginWithMaxAppApi(payload);
+            persistAuthToken(response.token);
+            dispatch(setAuthToken(response.token));
+            return response;
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'auth_max_failed';
             return rejectWithValue(message);
         }
     }
@@ -192,6 +211,20 @@ export const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginWithVkApp.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (typeof action.payload === 'string' ? action.payload : action.error.message) || 'unknown_error';
+            })
+            .addCase(loginWithMaxApp.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(loginWithMaxApp.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                const { token, ...profile } = action.payload;
+                state.user = profile;
+                state.error = null;
+            })
+            .addCase(loginWithMaxApp.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = (typeof action.payload === 'string' ? action.payload : action.error.message) || 'unknown_error';
             })

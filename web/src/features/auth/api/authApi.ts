@@ -47,6 +47,15 @@ export async function loginWithVkAppApi(data: VkAppAuthRequest): Promise<AuthUse
     return apiWithoutGlobalErrors.post<AuthUser>(API_ENDPOINTS.USERS.APP_VK, data);
 }
 
+export interface MaxAppAuthRequest {
+    url: string;
+    utm?: string | null;
+}
+
+export async function loginWithMaxAppApi(data: MaxAppAuthRequest): Promise<AuthUser> {
+    return apiWithoutGlobalErrors.post<AuthUser>(API_ENDPOINTS.USERS.APP_MAX, data);
+}
+
 export interface SocialAuthRequest {
     social: string | number;
     code: string;
