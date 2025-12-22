@@ -2,6 +2,7 @@ from typing import Any, Dict, Iterable, List
 
 from userhub import BaseUser as User
 from libdev.codes import get_flag
+from libdev.crypt import encrypt
 from consys.errors import ErrorWrong
 
 from lib import cfg
@@ -31,7 +32,7 @@ class UserLocal(Base):
     mailing = Attribute(types=bool, default=False)
     wallet = Attribute(types=str)
 
-    spaces = Attribute(types=list, default=list)
+    spaces = Attribute(types=list)
 
     # Referral
     link = Attribute(types=str)
@@ -46,6 +47,45 @@ class UserLocal(Base):
     tasks = Attribute(types=list, default=list)
     # draws = Attribute(types=list)
     # pays = Attribute(types=list)
+
+    @classmethod
+    def get_or_create(
+        cls,
+        user_id: int,
+        *,
+        social_user: int | None = None,
+        locale: str | None = None,
+    ) -> tuple["UserLocal", bool]:
+        """Return a local user overlay, creating it with defaults when missing."""
+
+        new = False
+        changed = False
+
+        try:
+            user = cls.get(user_id)
+
+        except ErrorWrong:
+            new = True
+            user = cls(
+                id=user_id,
+                link=encrypt(user_id, 8),
+                balance=DEFAULT_BALANCE,
+                social_user=social_user,
+                locale=locale,
+            )
+            changed = True
+
+        else:
+            if not user.social_user and social_user:
+                user.social_user = social_user
+                changed = True
+            # if not user.locale or (locale and user.locale != locale):
+            #     user.locale = locale
+            #     changed = True
+
+        if changed:
+            user.save()
+        return user, new
 
 
 async def complex_global_users(**kwargs):

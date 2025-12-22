@@ -8,7 +8,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess, ErrorInvalid
 
-from models.user import User, UserLocal, DEFAULT_BALANCE, complex_global_users
+from models.user import User, UserLocal, complex_global_users
 from models.socket import Socket
 
 
@@ -86,13 +86,7 @@ async def handler(
     user_local_ids = {user["id"] for user in users_local}
 
     for user_id in user_ids - user_local_ids:
-        user_local = UserLocal(
-            id=user_id,
-            balance=DEFAULT_BALANCE,
-            spaces=[],
-            # TODO: social
-        )
-        user_local.save()
+        user_local, _ = UserLocal.get_or_create(user_id)  # TODO: social
         users_local.append(user_local.json())
 
     users_local = {user["id"]: user for user in users_local}

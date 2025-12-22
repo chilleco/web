@@ -12,13 +12,7 @@ from libdev.crypt import decrypt, encrypt
 
 from lib import cfg, log, report
 from models.track import Track, TrackAction, TrackObject, _resolve_source
-from models.user import (
-    DEFAULT_BALANCE,
-    UserLocal,
-    complex_global_users,
-    get_name,
-    get_social,
-)
+from models.user import UserLocal, complex_global_users, get_name, get_social
 
 
 USER_FIELDS = {
@@ -48,32 +42,11 @@ def get_user(global_user, **kwargs):
     if not global_user["id"]:
         raise ErrorInvalid("user_id")
 
-    new = False
-    try:
-        user = UserLocal.get(global_user["id"])
-    except ErrorWrong:
-        user = UserLocal(
-            id=global_user["id"],
-            balance=DEFAULT_BALANCE,
-            social_user=social.get("id"),
-            locale=kwargs.get("locale"),
-            spaces=[],
-        )
-        user.save()
-        if not user.link:
-            user.link = encrypt(user.id, 8)
-            user.save()
-        new = True
-    else:
-        if user.spaces is None:
-            user.spaces = []
-            user.save()
-        if not user.link:
-            user.link = encrypt(user.id, 8)
-            user.save()
-        if user.locale and kwargs.get("locale") and user.locale != kwargs["locale"]:
-            user.locale = kwargs["locale"]
-            user.save()
+    user, new = UserLocal.get_or_create(
+        global_user["id"],
+        social_user=social.get("id"),
+        locale=kwargs.get("locale"),
+    )
 
     return user, new
 

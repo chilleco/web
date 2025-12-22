@@ -6,10 +6,10 @@ from typing import Literal
 
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel, Field
-from consys.errors import ErrorAccess, ErrorWrong
+from consys.errors import ErrorAccess
 from libdev.crypt import encrypt
 
-from models.user import DEFAULT_BALANCE, UserLocal, fetch_user_profiles
+from models.user import UserLocal, fetch_user_profiles
 
 
 router = APIRouter()
@@ -73,15 +73,7 @@ async def handler(
     if request.state.status < 3 or not request.state.user:
         raise ErrorAccess("frens")
 
-    try:
-        user = UserLocal.get(request.state.user)
-    except ErrorWrong:
-        user = UserLocal(
-            id=request.state.user,
-            balance=DEFAULT_BALANCE,
-            spaces=[],
-        )
-        user.save()
+    user, _ = UserLocal.get_or_create(request.state.user)
 
     if not user.link:
         user.link = encrypt(user.id, 8)

@@ -6,9 +6,9 @@ from typing import Any
 
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel, ConfigDict, Field
-from consys.errors import ErrorAccess, ErrorInvalid, ErrorWrong
+from consys.errors import ErrorAccess, ErrorInvalid
 
-from models.user import DEFAULT_BALANCE, User, UserLocal
+from models.user import User, UserLocal
 from models.track import Track, TrackAction, TrackObject, format_changes
 
 
@@ -152,15 +152,7 @@ async def handler(
     if data.id and target_user_id != request.state.user and not is_admin:
         raise ErrorAccess("save user")
 
-    try:
-        user_local = UserLocal.get(target_user_id)
-        created = False
-    except ErrorWrong:
-        user_local = UserLocal(
-            id=target_user_id,
-            balance=DEFAULT_BALANCE,
-        )
-        created = True
+    user_local, new = UserLocal.get_or_create(target_user_id)
 
     tracked_fields = {
         "id",
@@ -176,7 +168,7 @@ async def handler(
         "balance",
         "status",
     }
-    before_state = None if created else user_local.json(fields=tracked_fields)
+    before_state = None if new else user_local.json(fields=tracked_fields)
 
     payload = data.model_dump(exclude_unset=True)
     payload.pop("id", None)
@@ -204,13 +196,13 @@ async def handler(
     for field, value in payload.items():
         setattr(user_local, field, value)
 
-    if created or payload:
+    if new or payload:
         changes = format_changes(user_local.get_changes())
         user_local.save()
 
         Track.log(
             object=TrackObject.USER,
-            action=TrackAction.CREATE if created else TrackAction.UPDATE,
+            action=TrackAction.CREATE if new else TrackAction.UPDATE,
             user=request.state.user,
             token=request.state.token,
             request=request,

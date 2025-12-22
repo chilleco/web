@@ -1,17 +1,7 @@
 from consys.errors import ErrorWrong
 
 from models.space import Space
-from models.user import DEFAULT_BALANCE, UserLocal
-
-
-def get_or_create_user_local(user_id: int) -> UserLocal:
-    """Return local user overlay with defaults."""
-    try:
-        return UserLocal.get(user_id)
-    except ErrorWrong:
-        user_local = UserLocal(id=user_id, balance=DEFAULT_BALANCE)
-        user_local.save()
-        return user_local
+from models.user import UserLocal
 
 
 def _ensure_space_instance(space: Space | dict | list[Space | dict]) -> Space:
@@ -27,7 +17,10 @@ def _ensure_space_instance(space: Space | dict | list[Space | dict]) -> Space:
     raise ErrorWrong("space")
 
 
-def attach_user_to_space(space: Space | dict | list[Space | dict], user_id: int) -> None:
+def attach_user_to_space(
+    space: Space | dict | list[Space | dict],
+    user_id: int,
+) -> None:
     """Attach user to space and persist both sides."""
     space = _ensure_space_instance(space)
     if not user_id:
@@ -37,7 +30,7 @@ def attach_user_to_space(space: Space | dict | list[Space | dict], user_id: int)
         space.users.append(user_id)
         space.save()
 
-    user_local = get_or_create_user_local(user_id)
+    user_local, _ = UserLocal.get_or_create(user_id)
     if space.id not in user_local.spaces:
         user_local.spaces.append(space.id)
         user_local.save()
