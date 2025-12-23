@@ -71,6 +71,7 @@
     "empty": "No frens yet.",
     "addFriends": "Add frens",
     "shareTitle": "Invite frens",
+    "shareText": "Join with me:",
     "referralMissing": "Referral code is not available yet.",
     "nameFallback": "User #{id}",
     "relation": {

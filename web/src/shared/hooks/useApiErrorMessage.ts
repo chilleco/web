@@ -41,6 +41,7 @@ export function useApiErrorMessage() {
     if (errorCode === 'ErrorAccess') {
       const accessLabels: Record<string, string> = {
         tasks: tNavigation('tasks'),
+        frens: tNavigation('frens'),
         posts: tNavigation('posts'),
         products: tNavigation('products'),
         feedback: tNavigation('feedback'),

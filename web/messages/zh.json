@@ -71,6 +71,7 @@
     "empty": "还没有好友。",
     "addFriends": "添加好友",
     "shareTitle": "邀请好友",
+    "shareText": "和我一起加入：",
     "referralMissing": "推荐码暂不可用。",
     "nameFallback": "用户 #{id}",
     "relation": {

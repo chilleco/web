@@ -71,6 +71,7 @@
     "empty": "Aún no hay amigos.",
     "addFriends": "Agregar amigos",
     "shareTitle": "Invitar amigos",
+    "shareText": "Únete conmigo:",
     "referralMissing": "El código de referido aún no está disponible.",
     "nameFallback": "Usuario #{id}",
     "relation": {

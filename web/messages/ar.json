@@ -71,6 +71,7 @@
     "empty": "لا يوجد أصدقاء بعد.",
     "addFriends": "إضافة أصدقاء",
     "shareTitle": "دعوة أصدقاء",
+    "shareText": "انضم معي:",
     "referralMissing": "رمز الإحالة غير متاح بعد.",
     "nameFallback": "المستخدم #{id}",
     "relation": {

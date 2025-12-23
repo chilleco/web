@@ -1,13 +1,14 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { PageHeader } from '@/shared/ui/page-header';
 import { Box } from '@/shared/ui/box';
 import { IconButton } from '@/shared/ui/icon-button';
 import { AddIcon, CoinsIcon, RefreshIcon, UserGroupIcon } from '@/shared/ui/icons';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
 import { cn } from '@/shared/lib/utils';
+import { getClientNetwork } from '@/shared/lib/app';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { useShare } from '@/features/share';
@@ -28,12 +29,83 @@ const relationStyles: Record<string, string> = {
     friend: 'bg-muted/70 text-muted-foreground',
 };
 
-const buildReferralUrl = (locale: string, referralKey: string) => {
+const buildReferralUrl = (referralKey: string) => {
     if (typeof window === 'undefined') return '';
     const baseUrl = window.location.origin;
-    const url = new URL(`/${locale}`, baseUrl);
+    const url = new URL(baseUrl);
     url.searchParams.set('utm', referralKey);
     return url.toString();
+};
+
+const buildTelegramShareUrl = (targetUrl: string, text: string) => {
+    const shareUrl = new URL('https://t.me/share/url');
+    shareUrl.searchParams.set('url', targetUrl);
+    if (text) {
+        shareUrl.searchParams.set('text', text);
+    }
+    return shareUrl.toString();
+};
+
+const buildTelegramTargetUrl = (referralUrl: string, referralKey: string) => {
+    if (process.env.NEXT_PUBLIC_TG_BOT) {
+        return `https://t.me/${process.env.NEXT_PUBLIC_TG_BOT}?start=${referralKey}`;
+    }
+    return referralUrl;
+};
+
+const openTelegramShare = (shareUrl: string) => {
+    if (typeof window === 'undefined') return false;
+    const tma = window.Telegram?.WebApp as
+        | { openTelegramLink?: (url: string) => void; openLink?: (url: string) => void }
+        | undefined;
+
+    if (tma?.openTelegramLink && shareUrl.startsWith('https://t.me/')) {
+        tma.openTelegramLink(shareUrl);
+        return true;
+    }
+
+    if (tma?.openLink) {
+        tma.openLink(shareUrl);
+        return true;
+    }
+
+    return false;
+};
+
+const openVkShare = async (url: string) => {
+    if (typeof window === 'undefined') return false;
+    const bridge = window.vkBridge;
+    if (!bridge?.send) return false;
+
+    try {
+        await bridge.send('VKWebAppShare', { link: url });
+        return true;
+    } catch {
+        return false;
+    }
+};
+
+const openMaxShare = async ({
+    url,
+    title,
+    text,
+}: {
+    url: string;
+    title: string;
+    text: string;
+}) => {
+    if (typeof window === 'undefined') return false;
+    const webApp = (window as typeof window & {
+        WebApp?: { share?: (params: { url: string; text?: string; title?: string }) => Promise<unknown> | void };
+    }).WebApp;
+    if (!webApp?.share) return false;
+
+    try {
+        await webApp.share({ url, title, text });
+        return true;
+    } catch {
+        return false;
+    }
 };
 
 const getDisplayName = (fren: FrenProfile, fallback: string) => {
@@ -174,7 +246,6 @@ function AddFriendsBar({
 }
 
 export default function SocialPage() {
-    const locale = useLocale();
     const tNavigation = useTranslations('navigation');
     const tSocial = useTranslations('social');
     const tSystem = useTranslations('system');
@@ -231,7 +302,7 @@ export default function SocialPage() {
         loadFrens('initial');
     }, [loadFrens]);
 
-    const handleAddFriends = useCallback(() => {
+    const handleAddFriends = useCallback(async () => {
         const referralKey = referralLink ?? (referralCode !== null ? String(referralCode) : null);
 
         if (!referralKey) {
@@ -239,9 +310,27 @@ export default function SocialPage() {
             return;
         }
 
-        const url = buildReferralUrl(locale, referralKey);
-        share({ title: tSocial('shareTitle'), url });
-    }, [locale, referralCode, referralLink, share, showError, tSocial]);
+        const url = buildReferralUrl(referralKey);
+        const title = tSocial('shareTitle');
+        const text = tSocial('shareText');
+        const network = getClientNetwork();
+
+        if (network === 'tg') {
+            const targetUrl = buildTelegramTargetUrl(url, referralKey);
+            const shareUrl = buildTelegramShareUrl(targetUrl, text);
+            if (openTelegramShare(shareUrl)) return;
+        }
+
+        if (network === 'vk') {
+            if (await openVkShare(url)) return;
+        }
+
+        if (network === 'max') {
+            if (await openMaxShare({ url, title, text })) return;
+        }
+
+        share({ title, url });
+    }, [referralCode, referralLink, share, showError, tSocial]);
 
     return (
         <div

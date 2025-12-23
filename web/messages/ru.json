@@ -71,6 +71,7 @@
     "empty": "Пока нет друзей.",
     "addFriends": "Добавить друзей",
     "shareTitle": "Пригласить друзей",
+    "shareText": "Присоединяйся ко мне:",
     "referralMissing": "Реферальный код пока недоступен.",
     "nameFallback": "Пользователь #{id}",
     "relation": {

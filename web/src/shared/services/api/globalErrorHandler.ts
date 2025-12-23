@@ -77,6 +77,7 @@ const getLocalizedMessage = (key: string, values?: Record<string, string>): stri
 
 const accessLabelKeys: Record<string, { scope: 'navigation' | 'system'; key: string }> = {
   tasks: { scope: 'navigation', key: 'tasks' },
+  frens: { scope: 'navigation', key: 'frens' },
   posts: { scope: 'navigation', key: 'posts' },
   products: { scope: 'navigation', key: 'products' },
   feedback: { scope: 'navigation', key: 'feedback' },
