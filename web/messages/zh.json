@@ -81,21 +81,21 @@
   },
   "landing": {
     "hero": {
-      "title": "在第一天就能转化的落地页",
-      "subtitle": "统一的 FastAPI、Next.js 15 和 Telegram 工具，提供自适应区块与类型化 API 调用。",
+      "title": "让 Web 产品、平台和服务在第一天上线",
+      "subtitle": "FastAPI + Next.js 15 + Telegram 自动化的全栈发布平台，开箱即连。",
       "primaryCta": "打开目录",
       "secondaryCta": "阅读文章",
-      "badge": "全栈起步",
-      "heading": "用自适应多语言落地页更快上线",
-      "body": "通过已接入 API 和消息的 Hero、证明、目录与引导流程传递清晰故事。",
+      "badge": "上线就绪的技术栈",
+      "heading": "一套栈，更快交付可上线的 Web 体验",
+      "body": "在一个自适应的发布中心完成定位、引导用户和收款——目录、文章和自动化已接入你的 API 与消息系统。",
       "points": [
-        "FSD 布局，支持明暗主题",
-        "结构化数据、SEO 元数据与分析事件",
-        "CTA、toast 与 Telegram hook 开箱即用"
+        "适用于网站、SaaS、商城和服务的全栈流水线，内置认证、目录、文章和任务。",
+        "为上线和扩展优化的 SEO 元数据、结构化数据和分析事件。",
+        "CTA 流程、入门 toast，以及 Telegram/VK/Mini App hooks，立即捕获需求。"
       ],
       "snapshot": {
-        "title": "本月上线",
-        "value": "已交付 37 个项目",
+        "title": "本季度上线",
+        "value": "42 个产品在线",
         "cta": "查看案例"
       },
       "stats": {
@@ -115,22 +115,22 @@
     },
     "howItWorks": {
       "title": "工作原理",
-      "description": "三步把访客从第一眼引导到激活。",
+      "description": "三步从想法到上线的 Web 产品。",
       "cta": "查看路径",
       "steps": {
         "discover": {
-          "title": "发现",
-          "description": "Hero、导航和证明随语言与主题自适应。",
+          "title": "塑造故事",
+          "description": "Hero、导航和证明块按产品/平台/服务和语言自适应。",
           "badge": "步骤 01"
         },
         "decide": {
-          "title": "决策",
-          "description": "文章和目录突出成果、定价与标签。",
+          "title": "接好技术栈",
+          "description": "文章、目录和定价直接取自你的 API，所有区块实时更新。",
           "badge": "步骤 02"
         },
         "act": {
-          "title": "行动",
-          "description": "线索表单、toast 和 Telegram 通知立即捕获意图。",
+          "title": "上线并迭代",
+          "description": "线索表单、toast 和 Telegram/VK/Mini App hooks 把流量转成付费用户。",
           "badge": "步骤 03"
         }
       }
@@ -162,7 +162,7 @@
     },
     "products": {
       "title": "精选产品",
-      "description": "在落地页直接呈现价值与定价。",
+      "description": "在你的发布中心直接呈现报价，价值与价格一目了然。",
       "viewAll": "打开目录",
       "currency": "$",
       "cta": "查看详情",
@@ -265,7 +265,7 @@
     "about": {
       "title": "关于我们",
       "description": "专注可预测交付的全栈团队。",
-      "heading": "API-first，内建 Telegram 流程",
+      "heading": "API-first 团队，专注上线 Web 产品、平台和服务",
       "body": "我们将 FastAPI、Next.js 15 和 Telegram 自动化融为一体。每个区块都带本地化、分析元数据和严格类型，帮助团队无重写上线。",
       "cards": {
         "delivery": "交付文化",
@@ -305,6 +305,19 @@
   },
   "system": {
     "locale": "区域设置",
+    "network": "网络",
+    "networks": {
+      "all": "所有网络",
+      "web": "Web",
+      "tg": "Telegram",
+      "vk": "VK",
+      "g": "Google",
+      "fb": "Facebook",
+      "a": "Apple",
+      "in": "LinkedIn",
+      "ig": "Instagram",
+      "max": "MAX"
+    },
     "worldwide": "全球",
     "sign_out": "登出",
     "sign_in": "登录",

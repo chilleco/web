@@ -11,6 +11,7 @@ Notes:
 
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel, ConfigDict, Field
+from libdev.codes import get_network
 from consys.errors import ErrorAccess, ErrorWrong
 
 from lib import report
@@ -27,7 +28,7 @@ class TaskSaveRequest(BaseModel):
     id: int | None = Field(None, description="Task id for update", examples=[3])
     title: dict | None = Field(
         None,
-        description="Localized task title (e.g., {\"en\": \"Initial Bonus\", \"ru\": \"Начальный бонус\"})",
+        description='Localized task title (e.g., {"en": "Initial Bonus", "ru": "Начальный бонус"})',
         examples=[{"en": "Initial Bonus", "ru": "Начальный бонус"}],
     )
     data: dict | None = Field(
@@ -55,9 +56,15 @@ class TaskSaveRequest(BaseModel):
         description="Color key used by the client (green/violet/blue/orange)",
         examples=["green"],
     )
-    size: int | None = Field(None, description="Optional size hint for the client", examples=[0])
-    expired: int | None = Field(None, description="Expiration timestamp (unix seconds)", examples=[1733962020])
-    reward: int | None = Field(None, ge=0, description="Reward amount in inner coins", examples=[1000])
+    size: int | None = Field(
+        None, description="Optional size hint for the client", examples=[0]
+    )
+    expired: int | None = Field(
+        None, description="Expiration timestamp (unix seconds)", examples=[1733962020]
+    )
+    reward: int | None = Field(
+        None, ge=0, description="Reward amount in inner coins", examples=[1000]
+    )
     verify: str | None = Field(
         None,
         description="Verify module key (api/app/verify/*.py)",
@@ -68,8 +75,17 @@ class TaskSaveRequest(BaseModel):
         description="Verify params payload for the verify module",
         examples=[{"chat_id": -1002273788200}, {"count": 3}],
     )
-    priority: int | None = Field(None, description="Sorting priority (DESC)", examples=[1000])
-    status: int | None = Field(None, description="0=disabled/cancelled, 1=active", examples=[0])
+    priority: int | None = Field(
+        None, description="Sorting priority (DESC)", examples=[1000]
+    )
+    status: int | None = Field(
+        None, description="0=disabled/cancelled, 1=active", examples=[0]
+    )
+    network: str | None = Field(
+        None,
+        description="Optional network restriction (e.g., tg/vk/web). Converted via libdev.codes.get_network.",
+        examples=["tg"],
+    )
 
 
 class TaskSaveResponse(BaseModel):
@@ -127,6 +143,11 @@ async def handler(
         task.priority = data.priority
     if data.status is not None:
         task.status = int(data.status)
+    if data.network is not None:
+        if data.network:
+            task.network = get_network(data.network)
+        else:
+            del task.network
 
     changes = format_changes(task.get_changes())
     task.save()

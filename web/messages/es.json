@@ -81,21 +81,21 @@
   },
   "landing": {
     "hero": {
-      "title": "Crea un landing que convierta desde el primer día",
-      "subtitle": "FastAPI, Next.js 15 y Telegram unificados con bloques adaptativos y llamadas API tipadas.",
+      "title": "Lanza productos web, plataformas y servicios desde el primer día",
+      "subtitle": "Plataforma de lanzamiento full-stack con FastAPI, Next.js 15 y automatización en Telegram ya conectados.",
       "primaryCta": "Abrir catálogo",
       "secondaryCta": "Leer posts",
-      "badge": "Starter full-stack",
-      "heading": "Lanza más rápido con un landing adaptativo y multilenguaje",
-      "body": "Cuenta la historia con hero, prueba social, catálogo y onboarding ya conectados a tu API y mensajería.",
+      "badge": "Stack listo para lanzamiento",
+      "heading": "Un solo stack para poner en producción experiencias web más rápido",
+      "body": "Posiciona tu producto, integra usuarios y cobra desde un hub de lanzamiento adaptable: catálogo, posts y automatización conectados a tu API y mensajería.",
       "points": [
-        "Maquetado FSD listo para temas claro y oscuro",
-        "Datos estructurados, metadatos SEO y eventos listos para analítica",
-        "CTAs, toasts y hooks de Telegram listos para usar"
+        "Pipeline full-stack para sitios, SaaS, marketplaces y servicios con auth, catálogo, posts y tareas listos.",
+        "Metadatos SEO, datos estructurados y eventos de analítica afinados para lanzamientos y escala.",
+        "Flujos de CTA, toasts de onboarding y hooks de Telegram/VK/Mini App que capturan la demanda al instante."
       ],
       "snapshot": {
-        "title": "Lanzamientos este mes",
-        "value": "37 proyectos entregados",
+        "title": "Lanzamientos este trimestre",
+        "value": "42 productos en vivo",
         "cta": "Ver casos"
       },
       "stats": {
@@ -115,22 +115,22 @@
     },
     "howItWorks": {
       "title": "Cómo funciona",
-      "description": "Guía al visitante de la primera impresión a la activación en tres pasos.",
+      "description": "Pasa de idea a producto web en vivo en tres pasos enfocados.",
       "cta": "Ver recorrido",
       "steps": {
         "discover": {
-          "title": "Descubrir",
-          "description": "Hero, navegación y pruebas se adaptan al idioma y tema.",
+          "title": "Define la historia",
+          "description": "Hero, navegación y pruebas se alinean a tu producto, plataforma o servicio con bloques por locale.",
           "badge": "Paso 01"
         },
         "decide": {
-          "title": "Decidir",
-          "description": "Posts y catálogo resaltan resultados, precios y etiquetas.",
+          "title": "Conecta el stack",
+          "description": "Posts, catálogo y precios se nutren de tu API para mantener cada sección en tiempo real.",
           "badge": "Paso 02"
         },
         "act": {
-          "title": "Actuar",
-          "description": "Formularios, toasts y avisos en Telegram capturan la intención al instante.",
+          "title": "Lanza y itera",
+          "description": "Formularios, toasts y hooks de Telegram/VK/Mini App convierten el tráfico en usuarios de pago.",
           "badge": "Paso 03"
         }
       }
@@ -162,7 +162,7 @@
     },
     "products": {
       "title": "Productos destacados",
-      "description": "Muestra ofertas directo en el landing con valor y precio claros.",
+      "description": "Muestra ofertas directamente en tu hub de lanzamiento con valor y precio claros.",
       "viewAll": "Abrir catálogo",
       "currency": "$",
       "cta": "Ver detalles",
@@ -265,7 +265,7 @@
     "about": {
       "title": "Sobre nosotros",
       "description": "Equipo full-stack enfocado en lanzamientos previsibles.",
-      "heading": "Constructores API-first con flujos listos para Telegram",
+      "heading": "Constructores API-first para productos web, plataformas y servicios",
       "body": "Combinamos FastAPI, Next.js 15 y automatización en Telegram en un solo flujo. Cada bloque trae localización, metadatos para analítica y tipado estricto para lanzar sin retrabajo.",
       "cards": {
         "delivery": "Cultura de entrega",
@@ -305,6 +305,19 @@
   },
   "system": {
     "locale": "Idioma",
+    "network": "Red",
+    "networks": {
+      "all": "Todas las redes",
+      "web": "Web",
+      "tg": "Telegram",
+      "vk": "VKontakte",
+      "g": "Google",
+      "fb": "Facebook",
+      "a": "Apple",
+      "in": "LinkedIn",
+      "ig": "Instagram",
+      "max": "MAX"
+    },
     "worldwide": "En todo el mundo",
     "sign_out": "Cerrar sesión",
     "sign_in": "Iniciar sesión",

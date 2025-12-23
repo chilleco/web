@@ -11,6 +11,7 @@ import time
 
 from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel, Field
+from libdev.codes import NETWORKS
 from consys.errors import ErrorAccess
 
 from models.user import UserLocal
@@ -32,43 +33,33 @@ async def handler(
     request: Request,
     data: Type = Body(...),
 ):
-    if data.admin:
-        # Admin mode is used by `/admin/tasks` page to manage task definitions.
-        if request.state.status < 6:
-            raise ErrorAccess("get")
-
-        tasks = Task.complex(
-            ids=data.id,
-            limit=data.limit,
-            offset=data.offset,
-            fields={
-                "id",
-                "title",
-                "data",
-                "button",
-                "link",
-                "icon",
-                "size",
-                "reward",
-                "verify",
-                "params",
-                "priority",
-                "expired",
-                "color",
-                "status",
-                "created",
-                "updated",
-            },
-            sort="desc",
-            sortby="priority",
-        )
-
-        return {
-            "tasks": tasks,
-        }
-
+    if data.admin and request.state.status < 6:
+        raise ErrorAccess("admin")
     if request.state.status < 3:
         raise ErrorAccess("tasks")
+
+    fields = {
+        "id",
+        "title",
+        "data",
+        "button",
+        "link",
+        "icon",
+        "size",
+        "reward",
+        "priority",
+        "expired",
+        "color",
+    }
+    if data.admin:
+        fields |= {
+            "verify",
+            "params",
+            "status",
+            "created",
+            "updated",
+            "network",
+        }
 
     user = UserLocal.get(request.state.user)
 
@@ -86,36 +77,41 @@ async def handler(
             task["link"] = task["link"].format(
                 user.link
             )  # FIXME: or user.social_user ???
+        if task.get("network"):
+            task["network"] = NETWORKS[task["network"]]
         return task
+
+    conds = {}
+    if not data.admin:
+        conds = dict(
+            status={"$exists": False},  # =1
+            extra={
+                "$and": [
+                    {
+                        "$or": [
+                            {"expired": {"$exists": False}},
+                            {"expired": {"$gt": int(time.time())}},
+                        ]
+                    },
+                    {
+                        "$or": [
+                            {"network": {"$exists": False}},
+                            {"network": request.state.network},
+                        ]
+                    },
+                ]
+            },
+        )
 
     tasks = Task.complex(
         ids=data.id,
         limit=data.limit,
         offset=data.offset,
-        status={"$exists": False},  # =1
-        # Expiration is implemented via Base.expired (unix seconds); tasks without expired are always shown.
-        extra={
-            "$or": [
-                {"expired": {"$exists": False}},
-                {"expired": {"$gt": int(time.time())}},
-            ]
-        },
-        fields={
-            "id",
-            "title",
-            "data",
-            "button",
-            "link",
-            "icon",
-            "size",
-            "reward",
-            "priority",
-            "expired",
-            "color",
-        },
+        fields=fields,
+        **conds,
         handler=handle,
         sort="desc",
-        sortby="priority",
+        sortby="id" if data.admin else "priority",
     )
 
     # Stable sort by completion so incomplete tasks stay first while preserving priority order inside groups.

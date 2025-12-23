@@ -11,10 +11,12 @@ import {
   CoinsIcon,
   EditIcon,
   EyeIcon,
+  GlobeIcon,
   HideIcon,
   TagIcon,
   TrendingIcon,
 } from '@/shared/ui/icons';
+import { NETWORK_KEYS } from '@/shared/lib/codes';
 import { resolveLocalizedText, resolveTaskColorStyles, resolveTaskIcon } from '@/entities/task/lib/presentation';
 import type { Task } from '@/entities/task/model/task';
 
@@ -41,6 +43,14 @@ export function TaskListItem({ task, locale, onEdit, onToggleStatus }: TaskListI
   const statusLabel = task.status === 0 ? t('status.inactive') : t('status.active');
   const statusVariant = task.status === 0 ? 'destructive' : 'secondary';
   const verifyLabel = task.verify ? t('verify.value', { value: task.verify }) : t('verify.empty');
+
+  const networkLabel = useMemo(() => {
+    if (typeof task.network !== 'string') return null;
+    const normalized = task.network.trim();
+    if (!normalized) return null;
+    const isKnown = NETWORK_KEYS.includes(normalized as (typeof NETWORK_KEYS)[number]);
+    return isKnown ? tSystem(`networks.${normalized}`) : normalized;
+  }, [task.network, tSystem]);
 
   const rewardLabel = useMemo(() => {
     if (typeof task.reward !== 'number') return null;
@@ -88,6 +98,13 @@ export function TaskListItem({ task, locale, onEdit, onToggleStatus }: TaskListI
                 value: task.color,
               }
             : null,
+          networkLabel
+            ? {
+                icon: <GlobeIcon size={12} />,
+                keyLabel: tSystem('network'),
+                value: networkLabel,
+              }
+            : null,
           expiredLabel
             ? {
                 icon: <ClockIcon size={12} />,
@@ -126,4 +143,3 @@ export function TaskListItem({ task, locale, onEdit, onToggleStatus }: TaskListI
     />
   );
 }
-

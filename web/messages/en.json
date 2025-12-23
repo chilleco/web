@@ -81,21 +81,21 @@
   },
   "landing": {
     "hero": {
-      "title": "Build a landing that converts on day one",
-      "subtitle": "Unified FastAPI, Next.js 15, and Telegram toolkit with adaptive UI blocks and typed API calls.",
+      "title": "Launch web products, platforms, and services on day one",
+      "subtitle": "Full-stack launchpad with FastAPI, Next.js 15, and Telegram automation already wired in.",
       "primaryCta": "Open catalog",
       "secondaryCta": "Read posts",
-      "badge": "Full-stack starter",
-      "heading": "Launch faster with an adaptive, multilingual landing template",
-      "body": "Ship a confident story with hero, proof, catalog, and onboarding flows connected to your API and messaging stack.",
+      "badge": "Launch-ready stack",
+      "heading": "One stack to ship production-ready web experiences faster",
+      "body": "Position your product, onboard users, and run payments from a single adaptive launch hub—catalog, posts, and automation connected to your API and messaging.",
       "points": [
-        "FSD-driven layout with light & dark themes ready",
-        "Structured data, SEO metadata, and analytics-ready events",
-        "CTA buttons, toast feedback, and Telegram hooks out of the box"
+        "Full-stack pipeline for sites, SaaS, marketplaces, and services with auth, catalog, posts, and tasks ready.",
+        "SEO metadata, structured data, and analytics events tuned for launches and scale.",
+        "CTA flows, onboarding toasts, and Telegram/VK/Mini App hooks that capture demand instantly."
       ],
       "snapshot": {
-        "title": "Live launches this month",
-        "value": "37 projects shipped",
+        "title": "Launches this quarter",
+        "value": "42 products live",
         "cta": "See stories"
       },
       "stats": {
@@ -115,22 +115,22 @@
     },
     "howItWorks": {
       "title": "How it works",
-      "description": "Guide visitors from first impression to activation with three focused steps.",
+      "description": "Move from idea to live web product in three focused steps.",
       "cta": "View the journey",
       "steps": {
         "discover": {
-          "title": "Discover",
-          "description": "Hero banner, navigation, and proof points adapt to locale and theme.",
+          "title": "Shape the story",
+          "description": "Hero, navigation, and proof align to your product, platform, or service with locale-aware blocks.",
           "badge": "Step 01"
         },
         "decide": {
-          "title": "Decide",
-          "description": "Posts and catalog blocks spotlight outcomes, pricing, and tags.",
+          "title": "Connect the stack",
+          "description": "Posts, catalog, and pricing pull from your API so every section stays real-time.",
           "badge": "Step 02"
         },
         "act": {
-          "title": "Act",
-          "description": "Lead forms, toasts, and Telegram notifications capture intent immediately.",
+          "title": "Launch and iterate",
+          "description": "Lead forms, toasts, and Telegram/VK/Mini App hooks turn traffic into paying users.",
           "badge": "Step 03"
         }
       }
@@ -162,7 +162,7 @@
     },
     "products": {
       "title": "Featured products",
-      "description": "Surface offers directly on the landing with clear value and pricing.",
+      "description": "Surface offers directly in your launch hub with clear value and pricing.",
       "viewAll": "Open catalog",
       "currency": "$",
       "cta": "See details",
@@ -265,7 +265,7 @@
     "about": {
       "title": "About us",
       "description": "Full-stack team focused on predictable releases.",
-      "heading": "API-first builders with Telegram-ready flows",
+      "heading": "API-first builders for web products, platforms, and services",
       "body": "We combine FastAPI, Next.js 15, and Telegram automation into one workflow. Every block ships with localization, analytics metadata, and strict typing so teams can launch without rewrites.",
       "cards": {
         "delivery": "Delivery culture",
@@ -305,6 +305,19 @@
   },
   "system": {
     "locale": "Locale",
+    "network": "Network",
+    "networks": {
+      "all": "All networks",
+      "web": "Web",
+      "tg": "Telegram",
+      "vk": "VKontakte",
+      "g": "Google",
+      "fb": "Facebook",
+      "a": "Apple",
+      "in": "LinkedIn",
+      "ig": "Instagram",
+      "max": "MAX"
+    },
     "worldwide": "Worldwide",
     "sign_out": "Log Out",
     "sign_in": "Log In",

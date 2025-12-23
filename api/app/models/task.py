@@ -60,3 +60,4 @@ class Task(Base):
     status = Attribute(types=int, default=1)
     priority = Attribute(types=int, default=0)
     color = Attribute(types=str)
+    network = Attribute(types=int)

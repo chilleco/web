@@ -26,6 +26,7 @@ export interface Task {
   status?: number;
   expired?: number;
   size?: number;
+  network?: string;
   created?: number;
   updated?: number;
 }
@@ -65,6 +66,7 @@ export interface TaskSaveRequest {
   params?: Record<string, unknown>;
   priority?: number;
   status?: number;
+  network?: string;
 }
 
 export interface TaskSaveResponse {

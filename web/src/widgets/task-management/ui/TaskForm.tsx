@@ -10,6 +10,7 @@ import { Label } from '@/shared/ui/label';
 import { IconKeyInput } from '@/shared/ui/icon-key-input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { CancelIcon, CoinsIcon, LoadingIcon, SaveIcon } from '@/shared/ui/icons';
+import { NETWORK_KEYS } from '@/shared/lib/codes';
 import { cn } from '@/shared/lib/utils';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
@@ -20,6 +21,7 @@ const LOCALES = ['en', 'ru', 'es', 'zh', 'ar'] as const;
 type LocaleKey = (typeof LOCALES)[number];
 
 type LocalizedState = Record<LocaleKey, string>;
+type NetworkSelection = 'all' | (typeof NETWORK_KEYS)[number];
 
 const toLocalizedState = (value?: LocalizedText): LocalizedState => {
   const result = {} as LocalizedState;
@@ -84,13 +86,20 @@ const normalizeIconKey = (value: string) => {
   return rawKey.toLowerCase().replace(/[^a-z0-9-]/g, '');
 };
 
+const toNetworkSelection = (value?: string | null): NetworkSelection => {
+  if (typeof value !== 'string') return 'all';
+  const normalized = value.trim();
+  if (!normalized) return 'all';
+  return (NETWORK_KEYS.includes(normalized as (typeof NETWORK_KEYS)[number]) ? normalized : 'all') as NetworkSelection;
+};
+
 interface TaskFormProps {
   task?: Task;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-type ApiErrorField = 'title' | 'verify' | 'reward' | 'priority' | 'link' | 'icon' | 'color' | 'params' | 'expired' | 'status';
+type ApiErrorField = 'title' | 'verify' | 'reward' | 'priority' | 'link' | 'icon' | 'color' | 'params' | 'expired' | 'status' | 'network';
 
 export function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
   const t = useTranslations('admin.tasks');
@@ -113,6 +122,7 @@ export function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
   const [status, setStatus] = useState(task?.status === 0 ? '0' : '1');
   const [verify, setVerify] = useState(task?.verify ?? 'simple');
   const [paramsJson, setParamsJson] = useState(() => (task?.params ? JSON.stringify(task.params, null, 2) : ''));
+  const [network, setNetwork] = useState<NetworkSelection>(() => toNetworkSelection(task?.network));
 
   useEffect(() => {
     setTitle(toLocalizedState(task?.title));
@@ -127,12 +137,23 @@ export function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
     setStatus(task?.status === 0 ? '0' : '1');
     setVerify(task?.verify ?? 'simple');
     setParamsJson(task?.params ? JSON.stringify(task.params, null, 2) : '');
+    setNetwork(toNetworkSelection(task?.network));
     setApiErrorField(null);
   }, [task]);
 
   const titlePayload = useMemo(() => toLocalizedPayload(title), [title]);
   const dataPayload = useMemo(() => toLocalizedPayload(data), [data]);
   const buttonPayload = useMemo(() => toLocalizedPayload(button), [button]);
+  const networkOptions = useMemo(
+    () => [
+      { value: 'all', label: tSystem('networks.all') },
+      ...NETWORK_KEYS.map((key) => ({
+        value: key,
+        label: tSystem(`networks.${key}`),
+      })),
+    ],
+    [tSystem]
+  );
 
   const handleSubmit = async () => {
     setApiErrorField(null);
@@ -162,6 +183,7 @@ export function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
       expired: parseOptionalInt(expired),
       status: parseOptionalInt(status),
       verify: normalizeString(verify) || undefined,
+      network: network === 'all' ? '' : network,
     };
 
     const paramsText = paramsJson.trim();
@@ -193,6 +215,7 @@ export function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
       const nextField: ApiErrorField | null = detailKey.includes('title') ? 'title'
         : detailKey.includes('verify') ? 'verify'
         : detailKey.includes('chat_id') || detailKey.includes('count') || detailKey.includes('params') ? 'params'
+        : detailKey.includes('network') ? 'network'
         : null;
       setApiErrorField(nextField);
       showError(message);
@@ -221,7 +244,7 @@ export function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label>{t('fields.verify')}*</Label>
             <Select value={verify} onValueChange={setVerify}>
@@ -245,6 +268,22 @@ export function TaskForm({ task, onSuccess, onCancel }: TaskFormProps) {
               <SelectContent>
                 <SelectItem value="1" className="cursor-pointer">{t('status.active')}</SelectItem>
                 <SelectItem value="0" className="cursor-pointer">{t('status.inactive')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>{tSystem('network')}</Label>
+            <Select value={network} onValueChange={(value) => setNetwork(value as NetworkSelection)}>
+              <SelectTrigger className={cn('cursor-pointer', apiErrorField === 'network' ? 'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40' : '')} aria-invalid={apiErrorField === 'network'}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {networkOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value} className="cursor-pointer">
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
