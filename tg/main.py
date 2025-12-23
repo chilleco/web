@@ -22,7 +22,6 @@ WEB_URL = cfg("web")
 DEFAULT_LOCALE = cfg("locale", "en")
 START_TEXT = cfg("tg.start_text", "Open the app to continue.")
 START_BUTTON = cfg("tg.start_button", "Open app")
-SUPPORTED_LOCALES = {"en", "ru", "zh", "es", "ar"}
 
 bot: Bot | None = None
 dispatcher = Dispatcher()
@@ -40,16 +39,6 @@ def _build_headers(locale: str | None) -> dict[str, str]:
     if locale:
         headers["Accept-Language"] = locale
     return headers
-
-
-def _normalize_locale(locale: str | None) -> str:
-    if not locale:
-        return DEFAULT_LOCALE
-
-    base = locale.lower().split("-")[0]
-    if base in SUPPORTED_LOCALES:
-        return base
-    return DEFAULT_LOCALE
 
 
 def _parse_start_payload(payload: str | None) -> str | None:
@@ -82,7 +71,7 @@ def _build_app_url(utm: str | None, locale: str | None) -> str:
         return ""
 
     base = base.rstrip("/") + "/"
-    locale_segment = (_normalize_locale(locale) or "").strip()
+    locale_segment = (locale or DEFAULT_LOCALE or "").strip()
     if locale_segment:
         base = urljoin(base, f"{locale_segment}/")
 
@@ -137,18 +126,21 @@ async def _auth_user(user: types.User, utm: str | None) -> None:
         log.error("Missing API base URL for Telegram bot auth")
         return
 
+    image_url = await _get_avatar_url(user.id)
     payload: dict[str, Any] = {
         "user": user.id,
         "login": user.username,
         "name": user.first_name,
         "surname": user.last_name,
-        "image": None,
+        "image": image_url,
         "utm": utm,
     }
     headers = _build_headers(user.language_code)
     headers["Authorization"] = f"Bearer {token}"
 
+    print("!", payload)
     status, response = await fetch(f"{API_URL}users/bot/", payload, headers=headers)
+    print("!!!", status, response)
     if status == 401:
         _user_tokens.pop(user.id, None)
         token = await _get_user_token(user.id, utm, user.language_code)
@@ -193,6 +185,25 @@ async def _send_start_message(
     )
 
 
+async def _get_avatar_url(user_id: int) -> str | None:
+    if not bot or not TOKEN:
+        return None
+
+    try:
+        photos = await bot.get_user_profile_photos(user_id, limit=1)
+        if not photos.total_count or not photos.photos:
+            return None
+        photo = photos.photos[0][-1]
+        file = await bot.get_file(photo.file_id)
+        if not file.file_path:
+            return None
+    except Exception as exc:  # pylint: disable=broad-except
+        log.warning(f"Failed to fetch Telegram avatar: {exc}")
+        return None
+
+    return f"https://api.telegram.org/file/bot{TOKEN}/{file.file_path}"
+
+
 @router.message(CommandStart())
 async def handle_start(message: types.Message, command: CommandObject) -> None:
     if message.chat.type != "private" or not message.from_user:
@@ -200,6 +211,7 @@ async def handle_start(message: types.Message, command: CommandObject) -> None:
 
     args = command.args if command else None
     utm = _parse_start_payload(args)
+    print("!!", utm)
     await _auth_user(message.from_user, utm)
     await _send_start_message(
         chat_id=message.chat.id,
