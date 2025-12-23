@@ -12,7 +12,7 @@ import { getClientNetwork } from '@/shared/lib/app';
 import { useToastActions } from '@/shared/hooks/useToast';
 import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { useShare } from '@/features/share';
-import { getFrens } from '@/entities/user';
+import { getFrens, getTelegramShareMessage } from '@/entities/user';
 import type { FrenProfile } from '@/entities/user';
 
 const REFERRAL_PERCENT = ''; // TODO: 5
@@ -70,6 +70,17 @@ const openTelegramShare = (shareUrl: string) => {
     }
 
     return false;
+};
+
+const openTelegramShareMessage = (messageId: string) => {
+    if (typeof window === 'undefined') return false;
+    const tma = window.Telegram?.WebApp as
+        | { shareMessage?: (id: string, callback?: (sent: boolean) => void) => void }
+        | undefined;
+
+    if (!tma?.shareMessage) return false;
+    tma.shareMessage(messageId);
+    return true;
 };
 
 const openVkShare = async (url: string) => {
@@ -263,7 +274,9 @@ export default function SocialPage() {
     const [referralCode, setReferralCode] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isShareLoading, setIsShareLoading] = useState(false);
     const fetchInFlightRef = useRef(false);
+    const shareInFlightRef = useRef(false);
 
     const orderedFrens = useMemo(() => {
         return [...frens].sort((a, b) => {
@@ -310,27 +323,55 @@ export default function SocialPage() {
             return;
         }
 
-        const url = buildReferralUrl(referralKey);
-        const title = tSocial('shareTitle');
-        const text = tSocial('shareText');
-        const network = getClientNetwork();
+        if (shareInFlightRef.current) return;
+        shareInFlightRef.current = true;
+        setIsShareLoading(true);
 
-        if (network === 'tg') {
-            const targetUrl = buildTelegramTargetUrl(url, referralKey);
-            const shareUrl = buildTelegramShareUrl(targetUrl, text);
-            if (openTelegramShare(shareUrl)) return;
+        try {
+            const url = buildReferralUrl(referralKey);
+            const title = tSocial('shareTitle');
+            const text = tSocial('shareText');
+            const network = getClientNetwork();
+
+            if (network === 'tg') {
+                const tma = window.Telegram?.WebApp as
+                    | { shareMessage?: (id: string, callback?: (sent: boolean) => void) => void }
+                    | undefined;
+                if (tma?.shareMessage) {
+                    try {
+                        const shareMessage = await getTelegramShareMessage({
+                            url: buildTelegramTargetUrl(url, referralKey),
+                            text,
+                            button: tSystem('share'),
+                            image: 'https://placehold.co/600x400/png',
+                        });
+                        if (openTelegramShareMessage(shareMessage.id)) return;
+                    } catch {
+                        // Fallback to classic share link if prepared message fails.
+                    }
+                }
+
+                const targetUrl = buildTelegramTargetUrl(url, referralKey);
+                const shareUrl = buildTelegramShareUrl(targetUrl, text);
+                if (openTelegramShare(shareUrl)) return;
+            }
+
+            if (network === 'vk') {
+                if (await openVkShare(url)) return;
+            }
+
+            if (network === 'max') {
+                if (await openMaxShare({ url, title, text })) return;
+            }
+
+            share({ title, url });
+        } catch (err) {
+            showError(formatApiErrorMessage(err, tSystem('shareUnavailable')));
+        } finally {
+            shareInFlightRef.current = false;
+            setIsShareLoading(false);
         }
-
-        if (network === 'vk') {
-            if (await openVkShare(url)) return;
-        }
-
-        if (network === 'max') {
-            if (await openMaxShare({ url, title, text })) return;
-        }
-
-        share({ title, url });
-    }, [referralCode, referralLink, share, showError, tSocial]);
+    }, [formatApiErrorMessage, referralCode, referralLink, share, showError, tSocial, tSystem]);
 
     return (
         <div
@@ -363,7 +404,7 @@ export default function SocialPage() {
                 </div>
             </div>
 
-            <AddFriendsBar onAdd={handleAddFriends} disabled={sharing} />
+            <AddFriendsBar onAdd={handleAddFriends} disabled={sharing || isShareLoading} />
         </div>
     );
 }

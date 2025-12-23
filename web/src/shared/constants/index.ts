@@ -45,6 +45,7 @@ export const API_ENDPOINTS = {
     APP_MAX: '/users/app/max/',
     SOCIAL: '/users/social/',
     FRENS: '/users/frens/',
+    SHARE_TG: '/users/share/tg/',
   },
   POSTS: {
     LIST: '/posts/',

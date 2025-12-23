@@ -95,3 +95,15 @@ export interface FrensResponse {
   count: number;
   referral_link?: string | null;
 }
+
+export interface TelegramShareRequest {
+  url?: string;
+  text: string;
+  button?: string;
+  image?: string;
+}
+
+export interface TelegramShareResponse {
+  id: string;
+  expiration_date: number;
+}

@@ -7,6 +7,8 @@ import type {
   RegisterRequest,
   SaveUserRequest,
   FrensResponse,
+  TelegramShareRequest,
+  TelegramShareResponse,
 } from '../model/user';
 
 export async function loginUser(credentials: LoginRequest): Promise<LoginResponse> {
@@ -69,4 +71,10 @@ export interface GetFrensParams {
 
 export async function getFrens(params: GetFrensParams = {}): Promise<FrensResponse> {
   return apiWithoutGlobalErrors.post<FrensResponse>(API_ENDPOINTS.USERS.FRENS, params);
+}
+
+export async function getTelegramShareMessage(
+  data: TelegramShareRequest
+): Promise<TelegramShareResponse> {
+  return apiWithoutGlobalErrors.post<TelegramShareResponse>(API_ENDPOINTS.USERS.SHARE_TG, data);
 }
