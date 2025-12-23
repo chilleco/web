@@ -83,12 +83,20 @@ const openTelegramShareMessage = (messageId: string) => {
     return true;
 };
 
-const openVkShare = async (url: string) => {
+const openVkShare = async ({ url, text }: { url: string; text?: string }) => {
     if (typeof window === 'undefined') return false;
     const bridge = window.vkBridge;
     if (!bridge?.send) return false;
 
     try {
+        if (text) {
+            try {
+                await bridge.send('VKWebAppShare', { link: url, text });
+                return true;
+            } catch {
+                // Retry without text for older VK Bridge versions.
+            }
+        }
         await bridge.send('VKWebAppShare', { link: url });
         return true;
     } catch {
@@ -277,6 +285,7 @@ export default function SocialPage() {
     const [isShareLoading, setIsShareLoading] = useState(false);
     const fetchInFlightRef = useRef(false);
     const shareInFlightRef = useRef(false);
+    const canShare = Boolean(referralLink || referralCode !== null);
 
     const orderedFrens = useMemo(() => {
         return [...frens].sort((a, b) => {
@@ -332,6 +341,7 @@ export default function SocialPage() {
             const title = tSocial('shareTitle');
             const text = tSocial('shareText');
             const network = getClientNetwork();
+            const hasVkBridge = typeof window !== 'undefined' && !!window.vkBridge?.send;
 
             if (network === 'tg') {
                 const tma = window.Telegram?.WebApp as
@@ -356,8 +366,9 @@ export default function SocialPage() {
                 if (openTelegramShare(shareUrl)) return;
             }
 
-            if (network === 'vk') {
-                if (await openVkShare(url)) return;
+            if (network === 'vk' || hasVkBridge) {
+                const shareMessage = text ? `${text} ${url}` : url;
+                if (await openVkShare({ url, text: shareMessage })) return;
             }
 
             if (network === 'max') {
@@ -404,7 +415,7 @@ export default function SocialPage() {
                 </div>
             </div>
 
-            <AddFriendsBar onAdd={handleAddFriends} disabled={sharing || isShareLoading} />
+            <AddFriendsBar onAdd={handleAddFriends} disabled={sharing || isShareLoading || isLoading || !canShare} />
         </div>
     );
 }

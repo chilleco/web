@@ -29,6 +29,10 @@ const shouldDelayCheck = (link?: string) => {
 const openTaskLink = (link: string) => {
     if (typeof window === 'undefined') return;
     if (link === 'story') return;
+    if ((link.startsWith('/') && !link.startsWith('//')) || link.startsWith('./')) {
+        window.location.assign(link);
+        return;
+    }
 
     const tma = window.Telegram?.WebApp as
         | { openTelegramLink?: (url: string) => void; openLink?: (url: string) => void }

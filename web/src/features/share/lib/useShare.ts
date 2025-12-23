@@ -32,9 +32,26 @@ export function useShare({ shareMessage, unavailableMessage, errorMessage }: Use
 
       try {
         if (supportsNativeShare) {
-          await navigator.share({ title, url });
-          success(shareMessage);
-          return;
+          try {
+            await navigator.share({ title, url });
+            success(shareMessage);
+            return;
+          } catch (err) {
+            if (err instanceof DOMException && err.name === 'AbortError') return;
+
+            if (supportsClipboard) {
+              try {
+                await navigator.clipboard.writeText(url);
+                success(shareMessage);
+                return;
+              } catch {
+                // Fall through to unavailable message.
+              }
+            }
+
+            error(unavailableMessage);
+            return;
+          }
         }
 
         if (supportsClipboard) {
@@ -44,9 +61,8 @@ export function useShare({ shareMessage, unavailableMessage, errorMessage }: Use
         }
 
         error(unavailableMessage);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : errorMessage;
-        error(message);
+      } catch {
+        error(errorMessage);
       } finally {
         setSharing(false);
       }
