@@ -64,11 +64,18 @@ async def update_utm(user, global_user, utm):
     if isinstance(referrer_id, int) and referrer_id > 0:
         try:
             global_referrer = await complex_global_users(
-                ids=referrer_id,
-                fields=USER_FIELDS,
+                id=referrer_id,
+                # TODO: link=utm,
+                fields=list(USER_FIELDS),  # TODO: serialize in method
             )
-        except Exception:  # pylint: disable=broad-except
-            global_referrer = None
+        except Exception as e:  # pylint: disable=broad-except
+            log.error(f"Getting global referrer for #{referrer_id}: {e}")
+        # else:
+        #     print("!@#", len(global_referrers))
+        #     if len(global_referrers) == 1:
+        #         global_referrer = global_referrers[0]
+        #     else:
+        #         log.error(f"Many users for #{referrer_id}: {len(global_referrers)}")
 
     if not global_referrer:
         if user.utm:

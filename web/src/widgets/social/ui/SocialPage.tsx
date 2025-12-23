@@ -342,7 +342,7 @@ export default function SocialPage() {
                         const shareMessage = await getTelegramShareMessage({
                             url: buildTelegramTargetUrl(url, referralKey),
                             text,
-                            button: tSystem('share'),
+                            button: tSystem('open'),
                             image: 'https://placehold.co/600x400/png',
                         });
                         if (openTelegramShareMessage(shareMessage.id)) return;

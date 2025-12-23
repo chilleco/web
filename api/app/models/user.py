@@ -89,6 +89,11 @@ class UserLocal(Base):
 
 
 async def complex_global_users(**kwargs):
+    # NOTE: get specified user only by `id=<int / list>`, return object, not list
+    # FIXME: ids=<int> doesn't work
+    # FIXME: id=[referrer_id]
+    # FIXME: id={"$in": [referrer_id]}
+    # TODO: convert set to list
     return await User.complex(
         token=ADMIN_TOKEN,  # FIXME: app token in userhub
         **kwargs,
@@ -171,7 +176,7 @@ async def fetch_user_profiles(
 
     try:
         global_users = await complex_global_users(
-            ids=user_ids,
+            id=user_ids,
             fields=list(global_fields or {"id", "login", "name", "surname", "title"}),
         )
         if global_users:
