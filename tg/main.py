@@ -1,4 +1,6 @@
 import asyncio
+import json
+from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, parse_qsl, urlencode, urljoin, urlparse, urlunparse
 
@@ -20,8 +22,7 @@ WEBHOOK_SECRET = cfg("tg.secret")
 API_URL = cfg("api")
 WEB_URL = cfg("web")
 DEFAULT_LOCALE = cfg("locale", "en")
-START_TEXT = cfg("tg.start_text", "Open the app to continue.")
-START_BUTTON = cfg("tg.start_button", "Open app")
+MESSAGES_DIR = Path(__file__).resolve().parent / "messages"
 
 bot: Bot | None = None
 dispatcher = Dispatcher()
@@ -34,11 +35,66 @@ _user_tokens: dict[int, str] = {}
 _token_lock = asyncio.Lock()
 
 
+def _load_localized_texts() -> dict[str, dict[str, str]]:
+    texts: dict[str, dict[str, str]] = {}
+    if not MESSAGES_DIR.exists():
+        return texts
+
+    for path in MESSAGES_DIR.glob("*.json"):
+        locale = path.stem
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:  # pylint: disable=broad-except
+            log.warning(f"Failed to load {path.name}: {exc}")
+            continue
+
+        texts[locale] = {
+            "text": data.get("start_text"),
+            "button": data.get("start_button"),
+        }
+
+    return texts
+
+
+LOCALIZED_TEXTS = _load_localized_texts()
+SUPPORTED_LOCALES = set(LOCALIZED_TEXTS.keys())
+
+
 def _build_headers(locale: str | None) -> dict[str, str]:
     headers: dict[str, str] = {}
     if locale:
         headers["Accept-Language"] = locale
     return headers
+
+
+def _resolve_text_locale(locale: str | None) -> str:
+    fallback = DEFAULT_LOCALE if DEFAULT_LOCALE in LOCALIZED_TEXTS else "en"
+    if not locale:
+        return fallback
+
+    key = locale.lower().replace("_", "-").split("-")[0]
+    if key in SUPPORTED_LOCALES and key in LOCALIZED_TEXTS:
+        return key
+    return fallback
+
+
+def _resolve_texts(locale: str | None) -> tuple[str, str]:
+    text_locale = _resolve_text_locale(locale)
+    current = LOCALIZED_TEXTS.get(text_locale)
+    if current and current.get("text") and current.get("button"):
+        return current["text"], current["button"]
+
+    fallback_locale = DEFAULT_LOCALE if DEFAULT_LOCALE in LOCALIZED_TEXTS else "en"
+    fallback = LOCALIZED_TEXTS.get(fallback_locale)
+    if fallback and fallback.get("text") and fallback.get("button"):
+        return fallback["text"], fallback["button"]
+
+    for value in LOCALIZED_TEXTS.values():
+        if value.get("text") and value.get("button"):
+            return value["text"], value["button"]
+
+    log.error("Missing localized bot messages")
+    return "", ""
 
 
 def _parse_start_payload(payload: str | None) -> str | None:
@@ -166,11 +222,15 @@ async def _send_start_message(
         log.error("Missing WEB base URL for Telegram mini app link")
         return
 
+    text, button = _resolve_texts(locale)
+    if not text or not button:
+        return
+
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=START_BUTTON,
+                    text=button,
                     web_app=WebAppInfo(url=url),
                 )
             ]
@@ -179,7 +239,7 @@ async def _send_start_message(
 
     await bot.send_message(
         chat_id=chat_id,
-        text=START_TEXT,
+        text=text,
         reply_markup=keyboard,
         disable_web_page_preview=True,
     )

@@ -72,5 +72,6 @@ DATA_PATH=~/data/web
 ## Telegram bot (webhooks)
 - Service lives in `tg/` and runs a FastAPI webhook handler behind `/tg/`.
 - Required env: `TG_TOKEN` (bot token) and `TG` (public webhook URL like `https://host/tg/`).
-- Optional env: `TG_SECRET` (webhook secret header), `TG_START_TEXT`, `TG_START_BUTTON`.
+- Optional env: `TG_SECRET` (webhook secret header).
 - `/start` payload is treated as `utm` and forwarded to auth; the bot replies with a WebApp button to open the Mini App.
+- Bot message localization lives in `tg/messages/*.json` (en/ru/zh/es/ar).

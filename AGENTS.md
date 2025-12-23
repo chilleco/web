@@ -5,7 +5,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 
 ## Architecture & Structure
 - Services: `api/` FastAPI backend; `web/` Next.js 15 + TypeScript (dirs: `src/app`, `entities`, `features`, `widgets`, `shared`, `i18n`, `styles`); `tg/` Telegram worker; `infra/` Docker Compose; `data/` runtime storage.
-- Telegram bot: `tg/main.py` handles webhook updates (proxied via `/tg/`), authenticates via `/users/token/` + `/users/bot/` with `utm` from `/start`, and replies with a WebApp button built from `WEB`.
+- Telegram bot: `tg/main.py` handles webhook updates (proxied via `/tg/`), authenticates via `/users/token/` + `/users/bot/` with `utm` from `/start`, and replies with a WebApp button built from `WEB`. Localized bot messages live in `tg/messages/{locale}.json` (five locales only).
 - Localization: bundles in `web/messages/*.json`; per-locale routing under `web/src/app/[locale]/**`. All user-facing text must use locale files.
 
 ## Background Jobs (Taskiq)
