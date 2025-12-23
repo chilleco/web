@@ -1,4 +1,5 @@
 {
   "start_text": "Open the app to continue.",
-  "start_button": "Open app"
+  "start_button": "Open app",
+  "auth_text": "You are authed as {user}"
 }

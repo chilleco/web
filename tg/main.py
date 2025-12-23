@@ -5,12 +5,13 @@ from typing import Any
 from urllib.parse import parse_qs, parse_qsl, urlencode, urljoin, urlparse, urlunparse
 
 from aiogram import Bot, Dispatcher, Router, types
-from aiogram.filters import CommandStart
+from aiogram.filters import Command, CommandStart
 from aiogram.filters.command import CommandObject
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Update, WebAppInfo
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from libdev.cfg import cfg
+from libdev.codes import get_flag
 from libdev.gen import generate
 from libdev.log import log
 from libdev.req import fetch
@@ -49,8 +50,9 @@ def _load_localized_texts() -> dict[str, dict[str, str]]:
             continue
 
         texts[locale] = {
-            "text": data.get("start_text"),
-            "button": data.get("start_button"),
+            "start_text": data.get("start_text"),
+            "start_button": data.get("start_button"),
+            "auth_text": data.get("auth_text"),
         }
 
     return texts
@@ -78,23 +80,51 @@ def _resolve_text_locale(locale: str | None) -> str:
     return fallback
 
 
-def _resolve_texts(locale: str | None) -> tuple[str, str]:
+def _resolve_message(locale: str | None, key: str) -> str:
     text_locale = _resolve_text_locale(locale)
     current = LOCALIZED_TEXTS.get(text_locale)
-    if current and current.get("text") and current.get("button"):
-        return current["text"], current["button"]
+    if current and current.get(key):
+        return current[key]
 
     fallback_locale = DEFAULT_LOCALE if DEFAULT_LOCALE in LOCALIZED_TEXTS else "en"
     fallback = LOCALIZED_TEXTS.get(fallback_locale)
-    if fallback and fallback.get("text") and fallback.get("button"):
-        return fallback["text"], fallback["button"]
+    if fallback and fallback.get(key):
+        return fallback[key]
 
     for value in LOCALIZED_TEXTS.values():
-        if value.get("text") and value.get("button"):
-            return value["text"], value["button"]
+        if value.get(key):
+            return value[key]
 
-    log.error("Missing localized bot messages")
-    return "", ""
+    log.error(f"Missing localized bot message: {key}")
+    return ""
+
+
+def _build_auth_label(user: types.User) -> str:
+    locale = _resolve_text_locale(user.language_code)
+    try:
+        flag = get_flag(locale)
+    except Exception:  # pylint: disable=broad-except
+        flag = ""
+
+    name = " ".join(part for part in [user.first_name, user.last_name] if part)
+    login = f"@{user.username}" if user.username else ""
+
+    pieces = [part for part in [flag, name] if part]
+    text = " ".join(pieces)
+    if login:
+        text = f"{text} ({login})" if text else login
+    return text
+
+
+def _build_auth_text(user: types.User) -> str:
+    template = _resolve_message(user.language_code, "auth_text")
+    if not template:
+        return ""
+    try:
+        return template.format(user=_build_auth_label(user))
+    except Exception as exc:  # pylint: disable=broad-except
+        log.warning(f"Failed to format auth text: {exc}")
+        return ""
 
 
 def _parse_start_payload(payload: str | None) -> str | None:
@@ -194,9 +224,7 @@ async def _auth_user(user: types.User, utm: str | None) -> None:
     headers = _build_headers(user.language_code)
     headers["Authorization"] = f"Bearer {token}"
 
-    print("!", payload)
     status, response = await fetch(f"{API_URL}users/bot/", payload, headers=headers)
-    print("!!!", status, response)
     if status == 401:
         _user_tokens.pop(user.id, None)
         token = await _get_user_token(user.id, utm, user.language_code)
@@ -222,7 +250,8 @@ async def _send_start_message(
         log.error("Missing WEB base URL for Telegram mini app link")
         return
 
-    text, button = _resolve_texts(locale)
+    text = _resolve_message(locale, "start_text")
+    button = _resolve_message(locale, "start_button")
     if not text or not button:
         return
 
@@ -241,6 +270,22 @@ async def _send_start_message(
         chat_id=chat_id,
         text=text,
         reply_markup=keyboard,
+        disable_web_page_preview=True,
+    )
+
+
+async def _send_auth_message(chat_id: int, user: types.User) -> None:
+    if not bot:
+        log.error("Telegram bot is not initialized")
+        return
+
+    text = _build_auth_text(user)
+    if not text:
+        return
+
+    await bot.send_message(
+        chat_id=chat_id,
+        text=text,
         disable_web_page_preview=True,
     )
 
@@ -271,13 +316,22 @@ async def handle_start(message: types.Message, command: CommandObject) -> None:
 
     args = command.args if command else None
     utm = _parse_start_payload(args)
-    print("!!", utm)
     await _auth_user(message.from_user, utm)
+    await _send_auth_message(message.chat.id, message.from_user)
     await _send_start_message(
         chat_id=message.chat.id,
         utm=utm,
         locale=message.from_user.language_code,
     )
+
+
+@router.message(Command("help", "info", "about"))
+async def handle_info(message: types.Message) -> None:
+    if message.chat.type != "private" or not message.from_user:
+        return
+
+    await _auth_user(message.from_user, None)
+    await _send_auth_message(message.chat.id, message.from_user)
 
 
 @app.post("/")

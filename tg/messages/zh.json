@@ -1,4 +1,5 @@
 {
-  "start_text": "\u6253\u5f00\u5e94\u7528\u4ee5\u7ee7\u7eed\u3002",
-  "start_button": "\u6253\u5f00\u5e94\u7528"
+  "start_text": "打开应用以继续。",
+  "start_button": "打开应用",
+  "auth_text": "你已授权为 {user}"
 }
