@@ -49,6 +49,11 @@ services:
       # For hot reload
       - ../../api/app:/app
 
+  tg:
+    volumes:
+      - ../../tg:/app
+    command: bash -c "cd /app && uv run uvicorn main:app --host 0.0.0.0 --port 80 --proxy-headers --reload"
+
   web:
     build:
       context: ../../web
