@@ -37,6 +37,22 @@ const buildReferralUrl = (referralKey: string) => {
     return url.toString();
 };
 
+const buildVkReferralUrl = (referralKey: string) => {
+    if (typeof window === 'undefined') return '';
+
+    const appIdFromPath = window.location.pathname.match(/\/app(\d+)/)?.[1] ?? null;
+    const searchParams = new URLSearchParams(window.location.search);
+    const appId = appIdFromPath || searchParams.get('vk_app_id');
+
+    if (!appId) {
+        return buildReferralUrl(referralKey);
+    }
+
+    const url = new URL(`https://vk.com/app${appId}`);
+    url.searchParams.set('utm', referralKey);
+    return url.toString();
+};
+
 const buildTelegramShareUrl = (targetUrl: string, text: string) => {
     const shareUrl = new URL('https://t.me/share/url');
     shareUrl.searchParams.set('url', targetUrl);
@@ -337,11 +353,11 @@ export default function SocialPage() {
         setIsShareLoading(true);
 
         try {
-            const url = buildReferralUrl(referralKey);
-            const title = tSocial('shareTitle');
-            const text = tSocial('shareText');
             const network = getClientNetwork();
             const hasVkBridge = typeof window !== 'undefined' && !!window.vkBridge?.send;
+            const url = network === 'vk' || hasVkBridge ? buildVkReferralUrl(referralKey) : buildReferralUrl(referralKey);
+            const title = tSocial('shareTitle');
+            const text = tSocial('shareText');
 
             if (network === 'tg') {
                 const tma = window.Telegram?.WebApp as
