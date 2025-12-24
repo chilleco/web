@@ -60,7 +60,7 @@ export default function proxy(request: NextRequest) {
         return NextResponse.redirect(redirectUrl);
     }
 
-    if (requiresModerator(pathname)) {
+    if (requiresModerator(pathname) && !isAppRequest) {
         if (!authCookie || status === null || status < 4) {
             const url = request.nextUrl.clone();
             url.pathname = '/';
