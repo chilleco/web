@@ -39,6 +39,7 @@ export function MobileBottomBar() {
     const user = useAppSelector(selectAuthUser);
     const navRef = useRef<HTMLElement | null>(null);
     const vkLaunchQuery = getVkLaunchQuery();
+    const vkLaunchKeys = useMemo(() => (vkLaunchQuery ? Object.keys(vkLaunchQuery) : []), [vkLaunchQuery]);
 
     const items = useMemo<BottomNavItem[]>(
         () => [
@@ -98,6 +99,18 @@ export function MobileBottomBar() {
     }, [shouldShowBar]);
 
     const handleNavigate = (path: RouteHref) => {
+        if (shouldShowBar && typeof window !== 'undefined') {
+            const pathLabel = typeof path === 'string' ? path : path.pathname;
+            const pathQueryKeys = typeof path === 'string' ? [] : Object.keys(path.query ?? {});
+            console.info('[nav] click', {
+                path: pathLabel,
+                pathname,
+                href: window.location.href,
+                vkLaunchKeys,
+                pathQueryKeys,
+            });
+        }
+
         if (!vkLaunchQuery) {
             router.push(path);
             return;
@@ -110,6 +123,17 @@ export function MobileBottomBar() {
 
         router.push({ ...path, query: { ...vkLaunchQuery, ...(path.query ?? {}) } });
     };
+
+    useEffect(() => {
+        if (!shouldShowBar || typeof window === 'undefined') return;
+        console.info('[nav] route', {
+            pathname,
+            href: window.location.href,
+            isApp,
+            isAppDetected,
+            vkLaunchKeys,
+        });
+    }, [isApp, isAppDetected, pathname, shouldShowBar, vkLaunchKeys]);
 
     const isActive = (path: RouteHref) => {
         if (typeof path !== 'string') {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { Box } from '@/shared/ui/box';
@@ -216,6 +216,14 @@ export default function SettingsPage() {
     const { success: showSuccess, error: showError } = useToastActions();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        console.info('[settings] mount', { href: window.location.href });
+        return () => {
+            console.info('[settings] unmount', { href: window.location.href });
+        };
+    }, []);
 
     const handleNavigate = (path: RouteHref) => {
         router.push(path);

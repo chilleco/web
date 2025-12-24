@@ -46,8 +46,20 @@ export default function proxy(request: NextRequest) {
 
     const authCookie = request.cookies.get('Authorization')?.value || request.cookies.get('authToken')?.value;
     const status = getStatusFromJwt(authCookie);
+    const shouldLog = pathname.startsWith('/settings') || pathname.startsWith('/profile') || pathname.startsWith('/billing');
+
+    if (shouldLog) {
+        console.info('[proxy] request', {
+            pathname,
+            hasAuthCookie: Boolean(authCookie),
+            status,
+        });
+    }
 
     if (requiresAuth(pathname) && !authCookie) {
+        if (shouldLog) {
+            console.info('[proxy] redirect', { pathname, reason: 'auth-required' });
+        }
         const url = request.nextUrl.clone();
         url.pathname = '/';
         return NextResponse.redirect(url);
@@ -55,12 +67,18 @@ export default function proxy(request: NextRequest) {
 
     if (requiresModerator(pathname)) {
         if (!authCookie || status === null || status < 4) {
+            if (shouldLog) {
+                console.info('[proxy] redirect', { pathname, reason: 'moderator-required', status });
+            }
             const url = request.nextUrl.clone();
             url.pathname = '/';
             return NextResponse.redirect(url);
         }
     }
 
+    if (shouldLog) {
+        console.info('[proxy] allow', { pathname });
+    }
     return response;
 }
 

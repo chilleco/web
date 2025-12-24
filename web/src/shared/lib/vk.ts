@@ -1,5 +1,23 @@
 const VK_LAUNCH_PARAMS_KEY = 'vk-launch-params';
 
+const shouldLogVk = () => {
+    if (typeof window === 'undefined') return false;
+    const params = getVkQueryParams();
+    if (params?.has('vk_debug') || params?.has('vk_user_id') || params?.has('sign')) {
+        return true;
+    }
+    try {
+        return Boolean(sessionStorage.getItem(VK_LAUNCH_PARAMS_KEY));
+    } catch {
+        return false;
+    }
+};
+
+const logVk = (message: string, details?: Record<string, unknown>) => {
+    if (!shouldLogVk()) return;
+    console.info(`[vk] ${message}`, details ?? {});
+};
+
 const getVkQueryParams = () => {
     if (typeof window === 'undefined') {
         return null;
@@ -32,6 +50,10 @@ const storeVkLaunchParams = (params: URLSearchParams) => {
     if (typeof window === 'undefined') return;
     try {
         sessionStorage.setItem(VK_LAUNCH_PARAMS_KEY, params.toString());
+        logVk('stored launch params', {
+            keys: Array.from(params.keys()),
+            pathname: window.location.pathname,
+        });
     } catch {
         // Ignore storage failures (private mode or disabled storage).
     }
@@ -43,7 +65,14 @@ const readStoredVkLaunchParams = () => {
         const stored = sessionStorage.getItem(VK_LAUNCH_PARAMS_KEY);
         if (!stored) return null;
         const params = new URLSearchParams(stored);
-        return isValidVkLaunchParams(params) ? params : null;
+        if (!isValidVkLaunchParams(params)) {
+            return null;
+        }
+        logVk('read launch params from session', {
+            keys: Array.from(params.keys()),
+            pathname: window.location.pathname,
+        });
+        return params;
     } catch {
         return null;
     }
@@ -54,10 +83,20 @@ export const getVkLaunchParams = () => {
     if (isValidVkLaunchParams(params)) {
         const filtered = filterVkLaunchParams(params);
         storeVkLaunchParams(filtered);
+        logVk('launch params from url', {
+            keys: Array.from(filtered.keys()),
+            pathname: window.location.pathname,
+        });
         return filtered;
     }
 
-    return readStoredVkLaunchParams();
+    const stored = readStoredVkLaunchParams();
+    if (!stored) {
+        logVk('launch params missing', {
+            pathname: typeof window !== 'undefined' ? window.location.pathname : '',
+        });
+    }
+    return stored;
 };
 
 export const getVkLaunchQuery = () => {
