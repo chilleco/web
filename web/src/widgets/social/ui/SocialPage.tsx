@@ -104,20 +104,29 @@ const openVkShare = async ({ url, text }: { url: string; text?: string }) => {
     const bridge = window.vkBridge;
     if (!bridge?.send) return false;
 
-    try {
+    const shareParams = text ? { link: url, text } : { link: url };
+    const fallbackParams = { link: url };
+    const shareMethods = ['VKWebAppShowShareDialog', 'VKWebAppShare'];
+
+    for (const method of shareMethods) {
+        try {
+            await bridge.send(method, shareParams);
+            return true;
+        } catch {
+            // Try the next VK Bridge share method.
+        }
+
         if (text) {
             try {
-                await bridge.send('VKWebAppShare', { link: url, text });
+                await bridge.send(method, fallbackParams);
                 return true;
             } catch {
-                // Retry without text for older VK Bridge versions.
+                // Try the next VK Bridge share method.
             }
         }
-        await bridge.send('VKWebAppShare', { link: url });
-        return true;
-    } catch {
-        return false;
     }
+
+    return false;
 };
 
 const openMaxShare = async ({
@@ -383,8 +392,7 @@ export default function SocialPage() {
             }
 
             if (network === 'vk' || hasVkBridge) {
-                const shareMessage = text ? `${text} ${url}` : url;
-                if (await openVkShare({ url, text: shareMessage })) return;
+                if (await openVkShare({ url, text })) return;
             }
 
             if (network === 'max') {

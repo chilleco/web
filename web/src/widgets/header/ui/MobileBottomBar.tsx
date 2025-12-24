@@ -11,6 +11,7 @@ import { selectAuthUser, selectIsAuthenticated } from '@/features/auth';
 import { useAppSelector } from '@/shared/stores/store';
 import { selectIsApp } from '@/shared/stores/layoutSlice';
 import { isApp as detectIsApp } from '@/shared/lib/app';
+import { getVkLaunchQuery } from '@/shared/lib/vk';
 
 type RouteHref = Parameters<ReturnType<typeof useRouter>['push']>[0];
 
@@ -37,6 +38,7 @@ export function MobileBottomBar() {
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const user = useAppSelector(selectAuthUser);
     const navRef = useRef<HTMLElement | null>(null);
+    const vkLaunchQuery = getVkLaunchQuery();
 
     const items = useMemo<BottomNavItem[]>(
         () => [
@@ -96,7 +98,17 @@ export function MobileBottomBar() {
     }, [shouldShowBar]);
 
     const handleNavigate = (path: RouteHref) => {
-        router.push(path);
+        if (!vkLaunchQuery) {
+            router.push(path);
+            return;
+        }
+
+        if (typeof path === 'string') {
+            router.push({ pathname: path, query: vkLaunchQuery });
+            return;
+        }
+
+        router.push({ ...path, query: { ...vkLaunchQuery, ...(path.query ?? {}) } });
     };
 
     const isActive = (path: RouteHref) => {
