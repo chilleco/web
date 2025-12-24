@@ -48,6 +48,86 @@ services:
       #   timeout: 10s
       #   retries: 3
 
+  worker:
+    image: ${REGISTRY}/${PROJECT_NAME}/api:latest
+    env_file: .env
+    environment:
+      API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
+      WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
+      RELEASE: ${RELEASE}
+      LOG_FILE: /logs/worker.log
+      ERR_FILE: /logs/worker.err
+    volumes:
+      - ${DATA_PATH}/load:/data/load
+      - ${DATA_PATH}/backup:/backup
+      # For sitemap
+      - ${DATA_PATH}/sitemaps:/data/sitemaps
+      - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
+      - ${DATA_PATH}/robots.txt:/data/robots.txt
+      # For logs
+      - ${DATA_PATH}/logs/worker.log:/logs/worker.log
+      - ${DATA_PATH}/logs/worker.err:/logs/worker.err
+    command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks.registry --workers 2 --log-level INFO"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        preferences:
+          - spread: node.labels.worker
+        max_replicas_per_node: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+        reservations:
+          cpus: "0.2"
+          memory: 256M
+
+  scheduler:
+    image: ${REGISTRY}/${PROJECT_NAME}/api:latest
+    env_file: .env
+    environment:
+      API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
+      WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
+      RELEASE: ${RELEASE}
+      LOG_FILE: /logs/scheduler.log
+      ERR_FILE: /logs/scheduler.err
+    volumes:
+      # For logs
+      - ${DATA_PATH}/logs/scheduler.log:/logs/scheduler.log
+      - ${DATA_PATH}/logs/scheduler.err:/logs/scheduler.err
+    command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks.registry --log-level INFO"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        preferences:
+          - spread: node.labels.worker
+        max_replicas_per_node: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
   web:
     image: ${REGISTRY}/${PROJECT_NAME}/web:latest
     env_file: .env

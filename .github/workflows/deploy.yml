@@ -187,10 +187,14 @@ jobs:
             # force update all services to ensure new images are deployed
             # this handles cases where services are at max replicas per node
             echo "Force updating services to ensure latest images are deployed..."
-            for service in api web tg; do
+            for service in api web tg worker scheduler; do
+              image_suffix="$service"
+              if [ "$service" = "worker" ] || [ "$service" = "scheduler" ]; then
+                image_suffix="api"
+              fi
               echo "Updating ${STACK}_${service} with stop-first strategy to avoid replica-limit deadlocks..."
               sudo docker service update \
-                --image $REGISTRY/$PROJECT_NAME/${service}:latest \
+                --image $REGISTRY/$PROJECT_NAME/${image_suffix}:latest \
                 --update-order stop-first \
                 --update-parallelism 1 \
                 --force \

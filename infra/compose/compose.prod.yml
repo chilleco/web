@@ -13,23 +13,11 @@ services:
       - ${API_PORT}:5000
     command: bash -c "cd /app && uv run uvicorn main:app --host 0.0.0.0 --port 5000 --proxy-headers"
 
-  # jobs:
-  #   image: ${PROJECT_NAME}/jobs
-  #   build: ../../api
-  #   restart: unless-stopped
-  #   env_file: ../../.env
-  #   environment:
-  #     API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
-  #     WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
-  #   volumes:
-  #     # For logs
-  #     - ${DATA_PATH}/logs/jobs.err:/app/app.err
-  #     - ${DATA_PATH}/logs/jobs.log:/app/app.log
-  #     # For sitemap
-  #     - ${DATA_PATH}/sitemaps:/data/sitemaps
-  #     - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
-  #     - ${DATA_PATH}/robots.txt:/data/robots.txt
-  #   command: bash -c "cd /app && uv run python job.py"
+  worker:
+    command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks.registry --workers 2 --log-level INFO"
+
+  scheduler:
+    command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks.registry --log-level INFO"
 
   tg:
     ports:
