@@ -99,22 +99,42 @@ const openTelegramShareMessage = (messageId: string) => {
     return true;
 };
 
-const openVkShare = async ({ url }: { url: string }) => {
+const openVkShare = async ({ url, text }: { url: string; text?: string }) => {
     if (typeof window === 'undefined') return false;
     const bridge = window.vkBridge;
     if (!bridge?.send) return false;
 
-    const shareMethods: Array<{ method: string; params?: Record<string, unknown> }> = [
-        { method: 'VKWebAppShowInviteBox' },
-        { method: 'VKWebAppShare', params: { link: url } },
-    ];
+    const inviteParams = text ? { message: text } : undefined;
+    const shareParams = text ? { link: url, text } : { link: url };
+    const shareFallbackParams = { link: url };
 
-    for (const { method, params } of shareMethods) {
+    try {
+        await bridge.send('VKWebAppShowInviteBox', inviteParams);
+        return true;
+    } catch {
+        // Try without custom text if params are not supported.
+    }
+
+    try {
+        await bridge.send('VKWebAppShowInviteBox');
+        return true;
+    } catch {
+        // Fallback to legacy share dialog.
+    }
+
+    try {
+        await bridge.send('VKWebAppShare', shareParams);
+        return true;
+    } catch {
+        // Retry without text for older VK Bridge versions.
+    }
+
+    if (text) {
         try {
-            await bridge.send(method, params);
+            await bridge.send('VKWebAppShare', shareFallbackParams);
             return true;
         } catch {
-            // Try the next VK Bridge share method.
+            return false;
         }
     }
 
@@ -384,7 +404,8 @@ export default function SocialPage() {
             }
 
             if (network === 'vk' || hasVkBridge) {
-                if (await openVkShare({ url })) return;
+                const shareMessage = text ? `${text} ${url}` : url;
+                if (await openVkShare({ url, text: shareMessage })) return;
             }
 
             if (network === 'max') {
