@@ -117,7 +117,7 @@ export default async function LocaleLayout({
     params: Promise<{ locale: string }>;
 }) {
     const { locale } = await params;
-    const enableEruda = ["LOCAL", "DEV", "TEST"].includes(process.env.NEXT_PUBLIC_MODE ?? "");
+    const enableEruda = true; // FIXME: ["LOCAL", "DEV", "TEST"].includes(process.env.NEXT_PUBLIC_MODE ?? "");
 
     // Ensure that the incoming `locale` is valid
     if (!routing.locales.includes(locale as Locale)) {
