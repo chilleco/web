@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useTheme } from '@/providers/ThemeProvider';
 import LoadingScreen from './LoadingScreen';
 import { Header, MobileBottomBar } from '@/widgets/header';
+import { VkLaunchParamsSync } from '@/shared/components/layout';
 import { Footer } from '@/widgets/footer';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { selectIsApp, setIsApp } from '@/shared/stores/layoutSlice';
@@ -30,6 +31,7 @@ export default function ThemeAwareContent({ children }: ThemeAwareContentProps) 
 
     return (
         <LoadingScreen isLoading={!isInitialized}>
+            <VkLaunchParamsSync />
             {shouldUseAppShell ? null : <Header />}
             <div
                 className={cn(

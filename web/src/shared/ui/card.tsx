@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link, type RouteHref } from '@/i18n/routing';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/shared/lib/utils';
@@ -221,7 +221,7 @@ interface CardProps extends VariantProps<typeof cardVariants> {
   images: string[];
 
   // Navigation
-  href?: string;
+  href?: RouteHref;
   onClick?: () => void;
 
   // Filters above title (plain icon + value)

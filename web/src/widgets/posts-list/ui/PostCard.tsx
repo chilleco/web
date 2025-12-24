@@ -76,12 +76,17 @@ export function PostCard({ post, imageLoading = 'lazy' }: PostCardProps) {
         });
     }
 
+    const postHref = {
+        pathname: '/posts/[categoryUrl]',
+        params: { categoryUrl: post.url || String(post.id) },
+    } as const;
+
     return (
         <Card
             title={post.title}
             description={post.description || stripHtml(post.data)}
             images={post.image ? [post.image] : []}
-            href={`/posts/${post.url}`}
+            href={postHref}
             filters={filters}
             metadata={metadata}
             variant="default"

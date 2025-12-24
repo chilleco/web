@@ -39,6 +39,10 @@ export function SpaceListItem({ space, onDelete }: SpaceListItemProps) {
     }),
     [t]
   );
+  const spaceHref = {
+    pathname: '/spaces/[link]',
+    params: { link: space.link },
+  } as const;
   const marginBadge = (
     <Badge key="margin" variant="outline" className="bg-amber-500/10 text-amber-700 dark:text-amber-300">
       {t('fields.marginBadge', { value: formatMargin(space.margin) })}
@@ -82,6 +86,7 @@ export function SpaceListItem({ space, onDelete }: SpaceListItemProps) {
       id={space.id}
       title={space.title}
       url={`spaces/${space.link}`}
+      urlHref={spaceHref}
       badges={[marginBadge]}
       secondRowItems={secondRowItems}
       leftSlot={

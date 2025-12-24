@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useState, useTransition } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 
 import { PageHeader } from '@/shared/ui/page-header';
@@ -194,7 +193,10 @@ export function PostDetailClient({
         });
         success(tSystem('saved'));
         startTransition(() => {
-          router.push(locale ? `/${locale}/posts/${created.url}` : `/posts/${created.url}`);
+          router.push({
+            pathname: '/posts/[categoryUrl]',
+            params: { categoryUrl: created.url },
+          });
           router.refresh();
         });
         return;
@@ -224,7 +226,12 @@ export function PostDetailClient({
     setEditing(false);
   };
 
-  const categoryLink = post.category_data ? `/posts/${post.category_data.url}` : undefined;
+  const categoryLink = post.category_data
+    ? ({
+        pathname: '/posts/[categoryUrl]',
+        params: { categoryUrl: post.category_data.url },
+      } as const)
+    : undefined;
   const imageValue = image || post.image || '';
   const imageFileData = imageValue && fileData
     ? { ...fileData, type: 'image' as const }
@@ -236,7 +243,6 @@ export function PostDetailClient({
     : (
       <PostActions
         post={post}
-        locale={locale}
         isEditing={isEditing}
         onToggleEdit={() => {
           if (isEditing) {
@@ -286,7 +292,10 @@ export function PostDetailClient({
 
                 {post.category_data && (
                   <Link
-                    href={`/posts/${post.category_data.url}`}
+                    href={{
+                      pathname: '/posts/[categoryUrl]',
+                      params: { categoryUrl: post.category_data.url },
+                    }}
                     className="flex items-center justify-between gap-3 rounded-[0.75rem] bg-muted/60 px-3 py-2 transition-all duration-300 ease-[cubic-bezier(0,0,0.5,1)] hover:scale-[1.01]"
                   >
                     <div className="flex items-center gap-3">

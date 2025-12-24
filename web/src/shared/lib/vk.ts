@@ -49,6 +49,45 @@ const readStoredVkLaunchParams = () => {
     }
 };
 
+const shouldSkipHref = (href: string) => {
+    const lower = href.toLowerCase();
+    return (
+        lower.startsWith('mailto:') ||
+        lower.startsWith('tel:') ||
+        lower.startsWith('javascript:') ||
+        lower.startsWith('#')
+    );
+};
+
+export const appendVkLaunchParamsToUrl = (
+    href: string,
+    vkQuery?: Record<string, string> | null
+) => {
+    if (!vkQuery || Object.keys(vkQuery).length === 0) return href;
+    if (typeof window === 'undefined') return href;
+    if (!href || shouldSkipHref(href)) return href;
+
+    let url: URL;
+    try {
+        url = new URL(href, window.location.href);
+    } catch {
+        return href;
+    }
+
+    if (url.origin !== window.location.origin) {
+        return href;
+    }
+
+    Object.entries(vkQuery).forEach(([key, value]) => {
+        if (!url.searchParams.has(key)) {
+            url.searchParams.set(key, value);
+        }
+    });
+
+    const search = url.searchParams.toString();
+    return `${url.pathname}${search ? `?${search}` : ''}${url.hash || ''}`;
+};
+
 export const getVkLaunchParams = () => {
     const params = getVkQueryParams();
     if (isValidVkLaunchParams(params)) {

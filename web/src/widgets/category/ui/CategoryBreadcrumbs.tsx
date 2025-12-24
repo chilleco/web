@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import type { Category } from '@/entities/category';
 import { buildBreadcrumbs, generateBreadcrumbStructuredData } from '@/entities/category';
@@ -12,7 +12,17 @@ interface CategoryBreadcrumbsProps {
 
 export function CategoryBreadcrumbs({ category, className = '' }: CategoryBreadcrumbsProps) {
   const t = useTranslations('navigation');
-  
+  const resolveBreadcrumbHref = (url: string) => {
+    if (url === '/posts') {
+      return '/posts' as const;
+    }
+    const slug = url.replace(/^\/posts\//, '');
+    return {
+      pathname: '/posts/[categoryUrl]',
+      params: { categoryUrl: slug },
+    } as const;
+  };
+
   const breadcrumbs = buildBreadcrumbs(category || null, t('posts'));
   const structuredData = generateBreadcrumbStructuredData(breadcrumbs);
 
@@ -50,7 +60,7 @@ export function CategoryBreadcrumbs({ category, className = '' }: CategoryBreadc
               // Link to parent pages
               <>
                 <Link
-                  href={breadcrumb.url}
+                  href={resolveBreadcrumbHref(breadcrumb.url)}
                   title={breadcrumb.title}
                   itemID={breadcrumb.url}
                   itemScope

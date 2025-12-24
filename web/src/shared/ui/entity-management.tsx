@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link, type RouteHref } from '@/i18n/routing';
 import { ReactNode } from 'react';
 import { Alert, AlertDescription } from './alert';
 import { Box } from './box';
@@ -79,6 +79,7 @@ interface EntityRowProps {
   id?: number | string;
   title: string;
   url?: string;
+  urlHref?: RouteHref;
   badges?: ReactNode[];
   secondRowItems?: EntityRowMetaItem[];
   leftSlot?: ReactNode;
@@ -94,6 +95,7 @@ export function EntityRow({
   id,
   title,
   url,
+  urlHref,
   badges = [],
   secondRowItems = [],
   leftSlot,
@@ -113,12 +115,16 @@ export function EntityRow({
           ) : null}
           <span className="font-medium truncate">{title}</span>
           {url ? (
-            <Link
-              href={`/${url}`}
-              className="text-xs text-muted-foreground hover:text-primary transition-colors underline decoration-dashed underline-offset-2"
-            >
-              /{url}
-            </Link>
+            urlHref ? (
+              <Link
+                href={urlHref}
+                className="text-xs text-muted-foreground hover:text-primary transition-colors underline decoration-dashed underline-offset-2"
+              >
+                /{url}
+              </Link>
+            ) : (
+              <span className="text-xs text-muted-foreground">/{url}</span>
+            )
           ) : null}
           {badges.length > 0 ? <div className="flex flex-wrap gap-2">{badges}</div> : null}
         </div>
