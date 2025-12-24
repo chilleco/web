@@ -210,7 +210,6 @@ function AccountBlock({
 }
 
 export default function SettingsPage() {
-    console.log('!SETS1');
     const tSystem = useTranslations('system');
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -219,17 +218,12 @@ export default function SettingsPage() {
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
 
     const handleNavigate = (path: RouteHref) => {
-        console.log('!SETS2');
         router.push(path);
     };
 
-    const handleHome = () => {
-        console.log('!SETS3');
-        handleNavigate('/');
-    }
+    const handleHome = () => handleNavigate('/');
 
     const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        console.log('!SETS4');
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const query = formData.get('search') as string;

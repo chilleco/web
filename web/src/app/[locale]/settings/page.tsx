@@ -11,7 +11,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function SettingsRoutePage() {
-    console.log('!SETS0');
     return <SettingsPage />;
 }
-

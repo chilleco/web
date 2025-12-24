@@ -29,10 +29,16 @@ const shouldDelayCheck = (link?: string) => {
     return link.includes('t.me');
 };
 
+const isLocalTaskLink = (link: string) => {
+    if (!link) return false;
+    return ((link.startsWith('/') && !link.startsWith('//')) || link.startsWith('./'));
+};
+
 const openTaskLink = (link: string) => {
     if (typeof window === 'undefined') return;
     if (link === 'story') return;
-    if ((link.startsWith('/') && !link.startsWith('//')) || link.startsWith('./')) {
+
+    if (isLocalTaskLink(link)) {
         window.location.assign(link);
         return;
     }
