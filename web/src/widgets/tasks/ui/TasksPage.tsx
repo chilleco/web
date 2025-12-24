@@ -68,37 +68,66 @@ const buildVkAppShareUrl = () => {
     return `https://vk.com/app${appId}`;
 };
 
-const openVkRecommend = async ({ url }: { url: string }) => {
-    if (typeof window === 'undefined') return false;
-    const bridge = window.vkBridge;
-    if (!bridge?.send) return false;
+type VkRecommendStatus = 'shared' | 'cancelled' | 'failed';
 
-    const supportsMethod = (method: string) =>
-        typeof bridge.supports === 'function' ? bridge.supports(method) : false;
+const isVkShareCancelled = (error: unknown) => {
+    if (!error || typeof error !== 'object') return false;
+    const payload = error as {
+        error_type?: string;
+        error_data?: { error_code?: number; error_reason?: string };
+        message?: string;
+    };
+
+    if (payload.error_type === 'client_error' && payload.error_data?.error_code === 4) {
+        return true;
+    }
+
+    const reason = payload.error_data?.error_reason || payload.message;
+    if (!reason) return false;
+    return /cancel|denied|abort/i.test(reason);
+};
+
+const openVkRecommend = async ({ url }: { url: string }): Promise<VkRecommendStatus> => {
+    if (typeof window === 'undefined') return 'failed';
+    const bridge = window.vkBridge;
+    if (!bridge?.send) return 'failed';
+
+    const supportsMethod = async (method: string) => {
+        if (typeof bridge.supportsAsync === 'function') {
+            try {
+                return await bridge.supportsAsync(method);
+            } catch {
+                return false;
+            }
+        }
+        return true;
+    };
     const shareMethods: Array<{ method: string; params?: Record<string, unknown> }> = [];
 
-    if (supportsMethod('VKWebAppRecommend')) {
+    const canRecommend = await supportsMethod('VKWebAppRecommend');
+    const canShare = await supportsMethod('VKWebAppShare');
+
+    if (canRecommend) {
         shareMethods.push({ method: 'VKWebAppRecommend' });
     }
 
-    if (!bridge.supports || supportsMethod('VKWebAppShare')) {
-        if (url) {
-            shareMethods.push({ method: 'VKWebAppShare', params: { link: url } });
-        }
+    if (canShare && url) {
+        shareMethods.push({ method: 'VKWebAppShare', params: { link: url } });
     }
 
-    if (!shareMethods.length) return false;
+    if (!shareMethods.length) return 'failed';
 
     for (const { method, params } of shareMethods) {
         try {
             await bridge.send(method, params);
-            return true;
-        } catch {
+            return 'shared';
+        } catch (err) {
+            if (isVkShareCancelled(err)) return 'cancelled';
             // Try the next VK Bridge method.
         }
     }
 
-    return false;
+    return 'failed';
 };
 
 function TaskItem({
@@ -286,10 +315,33 @@ export default function TasksPage() {
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        const network = getClientNetwork();
-        const bridge = window.vkBridge;
-        const supportsShare = typeof bridge?.supports === 'function' ? bridge.supports('VKWebAppShare') : true;
-        setIsVkMiniApp(network === 'vk' && Boolean(bridge?.send) && supportsShare);
+        let mounted = true;
+
+        const resolveVkSupport = async () => {
+            const network = getClientNetwork();
+            const bridge = window.vkBridge;
+            if (network !== 'vk' || !bridge?.send) {
+                if (mounted) setIsVkMiniApp(false);
+                return;
+            }
+
+            if (typeof bridge.supportsAsync === 'function') {
+                const [supportsRecommend, supportsShare] = await Promise.all([
+                    bridge.supportsAsync('VKWebAppRecommend').catch(() => false),
+                    bridge.supportsAsync('VKWebAppShare').catch(() => false),
+                ]);
+                if (mounted) setIsVkMiniApp(supportsRecommend || supportsShare);
+                return;
+            }
+
+            if (mounted) setIsVkMiniApp(true);
+        };
+
+        void resolveVkSupport();
+
+        return () => {
+            mounted = false;
+        };
     }, []);
 
     const handleRefresh = () => loadTasks('refresh');
@@ -342,8 +394,8 @@ export default function TasksPage() {
 
         try {
             const url = buildVkAppShareUrl();
-            const shared = await openVkRecommend({ url });
-            if (!shared) {
+            const result = await openVkRecommend({ url });
+            if (result === 'failed') {
                 showError(tSystem('shareUnavailable'));
             }
         } catch (err) {

@@ -8,6 +8,7 @@ declare global {
         vkBridge?: {
             send?: (method: string, params?: Record<string, unknown>) => Promise<unknown> | void;
             supports?: (method: string) => boolean;
+            supportsAsync?: (method: string) => Promise<boolean>;
         };
     }
 }

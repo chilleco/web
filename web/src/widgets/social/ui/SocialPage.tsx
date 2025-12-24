@@ -82,16 +82,7 @@ const supportsVkMethod = async (method: string) => {
             // Ignore capability detection errors.
         }
     }
-
-    try {
-        if (typeof bridge.supports === 'function') {
-            return bridge.supports(method as never);
-        }
-    } catch {
-        // Ignore capability detection errors.
-    }
-
-    return false;
+    return true;
 };
 
 const openTelegramShare = (shareUrl: string) => {
