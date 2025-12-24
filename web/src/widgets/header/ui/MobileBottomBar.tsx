@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, type ComponentType } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useBottomNavigationItems } from '../model/bottomNavigationItems';
 import { HomeIcon, UserIcon } from '@/shared/ui/icons';
@@ -29,6 +29,7 @@ const MOBILE_BOTTOM_BAR_OFFSET_VAR = '--mobile-bottom-bar-offset';
 export function MobileBottomBar() {
     const router = useRouter();
     const pathname = usePathname();
+    const locale = useLocale();
     const navigationItems = useBottomNavigationItems();
     const tNavigation = useTranslations('navigation');
     const tSystem = useTranslations('system');
@@ -40,6 +41,7 @@ export function MobileBottomBar() {
     const navRef = useRef<HTMLElement | null>(null);
     const vkLaunchQuery = getVkLaunchQuery();
     const vkLaunchKeys = useMemo(() => (vkLaunchQuery ? Object.keys(vkLaunchQuery) : []), [vkLaunchQuery]);
+    const fallbackTimerRef = useRef<number | null>(null);
 
     const items = useMemo<BottomNavItem[]>(
         () => [
@@ -98,6 +100,40 @@ export function MobileBottomBar() {
         };
     }, [shouldShowBar]);
 
+    useEffect(() => {
+        return () => {
+            if (fallbackTimerRef.current) {
+                window.clearTimeout(fallbackTimerRef.current);
+                fallbackTimerRef.current = null;
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!fallbackTimerRef.current) return;
+        window.clearTimeout(fallbackTimerRef.current);
+        fallbackTimerRef.current = null;
+    }, [pathname]);
+
+    const buildHref = (path: RouteHref) => {
+        if (typeof window === 'undefined') return '';
+        const pathString = typeof path === 'string' ? path : path.pathname;
+        const params = new URLSearchParams();
+        Object.entries(vkLaunchQuery ?? {}).forEach(([key, value]) => {
+            params.set(key, String(value));
+        });
+        if (typeof path !== 'string' && path.query) {
+            Object.entries(path.query).forEach(([key, value]) => {
+                if (value === undefined || value === null) return;
+                params.set(key, String(value));
+            });
+        }
+        const search = params.toString();
+        const prefix = locale ? `/${locale}` : '';
+        const normalizedPath = pathString.startsWith('/') ? pathString : `/${pathString}`;
+        return `${prefix}${normalizedPath}${search ? `?${search}` : ''}`;
+    };
+
     const handleNavigate = (path: RouteHref) => {
         if (shouldShowBar && typeof window !== 'undefined') {
             const pathLabel = typeof path === 'string' ? path : path.pathname;
@@ -111,17 +147,34 @@ export function MobileBottomBar() {
             });
         }
 
+        const targetHref = buildHref(path);
+        const currentPathname = typeof window !== 'undefined' ? window.location.pathname : pathname;
+        const shouldHardFallback = isAppDetected || isApp;
+
         if (!vkLaunchQuery) {
             router.push(path);
-            return;
-        }
-
-        if (typeof path === 'string') {
+        } else if (typeof path === 'string') {
             router.push({ pathname: path, query: vkLaunchQuery });
-            return;
+        } else {
+            router.push({ ...path, query: { ...vkLaunchQuery, ...(path.query ?? {}) } });
         }
 
-        router.push({ ...path, query: { ...vkLaunchQuery, ...(path.query ?? {}) } });
+        if (shouldHardFallback && typeof window !== 'undefined') {
+            if (fallbackTimerRef.current) {
+                window.clearTimeout(fallbackTimerRef.current);
+            }
+            fallbackTimerRef.current = window.setTimeout(() => {
+                const unchanged = window.location.pathname === currentPathname;
+                if (unchanged && targetHref) {
+                    console.info('[nav] fallback redirect', {
+                        from: currentPathname,
+                        to: targetHref,
+                        vkLaunchKeys,
+                    });
+                    window.location.href = targetHref;
+                }
+            }, 350);
+        }
     };
 
     useEffect(() => {

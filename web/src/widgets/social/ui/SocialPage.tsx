@@ -69,6 +69,31 @@ const buildTelegramTargetUrl = (referralUrl: string, referralKey: string) => {
     return referralUrl;
 };
 
+const supportsVkMethod = async (method: string) => {
+    if (typeof window === 'undefined') return false;
+    const bridge = window.vkBridge;
+    if (!bridge?.send) return false;
+
+    const supportsAsync = (bridge as unknown as { supportsAsync?: (method: string) => Promise<boolean> }).supportsAsync;
+    if (typeof supportsAsync === 'function') {
+        try {
+            return await supportsAsync(method);
+        } catch {
+            // Ignore capability detection errors.
+        }
+    }
+
+    try {
+        if (typeof bridge.supports === 'function') {
+            return bridge.supports(method as never);
+        }
+    } catch {
+        // Ignore capability detection errors.
+    }
+
+    return false;
+};
+
 const openTelegramShare = (shareUrl: string) => {
     if (typeof window === 'undefined') return false;
     const tma = window.Telegram?.WebApp as
@@ -104,37 +129,56 @@ const openVkShare = async ({ url, text }: { url: string; text?: string }) => {
     const bridge = window.vkBridge;
     if (!bridge?.send) return false;
 
-    const inviteParams = text ? { message: text } : undefined;
-    const shareParams = text ? { link: url, text } : { link: url };
-    const shareFallbackParams = { link: url };
+    const isWebView =
+        typeof (bridge as unknown as { isWebView?: () => boolean }).isWebView === 'function'
+            ? (bridge as unknown as { isWebView: () => boolean }).isWebView()
+            : false;
 
-    try {
-        await bridge.send('VKWebAppShowInviteBox', inviteParams);
-        return true;
-    } catch {
-        // Try without custom text if params are not supported.
-    }
-
-    try {
-        await bridge.send('VKWebAppShowInviteBox');
-        return true;
-    } catch {
-        // Fallback to legacy share dialog.
-    }
-
-    try {
-        await bridge.send('VKWebAppShare', shareParams);
-        return true;
-    } catch {
-        // Retry without text for older VK Bridge versions.
-    }
-
-    if (text) {
+    // New invite dialog (mobile webview only; crashes on desktop/messenger if unsupported).
+    if (isWebView && (await supportsVkMethod('VKWebAppShowInviteBox'))) {
+        const inviteParams = text ? { message: text } : undefined;
         try {
-            await bridge.send('VKWebAppShare', shareFallbackParams);
+            await bridge.send('VKWebAppShowInviteBox', inviteParams);
             return true;
         } catch {
-            return false;
+            // Fallback to next method.
+        }
+
+        try {
+            await bridge.send('VKWebAppShowInviteBox');
+            return true;
+        } catch {
+            // Fallback to legacy share dialog.
+        }
+    }
+
+    // VK recommend sheet (if available) - no custom text support.
+    if (await supportsVkMethod('VKWebAppRecommend')) {
+        try {
+            await bridge.send('VKWebAppRecommend');
+            return true;
+        } catch {
+            // Fallback to share dialog.
+        }
+    }
+
+    if (await supportsVkMethod('VKWebAppShare')) {
+        const shareParams = text ? { link: url, text } : { link: url };
+        try {
+            await bridge.send('VKWebAppShare', shareParams);
+            return true;
+        } catch {
+            // Retry without text for older VK Bridge versions.
+        }
+
+        const shareFallbackParams = { link: url };
+        if (text) {
+            try {
+                await bridge.send('VKWebAppShare', shareFallbackParams);
+                return true;
+            } catch {
+                return false;
+            }
         }
     }
 

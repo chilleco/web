@@ -73,14 +73,25 @@ const openVkRecommend = async ({ url }: { url: string }) => {
     const bridge = window.vkBridge;
     if (!bridge?.send) return false;
 
-    const shareMethods: Array<{ method: string; params?: Record<string, unknown> }> = [
-        { method: 'VKWebAppRecommend' },
-        { method: 'VKWebAppShowInviteBox' },
-    ];
+    const supportsMethod = (method: string) =>
+        typeof bridge.supports === 'function' ? bridge.supports(method) : false;
+    const shareMethods: Array<{ method: string; params?: Record<string, unknown> }> = [];
 
-    if (url) {
-        shareMethods.push({ method: 'VKWebAppShare', params: { link: url } });
+    if (supportsMethod('VKWebAppRecommend')) {
+        shareMethods.push({ method: 'VKWebAppRecommend' });
     }
+
+    if (supportsMethod('VKWebAppShowInviteBox')) {
+        shareMethods.push({ method: 'VKWebAppShowInviteBox' });
+    }
+
+    if (!bridge.supports || supportsMethod('VKWebAppShare')) {
+        if (url) {
+            shareMethods.push({ method: 'VKWebAppShare', params: { link: url } });
+        }
+    }
+
+    if (!shareMethods.length) return false;
 
     for (const { method, params } of shareMethods) {
         try {
@@ -278,7 +289,11 @@ export default function TasksPage() {
     }, [loadTasks]);
 
     useEffect(() => {
-        setIsVkMiniApp(getClientNetwork() === 'vk');
+        if (typeof window === 'undefined') return;
+        const network = getClientNetwork();
+        const bridge = window.vkBridge;
+        const supportsShare = typeof bridge?.supports === 'function' ? bridge.supports('VKWebAppShare') : true;
+        setIsVkMiniApp(network === 'vk' && Boolean(bridge?.send) && supportsShare);
     }, []);
 
     const handleRefresh = () => loadTasks('refresh');
