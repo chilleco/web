@@ -10,7 +10,9 @@ import {
     CoinsIcon,
     LoadingIcon,
     RefreshIcon,
+    ShareIcon,
     TasksIcon,
+    UserGroupIcon,
 } from '@/shared/ui/icons';
 import { cn } from '@/shared/lib/utils';
 import { IconButton } from '@/shared/ui/icon-button';
@@ -19,6 +21,7 @@ import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { checkTask, getTasks } from '@/entities/task/api/tasks';
 import type { Task } from '@/entities/task/model/task';
 import { resolveLocalizedText, resolveTaskColorStyles, resolveTaskIcon } from '@/entities/task/lib/presentation';
+import { getClientNetwork } from '@/shared/lib/app';
 
 const shouldDelayCheck = (link?: string) => {
     if (!link) return false;
@@ -49,6 +52,46 @@ const openTaskLink = (link: string) => {
     }
 
     window.open(link, '_blank', 'noopener,noreferrer');
+};
+
+const buildVkAppShareUrl = () => {
+    if (typeof window === 'undefined') return '';
+
+    const appIdFromPath = window.location.pathname.match(/\/app(\d+)/)?.[1] ?? null;
+    const searchParams = new URLSearchParams(window.location.search);
+    const appId = appIdFromPath || searchParams.get('vk_app_id');
+
+    if (!appId) {
+        return window.location.origin;
+    }
+
+    return `https://vk.com/app${appId}`;
+};
+
+const openVkRecommend = async ({ url }: { url: string }) => {
+    if (typeof window === 'undefined') return false;
+    const bridge = window.vkBridge;
+    if (!bridge?.send) return false;
+
+    const shareMethods: Array<{ method: string; params?: Record<string, unknown> }> = [
+        { method: 'VKWebAppRecommend' },
+        { method: 'VKWebAppShowInviteBox' },
+    ];
+
+    if (url) {
+        shareMethods.push({ method: 'VKWebAppShare', params: { link: url } });
+    }
+
+    for (const { method, params } of shareMethods) {
+        try {
+            await bridge.send(method, params);
+            return true;
+        } catch {
+            // Try the next VK Bridge method.
+        }
+    }
+
+    return false;
 };
 
 function TaskItem({
@@ -136,6 +179,47 @@ function TaskItem({
     );
 }
 
+function VkRecommendWidget({
+    isLoading,
+    onRecommend,
+}: {
+    isLoading: boolean;
+    onRecommend: () => void;
+}) {
+    const tTasks = useTranslations('tasks');
+
+    return (
+        <Box size="default" className="flex flex-col gap-4">
+            <div className="flex items-start gap-4">
+                <div className="flex items-center justify-center shrink-0 rounded-[0.75rem] w-12 h-12 bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+                    <UserGroupIcon size={22} />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                    <div className="text-base font-semibold text-foreground">
+                        {tTasks('vkRecommendTitle')}
+                    </div>
+                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                        {tTasks('vkRecommendDescription')}
+                    </p>
+                </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+                <IconButton
+                    icon={<ShareIcon size={16} />}
+                    responsive
+                    variant="outline"
+                    onClick={onRecommend}
+                    disabled={isLoading}
+                >
+                    {tTasks('vkRecommendAction')}
+                </IconButton>
+            </div>
+        </Box>
+    );
+}
+
 export default function TasksPage() {
     const locale = useLocale();
     const tNavigation = useTranslations('navigation');
@@ -149,8 +233,11 @@ export default function TasksPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [checkingIds, setCheckingIds] = useState<Set<number>>(new Set());
+    const [isVkMiniApp, setIsVkMiniApp] = useState(false);
+    const [isRecommending, setIsRecommending] = useState(false);
 
     const fetchInFlightRef = useRef(false);
+    const recommendInFlightRef = useRef(false);
 
     const orderedTasks = useMemo(() => {
         return [...tasks].sort((a, b) => {
@@ -189,6 +276,10 @@ export default function TasksPage() {
     useEffect(() => {
         loadTasks('initial');
     }, [loadTasks]);
+
+    useEffect(() => {
+        setIsVkMiniApp(getClientNetwork() === 'vk');
+    }, []);
 
     const handleRefresh = () => loadTasks('refresh');
 
@@ -231,6 +322,27 @@ export default function TasksPage() {
         }
     };
 
+    const handleVkRecommend = useCallback(async () => {
+        if (!isVkMiniApp) return;
+        if (recommendInFlightRef.current) return;
+
+        recommendInFlightRef.current = true;
+        setIsRecommending(true);
+
+        try {
+            const url = buildVkAppShareUrl();
+            const shared = await openVkRecommend({ url });
+            if (!shared) {
+                showError(tSystem('shareUnavailable'));
+            }
+        } catch (err) {
+            showError(formatApiErrorMessage(err, tSystem('shareUnavailable')));
+        } finally {
+            recommendInFlightRef.current = false;
+            setIsRecommending(false);
+        }
+    }, [formatApiErrorMessage, isVkMiniApp, showError, tSystem]);
+
     return (
         <div className="min-h-screen bg-background">
             <div className="container mx-auto px-4 py-8">
@@ -254,6 +366,10 @@ export default function TasksPage() {
                     />
 
                     <div className="space-y-3">
+                        {isVkMiniApp ? (
+                            <VkRecommendWidget isLoading={isRecommending} onRecommend={handleVkRecommend} />
+                        ) : null}
+
                         {balance !== null && (
                             <div className="flex items-center justify-between gap-3">
                                 <div className="text-sm text-muted-foreground">{tTasks('balanceLabel')}</div>

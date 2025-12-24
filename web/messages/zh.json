@@ -62,7 +62,10 @@
     "balanceLabel": "余额",
     "claimSuccess": "已领取 +{reward} 金币",
     "claimNotReady": "任务尚未完成。",
-    "fallbackTitle": "任务 #{id}"
+    "fallbackTitle": "任务 #{id}",
+    "vkRecommendTitle": "推荐给朋友",
+    "vkRecommendDescription": "在 VK 分享应用并邀请朋友。",
+    "vkRecommendAction": "在 VK 推荐"
   },
   "social": {
     "description": "查看你的好友和推荐奖励。",

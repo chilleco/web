@@ -62,7 +62,10 @@
     "balanceLabel": "Saldo",
     "claimSuccess": "Recibiste +{reward} monedas",
     "claimNotReady": "La tarea aún no está completada.",
-    "fallbackTitle": "Tarea #{id}"
+    "fallbackTitle": "Tarea #{id}",
+    "vkRecommendTitle": "Recomienda a tus amigos",
+    "vkRecommendDescription": "Comparte la app en VK e invita a tus amigos.",
+    "vkRecommendAction": "Recomendar en VK"
   },
   "social": {
     "description": "Sigue a tus amigos y recompensas por referidos.",

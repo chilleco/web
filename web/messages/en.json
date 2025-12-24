@@ -62,7 +62,10 @@
     "balanceLabel": "Balance",
     "claimSuccess": "Claimed +{reward} coins",
     "claimNotReady": "Task is not completed yet.",
-    "fallbackTitle": "Task #{id}"
+    "fallbackTitle": "Task #{id}",
+    "vkRecommendTitle": "Recommend to friends",
+    "vkRecommendDescription": "Share the app on VK and invite your friends.",
+    "vkRecommendAction": "Recommend in VK"
   },
   "social": {
     "description": "Track your frens and referral rewards.",

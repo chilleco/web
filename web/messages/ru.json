@@ -62,7 +62,10 @@
     "balanceLabel": "Баланс",
     "claimSuccess": "Получено +{reward} монет",
     "claimNotReady": "Задание ещё не выполнено.",
-    "fallbackTitle": "Задание №{id}"
+    "fallbackTitle": "Задание №{id}",
+    "vkRecommendTitle": "Рекомендуй друзьям",
+    "vkRecommendDescription": "Поделись приложением во ВКонтакте и пригласи друзей.",
+    "vkRecommendAction": "Рекомендовать в VK"
   },
   "social": {
     "description": "Следи за друзьями и реферальными наградами.",
