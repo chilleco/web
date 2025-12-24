@@ -99,30 +99,22 @@ const openTelegramShareMessage = (messageId: string) => {
     return true;
 };
 
-const openVkShare = async ({ url, text }: { url: string; text?: string }) => {
+const openVkShare = async ({ url }: { url: string }) => {
     if (typeof window === 'undefined') return false;
     const bridge = window.vkBridge;
     if (!bridge?.send) return false;
 
-    const shareParams = text ? { link: url, text } : { link: url };
-    const fallbackParams = { link: url };
-    const shareMethods = ['VKWebAppShowShareDialog', 'VKWebAppShare'];
+    const shareMethods: Array<{ method: string; params?: Record<string, unknown> }> = [
+        { method: 'VKWebAppShowInviteBox' },
+        { method: 'VKWebAppShare', params: { link: url } },
+    ];
 
-    for (const method of shareMethods) {
+    for (const { method, params } of shareMethods) {
         try {
-            await bridge.send(method, shareParams);
+            await bridge.send(method, params);
             return true;
         } catch {
             // Try the next VK Bridge share method.
-        }
-
-        if (text) {
-            try {
-                await bridge.send(method, fallbackParams);
-                return true;
-            } catch {
-                // Try the next VK Bridge share method.
-            }
         }
     }
 
@@ -392,7 +384,7 @@ export default function SocialPage() {
             }
 
             if (network === 'vk' || hasVkBridge) {
-                if (await openVkShare({ url, text })) return;
+                if (await openVkShare({ url })) return;
             }
 
             if (network === 'max') {
