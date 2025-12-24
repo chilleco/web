@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 
 import { ButtonGroup } from '@/shared/ui/button-group';
@@ -20,12 +20,11 @@ import {
 
 interface PostActionsProps {
   post: Post;
-  locale: string;
   isEditing: boolean;
   onToggleEdit: () => void;
 }
 
-export function PostActions({ post, locale, isEditing, onToggleEdit }: PostActionsProps) {
+export function PostActions({ post, isEditing, onToggleEdit }: PostActionsProps) {
   const router = useRouter();
   const tSystem = useTranslations('system');
   const tPosts = useTranslations('posts');
@@ -67,7 +66,7 @@ export function PostActions({ post, locale, isEditing, onToggleEdit }: PostActio
       success(tSystem('deleted'));
       setDeleteOpen(false);
       startTransition(() => {
-        router.push(locale ? `/${locale}/posts` : '/posts');
+        router.push('/posts');
         router.refresh();
       });
     } catch (err) {

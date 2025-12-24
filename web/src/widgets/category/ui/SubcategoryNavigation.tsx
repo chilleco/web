@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { Button } from '@/shared/ui/button';
 import type { Category } from '@/entities/category';
 import { getActiveSubcategories } from '@/entities/category';
@@ -33,7 +33,12 @@ export function SubcategoryNavigation({
               asChild
               className="hover:bg-primary hover:text-white dark:hover:text-white transition-colors"
             >
-              <Link href={`/posts/${subcategory.url}`}>
+              <Link
+                href={{
+                  pathname: '/posts/[categoryUrl]',
+                  params: { categoryUrl: subcategory.url },
+                }}
+              >
                 {subcategory.title}
               </Link>
             </Button>

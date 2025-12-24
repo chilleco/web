@@ -125,6 +125,12 @@ export function CategoryPreview({
 
   const hasSubcategories = category.categories && category.categories.length > 0;
   const paddingLeft = level * 24; // 24px per level for indentation
+  const categoryHref = category.url
+    ? ({
+        pathname: '/posts/[categoryUrl]',
+        params: { categoryUrl: category.url },
+      } as const)
+    : undefined;
 
   // No default right actions for preview mode
   const defaultRightActions = null;
@@ -138,7 +144,8 @@ export function CategoryPreview({
         <EntityRow
           id={category.id || 'NEW'}
           title={category.title}
-          url={`posts/${category.url}`}
+          url={category.url ? `posts/${category.url}` : undefined}
+          urlHref={categoryHref}
           badges={[
             <div className="hidden md:block" key="status">
               {getStatusBadge(category.status ?? 1)}

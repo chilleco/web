@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { Box } from '@/shared/ui/box';
@@ -109,7 +109,10 @@ export function CategoriesHoverPopup({
                 return (
                   <Link
                     key={category.id}
-                    href={`/posts/${category.url}`}
+                    href={{
+                      pathname: '/posts/[categoryUrl]',
+                      params: { categoryUrl: category.url },
+                    }}
                     className="flex items-center gap-2 p-2 rounded-[0.75rem] hover:bg-muted/50 transition-colors cursor-pointer group"
                   >
                     {/* Category Icon - Just the icon without colored background */}

@@ -26,12 +26,17 @@ export function ProductListItem({ product, onEdit, onDelete }: ProductListItemPr
   const inStock = typeof product.inStock === 'boolean'
     ? product.inStock
     : (product.options?.some((option) => (option.stockCount ?? 0) > 0) ?? true);
+  const productHref = {
+    pathname: '/catalog/[id]',
+    params: { id: String(product.url || product.id) },
+  } as const;
 
   return (
     <EntityRow
       id={product.id}
       title={product.title}
       url={`catalog/${product.url}`}
+      urlHref={productHref}
       leftSlot={
         <div className="relative w-12 h-12 rounded-[0.75rem] overflow-hidden bg-muted flex-shrink-0">
           {previewImage ? (

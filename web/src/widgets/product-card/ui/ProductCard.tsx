@@ -152,7 +152,10 @@ export function ProductCard({
         </Button>
     ) : null;
 
-    const productLink = `/catalog/${product.url || product.id}`;
+    const productHref = {
+        pathname: '/catalog/[id]',
+        params: { id: String(product.url || product.id) },
+    } as const;
 
     return (
         <Card
@@ -171,7 +174,7 @@ export function ProductCard({
             isLiked={isLiked}
             onLikeClick={handleLikeClick}
             id={product.id}
-            href={productLink}
+            href={productHref}
             imageLoading={imageLoading}
         />
     );

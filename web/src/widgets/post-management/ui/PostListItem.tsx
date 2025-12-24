@@ -18,12 +18,17 @@ interface PostListItemProps {
 export function PostListItem({ post, onDelete }: PostListItemProps) {
   const tSystem = useTranslations('system');
   const tAdmin = useTranslations('admin.posts');
+  const postHref = {
+    pathname: '/posts/[categoryUrl]',
+    params: { categoryUrl: post.url },
+  } as const;
 
   return (
     <EntityRow
       id={post.id}
       title={post.title}
       url={`posts/${post.url}`}
+      urlHref={postHref}
       badges={
         post.status !== undefined
           ? [
