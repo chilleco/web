@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 import { PageHeader } from '@/shared/ui/page-header';
 import { Box } from '@/shared/ui/box';
 import {
@@ -22,6 +23,9 @@ import { checkTask, getTasks } from '@/entities/task/api/tasks';
 import type { Task } from '@/entities/task/model/task';
 import { resolveLocalizedText, resolveTaskColorStyles, resolveTaskIcon } from '@/entities/task/lib/presentation';
 import { getClientNetwork } from '@/shared/lib/app';
+import { getVkLaunchQuery } from '@/shared/lib/vk';
+
+type RouteHref = Parameters<ReturnType<typeof useRouter>['push']>[0];
 
 const shouldDelayCheck = (link?: string) => {
     if (!link) return false;
@@ -34,12 +38,16 @@ const isLocalTaskLink = (link: string) => {
     return ((link.startsWith('/') && !link.startsWith('//')) || link.startsWith('./'));
 };
 
-const openTaskLink = (link: string) => {
+const openTaskLink = (link: string, localRedirect?: (link: string) => void) => {
     if (typeof window === 'undefined') return;
     if (link === 'story') return;
 
     if (isLocalTaskLink(link)) {
-        window.location.assign(link);
+        if (localRedirect) {
+            localRedirect(link);
+        } else {
+            window.location.assign(link);
+        }
         return;
     }
 
@@ -263,6 +271,9 @@ function VkRecommendWidget({
 }
 
 export default function TasksPage() {
+    const router = useRouter();
+    const vkLaunchQuery = getVkLaunchQuery();
+
     const locale = useLocale();
     const tNavigation = useTranslations('navigation');
     const tSystem = useTranslations('system');
@@ -352,6 +363,26 @@ export default function TasksPage() {
 
     const handleRefresh = () => loadTasks('refresh');
 
+    const localRedirect = useCallback((link: string) => {
+        if (typeof window === 'undefined') return;
+
+        const normalizedLink = link.startsWith('./') ? link.slice(1) : link;
+        const url = new URL(normalizedLink, window.location.origin);
+
+        const mergedSearchParams = new URLSearchParams();
+        if (vkLaunchQuery) {
+            Object.entries(vkLaunchQuery).forEach(([key, value]) => mergedSearchParams.append(key, value));
+        }
+        url.searchParams.forEach((value, key) => {
+            mergedSearchParams.set(key, value);
+        });
+
+        const search = mergedSearchParams.toString();
+        const href = `${url.pathname}${search ? `?${search}` : ''}${url.hash || ''}` as RouteHref;
+
+        router.push(href);
+    }, [router, vkLaunchQuery]);
+
     const handleTaskClick = async (task: Task) => {
         if (task.status === 3) return;
         if (checkingIds.has(task.id)) return;
@@ -360,7 +391,7 @@ export default function TasksPage() {
 
         try {
             if (task.link) {
-                openTaskLink(task.link);
+                openTaskLink(task.link, localRedirect);
             }
 
             const delayMs = shouldDelayCheck(task.link) ? 4000 : 0;

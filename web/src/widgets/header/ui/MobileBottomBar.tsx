@@ -14,6 +14,7 @@ import { isApp as detectIsApp } from '@/shared/lib/app';
 import { getVkLaunchQuery } from '@/shared/lib/vk';
 
 type RouteHref = Parameters<ReturnType<typeof useRouter>['push']>[0];
+type RouteObjectHref = Extract<RouteHref, { pathname: string }>;
 
 type BottomNavItem = {
     key: string;
@@ -104,11 +105,16 @@ export function MobileBottomBar() {
         }
 
         if (typeof path === 'string') {
-            router.push({ pathname: path, query: vkLaunchQuery });
+            const target = { pathname: path, query: vkLaunchQuery } as RouteObjectHref;
+            router.push(target);
             return;
         }
 
-        router.push({ ...path, query: { ...vkLaunchQuery, ...(path.query ?? {}) } });
+        const target = {
+            ...path,
+            query: { ...vkLaunchQuery, ...(path.query ?? {}) },
+        } as RouteObjectHref;
+        router.push(target);
     };
 
     const isActive = (path: RouteHref) => {

@@ -40,17 +40,24 @@ function getStatusFromJwt(token?: string | null): number | null {
     }
 }
 
+function isMiniAppRequest(url: URL) {
+    const params = url.searchParams;
+    return params.has('vk_user_id') && params.has('sign');
+}
+
 export default function proxy(request: NextRequest) {
     const response = intlProxy(request);
-    const pathname = stripLocale(request.nextUrl.pathname);
+    const url = request.nextUrl;
+    const pathname = stripLocale(url.pathname);
 
     const authCookie = request.cookies.get('Authorization')?.value || request.cookies.get('authToken')?.value;
     const status = getStatusFromJwt(authCookie);
+    const isAppRequest = isMiniAppRequest(url);
 
-    if (requiresAuth(pathname) && !authCookie) {
-        const url = request.nextUrl.clone();
-        url.pathname = '/';
-        return NextResponse.redirect(url);
+    if (requiresAuth(pathname) && !authCookie && !isAppRequest) {
+        const redirectUrl = url.clone();
+        redirectUrl.pathname = '/';
+        return NextResponse.redirect(redirectUrl);
     }
 
     if (requiresModerator(pathname)) {
