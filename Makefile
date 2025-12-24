@@ -66,13 +66,13 @@ logs-web:
 
 # Development tools
 shell:
-	sudo docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` bash
+	sudo docker exec -it `sudo docker ps -a --filter name="^${PROJECT_NAME}.*api" --format "{{.ID}}" | head -n 1` bash
 
 python:
-	sudo docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` python
+	sudo docker exec -it `sudo docker ps -a --filter name="^${PROJECT_NAME}.*api" --format "{{.ID}}" | head -n 1` python
 
 script:
-	sudo docker exec -it `docker ps -a | grep ${PROJECT_NAME}-api | cut -d ' ' -f 1` python -m scripts.$(name)
+	sudo docker exec -it `sudo docker ps -a --filter name="^${PROJECT_NAME}.*api" --format "{{.ID}}" | head -n 1` python -m scripts.$(name)
 
 set:
 	sudo chmod 0755 ~

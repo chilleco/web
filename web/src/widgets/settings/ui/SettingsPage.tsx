@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { Box } from '@/shared/ui/box';
@@ -210,6 +210,7 @@ function AccountBlock({
 }
 
 export default function SettingsPage() {
+    console.log('!SETS1');
     const tSystem = useTranslations('system');
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -217,21 +218,18 @@ export default function SettingsPage() {
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const [isAuthModalOpen, setAuthModalOpen] = useState(false);
 
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-        console.info('[settings] mount', { href: window.location.href });
-        return () => {
-            console.info('[settings] unmount', { href: window.location.href });
-        };
-    }, []);
-
     const handleNavigate = (path: RouteHref) => {
+        console.log('!SETS2');
         router.push(path);
     };
 
-    const handleHome = () => handleNavigate('/');
+    const handleHome = () => {
+        console.log('!SETS3');
+        handleNavigate('/');
+    }
 
     const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        console.log('!SETS4');
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const query = formData.get('search') as string;

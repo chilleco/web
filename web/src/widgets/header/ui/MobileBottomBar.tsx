@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, type ComponentType } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useBottomNavigationItems } from '../model/bottomNavigationItems';
 import { HomeIcon, UserIcon } from '@/shared/ui/icons';
@@ -29,7 +29,6 @@ const MOBILE_BOTTOM_BAR_OFFSET_VAR = '--mobile-bottom-bar-offset';
 export function MobileBottomBar() {
     const router = useRouter();
     const pathname = usePathname();
-    const locale = useLocale();
     const navigationItems = useBottomNavigationItems();
     const tNavigation = useTranslations('navigation');
     const tSystem = useTranslations('system');
@@ -40,8 +39,6 @@ export function MobileBottomBar() {
     const user = useAppSelector(selectAuthUser);
     const navRef = useRef<HTMLElement | null>(null);
     const vkLaunchQuery = getVkLaunchQuery();
-    const vkLaunchKeys = useMemo(() => (vkLaunchQuery ? Object.keys(vkLaunchQuery) : []), [vkLaunchQuery]);
-    const fallbackTimerRef = useRef<number | null>(null);
 
     const items = useMemo<BottomNavItem[]>(
         () => [
@@ -100,93 +97,19 @@ export function MobileBottomBar() {
         };
     }, [shouldShowBar]);
 
-    useEffect(() => {
-        return () => {
-            if (fallbackTimerRef.current) {
-                window.clearTimeout(fallbackTimerRef.current);
-                fallbackTimerRef.current = null;
-            }
-        };
-    }, []);
-
-    useEffect(() => {
-        if (!fallbackTimerRef.current) return;
-        window.clearTimeout(fallbackTimerRef.current);
-        fallbackTimerRef.current = null;
-    }, [pathname]);
-
-    const buildHref = (path: RouteHref) => {
-        if (typeof window === 'undefined') return '';
-        const pathString = typeof path === 'string' ? path : path.pathname;
-        const params = new URLSearchParams();
-        Object.entries(vkLaunchQuery ?? {}).forEach(([key, value]) => {
-            params.set(key, String(value));
-        });
-        if (typeof path !== 'string' && path.query) {
-            Object.entries(path.query).forEach(([key, value]) => {
-                if (value === undefined || value === null) return;
-                params.set(key, String(value));
-            });
-        }
-        const search = params.toString();
-        const prefix = locale ? `/${locale}` : '';
-        const normalizedPath = pathString.startsWith('/') ? pathString : `/${pathString}`;
-        return `${prefix}${normalizedPath}${search ? `?${search}` : ''}`;
-    };
-
     const handleNavigate = (path: RouteHref) => {
-        if (shouldShowBar && typeof window !== 'undefined') {
-            const pathLabel = typeof path === 'string' ? path : path.pathname;
-            const pathQueryKeys = typeof path === 'string' ? [] : Object.keys(path.query ?? {});
-            console.info('[nav] click', {
-                path: pathLabel,
-                pathname,
-                href: window.location.href,
-                vkLaunchKeys,
-                pathQueryKeys,
-            });
-        }
-
-        const targetHref = buildHref(path);
-        const currentPathname = typeof window !== 'undefined' ? window.location.pathname : pathname;
-        const shouldHardFallback = isAppDetected || isApp;
-
         if (!vkLaunchQuery) {
             router.push(path);
-        } else if (typeof path === 'string') {
+            return;
+        }
+
+        if (typeof path === 'string') {
             router.push({ pathname: path, query: vkLaunchQuery });
-        } else {
-            router.push({ ...path, query: { ...vkLaunchQuery, ...(path.query ?? {}) } });
+            return;
         }
 
-        if (shouldHardFallback && typeof window !== 'undefined') {
-            if (fallbackTimerRef.current) {
-                window.clearTimeout(fallbackTimerRef.current);
-            }
-            fallbackTimerRef.current = window.setTimeout(() => {
-                const unchanged = window.location.pathname === currentPathname;
-                if (unchanged && targetHref) {
-                    console.info('[nav] fallback redirect', {
-                        from: currentPathname,
-                        to: targetHref,
-                        vkLaunchKeys,
-                    });
-                    window.location.href = targetHref;
-                }
-            }, 350);
-        }
+        router.push({ ...path, query: { ...vkLaunchQuery, ...(path.query ?? {}) } });
     };
-
-    useEffect(() => {
-        if (!shouldShowBar || typeof window === 'undefined') return;
-        console.info('[nav] route', {
-            pathname,
-            href: window.location.href,
-            isApp,
-            isAppDetected,
-            vkLaunchKeys,
-        });
-    }, [isApp, isAppDetected, pathname, shouldShowBar, vkLaunchKeys]);
 
     const isActive = (path: RouteHref) => {
         if (typeof path !== 'string') {

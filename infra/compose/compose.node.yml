@@ -87,3 +87,40 @@ services:
         reservations:
           cpus: "0.5"
           memory: 1G
+
+  tg:
+    image: ${REGISTRY}/${PROJECT_NAME}/tg:latest
+    env_file: .env
+    environment:
+      API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
+      WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
+      TG: ${PROTOCOL}://${EXTERNAL_HOST}/tg/
+      LOG_FILE: /logs/tg.log
+      ERR_FILE: /logs/tg.err
+    volumes:
+      - ${DATA_PATH}/logs:/logs
+    ports:
+      - target: 80
+        published: ${TG_PORT}
+        protocol: tcp
+        mode: ingress
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        preferences:
+          - spread: node.labels.worker
+        max_replicas_per_node: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.1"
+          memory: 128M

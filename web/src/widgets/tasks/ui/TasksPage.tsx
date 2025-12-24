@@ -81,10 +81,6 @@ const openVkRecommend = async ({ url }: { url: string }) => {
         shareMethods.push({ method: 'VKWebAppRecommend' });
     }
 
-    if (supportsMethod('VKWebAppShowInviteBox')) {
-        shareMethods.push({ method: 'VKWebAppShowInviteBox' });
-    }
-
     if (!bridge.supports || supportsMethod('VKWebAppShare')) {
         if (url) {
             shareMethods.push({ method: 'VKWebAppShare', params: { link: url } });
