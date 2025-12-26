@@ -8,6 +8,53 @@ import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { isVkMiniApp } from '@/shared/lib/vk';
 import { loginWithVkApp, selectAuthUser } from '../stores/authSlice';
 
+type VkUserInfo = {
+    first_name?: string;
+    last_name?: string;
+    photo_200?: string;
+    photo_200_orig?: string;
+    photo_100?: string;
+};
+
+const getVkUtm = () => {
+    if (typeof window === 'undefined') return null;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('utm') || params.get('vk_ref') || null;
+};
+
+const getVkEmail = () => {
+    if (typeof window === 'undefined') return null;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('vk_email') || null;
+};
+
+const getVkUserInfo = async (): Promise<VkUserInfo | null> => {
+    if (typeof window === 'undefined') return null;
+    const bridge = window.vkBridge;
+    if (!bridge?.send) return null;
+
+    const supportsAsync = (bridge as unknown as { supportsAsync?: (method: string) => Promise<boolean> }).supportsAsync;
+    if (typeof supportsAsync === 'function') {
+        try {
+            const supported = await supportsAsync('VKWebAppGetUserInfo');
+            if (!supported) return null;
+        } catch {
+            // Ignore capability detection errors.
+        }
+    }
+
+    try {
+        const response = await bridge.send('VKWebAppGetUserInfo');
+        if (response && typeof response === 'object') {
+            return response as VkUserInfo;
+        }
+    } catch {
+        // Ignore VK bridge errors.
+    }
+
+    return null;
+};
+
 export default function VkAuthInitializer() {
     const dispatch = useAppDispatch();
     const { error: showError } = useToastActions();
@@ -28,8 +75,25 @@ export default function VkAuthInitializer() {
 
         hasAttempted.current = true;
         inFlightRef.current = true;
-        dispatch(loginWithVkApp({ url, utm }))
-            .unwrap()
+        const runAuth = async () => {
+            const resolvedUtm = utm || getVkUtm();
+            const userInfo = await getVkUserInfo();
+            const image = userInfo?.photo_200_orig || userInfo?.photo_200 || userInfo?.photo_100 || null;
+            const mail = getVkEmail();
+
+            return dispatch(
+                loginWithVkApp({
+                    url,
+                    utm: resolvedUtm,
+                    name: userInfo?.first_name,
+                    surname: userInfo?.last_name,
+                    image,
+                    mail,
+                })
+            ).unwrap();
+        };
+
+        runAuth()
             .catch((err) => {
                 showError(formatApiErrorMessage(err, tSystem('server_error')));
             })

@@ -47,6 +47,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 ## Referrals (Frens)
 - Backend: `POST /users/frens/` returns the current user's frens list (sorted by balance) with relation labels and `referral_link`.
 - Referral key: `UserLocal.link` is generated via `encrypt(user.id, 8)` and decoded with `decrypt()` in `routes/users/auth.update_utm` to resolve referrers.
+- VK Mini Apps: share links should use `vk_ref=<referral>` so the frontend can map it to `utm` on session init.
 - Frontend: `web/src/app/[locale]/social/page.tsx` renders the frens list and uses `navigation.frens` + `social.*` i18n; mobile bottom bar includes the frens entry linking to `/social`.
 
 ## Environments

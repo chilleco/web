@@ -17,7 +17,7 @@ export default function SessionInitializer() {
     const authToken = useAppSelector((state) => state.session.authToken);
     const { error: showError } = useToastActions();
 
-    const utmParam = useMemo(() => searchParams?.get('utm') || null, [searchParams]);
+    const utmParam = useMemo(() => searchParams?.get('utm') || searchParams?.get('vk_ref') || null, [searchParams]);
 
     useEffect(() => {
         if (utmParam) {

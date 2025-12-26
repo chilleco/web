@@ -106,6 +106,7 @@ jobs:
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH }}
+          command_timeout: 30m
           # script_stop: true
           script: |
             # set -euo pipefail
@@ -201,7 +202,7 @@ jobs:
                 "${STACK}_${service}"
             done
 
-            #
+            echo "Clean"
             yes | sudo docker system prune -a
 
             # check services

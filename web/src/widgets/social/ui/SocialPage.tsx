@@ -49,7 +49,7 @@ const buildVkReferralUrl = (referralKey: string) => {
     }
 
     const url = new URL(`https://vk.com/app${appId}`);
-    url.searchParams.set('utm', referralKey);
+    url.searchParams.set('vk_ref', referralKey);
     return url.toString();
 };
 
@@ -115,7 +115,7 @@ const openTelegramShareMessage = (messageId: string) => {
     return true;
 };
 
-const openVkShare = async ({ url, text }: { url: string; text?: string }) => {
+const openVkShare = async ({ url, text, forceLink = false }: { url: string; text?: string; forceLink?: boolean }) => {
     if (typeof window === 'undefined') return false;
     const bridge = window.vkBridge;
     if (!bridge?.send) return false;
@@ -125,8 +125,12 @@ const openVkShare = async ({ url, text }: { url: string; text?: string }) => {
             ? (bridge as unknown as { isWebView: () => boolean }).isWebView()
             : false;
 
+    if (forceLink && !(await supportsVkMethod('VKWebAppShare'))) {
+        return false;
+    }
+
     // New invite dialog (mobile webview only; crashes on desktop/messenger if unsupported).
-    if (isWebView && (await supportsVkMethod('VKWebAppShowInviteBox'))) {
+    if (!forceLink && isWebView && (await supportsVkMethod('VKWebAppShowInviteBox'))) {
         const inviteParams = text ? { message: text } : undefined;
         try {
             await bridge.send('VKWebAppShowInviteBox', inviteParams);
@@ -144,7 +148,7 @@ const openVkShare = async ({ url, text }: { url: string; text?: string }) => {
     }
 
     // VK recommend sheet (if available) - no custom text support.
-    if (await supportsVkMethod('VKWebAppRecommend')) {
+    if (!forceLink && (await supportsVkMethod('VKWebAppRecommend'))) {
         try {
             await bridge.send('VKWebAppRecommend');
             return true;
@@ -439,8 +443,7 @@ export default function SocialPage() {
             }
 
             if (network === 'vk' || hasVkBridge) {
-                const shareMessage = text ? `${text} ${url}` : url;
-                if (await openVkShare({ url, text: shareMessage })) return;
+                if (await openVkShare({ url, text, forceLink: true })) return;
             }
 
             if (network === 'max') {

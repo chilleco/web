@@ -41,6 +41,10 @@ export async function loginWithTelegramAppApi(data: TelegramAppAuthRequest): Pro
 export interface VkAppAuthRequest {
     url: string;
     utm?: string | null;
+    name?: string | null;
+    surname?: string | null;
+    image?: string | null;
+    mail?: string | null;
 }
 
 export async function loginWithVkAppApi(data: VkAppAuthRequest): Promise<AuthUser> {
