@@ -64,6 +64,7 @@ const buildTelegramShareUrl = (targetUrl: string, text: string) => {
 
 const buildTelegramTargetUrl = (referralUrl: string, referralKey: string) => {
     if (process.env.NEXT_PUBLIC_TG_BOT) {
+        // console.log(`TG Share: https://t.me/${process.env.NEXT_PUBLIC_TG_BOT}?start=${referralKey}`);
         return `https://t.me/${process.env.NEXT_PUBLIC_TG_BOT}?start=${referralKey}`;
     }
     return referralUrl;
@@ -133,6 +134,7 @@ const openVkShare = async ({ url, text, forceLink = false }: { url: string; text
     if (!forceLink && isWebView && (await supportsVkMethod('VKWebAppShowInviteBox'))) {
         const inviteParams = text ? { message: text } : undefined;
         try {
+            // console.log(`VK Share: ${inviteParams}`);
             await bridge.send('VKWebAppShowInviteBox', inviteParams);
             return true;
         } catch {
@@ -160,6 +162,7 @@ const openVkShare = async ({ url, text, forceLink = false }: { url: string; text
     if (await supportsVkMethod('VKWebAppShare')) {
         const shareParams = text ? { link: url, text } : { link: url };
         try {
+            // console.log(`VK Share: ${shareParams}`);
             await bridge.send('VKWebAppShare', shareParams);
             return true;
         } catch {
@@ -355,13 +358,12 @@ export default function SocialPage() {
     const [frens, setFrens] = useState<FrenProfile[]>([]);
     const [count, setCount] = useState(0);
     const [referralLink, setReferralLink] = useState<string | null>(null);
-    const [referralCode, setReferralCode] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isShareLoading, setIsShareLoading] = useState(false);
     const fetchInFlightRef = useRef(false);
     const shareInFlightRef = useRef(false);
-    const canShare = Boolean(referralLink || referralCode !== null);
+    const canShare = Boolean(referralLink !== null);
 
     const orderedFrens = useMemo(() => {
         return [...frens].sort((a, b) => {
@@ -401,9 +403,7 @@ export default function SocialPage() {
     }, [loadFrens]);
 
     const handleAddFriends = useCallback(async () => {
-        const referralKey = referralLink ?? (referralCode !== null ? String(referralCode) : null);
-
-        if (!referralKey) {
+        if (!referralLink) {
             showError(tSocial('referralMissing'));
             return;
         }
@@ -415,7 +415,7 @@ export default function SocialPage() {
         try {
             const network = getClientNetwork();
             const hasVkBridge = typeof window !== 'undefined' && !!window.vkBridge?.send;
-            const url = network === 'vk' || hasVkBridge ? buildVkReferralUrl(referralKey) : buildReferralUrl(referralKey);
+            const url = network === 'vk' || hasVkBridge ? buildVkReferralUrl(referralLink) : buildReferralUrl(referralLink);
             const title = tSocial('shareTitle');
             const text = tSocial('shareText');
 
@@ -426,7 +426,7 @@ export default function SocialPage() {
                 if (tma?.shareMessage) {
                     try {
                         const shareMessage = await getTelegramShareMessage({
-                            url: buildTelegramTargetUrl(url, referralKey),
+                            url: buildTelegramTargetUrl(url, referralLink),
                             text,
                             button: tSystem('open'),
                             image: 'https://placehold.co/600x400/png',
@@ -437,7 +437,7 @@ export default function SocialPage() {
                     }
                 }
 
-                const targetUrl = buildTelegramTargetUrl(url, referralKey);
+                const targetUrl = buildTelegramTargetUrl(url, referralLink);
                 const shareUrl = buildTelegramShareUrl(targetUrl, text);
                 if (openTelegramShare(shareUrl)) return;
             }
@@ -457,7 +457,7 @@ export default function SocialPage() {
             shareInFlightRef.current = false;
             setIsShareLoading(false);
         }
-    }, [formatApiErrorMessage, referralCode, referralLink, share, showError, tSocial, tSystem]);
+    }, [formatApiErrorMessage, referralLink, share, showError, tSocial, tSystem]);
 
     return (
         <div
