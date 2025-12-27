@@ -2,6 +2,8 @@
 The authorization method of the user object of the API
 """
 
+import time
+
 import jwt
 from fastapi import APIRouter, Body, Request
 from fastapi.responses import JSONResponse
@@ -54,6 +56,7 @@ def get_user(global_user, **kwargs):
 async def update_utm(user, global_user, utm):
     if not utm:
         return user, None, None
+    log.info(f"UTM #{utm} for {user.id}")
 
     try:
         referrer_id = decrypt(utm)
@@ -91,7 +94,11 @@ async def update_utm(user, global_user, utm):
     if referrer.id == user.id:
         return user, None, None
 
-    if user.referrer is None:
+    if (
+        user.referrer is None
+        and not user.frens  # friend link
+        and time.time() - user.created > 3600  # old user – no referrer
+    ):
         user.referrer = referrer.id
 
     if referrer.id not in user.frens:

@@ -6,6 +6,7 @@ import { useToastActions } from '@/shared/hooks/useToast';
 import { useApiErrorMessage } from '@/shared/hooks/useApiErrorMessage';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { isVkMiniApp } from '@/shared/lib/vk';
+import { getUtmFromSearchParams } from '@/shared/lib/utm';
 import { loginWithVkApp, selectAuthUser } from '../stores/authSlice';
 
 type VkUserInfo = {
@@ -19,7 +20,7 @@ type VkUserInfo = {
 const getVkUtm = () => {
     if (typeof window === 'undefined') return null;
     const params = new URLSearchParams(window.location.search);
-    return params.get('utm') || params.get('vk_ref') || null;
+    return getUtmFromSearchParams(params);
 };
 
 const getVkEmail = () => {
@@ -80,6 +81,8 @@ export default function VkAuthInitializer() {
             const userInfo = await getVkUserInfo();
             const image = userInfo?.photo_200_orig || userInfo?.photo_200 || userInfo?.photo_100 || null;
             const mail = getVkEmail();
+
+            console.log(`VK UTM #${resolvedUtm}`, userInfo);
 
             return dispatch(
                 loginWithVkApp({

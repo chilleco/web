@@ -7,23 +7,32 @@ import { useToastActions } from '@/shared/hooks/useToast';
 import { useAppDispatch, useAppSelector } from '@/shared/stores/store';
 import { STORAGE_KEYS } from '@/shared/constants';
 import { syncAuthCookie } from '@/shared/lib/auth';
-import { initializeSession, setUtm } from '../stores/sessionSlice';
+import { getClientNetwork } from '@/shared/lib/app';
+import { getUtmFromSearchParams } from '@/shared/lib/utm';
+import { initializeSession, setNetwork, setUtm } from '../stores/sessionSlice';
 
 export default function SessionInitializer() {
     const dispatch = useAppDispatch();
     const searchParams = useSearchParams();
     const t = useTranslations('session');
-    const { status } = useAppSelector((state) => state.session);
+    const { status, network: storedNetwork, utm: storedUtm } = useAppSelector((state) => state.session);
     const authToken = useAppSelector((state) => state.session.authToken);
     const { error: showError } = useToastActions();
 
-    const utmParam = useMemo(() => searchParams?.get('utm') || searchParams?.get('vk_ref') || null, [searchParams]);
+    const utmParam = useMemo(() => getUtmFromSearchParams(searchParams), [searchParams]);
 
     useEffect(() => {
-        if (utmParam) {
+        if (storedUtm !== utmParam) {
             dispatch(setUtm(utmParam));
         }
-    }, [dispatch, utmParam]);
+    }, [dispatch, storedUtm, utmParam]);
+
+    useEffect(() => {
+        const resolvedNetwork = getClientNetwork();
+        if (storedNetwork !== resolvedNetwork) {
+            dispatch(setNetwork(resolvedNetwork));
+        }
+    }, [dispatch, storedNetwork]);
 
     useEffect(() => {
         if (status === 'loading') {
