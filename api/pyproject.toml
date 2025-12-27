@@ -17,7 +17,7 @@ dependencies = [
     "taskiq-redis==1.2.1",
 
     # Users
-    "userhub==0.16",
+    "userhub==0.18",
 
     # DB
     "consys==0.44",
