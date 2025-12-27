@@ -61,7 +61,11 @@ async def handler(
             "network",
         }
 
-    user_global = User.get(request.state.user)  # TODO: use local
+    user_global = await User.get(
+        token=request.state.token,
+        id=request.state.user,
+        fields=list({"id", "link"}),
+    )  # TODO: use local
     user = UserLocal.get(request.state.user)
 
     def handle(task):

@@ -3,14 +3,17 @@ from consys.errors import ErrorWrong
 
 from lib import report
 from lib.tg import tg
-from models.user import User
+from models.user import complex_global_users
 
 
 async def check(user_id, params):
     if not params or not params.get("chat_id"):
         raise ErrorWrong("chat_id")
 
-    user_global = User.get(user_id)  # FIXME
+    user_global = await complex_global_users(
+        id=user_id,
+        fields=list({"id", "social"}),
+    )  # FIXME
 
     try:
         response = await tg.bot.get_chat_member(

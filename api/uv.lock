@@ -256,7 +256,7 @@ requires-dist = [
     { name = "taskiq-redis", specifier = "==1.2.1" },
     { name = "tgio", specifier = "==0.17" },
     { name = "tgreports", specifier = "==0.19.0" },
-    { name = "userhub", specifier = "==0.15" },
+    { name = "userhub", specifier = "==0.16" },
     { name = "uvicorn", specifier = "==0.38.0" },
     { name = "websockets", specifier = "==15.0.1" },
 ]
@@ -2100,15 +2100,15 @@ wheels = [
 
 [[package]]
 name = "userhub"
-version = "0.15"
+version = "0.16"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "consys" },
     { name = "libdev" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cc/76/f3413465f1bd31d6d3fc25e4ae90d74f66d34017ad509acfa75540d73bc7/userhub-0.15.tar.gz", hash = "sha256:8bc6a2a97fd795d47215b32320ee77751d10bbcf2b5214e98d6b0ba714fa79e7", size = 8379, upload-time = "2025-12-02T10:48:14.177Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e2/a0/feaf735d1ebdcb0b1b7961136deceb86809636bae6748327082d2ce3fa9a/userhub-0.16.tar.gz", hash = "sha256:941eff7a4eb18110baf4707cff1ec9d448e843f0c008fa67aab7052e4d267690", size = 8401, upload-time = "2025-12-27T14:48:12.795Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f2/22/fcd343ec30b5cfd9f1e96e2f89a1f42d444415734dc78f6d06ca316c6ca6/userhub-0.15-py3-none-any.whl", hash = "sha256:2afe99eae4595948c13c63c0d4b9769e28d2812a8f88a64fc530105be4e08312", size = 7773, upload-time = "2025-12-02T10:48:12.869Z" },
+    { url = "https://files.pythonhosted.org/packages/03/6a/f4e28ace4ad948aa5a554cd00624183e01c9dec65fe7f6ca29b79601807a/userhub-0.16-py3-none-any.whl", hash = "sha256:cfad282e822918a4d1b8775fad3de165aebad53ae6188e6369eb261cb2f3d738", size = 7787, upload-time = "2025-12-27T14:48:11.838Z" },
 ]
 
 [[package]]

@@ -73,7 +73,11 @@ async def handler(
     if request.state.status < 3 or not request.state.user:
         raise ErrorAccess("frens")
 
-    user_global = User.get(request.state.user)  # TODO: use local
+    user_global = await User.get(
+        token=request.state.token,
+        id=request.state.user,
+        fields=list({"id", "link"}),
+    )  # TODO: use local
     user, _ = UserLocal.get_or_create(request.state.user)
 
     fren_ids = {int(value) for value in (user.frens or []) if value}

@@ -84,7 +84,11 @@ async def handler(
             "inline_keyboard": [[{"text": button, "url": url}]],
         }
 
-    user_global = User.get(request.state.user)  # FIXME: use local
+    user_global = await User.get(
+        token=request.state.token,
+        id=request.state.user,
+        fields=list({"id", "social"}),
+    )  # FIXME: use local
     payload = {
         "user_id": int(user_global.get_social(2)["id"]),
         "result": json.dumps(result, ensure_ascii=False),
