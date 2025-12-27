@@ -36,17 +36,11 @@ router = APIRouter()
 
 
 def get_user(global_user, **kwargs):
-    if not global_user:
-        raise ErrorInvalid("user_id")
-
-    social = get_social(global_user, 2) or {}
-
-    if not global_user["id"]:
+    if not global_user or not global_user["id"]:
         raise ErrorInvalid("user_id")
 
     user, new = UserLocal.get_or_create(
         global_user["id"],
-        social_user=social.get("id"),
         locale=kwargs.get("locale"),
     )
 
@@ -114,6 +108,8 @@ async def update_utm(user, global_user, utm):
 
 async def wrap_auth(*args, **kwargs):
     """Unified auth wrapper"""
+
+    log.info(f"WRAP AUTH args: {args} kwargs: {kwargs}")
 
     user, token_id, new_global = await auth(cfg("PROJECT_NAME"), *args, **kwargs)
 

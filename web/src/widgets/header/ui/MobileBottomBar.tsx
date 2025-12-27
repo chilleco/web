@@ -74,13 +74,10 @@ export function MobileBottomBar() {
             return;
         }
 
-        const setOffset = (height: number) => {
-            const safeHeight = Math.max(0, Math.ceil(height));
-            root.style.setProperty(MOBILE_BOTTOM_BAR_OFFSET_VAR, `${safeHeight}px`);
-        };
-
         const updateOffset = () => {
-            setOffset(nav.getBoundingClientRect().height);
+            const rect = nav.getBoundingClientRect();
+            const offset = Math.max(0, Math.ceil(window.innerHeight - rect.top));
+            root.style.setProperty(MOBILE_BOTTOM_BAR_OFFSET_VAR, `${offset}px`);
         };
 
         updateOffset();
@@ -134,9 +131,9 @@ export function MobileBottomBar() {
             {shouldShowBar ? (
                 <nav
                     ref={navRef}
-                    className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-[0_-0.25rem_1.5rem_rgba(0,0,0,0.12)]"
+                    className="fixed bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] inset-x-3 z-50 rounded-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-[0_-0.25rem_1.5rem_rgba(0,0,0,0.12)]"
                 >
-                    <div className="grid grid-flow-col auto-cols-fr gap-1 px-4 pb-[env(safe-area-inset-bottom)]">
+                    <div className="grid grid-flow-col auto-cols-fr gap-1 px-3 py-1.5">
                         {items.map(item => {
                             const Icon = item.icon;
                             const active = isActive(item.path);
@@ -150,7 +147,7 @@ export function MobileBottomBar() {
                                     key={item.key}
                                     type="button"
                                     className={cn(
-                                        'flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors cursor-pointer',
+                                        'flex flex-col items-center justify-center gap-0.5 py-2 text-xs font-medium transition-colors cursor-pointer',
                                         active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                                     )}
                                     onClick={handleClick}

@@ -13,7 +13,6 @@ class Task(Base):
     Stored fields:
     - `title`/`data`/`button`: localized dicts (keys are locale codes, e.g. `{"en": "...", "ru": "..."}`).
     - `link`: optional action link. If it contains a literal `'{}'` placeholder, `/tasks/get/` (user mode)
-      formats it with `user.social_user` (Telegram user id) so invite/share links can embed the ref id.
     - `icon`: optional FontAwesome icon key (without `fa-` prefix), e.g. `gift`. Older records may still contain
       a full class string like `fa-solid fa-gift`; the admin UI normalizes inputs to the key form.
     - `verify`: key of the verify module under `api/app/verify/<verify>.py`.

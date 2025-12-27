@@ -3,20 +3,19 @@ from consys.errors import ErrorWrong
 
 from lib import report
 from lib.tg import tg
-from models.user import UserLocal
+from models.user import User
 
 
 async def check(user_id, params):
     if not params or not params.get("chat_id"):
         raise ErrorWrong("chat_id")
 
-    user = UserLocal.get(user_id)
-    if not user.social_user:
-        raise ErrorWrong("id")
+    user_global = User.get(user_id)  # FIXME
 
     try:
         response = await tg.bot.get_chat_member(
-            chat_id=params["chat_id"], user_id=user.social_user
+            chat_id=params["chat_id"],
+            user_id=user_global.get_social(2)["id"],  # TODO: by networks
         )
     except Exception as e:
         await report.error(
@@ -24,7 +23,6 @@ async def check(user_id, params):
             {
                 "user": user_id,
                 "chat_id": params["chat_id"],
-                "user_id": user.social_user,
             },
             error=e,
         )

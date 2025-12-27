@@ -2,7 +2,6 @@ from typing import Any, Dict, Iterable, List
 
 from userhub import BaseUser as User
 from libdev.codes import get_flag
-from libdev.crypt import encrypt
 from consys.errors import ErrorWrong
 
 from lib import cfg
@@ -35,14 +34,12 @@ class UserLocal(Base):
     spaces = Attribute(types=list)
 
     # Referral
-    link = Attribute(types=str)
     referrer = Attribute(types=int)
     frens = Attribute(types=list)
     utm = Attribute(types=str)
 
     # Cache
     locale = Attribute(types=str, default="en")
-    social_user = Attribute(types=int)  # TODO: rm, use get_social()
     # Completed task ids (used by `/tasks/get/` and `/tasks/check/`)
     tasks = Attribute(types=list)
     # draws = Attribute(types=list)
@@ -53,7 +50,6 @@ class UserLocal(Base):
         cls,
         user_id: int,
         *,
-        social_user: int | None = None,
         locale: str | None = None,
     ) -> tuple["UserLocal", bool]:
         """Return a local user overlay, creating it with defaults when missing."""
@@ -68,20 +64,15 @@ class UserLocal(Base):
             new = True
             user = cls(
                 id=user_id,
-                link=encrypt(user_id, 8),
                 balance=DEFAULT_BALANCE,
-                social_user=social_user,
                 locale=locale,
             )
             changed = True
 
-        else:
-            if not user.social_user and social_user:
-                user.social_user = social_user
-                changed = True
-            # if not user.locale or (locale and user.locale != locale):
-            #     user.locale = locale
-            #     changed = True
+        # else:
+        #     if not user.locale or (locale and user.locale != locale):
+        #         user.locale = locale
+        #         changed = True
 
         if changed:
             user.save()

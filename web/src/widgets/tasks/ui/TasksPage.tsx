@@ -466,9 +466,9 @@ export default function TasksPage() {
                     />
 
                     <div className="space-y-3">
-                        {isVkMiniApp ? (
+                        {/* {isVkMiniApp ? (
                             <VkRecommendWidget isLoading={isRecommending} onRecommend={handleVkRecommend} />
-                        ) : null}
+                        ) : null} */}
 
                         {balance !== null && (
                             <div className="flex items-center justify-between gap-3">

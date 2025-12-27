@@ -10,7 +10,7 @@ from consys.errors import BaseError, ErrorAccess
 from libdev.req import fetch
 
 from lib import cfg, generate
-from models.user import UserLocal
+from models.user import User, UserLocal
 
 
 router = APIRouter()
@@ -61,8 +61,6 @@ async def handler(
         raise BaseError("tg.token")
 
     user, _ = UserLocal.get_or_create(request.state.user)
-    if not user.social_user:
-        raise BaseError("telegram_user")
 
     url = (data.url or "").strip()
     text = data.text.strip()
@@ -86,8 +84,9 @@ async def handler(
             "inline_keyboard": [[{"text": button, "url": url}]],
         }
 
+    user_global = User.get(request.state.user)  # FIXME: use local
     payload = {
-        "user_id": int(user.social_user),
+        "user_id": int(user_global.get_social(2)["id"]),
         "result": json.dumps(result, ensure_ascii=False),
         "allow_user_chats": True,
         "allow_bot_chats": True,

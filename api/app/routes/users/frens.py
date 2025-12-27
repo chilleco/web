@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from consys.errors import ErrorAccess
 from libdev.crypt import encrypt
 
-from models.user import UserLocal, fetch_user_profiles
+from models.user import User, UserLocal, fetch_user_profiles
 
 
 router = APIRouter()
@@ -73,18 +73,15 @@ async def handler(
     if request.state.status < 3 or not request.state.user:
         raise ErrorAccess("frens")
 
+    user_global = User.get(request.state.user)  # TODO: use local
     user, _ = UserLocal.get_or_create(request.state.user)
-
-    if not user.link:
-        user.link = encrypt(user.id, 8)
-        user.save()
 
     fren_ids = {int(value) for value in (user.frens or []) if value}
     if not fren_ids:
         return {
             "frens": [],
             "count": 0,
-            "referral_link": user.link,
+            "referral_link": user_global.link,
         }
 
     profiles = await fetch_user_profiles(
@@ -137,5 +134,5 @@ async def handler(
     return {
         "frens": frens,
         "count": total,
-        "referral_link": user.link,
+        "referral_link": user_global.link,
     }

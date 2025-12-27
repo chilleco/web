@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field
 from libdev.codes import NETWORKS
 from consys.errors import ErrorAccess
 
-from models.user import UserLocal
+from models.user import User, UserLocal
 from models.task import Task
 
 
@@ -61,6 +61,7 @@ async def handler(
             "network",
         }
 
+    user_global = User.get(request.state.user)  # TODO: use local
     user = UserLocal.get(request.state.user)
 
     def handle(task):
@@ -74,9 +75,7 @@ async def handler(
         task["status"] = 3 if task["id"] in user.tasks else 1
         if task.get("link") and "{}" in task["link"]:
             # Keep DB value as literal `'{}'` and inject user social id only in user mode.
-            task["link"] = task["link"].format(
-                user.link
-            )  # FIXME: or user.social_user ???
+            task["link"] = task["link"].format(user_global.link)
         if task.get("network"):
             task["network"] = NETWORKS[task["network"]]
         return task
