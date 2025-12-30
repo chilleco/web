@@ -49,7 +49,9 @@ const buildVkReferralUrl = (referralKey: string) => {
     }
 
     const url = new URL(`https://vk.com/app${appId}`);
-    url.searchParams.set('vk_ref', referralKey);
+    const hashParams = new URLSearchParams();
+    hashParams.set('utm', referralKey);
+    url.hash = hashParams.toString();
     return url.toString();
 };
 

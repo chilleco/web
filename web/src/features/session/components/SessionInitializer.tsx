@@ -20,9 +20,10 @@ export default function SessionInitializer() {
     const { error: showError } = useToastActions();
 
     const utmParam = useMemo(() => getUtmFromSearchParams(searchParams), [searchParams]);
+    // console.log('!2', utmParam);
 
     useEffect(() => {
-        if (storedUtm !== utmParam) {
+        if (utmParam && storedUtm !== utmParam) {
             dispatch(setUtm(utmParam));
         }
     }, [dispatch, storedUtm, utmParam]);

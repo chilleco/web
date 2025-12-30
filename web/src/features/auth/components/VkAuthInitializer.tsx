@@ -82,7 +82,7 @@ export default function VkAuthInitializer() {
             const image = userInfo?.photo_200_orig || userInfo?.photo_200 || userInfo?.photo_100 || null;
             const mail = getVkEmail();
 
-            console.log(`VK UTM #${resolvedUtm}`, userInfo);
+            // console.log(`VK UTM #${resolvedUtm} (${utm} / ${getVkUtm()})`, userInfo);
 
             return dispatch(
                 loginWithVkApp({

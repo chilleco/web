@@ -68,7 +68,6 @@ async def update_utm(user, global_user, utm):
         except Exception as e:  # pylint: disable=broad-except
             log.error(f"Getting global referrer for #{referrer_id}: {e}")
         # else:
-        #     print("!@#", len(global_referrers))
         #     if len(global_referrers) == 1:
         #         global_referrer = global_referrers[0]
         #     else:
