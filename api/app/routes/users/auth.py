@@ -90,7 +90,7 @@ async def update_utm(user, global_user, utm):
     if (
         user.referrer is None
         and not user.frens  # friend link
-        and time.time() - user.created > 3600  # old user – no referrer
+        and time.time() - user.created < 3600  # old user – no referrer
     ):
         user.referrer = referrer.id
 

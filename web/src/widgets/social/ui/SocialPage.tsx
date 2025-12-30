@@ -418,6 +418,7 @@ export default function SocialPage() {
             const network = getClientNetwork();
             const hasVkBridge = typeof window !== 'undefined' && !!window.vkBridge?.send;
             const url = network === 'vk' || hasVkBridge ? buildVkReferralUrl(referralLink) : buildReferralUrl(referralLink);
+            const telegramTargetUrl = network === 'tg' ? buildTelegramTargetUrl(url, referralLink) : null;
             const title = tSocial('shareTitle');
             const text = tSocial('shareText');
 
@@ -428,18 +429,19 @@ export default function SocialPage() {
                 if (tma?.shareMessage) {
                     try {
                         const shareMessage = await getTelegramShareMessage({
-                            url: buildTelegramTargetUrl(url, referralLink),
+                            url: telegramTargetUrl ?? buildTelegramTargetUrl(url, referralLink),
                             text,
                             button: tSystem('open'),
                             image: 'https://placehold.co/600x400/png',
                         });
                         if (openTelegramShareMessage(shareMessage.id)) return;
-                    } catch {
+                    } catch (e) {
+                        console.log(`openTelegramShareMessage: ${e}`)
                         // Fallback to classic share link if prepared message fails.
                     }
                 }
 
-                const targetUrl = buildTelegramTargetUrl(url, referralLink);
+                const targetUrl = telegramTargetUrl ?? buildTelegramTargetUrl(url, referralLink);
                 const shareUrl = buildTelegramShareUrl(targetUrl, text);
                 if (openTelegramShare(shareUrl)) return;
             }
@@ -452,7 +454,7 @@ export default function SocialPage() {
                 if (await openMaxShare({ url, title, text })) return;
             }
 
-            share({ title, url });
+            share({ title, url: telegramTargetUrl ?? url });
         } catch (err) {
             showError(formatApiErrorMessage(err, tSystem('shareUnavailable')));
         } finally {
