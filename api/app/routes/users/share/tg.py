@@ -61,8 +61,15 @@ async def handler(
         raise BaseError("tg.token")
 
     user, _ = UserLocal.get_or_create(request.state.user)
+    user_global = await User.get(
+        token=request.state.token,
+        id=request.state.user,
+        fields=list({"id", "link", "social"}),
+    )  # FIXME: use local
 
     url = (data.url or "").strip()
+    if not url:
+        url = f"https://t.me/{cfg('tg.bot')}?start={user_global.link}"
     text = data.text.strip()
     button = (data.button or "").strip()
     image = (data.image or "").strip()
@@ -84,11 +91,6 @@ async def handler(
             "inline_keyboard": [[{"text": button, "url": url}]],
         }
 
-    user_global = await User.get(
-        token=request.state.token,
-        id=request.state.user,
-        fields=list({"id", "social"}),
-    )  # FIXME: use local
     payload = {
         "user_id": int(user_global.get_social(2)["id"]),
         "result": json.dumps(result, ensure_ascii=False),

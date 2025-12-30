@@ -65,8 +65,8 @@ const buildTelegramShareUrl = (targetUrl: string, text: string) => {
 };
 
 const buildTelegramTargetUrl = (referralUrl: string, referralKey: string) => {
+    // console.log('TG Share', referralUrl, referralKey);
     if (process.env.NEXT_PUBLIC_TG_BOT) {
-        // console.log(`TG Share: https://t.me/${process.env.NEXT_PUBLIC_TG_BOT}?start=${referralKey}`);
         return `https://t.me/${process.env.NEXT_PUBLIC_TG_BOT}?start=${referralKey}`;
     }
     return referralUrl;
@@ -429,7 +429,7 @@ export default function SocialPage() {
                 if (tma?.shareMessage) {
                     try {
                         const shareMessage = await getTelegramShareMessage({
-                            url: telegramTargetUrl ?? buildTelegramTargetUrl(url, referralLink),
+                            // url: telegramTargetUrl ?? buildTelegramTargetUrl(url, referralLink),
                             text,
                             button: tSystem('open'),
                             image: 'https://placehold.co/600x400/png',
