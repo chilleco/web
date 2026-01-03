@@ -1,6 +1,27 @@
 include .env
 
-#
+# ============================================================================
+# Common
+# ============================================================================
+
+ENV_LC := $(shell echo "$(MODE)" | tr A-Z a-z)
+STACK_NAME ?= $(PROJECT_NAME)-$(ENV_LC)
+IMAGE_TAG ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo latest)
+SECRETS_VERSION ?= $(IMAGE_TAG)
+
+# Files
+COMPOSE_BASE := infra/compose/$(COMPOSE_BASE)
+COMPOSE_APP := infra/compose/$(ENV_LC).yml
+# FIXME: rm, use COMPOSE_APP
+COMPOSE_LOCAL := infra/compose/local.yml
+COMPOSE_TEST := infra/compose/test.yml
+COMPOSE_DEV := infra/compose/dev.yml
+COMPOSE_PROD := infra/compose/prod.yml
+
+# ============================================================================
+# Actions & Pipeline
+# ============================================================================
+
 release:
 	git checkout dev
 	git pull
@@ -9,45 +30,55 @@ release:
 	git push origin main
 	git checkout dev
 
+# ============================================================================
+# Docker Lifecycle
+# ============================================================================
+
 # Start services
 up:
-	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f local.yml -p ${PROJECT_NAME} up --build
+	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) -p ${PROJECT_NAME} up --build
 
 up-dev:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f dev.yml -p ${PROJECT_NAME} up --build
+	sudo docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -p ${PROJECT_NAME} up --build
 
 # up-prod:
-# 	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f prod.yml -p ${PROJECT_NAME} up --build -d
+# 	sudo docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_PROD) -p ${PROJECT_NAME} up --build -d
 
 up-test:
-	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f test.yml -p ${PROJECT_NAME} up --build
+	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} up --build
 
 # Stop services
 down:
-	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f local.yml -p ${PROJECT_NAME} down
+	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) -p ${PROJECT_NAME} down
 
 down-dev:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f dev.yml -p ${PROJECT_NAME} down
+	sudo docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -p ${PROJECT_NAME} down
 
 # down-prod:
-# 	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f prod.yml -p ${PROJECT_NAME} down
+# 	sudo docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_PROD) -p ${PROJECT_NAME} down
 
 down-test:
-	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f test.yml -p ${PROJECT_NAME} down
+	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} down
 
+# ============================================================================
 # Status and monitoring
+# ============================================================================
+
 status:
 	sudo docker ps --filter name="^${PROJECT_NAME}" --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
 
+# ============================================================================
 # Logs
+# ============================================================================
+
 # logs:
-# 	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f prod.yml logs
+# 	sudo docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_PROD) logs
 
 logs-dev:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f dev.yml logs
+	sudo docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) logs
 
 logs-local:
-	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f local.yml logs
+	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) logs
 
 logs-api:
 	tail -f ${DATA_PATH}/logs/api.log
@@ -64,7 +95,10 @@ logs-tg:
 logs-web:
 	docker service logs -f ${PROJECT_NAME}_web
 
+# ============================================================================
 # Development tools
+# ============================================================================
+
 shell:
 	sudo docker exec -it `sudo docker ps -a --filter name="^${PROJECT_NAME}.*api" --format "{{.ID}}" | head -n 1` bash
 
@@ -84,9 +118,12 @@ set:
 	sudo systemctl restart nginx
 	sudo certbot --nginx
 
-# Run tests
+# ============================================================================
+# Tests & Linter
+# ============================================================================
+
 test: # FIXME
-	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f test.yml -p ${PROJECT_NAME} up --build
+	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} up --build
 
 lint-api:
 	find . -type f -name '*.py' \
@@ -115,7 +152,10 @@ unit-test-changed:
 	| awk '{print $$2}' \
 	| xargs pytest -s
 
+# ============================================================================
 # Cleanup
+# ============================================================================
+
 clean-venv:
 	rm -rf env/
 	rm -rf **/env/
