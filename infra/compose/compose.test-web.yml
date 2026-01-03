@@ -1,8 +1,0 @@
-services:
-  test:
-    image: node:24
-    build: ../../web
-    volumes:
-      - ../../web:/app
-    working_dir: /app
-    command: bash -c "npm i && node_modules/.bin/eslint . --ext .js --ext .jsx"

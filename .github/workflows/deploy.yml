@@ -146,7 +146,7 @@ jobs:
             echo "Copying keys"
             cp "$SECRETS_FILE" "$FOLDER/.env"
 
-            COMPOSE_FILE=infra/compose/compose.node.yml
+            COMPOSE_FILE=infra/compose/prod.yml
             REGISTRY=${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_OWNER }}
             PROJECT_NAME=${{ env.PROJECT_NAME }}
             STACK=${{ env.STACK_NAME }}

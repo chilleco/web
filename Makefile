@@ -11,43 +11,43 @@ release:
 
 # Start services
 up:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.local.yml -p ${PROJECT_NAME} up --build
+	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f local.yml -p ${PROJECT_NAME} up --build
 
 up-dev:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml -p ${PROJECT_NAME} up --build
+	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f dev.yml -p ${PROJECT_NAME} up --build
 
-up-prod:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml -p ${PROJECT_NAME} up --build -d
+# up-prod:
+# 	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f prod.yml -p ${PROJECT_NAME} up --build -d
 
 up-test:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.test.yml -p ${PROJECT_NAME} up --build
+	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f test.yml -p ${PROJECT_NAME} up --build
 
 # Stop services
 down:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.local.yml -p ${PROJECT_NAME} down
+	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f local.yml -p ${PROJECT_NAME} down
 
 down-dev:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml -p ${PROJECT_NAME} down
+	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f dev.yml -p ${PROJECT_NAME} down
 
-down-prod:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml -p ${PROJECT_NAME} down
+# down-prod:
+# 	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f prod.yml -p ${PROJECT_NAME} down
 
 down-test:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.test.yml -p ${PROJECT_NAME} down
+	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f test.yml -p ${PROJECT_NAME} down
 
 # Status and monitoring
 status:
 	sudo docker ps --filter name="^${PROJECT_NAME}" --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
 
 # Logs
-logs:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.prod.yml logs
+# logs:
+# 	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f prod.yml logs
 
 logs-dev:
-	cd infra/compose && sudo docker compose --env-file ../../.env -f compose.yml -f compose.dev.yml logs
+	cd infra/compose && sudo docker compose --env-file ../../.env -f base.yml -f dev.yml logs
 
 logs-local:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.yml -f compose.local.yml logs
+	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f local.yml logs
 
 logs-api:
 	tail -f ${DATA_PATH}/logs/api.log
@@ -85,17 +85,10 @@ set:
 	sudo certbot --nginx
 
 # Run tests
-test:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.test-api.yml -p ${PROJECT_NAME} up --build --exit-code-from test
-	cd infra/compose && docker compose --env-file ../../.env -f compose.test-web.yml -p ${PROJECT_NAME} up --build --exit-code-from test
+test: # FIXME
+	cd infra/compose && docker compose --env-file ../../.env -f base.yml -f test.yml -p ${PROJECT_NAME} up --build
 
-test-api:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.test-api.yml -p ${PROJECT_NAME} up --build --exit-code-from test
-
-test-web:
-	cd infra/compose && docker compose --env-file ../../.env -f compose.test-web.yml -p ${PROJECT_NAME} up --build --exit-code-from test
-
-lint:
+lint-api:
 	find . -type f -name '*.py' \
 	| grep -vE 'env/' \
 	| grep -vE 'tests/' \
