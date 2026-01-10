@@ -8,11 +8,9 @@ env:
   REGISTRY_HOST: ghcr.io
   REGISTRY_OWNER: kosyachniy
   PROJECT_NAME: web
-  STACK_NAME: web-prod
+  MODE: PROD
   FOLDER: ~/web
   GITHUB_REPO: git@github.com:chilleco/web.git
-  DATA_FOLDER: ~/data/web
-  SECRETS_FILE: ~/.secrets/web.env
 
 jobs:
   web-check:
@@ -101,11 +99,15 @@ jobs:
     steps:
       - name: Deploy to Swarm via SSH
         uses: appleboy/ssh-action@v0.1.7
+        env:
+          ENV_VARS_JSON: ${{ toJson(vars) }}
+          ENV_SECRETS_JSON: ${{ toJson(secrets) }}
         with:
           host: ${{ secrets.HOST }}
           port: ${{ secrets.PORT }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH }}
+          envs: ENV_VARS_JSON,ENV_SECRETS_JSON
           command_timeout: 30m
           # script_stop: true
           script: |
@@ -113,10 +115,12 @@ jobs:
 
             FOLDER=${{ env.FOLDER }}
             PROJECT_NAME=${{ env.PROJECT_NAME }}
+            MODE=${{ env.MODE }}
+            MODE_LC="$(printf '%s' "$MODE" | tr '[:upper:]' '[:lower:]')"
+            STACK_NAME="${PROJECT_NAME}-${MODE_LC}"
             REPO=${{ env.GITHUB_REPO }}
-            DATA_FOLDER=${{ env.DATA_FOLDER }}
-            SECRETS_FILE=${{ env.SECRETS_FILE }}
-            DATA_ROOT="$(dirname "$DATA_FOLDER")"
+            DATA_PATH=${{ vars.DATA_PATH }}
+            DATA_ROOT="$(dirname "$DATA_PATH")"
             echo "Pulling new version"
             if [ -d "$FOLDER" ];
             then
@@ -136,20 +140,41 @@ jobs:
             else
                 mkdir -p "$DATA_ROOT"
             fi
-            if [ -d "$DATA_FOLDER" ];
+            if [ -d "$DATA_PATH" ];
             then
                 echo ""
             else
-                cp -r "$FOLDER/data" "$DATA_FOLDER"
+                cp -r "$FOLDER/data" "$DATA_PATH"
             fi
 
-            echo "Copying keys"
-            cp "$SECRETS_FILE" "$FOLDER/.env"
+            echo "Generating .env"
+            ENV_LIST="$FOLDER/infra/compose/.env.list"
+            ENV_OUT="$FOLDER/.env"
+            if ! command -v jq >/dev/null 2>&1; then
+              echo "jq is required to generate .env from GitHub vars/secrets"
+              exit 1
+            fi
+            : > "$ENV_OUT"
+            while IFS= read -r raw; do
+              key="$(echo "$raw" | xargs)"
+              case "$key" in
+                ''|\#*) continue ;;
+              esac
+              value="$(printf '%s' "$ENV_SECRETS_JSON" | jq -r --arg key "$key" '.[$key] // empty')"
+              if [ -z "$value" ]; then
+                value="$(printf '%s' "$ENV_VARS_JSON" | jq -r --arg key "$key" '.[$key] // empty')"
+              fi
+              if [ -z "$value" ] && [ "$key" = "STACK_NAME" ]; then
+                value="$STACK_NAME"
+              fi
+              value="$(printf '%s' "$value" | tr '\r' '\n' | awk 'BEGIN{ORS="";} {gsub(/\n/,"\\\\n"); print}')"
+              printf '%s=%s\n' "$key" "$value" >> "$ENV_OUT"
+            done < "$ENV_LIST"
 
             COMPOSE_FILE=infra/compose/prod.yml
             REGISTRY=${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_OWNER }}
             PROJECT_NAME=${{ env.PROJECT_NAME }}
-            STACK=${{ env.STACK_NAME }}
+            STACK="$STACK_NAME"
 
             # login to registry
             echo "${{ secrets.REGISTRY_TOKEN }}" | docker login \
