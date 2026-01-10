@@ -85,7 +85,7 @@ jobs:
             CONTEXT="$svc"
             DOCKERFILE="$svc/Dockerfile"
             IMAGE="${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_OWNER }}/${{ env.PROJECT_NAME }}/${svc}"
-            docker buildx build \
+            docker buildx build --platform linux/amd64,linux/arm64 \
               --platform linux/amd64 \
               -f $DOCKERFILE \
               -t $IMAGE:${{ env.VERSION }} \
