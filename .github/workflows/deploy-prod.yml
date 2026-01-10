@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
 
 env:
+  ENV: prod
 
 jobs:
   web-check:
@@ -51,7 +52,7 @@ jobs:
     name: Build & Push
     needs: web-check
     runs-on: ubuntu-latest
-    environment: prod
+    environment: ${{ env.ENV }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -91,7 +92,7 @@ jobs:
     name: Deploy Main
     needs: build-and-push
     runs-on: ubuntu-latest
-    environment: prod
+    environment: ${{ env.ENV }}
     steps:
       - name: Deploy to Swarm via SSH
         uses: appleboy/ssh-action@v0.1.7
@@ -111,9 +112,8 @@ jobs:
 
             FOLDER=${{ vars.FOLDER }}
             PROJECT_NAME=${{ vars.PROJECT_NAME }}
-            MODE=${{ vars.MODE }}
-            MODE_LC="$(printf '%s' "$MODE" | tr '[:upper:]' '[:lower:]')"
-            STACK_NAME="${PROJECT_NAME}-${MODE_LC}"
+            ENV=${{ env.ENV }}
+            STACK_NAME="${PROJECT_NAME}-${ENV}"
             GITHUB_SERVER_URL=${{ github.server_url }}
             GITHUB_REPOSITORY=${{ github.repository }}
             GITHUB_HOST="${GITHUB_SERVER_URL#https://}"
@@ -166,6 +166,9 @@ jobs:
               fi
               if [ -z "$value" ] && [ "$key" = "STACK_NAME" ]; then
                 value="$STACK_NAME"
+              fi
+              if [ -z "$value" ] && [ "$key" = "MODE" ]; then
+                value="$ENV"
               fi
               value="$(printf '%s' "$value" | tr '\r' '\n' | awk 'BEGIN{ORS="";} {gsub(/\n/,"\\\\n"); print}')"
               printf '%s=%s\n' "$key" "$value" >> "$ENV_OUT"
