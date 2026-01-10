@@ -42,7 +42,7 @@ jobs:
   #     - name: Setting up environment variables
   #       run: |
   #         cp base.env .env
-  #         echo "MODE=TEST" >> .env
+  #         echo "ENV=test" >> .env
   #         echo "DATA_PATH=./data" >> .env
 
   #     - name: Running tests inside the container
@@ -52,7 +52,7 @@ jobs:
     name: Build & Push
     needs: web-check
     runs-on: ubuntu-latest
-    environment: ${{ env.ENV }}
+    environment: prod
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -92,7 +92,7 @@ jobs:
     name: Deploy Main
     needs: build-and-push
     runs-on: ubuntu-latest
-    environment: ${{ env.ENV }}
+    environment: prod
     steps:
       - name: Deploy to Swarm via SSH
         uses: appleboy/ssh-action@v0.1.7
@@ -160,14 +160,21 @@ jobs:
               case "$key" in
                 ''|\#*) continue ;;
               esac
+              key_lc="$(printf '%s' "$key" | tr '[:upper:]' '[:lower:]')"
               value="$(printf '%s' "$ENV_SECRETS_JSON" | jq -r --arg key "$key" '.[$key] // empty')"
+              if [ -z "$value" ] && [ "$key_lc" != "$key" ]; then
+                value="$(printf '%s' "$ENV_SECRETS_JSON" | jq -r --arg key "$key_lc" '.[$key] // empty')"
+              fi
               if [ -z "$value" ]; then
                 value="$(printf '%s' "$ENV_VARS_JSON" | jq -r --arg key "$key" '.[$key] // empty')"
+              fi
+              if [ -z "$value" ] && [ "$key_lc" != "$key" ]; then
+                value="$(printf '%s' "$ENV_VARS_JSON" | jq -r --arg key "$key_lc" '.[$key] // empty')"
               fi
               if [ -z "$value" ] && [ "$key" = "STACK_NAME" ]; then
                 value="$STACK_NAME"
               fi
-              if [ -z "$value" ] && [ "$key" = "MODE" ]; then
+              if [ -z "$value" ] && [ "$key" = "ENV" ]; then
                 value="$ENV"
               fi
               value="$(printf '%s' "$value" | tr '\r' '\n' | awk 'BEGIN{ORS="";} {gsub(/\n/,"\\\\n"); print}')"

@@ -21,11 +21,11 @@ For local development of this package, install dev extras: `pip install -e ".[de
 import asyncio
 from tgreports import Report
 
-MODE = "DEV"            # e.g. LOCAL / TEST / DEV / PRE / PROD
+ENV = "dev"             # e.g. local / test / dev / pre / prod
 BOT_TOKEN = "123:ABC"   # Telegram bot token
 BUG_CHAT = -100111222   # Target chat/channel id
 
-report = Report(MODE, BOT_TOKEN, BUG_CHAT, log_file="service.log", err_file="service.err")
+report = Report(ENV, BOT_TOKEN, BUG_CHAT, log_file="service.log", err_file="service.err")
 
 async def main():
     await report.info("Service started")                     # Telegram only in PRE/PROD
@@ -40,7 +40,7 @@ asyncio.run(main())
 All public methods except `debug` are `async`; call them inside an event loop (`asyncio.run`, background task, or framework handler).
 
 ## API surface and behavior
-- `Report(MODE, token, bug_chat, log_file='app.log', err_file='app.err')`: create a reporter with a mode label, bot token, target chat id, and optional log file overrides.
+- `Report(ENV, token, bug_chat, log_file='app.log', err_file='app.err')`: create a reporter with an env label, bot token, target chat id, and optional log file overrides.
 - `await report.debug(text, extra=None)`: file log only; never sent to Telegram.
 - `await report.info(text, extra=None, tags=None, silent=False)`: info-level log. **Telegram send happens only when `mode` is `PRE` or `PROD`** (anti-noise rule). Set `silent=True` to log without Telegram.
 - `await report.warning(...)`, `await report.error(...)`, `await report.critical(...)`: log + Telegram with stack traces (unless `silent=True`). Pass `error=<Exception>` to include the traceback; otherwise caller info is used.
@@ -48,7 +48,7 @@ All public methods except `debug` are `async`; call them inside an event loop (`
 - `await report.request(...)`: for actionable user requests; no traceback.
 
 ### Message formatting rules (Telegram)
-- Prefix: emoji + `{MODE} {TYPE}` (e.g. `⚠️ DEV WARNING`).
+- Prefix: emoji + `{ENV} {TYPE}` (e.g. `⚠️ dev WARNING`).
 - Source context: best-effort `filename:line` and dotted path from the call stack/traceback, skipped for `info`/`important`/`request`.
 - Extra data: if `extra` is a dict it is rendered as `key = value` lines; non-dicts are stringified.
 - Tags: `#{mode.lower()}` is always added plus any `tags` you pass; use tags for filtering in the Telegram client.

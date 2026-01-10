@@ -51,9 +51,9 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - Frontend: `web/src/app/[locale]/social/page.tsx` renders the frens list and uses `navigation.frens` + `social.*` i18n; mobile bottom bar includes the frens entry linking to `/social`.
 
 ## Environments
-- `.env` defines `MODE`: LOCAL / TEST / DEV / PRE / PROD; loaded in `api/`, `web/`, and `tg/` containers. Copy `base.env` → `.env`; merge `prod.env` values for production.
+- `.env` defines `ENV`: local / test / dev / pre / prod; loaded in `api/`, `web/`, and `tg/` containers. Copy `base.env` → `.env`; merge `prod.env` values for production.
 - Base URLs: server-side requests must use `http://api:5000/` (internal Docker network); client-side requests must use `NEXT_PUBLIC_API` through nginx; do not add separate API base URL variables.
-- Detect environment via `NEXT_PUBLIC_MODE` (mirrors `MODE`).
+- Detect environment via `NEXT_PUBLIC_ENV` (mirrors `ENV`).
 - Web stack builds use Node 24 (Docker + compose test) and Next 16/React 19; keep local runtime and `@types/node` aligned when bumping.
 
 ## Golden Rules of coding & editing

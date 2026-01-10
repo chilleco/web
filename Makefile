@@ -4,14 +4,12 @@ include .env
 # Common
 # ============================================================================
 
-ENV_LC := $(shell echo "$(MODE)" | tr A-Z a-z)
-STACK_NAME ?= $(PROJECT_NAME)-$(ENV_LC)
 IMAGE_TAG ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo latest)
 SECRETS_VERSION ?= $(IMAGE_TAG)
 
 # Files
 COMPOSE_BASE := infra/compose/$(COMPOSE_BASE)
-COMPOSE_APP := infra/compose/$(ENV_LC).yml
+COMPOSE_APP := infra/compose/$(ENV).yml
 # FIXME: rm, use COMPOSE_APP
 COMPOSE_LOCAL := infra/compose/local.yml
 COMPOSE_TEST := infra/compose/test.yml

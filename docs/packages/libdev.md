@@ -120,7 +120,7 @@ log.json({"event": "http_request", "status": 200, "path": "/api"})
 ### File & Asset Layer
 **`libdev.s3`**
 - Global `s3` client initialized with `cfg("s3.*")`. If credentials are absent, helpers no-op and return `None`/`[]`.
-- `await upload(file, directory=cfg("mode"), bucket=cfg("project_name"), file_type=None)`:
+- `await upload(file, directory=cfg("env"), bucket=cfg("project_name"), file_type=None)`:
   - `file` may be a local path, remote URL, bytes, or a file-like object.
   - Remote URLs are fetched via `aiohttp`, mime types inferred from headers/extension.
   - Returns a full URL `f"{cfg('s3.host')}{bucket}/{key}"` or `None` on errors.

@@ -110,7 +110,7 @@ async def generate_file(links, locale=None, kind=None, ind=None):
 @broker.task(
     schedule=(
         [{"cron": "0 * * * *"}]  # hourly at minute 0
-        if cfg("mode") in {"PRE", "PROD"}
+        if cfg("env") in {"pre", "prod"}
         else []
     ),
 )
@@ -121,7 +121,7 @@ async def sitemap():
     # Robots
     # TODO: only on start
     with open("/data/robots.txt", "w", encoding="utf-8") as file:
-        if cfg("mode") == "PROD":
+        if cfg("env") == "prod":
             print(ROBOTS, file=file)
         else:
             print(ROBOTS_OFF, file=file)

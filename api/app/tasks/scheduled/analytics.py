@@ -69,7 +69,7 @@ def get_funnel(users_reg, users_fill, users_save, users_second, utm=None):
 @broker.task(
     schedule=(
         [{"cron": "0 0 * * *"}]  # daily at 00:00 UTC
-        if cfg("mode") in {"PRE", "PROD"}
+        if cfg("env") in {"pre", "prod"}
         else []
     ),
 )

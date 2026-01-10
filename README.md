@@ -22,8 +22,8 @@ Modern full-stack web application with Python FastAPI backend, Next.js frontend,
                 1. Configure <code> .env </code> from <code> base.env </code> and add:
                 <pre>
 # Type
-# LOCAL / TEST / DEV / PRE / PROD
-MODE=LOCAL<br />
+# local / test / dev / pre / prod
+ENV=local<br />
 
 \# Links
 PROTOCOL=http
@@ -36,8 +36,8 @@ DATA_PATH=./data
                 1. Configure <code> .env </code> from <code> base.env </code> and add:
                 <pre>
 \# Type
-\# LOCAL / TEST / DEV / PRE / PROD
-MODE=PROD
+\# local / test / dev / pre / prod
+ENV=prod
 
 \# Links
 PROTOCOL=https

@@ -7,7 +7,7 @@ from tgreports import Report
 
 
 report = Report(
-    cfg("mode"),
+    cfg("env"),
     cfg("tg.token"),
     cfg("bug_chat"),
     log_file=cfg("log_file", "/logs/app.log"),

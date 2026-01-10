@@ -46,7 +46,7 @@ async def startup():
     await report.info("Restart server")
 
     # Prometheus
-    if cfg("mode") in {"PRE", "PROD"}:
+    if cfg("env") in {"pre", "prod"}:
         Instrumentator().instrument(app).expose(app)
 
     # Tasks on start

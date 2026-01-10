@@ -18,20 +18,20 @@
  * NEXT_PUBLIC_API_TIMEOUT=10000                       # Request timeout (ms)
  * NEXT_PUBLIC_USE_MOCK_FALLBACK=true                  # Force mock fallback
  * NEXT_PUBLIC_MOCK_API_DELAY=500                      # Mock response delay (ms)
- * NEXT_PUBLIC_MODE=LOCAL                              # App mode: LOCAL/TEST/DEV/PRE/PROD
+ * NEXT_PUBLIC_ENV=local                               # App env: local/test/dev/pre/prod
  * ```
  *
  * ### Usage Examples
  *
  * #### In Local mode
- * When `NEXT_PUBLIC_MODE=LOCAL`, the app will:
+ * When `NEXT_PUBLIC_ENV=local`, the app will:
  * 1. Try to call the real API first
  * 2. If it fails, automatically use mock data
  * 3. Show warnings in the console
  * 4. Continue working normally
  *
  * #### In Production
- * When `NEXT_PUBLIC_MODE=PROD`, the app will:
+ * When `NEXT_PUBLIC_ENV=prod`, the app will:
  * 1. Call the real API only
  * 2. Let errors bubble up for proper error boundaries
  * 3. Not show API warnings
@@ -70,11 +70,11 @@
  * the backend isn't available, while maintaining proper error handling in production.
  */
 
-const mode = (process.env.NEXT_PUBLIC_MODE || '').toUpperCase();
+const envName = (process.env.NEXT_PUBLIC_ENV || '').toUpperCase();
 const mockFallbackEnv = process.env.NEXT_PUBLIC_USE_MOCK_FALLBACK;
-const isLocalMode = mode === 'LOCAL' || mode === '';
-const isDevMode = mode === 'DEV';
-const isNonProdMode = isLocalMode || isDevMode;
+const isLocalEnv = envName === 'LOCAL' || envName === '';
+const isDevEnv = envName === 'DEV';
+const isNonProdEnv = isLocalEnv || isDevEnv;
 
 // Environment-based configuration
 export const API_CONFIG = {
@@ -86,10 +86,10 @@ export const API_CONFIG = {
 
   // Whether to use mock data as fallback when API fails
   // Default to true only in LOCAL mode unless explicitly disabled
-  useMockFallback: mockFallbackEnv === 'true' || (isLocalMode && mockFallbackEnv !== 'false'),
+  useMockFallback: mockFallbackEnv === 'true' || (isLocalEnv && mockFallbackEnv !== 'false'),
 
   // Whether to show API warnings in console
-  showApiWarnings: isNonProdMode,
+  showApiWarnings: isNonProdEnv,
 
   // Mock data configuration
   mock: {
