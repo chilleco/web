@@ -54,17 +54,21 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     outputs:
-      release: ${{ steps.set-release.outputs.release }}
+      release: ${{ steps.set-tags.outputs.release }}
+      image_tag: ${{ steps.set-tags.outputs.image_tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set RELEASE
-        id: set-release
+      - name: Set RELEASE and IMAGE_TAG
+        id: set-tags
         run: |
-          RELEASE=$(git rev-parse --short HEAD)
+          RELEASE="$(git rev-parse --short HEAD)"
+          IMAGE_TAG="${ENV}-${RELEASE}"
           echo "RELEASE=$RELEASE" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           echo "release=$RELEASE" >> $GITHUB_OUTPUT
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -88,7 +92,7 @@ jobs:
             docker buildx build \
               --platform linux/amd64 \
               -f $DOCKERFILE \
-              -t $IMAGE:${{ env.RELEASE }} \
+              -t $IMAGE:${{ env.IMAGE_TAG }} \
               -t $IMAGE:latest \
               $CONTEXT \
               --push
@@ -125,10 +129,12 @@ jobs:
             GITHUB_REPOSITORY=${{ github.repository }}
             COMMIT_SHA=${{ github.sha }}
             RELEASE=${{ needs.build-and-push.outputs.release }}
+            IMAGE_TAG=${{ needs.build-and-push.outputs.image_tag }}
             GITHUB_HOST="${GITHUB_SERVER_URL#https://}"
             GITHUB_HOST="${GITHUB_HOST#http://}"
             REPOSITORY="git@${GITHUB_HOST}:${GITHUB_REPOSITORY}.git"
             DATA_PATH=${{ vars.DATA_PATH }}
+            REGISTRY="${{ vars.REGISTRY_HOST }}/${{ vars.REGISTRY_OWNER }}"
             DATA_ROOT="$(dirname "$DATA_PATH")"
             echo "Pulling new version"
             if [ -d "$FOLDER" ];
@@ -187,8 +193,17 @@ jobs:
               if [ -z "$value" ] && [ "$key" = "ENV" ]; then
                 value="$ENV"
               fi
+              if [ -z "$value" ] && [ "$key" = "REPOSITORY" ]; then
+                value="$REPOSITORY"
+              fi
+              if [ -z "$value" ] && [ "$key" = "REGISTRY" ]; then
+                value="$REGISTRY"
+              fi
               if [ -z "$value" ] && [ "$key" = "RELEASE" ]; then
                 value="$RELEASE"
+              fi
+              if [ -z "$value" ] && [ "$key" = "IMAGE_TAG" ]; then
+                value="$IMAGE_TAG"
               fi
               if [ -z "$value" ] && [ "$key" = "COMMIT_SHA" ]; then
                 value="$COMMIT_SHA"
@@ -221,11 +236,12 @@ jobs:
               export "${key}=${value}"
             done < "$ENV_FILE_PATH"
             export RELEASE="$RELEASE"
+            export IMAGE_TAG="$IMAGE_TAG"
             envsubst < "$COMPOSE_FILE" > "$FOLDER/deploy.yml"
 
             # optional: pull fresh images
             for service in api web tg; do
-              sudo docker pull "$REGISTRY/$PROJECT_NAME/${service}:$RELEASE"
+              sudo docker pull "$REGISTRY/$PROJECT_NAME/${service}:$IMAGE_TAG"
             done
 
             # deploy (with registry auth)
@@ -246,7 +262,7 @@ jobs:
               fi
               echo "Updating ${STACK}_${service} with stop-first strategy to avoid replica-limit deadlocks..."
               sudo docker service update \
-                --image $REGISTRY/$PROJECT_NAME/${image_suffix}:$RELEASE \
+                --image $REGISTRY/$PROJECT_NAME/${image_suffix}:$IMAGE_TAG \
                 --update-order stop-first \
                 --update-parallelism 1 \
                 --force \

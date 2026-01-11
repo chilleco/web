@@ -1,6 +1,6 @@
 services:
   api:
-    image: ${REGISTRY}/${PROJECT_NAME}/api:${RELEASE}
+    image: ${REGISTRY}/${PROJECT_NAME}/api:${IMAGE_TAG}
     env_file: .env
     environment:
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
@@ -49,7 +49,7 @@ services:
       #   retries: 3
 
   worker:
-    image: ${REGISTRY}/${PROJECT_NAME}/api:${RELEASE}
+    image: ${REGISTRY}/${PROJECT_NAME}/api:${IMAGE_TAG}
     env_file: .env
     environment:
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
@@ -92,7 +92,7 @@ services:
           memory: 256M
 
   scheduler:
-    image: ${REGISTRY}/${PROJECT_NAME}/api:${RELEASE}
+    image: ${REGISTRY}/${PROJECT_NAME}/api:${IMAGE_TAG}
     env_file: .env
     environment:
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
@@ -129,7 +129,7 @@ services:
           memory: 128M
 
   web:
-    image: ${REGISTRY}/${PROJECT_NAME}/web:${RELEASE}
+    image: ${REGISTRY}/${PROJECT_NAME}/web:${IMAGE_TAG}
     env_file: .env
     environment:
       NEXT_PUBLIC_ENV: ${ENV}
@@ -169,7 +169,7 @@ services:
           memory: 1G
 
   tg:
-    image: ${REGISTRY}/${PROJECT_NAME}/tg:${RELEASE}
+    image: ${REGISTRY}/${PROJECT_NAME}/tg:${IMAGE_TAG}
     env_file: .env
     environment:
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
