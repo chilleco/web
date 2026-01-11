@@ -6,6 +6,7 @@ on:
 
 env:
   ENV: prod
+  COMPOSE_FILE: infra/compose/prod.yml
 
 jobs:
   web-check:
@@ -133,16 +134,18 @@ jobs:
             GITHUB_HOST="${GITHUB_SERVER_URL#https://}"
             GITHUB_HOST="${GITHUB_HOST#http://}"
             REPOSITORY="git@${GITHUB_HOST}:${GITHUB_REPOSITORY}.git"
-            DATA_PATH=${{ vars.DATA_PATH }}
             REGISTRY="${{ vars.REGISTRY_HOST }}/${{ vars.REGISTRY_OWNER }}"
+            DATA_PATH=${{ vars.DATA_PATH }}
             DATA_ROOT="$(dirname "$DATA_PATH")"
+            export ENV STACK_NAME COMMIT_SHA RELEASE IMAGE_TAG REPOSITORY REGISTRY
             echo "Pulling new version"
             if [ -d "$FOLDER" ];
             then
                 cd "$FOLDER"
                 git fetch --prune origin
-                git checkout --detach "$COMMIT_SHA"
+                git checkout -f --detach "$COMMIT_SHA"
                 git reset --hard "$COMMIT_SHA"
+                git clean -fd
             else
                 GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone "$REPOSITORY" "$FOLDER"
                 cd "$FOLDER"
@@ -187,35 +190,15 @@ jobs:
               if [ -z "$value" ] && [ "$key_lc" != "$key" ]; then
                 value="$(printf '%s' "$ENV_VARS_JSON" | jq -r --arg key "$key_lc" '.[$key] // empty')"
               fi
-              if [ -z "$value" ] && [ "$key" = "STACK_NAME" ]; then
-                value="$STACK_NAME"
+              if [ -z "$value" ]; then
+                value="$(printenv "$key")"
               fi
-              if [ -z "$value" ] && [ "$key" = "ENV" ]; then
-                value="$ENV"
-              fi
-              if [ -z "$value" ] && [ "$key" = "REPOSITORY" ]; then
-                value="$REPOSITORY"
-              fi
-              if [ -z "$value" ] && [ "$key" = "REGISTRY" ]; then
-                value="$REGISTRY"
-              fi
-              if [ -z "$value" ] && [ "$key" = "RELEASE" ]; then
-                value="$RELEASE"
-              fi
-              if [ -z "$value" ] && [ "$key" = "IMAGE_TAG" ]; then
-                value="$IMAGE_TAG"
-              fi
-              if [ -z "$value" ] && [ "$key" = "COMMIT_SHA" ]; then
-                value="$COMMIT_SHA"
+              if [ -z "$value" ] && [ "$key_lc" != "$key" ]; then
+                value="$(printenv "$key_lc")"
               fi
               value="$(printf '%s' "$value" | tr '\r' '\n' | awk 'BEGIN{ORS="";} {gsub(/\n/,"\\\\n"); print}')"
               printf '%s=%s\n' "$key" "$value" >> "$ENV_OUT"
             done < "$ENV_LIST"
-
-            COMPOSE_FILE=infra/compose/prod.yml
-            REGISTRY=${{ vars.REGISTRY_HOST }}/${{ vars.REGISTRY_OWNER }}
-            PROJECT_NAME=${{ vars.PROJECT_NAME }}
-            STACK="$STACK_NAME"
 
             # login to registry
             echo "${{ secrets.REGISTRY_TOKEN }}" | docker login \
@@ -248,9 +231,8 @@ jobs:
             sudo docker stack deploy \
                   --compose-file "$FOLDER/deploy.yml" \
                   --with-registry-auth \
-                  --resolve-image always \
                   --prune \
-                  "$STACK"
+                  "$STACK_NAME"
 
             # force update all services to ensure new images are deployed
             # this handles cases where services are at max replicas per node
@@ -260,17 +242,17 @@ jobs:
               if [ "$service" = "worker" ] || [ "$service" = "scheduler" ]; then
                 image_suffix="api"
               fi
-              echo "Updating ${STACK}_${service} with stop-first strategy to avoid replica-limit deadlocks..."
+              echo "Updating ${STACK_NAME}_${service} with stop-first strategy to avoid replica-limit deadlocks..."
               sudo docker service update \
                 --image $REGISTRY/$PROJECT_NAME/${image_suffix}:$IMAGE_TAG \
                 --update-order stop-first \
                 --update-parallelism 1 \
                 --force \
-                "${STACK}_${service}"
+                "${STACK_NAME}_${service}"
             done
 
             echo "Clean"
             yes | sudo docker system prune -a
 
             # check services
-            sudo docker stack services "$STACK"
+            sudo docker stack services "$STACK_NAME"
