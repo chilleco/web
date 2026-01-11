@@ -4,9 +4,6 @@ include .env
 # Common
 # ============================================================================
 
-IMAGE_TAG ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo latest)
-SECRETS_VERSION ?= $(IMAGE_TAG)
-
 # Files
 COMPOSE_BASE := infra/compose/$(COMPOSE_BASE)
 COMPOSE_APP := infra/compose/$(ENV).yml
