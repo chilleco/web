@@ -1,3 +1,5 @@
+import hashlib
+
 from consys import make_base, Attribute
 
 from lib import cfg
@@ -57,7 +59,11 @@ class Base(_ConSysBase):
                 else:
                     new = diff
 
-                event_id = f"{model_name}:{entity_id}:{updated_value}:{field}"
+                diff_repr = repr({"old": old, "new": new})
+                change_hash = hashlib.sha1(diff_repr.encode("utf-8")).hexdigest()[:8]
+                event_id = (
+                    f"{model_name}:{entity_id}:{updated_value}:{field}:{change_hash}"
+                )
 
                 enqueue(
                     {

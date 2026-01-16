@@ -15,21 +15,55 @@ from lib.queue import redis
 from models import Base
 
 
-def _claim_event(event_id: str, *, ttl_seconds: int = 60 * 60 * 24 * 7) -> bool:
-    """
-    Best-effort idempotency guard.
+LOCK_TTL_SECONDS = 60 * 5
+DONE_TTL_SECONDS = 60 * 60 * 24 * 7
 
-    Uses Redis SET NX to prevent double execution of the same event.
-    """
 
+def _event_key(prefix: str, event_id: str) -> str:
+    return f"event:{prefix}:{event_id}"
+
+
+async def _is_done(event_id: str) -> bool:
+    if not event_id:
+        return False
+    try:
+        return bool(await redis.get(_event_key("done", event_id)))
+    except Exception:  # pylint: disable=broad-except
+        return False
+
+
+async def _acquire_lock(event_id: str) -> bool:
     if not event_id:
         return True
-
-    key = f"event:done:{event_id}"
     try:
-        return bool(redis.set(key, 1, nx=True, ex=ttl_seconds))
+        return bool(
+            await redis.set(
+                _event_key("lock", event_id),
+                1,
+                nx=True,
+                ex=LOCK_TTL_SECONDS,
+            )
+        )
     except Exception:  # pylint: disable=broad-except
         return True
+
+
+async def _mark_done(event_id: str) -> None:
+    if not event_id:
+        return
+    try:
+        await redis.set(_event_key("done", event_id), 1, ex=DONE_TTL_SECONDS)
+    except Exception:  # pylint: disable=broad-except
+        return
+
+
+async def _release_lock(event_id: str) -> None:
+    if not event_id:
+        return
+    try:
+        await redis.delete(_event_key("lock", event_id))
+    except Exception:  # pylint: disable=broad-except
+        return
 
 
 @lru_cache(maxsize=1)
@@ -64,31 +98,43 @@ def _get_model_cls(model_name: str) -> Type[Base] | None:
 
 async def dispatch_event(event: Dict[str, Any]) -> None:
     event_id = str(event.get("id") or "")
-    if not _claim_event(event_id):
+    if event_id and await _is_done(event_id):
+        return
+    if not await _acquire_lock(event_id):
         return
 
-    model_name = str(event.get("model") or "")
-    entity_id = event.get("entity_id")
-    field = str(event.get("field") or "")
+    try:
+        model_name = str(event.get("model") or "")
+        entity_id = event.get("entity_id")
+        field = str(event.get("field") or "")
 
-    model_cls = _get_model_cls(model_name)
-    if not model_cls or not entity_id or not field:
-        log.error("Invalid event: {}", event)
-        return
+        model_cls = _get_model_cls(model_name)
+        if not model_cls or not entity_id or not field:
+            log.error("Invalid event: {}", event)
+            await _mark_done(event_id)
+            return
 
-    handlers = get_handlers(model=model_name, field=field)
-    if not handlers:
-        return
+        handlers = get_handlers(model=model_name, field=field)
+        if not handlers:
+            await _mark_done(event_id)
+            return
 
-    entity = model_cls.get(int(entity_id))
+        entity = model_cls.get(int(entity_id))
+        if not entity:
+            await _mark_done(event_id)
+            return
 
-    for handler_cls in handlers:
-        handler = handler_cls(
-            entity,
-            field,
-            event.get("old"),
-            event.get("new"),
-            updated=event.get("updated"),
-            event_id=event_id,
-        )
-        await handler.execute()
+        for handler_cls in handlers:
+            handler = handler_cls(
+                entity,
+                field,
+                event.get("old"),
+                event.get("new"),
+                updated=event.get("updated"),
+                event_id=event_id,
+            )
+            await handler.execute()
+
+        await _mark_done(event_id)
+    finally:
+        await _release_lock(event_id)

@@ -15,6 +15,7 @@ Full-stack web application with Python FastAPI backend, Next.js frontend, and Te
 - Event system files live in `api/app/tasks/`: `event_base.py`, `event_registry.py`, `event_dispatcher.py`, `event_enqueue.py`.
 - Taskiq workers/scheduler should import `api/app/tasks/registry.py` (registers all tasks).
 - Import job tasks via `from tasks import <task_name>` (no `tasks.jobs.*`); `api/app/routes/tasks/__init__.py` should only import job tasks.
+- Event retries: failed model events are rescheduled with exponential backoff in `process_model_event`, and `retry_model_events` drains the fallback queue `model_events:pending` every minute.
 
 ## Entities
 Depending on the project that develops based on this template, the entities of this template can be reused as follows:
