@@ -226,11 +226,11 @@ dependencies = [
     { name = "python-multipart" },
     { name = "python-socketio" },
     { name = "redis" },
+    { name = "sentry-sdk" },
     { name = "slowapi" },
     { name = "taskiq" },
     { name = "taskiq-redis" },
     { name = "tgio" },
-    { name = "tgreports" },
     { name = "userhub" },
     { name = "uvicorn" },
     { name = "websockets" },
@@ -251,11 +251,11 @@ requires-dist = [
     { name = "python-multipart", specifier = "==0.0.21" },
     { name = "python-socketio", specifier = "==5.15.1" },
     { name = "redis", specifier = "==7.1.0" },
+    { name = "sentry-sdk", specifier = "==2.18.0" },
     { name = "slowapi", specifier = "==0.1.9" },
     { name = "taskiq", specifier = "==0.12.1" },
     { name = "taskiq-redis", specifier = "==1.2.1" },
     { name = "tgio", specifier = "==0.17" },
-    { name = "tgreports", specifier = "==0.19.0" },
     { name = "userhub", specifier = "==0.18" },
     { name = "uvicorn", specifier = "==0.38.0" },
     { name = "websockets", specifier = "==15.0.1" },
@@ -1939,6 +1939,19 @@ wheels = [
 ]
 
 [[package]]
+name = "sentry-sdk"
+version = "2.18.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "certifi" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/24/cc/0d87cc8246f52d92228aa6718a24e1988a2893f4abe2f64ec5a8bcba4185/sentry_sdk-2.18.0.tar.gz", hash = "sha256:0dc21febd1ab35c648391c664df96f5f79fb0d92d7d4225cd9832e53a617cafd", size = 293615, upload-time = "2024-11-04T13:58:17.093Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/76/9b/2d512efdb0de203d1f0312fae53433c3009ba70b0078421d25baaedc960a/sentry_sdk-2.18.0-py2.py3-none-any.whl", hash = "sha256:ee70e27d1bbe4cd52a38e1bd28a5fadb9b17bc29d91b5f2b97ae29c0a7610442", size = 317514, upload-time = "2024-11-04T13:58:15.166Z" },
+]
+
+[[package]]
 name = "simple-websocket"
 version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2035,19 +2048,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/84/ce/bca1d77e8c33041a374f3fd6b181cd833dd82c940872b6baaab5baa7949a/tgio-0.17.tar.gz", hash = "sha256:01950acccf0d915c1badc273b8850820c9c8243054cb0ca1b739337666aa5714", size = 10262, upload-time = "2025-12-12T15:55:26.531Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ae/7e/d1204043d247336a8bdbfe602b9528f2e7fd0a90efa21c1126ad3cf75b90/tgio-0.17-py3-none-any.whl", hash = "sha256:52761a1a6965347ac10409db6a8b8f7fb5c3d61b8fc262ad726f1aca039547b0", size = 7452, upload-time = "2025-12-12T15:55:25.281Z" },
-]
-
-[[package]]
-name = "tgreports"
-version = "0.19.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "loguru" },
-    { name = "tgio" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/8d/e8/a71a0c66c9f951060709a0b302f8dea6191c1c286a3b07d2734e62f66df7/tgreports-0.19.0.tar.gz", hash = "sha256:9dce71a6c3c529c89ebd45856012960b3ce65f9b31b2c00744695307730175e6", size = 7905, upload-time = "2025-12-02T10:35:04.205Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a4/0e/5a2e6ce445bc3547554aab7c2feb1bff847b5bb0974e0c1660efe8c29f93/tgreports-0.19.0-py3-none-any.whl", hash = "sha256:2d93faa96481637ede41c9e1cd6709d77b8cd3e24a7ab329de036aa49ff80555", size = 6457, upload-time = "2025-12-02T10:35:02.961Z" },
 ]
 
 [[package]]

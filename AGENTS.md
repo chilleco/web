@@ -153,10 +153,10 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - Keep it lean: no unnecessary wrappers, deep inheritance, or extra deps; keep schemas/models near routes.
 - **Typing**: prefer modern PEP syntax (for example: `T | None`, `list[str]`, `dict[str, Any]` over legacy `Optional`/`List`/`Dict`).
 - **API Documentation**: OpenAPI/Swagger auto-generated; Contracts: Swagger/OpenAPI is source of truth; define Pydantic request/response schemas; auto-generate TS types + client (e.g., `openapi-typescript` + `openapi-fetch`) so drift fails lint/build.
-- **Custom libs**: `consys` ORM (`docs/packages/consys.md`), `libdev` helpers (`docs/packages/libdev.md`), `userhub` (auth, `docs/packages/userhub.md`), `tgio` (Telegram helpers, `docs/packages/tgio.md`), `tgreports` (reporting, `docs/packages/tgreports.md`). Check docs/README before changes.
+- **Custom libs**: `consys` ORM (`docs/packages/consys.md`), `libdev` helpers (`docs/packages/libdev.md`), `userhub` (auth, `docs/packages/userhub.md`), `tgio` (Telegram helpers, `docs/packages/tgio.md`). Check docs/README before changes.
 - **Authentication**: JWT tokens with FastAPI security
 - **Caching**: Redis for session storage and caching
-- **Logging & alerts**: Structured loguru logging; Telegram alerts/reporting via `tgreports` — follow `docs/packages/tgreports.md`.
+- **Logging & alerts**: Structured loguru logging; error/perf reporting via Sentry (`api/app/services/sentry.py`).
 - **Testing**: pytest with async test support
 - **Background Tasks**: Celery with Redis broker
 - **Auth/Session flow (FE+BE)**:

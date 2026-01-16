@@ -4,8 +4,9 @@ Get request & response parameters
 
 import time
 
-from libdev.dev import check_public_ip
+import sentry_sdk
 from fastapi import Request
+from libdev.dev import check_public_ip
 from starlette.middleware.base import BaseHTTPMiddleware
 
 
@@ -30,6 +31,17 @@ class ParametersMiddleware(BaseHTTPMiddleware):
         )  # TODO: all locales, detect by browser
         request.state.ip = check_public_ip(request.headers.get("x-real-ip"))
         request.state.user_agent = request.headers.get("user-agent")
+
+        sentry_sdk.set_user(
+            {
+                "id": getattr(request.state, "user", None) or None,
+                "ip_address": request.state.ip,
+            }
+        )
+        if getattr(request.state, "network", None) is not None:
+            sentry_sdk.set_tag("network", request.state.network)
+        if request.state.locale:
+            sentry_sdk.set_tag("locale", request.state.locale)
 
         # Call
         response = await call_next(request)

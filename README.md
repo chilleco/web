@@ -6,6 +6,9 @@ Modern full-stack web application with Python FastAPI backend, Next.js frontend,
 - Scheduler: `uv run taskiq scheduler tasks.scheduler:scheduler tasks.registry`
 - Fixed-delay periodic jobs (cycle after finish): trigger once, e.g. `await run_periodic.kiq("cache_categories")`
 
+## Observability
+- Sentry: set `SENTRY_DSN` (optional: `SENTRY_TRACES_SAMPLE_RATE`, `SENTRY_PROFILES_SAMPLE_RATE`, `SENTRY_SEND_DEFAULT_PII`).
+
 ## Run
 [Before starting, you can learn how to configure the server →](https://github.com/kosyachniy/dev/blob/main/server/SERVER.md)
 
