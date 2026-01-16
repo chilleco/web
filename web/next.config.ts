@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
@@ -43,4 +44,29 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 };
 
-export default withNextIntl(nextConfig);
+const configWithIntl = withNextIntl(nextConfig);
+
+const release =
+  process.env.NEXT_PUBLIC_SENTRY_RELEASE ?? process.env.SENTRY_RELEASE ?? process.env.RELEASE;
+const hasSentryAuth = Boolean(process.env.SENTRY_AUTH_TOKEN);
+
+const sentryBuildOptions = {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  release: release ? { name: release } : undefined,
+  silent: true,
+  widenClientFileUpload: true,
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+  },
+  sourcemaps: {
+    disable: !hasSentryAuth,
+    deleteSourcemapsAfterUpload: true,
+  },
+  errorHandler: (err: Error) => {
+    console.warn(err);
+  },
+};
+
+export default withSentryConfig(configWithIntl, sentryBuildOptions);

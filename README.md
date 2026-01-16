@@ -7,7 +7,8 @@ Modern full-stack web application with Python FastAPI backend, Next.js frontend,
 - Fixed-delay periodic jobs (cycle after finish): trigger once, e.g. `await run_periodic.kiq("cache_categories")`
 
 ## Observability
-- Sentry: set `SENTRY_DSN` (optional: `SENTRY_TRACES_SAMPLE_RATE`, `SENTRY_PROFILES_SAMPLE_RATE`, `SENTRY_SEND_DEFAULT_PII`).
+- Sentry (API/TG): set `SENTRY_DSN` (optional: `SENTRY_TRACES_SAMPLE_RATE`, `SENTRY_PROFILES_SAMPLE_RATE`, `SENTRY_SEND_DEFAULT_PII`).
+- Sentry (Web): set `NEXT_PUBLIC_SENTRY_DSN` (and optionally `NEXT_PUBLIC_SENTRY_RELEASE`, `NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE`, `NEXT_PUBLIC_SENTRY_PROFILES_SAMPLE_RATE`).
 - Logging (Swarm): containers log JSON to stdout/stderr only (no files). Required fields: `service`, `env`, `version`, `level`, `trace_id`/`request_id`, `msg`, `error.stack` (if present). Use labels only for low-cardinality values (service, stack, env, node, level); keep `request_id`, `user_id`, `ip`, `url` in JSON fields.
 
 ## Run
