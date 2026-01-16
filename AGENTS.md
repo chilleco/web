@@ -157,6 +157,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - **Authentication**: JWT tokens with FastAPI security
 - **Caching**: Redis for session storage and caching
 - **Logging & alerts**: Structured loguru logging; error/perf reporting via Sentry (`api/app/services/sentry.py`).
+- **Log format**: Containers write JSON logs to stdout/stderr only (no file sinks). Required fields: `service`, `env`, `version`, `level`, `trace_id`/`request_id`, `msg`, `error.stack` (if present). Keep high-cardinality data as fields inside the JSON payload, not as log labels.
 - **Testing**: pytest with async test support
 - **Background Tasks**: Celery with Redis broker
 - **Auth/Session flow (FE+BE)**:

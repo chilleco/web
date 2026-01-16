@@ -70,6 +70,7 @@ def init_sentry() -> bool:
         return False
 
     env = str(_cfg_value("env", "ENV") or "local")
+    service = str(_cfg_value("NAME", "PROJECT_NAME") or "api")
     traces_sample_rate = _as_float(
         _cfg_value("sentry.traces_sample_rate", "SENTRY_TRACES_SAMPLE_RATE"),
         _default_sample_rate(env),
@@ -87,6 +88,7 @@ def init_sentry() -> bool:
         dsn=dsn,
         environment=env,
         release=_cfg_value("release", "VERSION", "SENTRY_RELEASE"),
+        server_name=service,
         integrations=_build_integrations(),
         traces_sample_rate=traces_sample_rate,
         profiles_sample_rate=profiles_sample_rate if traces_sample_rate > 0 else 0.0,
@@ -103,6 +105,7 @@ def init_sentry() -> bool:
             "lib",
         ],
     )
+    sentry_sdk.set_tag("service", service)
 
     log.info(
         "Sentry enabled",

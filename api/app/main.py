@@ -22,12 +22,13 @@ from services.monitoring import MonitoringMiddleware
 from services.errors import ErrorsMiddleware
 from services.access import AccessMiddleware
 from services.limiter import get_uniq
+from services.logging import setup_logging
 from services.on_startup import on_startup
 from services.sentry import flush_sentry, init_sentry
 from routes import router
 
 
-log.add("/backup/app.log")  # FIXME: file (centralized logging)
+setup_logging()
 init_sentry()
 
 app = FastAPI(title=cfg("NAME", "API"), root_path="/api")
