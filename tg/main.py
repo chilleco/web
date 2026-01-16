@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, parse_qsl, urlencode, urljoin, urlparse, urlunparse
+from uuid import uuid4
 
 from aiogram import Bot, Dispatcher, Router, types
 from aiogram.filters import Command, CommandStart
@@ -16,6 +17,12 @@ from libdev.gen import generate
 from libdev.log import log
 from libdev.req import fetch
 
+from tg.logging import clear_request_context, set_request_context, setup_logging
+from tg.sentry import flush_sentry, init_sentry
+import sentry_sdk
+
+setup_logging()
+init_sentry()
 
 TOKEN = cfg("tg.token")
 WEBHOOK_URL = cfg("tg")
@@ -34,6 +41,29 @@ app = FastAPI(title=cfg("NAME", "TG Bot"))
 
 _user_tokens: dict[int, str] = {}
 _token_lock = asyncio.Lock()
+
+
+def _trace_id_from_header(value: str | None) -> str | None:
+    if not value:
+        return None
+    parts = value.split("-", 1)
+    return parts[0] if parts else None
+
+
+@app.middleware("http")
+async def request_context_middleware(request: Request, call_next):
+    request_id = request.headers.get("x-request-id") or uuid4().hex
+    trace_id = _trace_id_from_header(request.headers.get("sentry-trace"))
+    set_request_context(request_id, trace_id)
+    sentry_sdk.set_extra("request_id", request_id)
+    if trace_id:
+        sentry_sdk.set_extra("trace_id", trace_id)
+    try:
+        response = await call_next(request)
+    finally:
+        clear_request_context()
+    response.headers["X-Request-Id"] = request_id
+    return response
 
 
 def _load_localized_texts() -> dict[str, dict[str, str]]:
@@ -351,6 +381,7 @@ async def webhook(request: Request):
         await dispatcher.feed_update(bot, update)
     except Exception as exc:  # pylint: disable=broad-except
         log.error(f"Webhook handling failed: {exc}")
+        sentry_sdk.capture_exception(exc)
     return {"ok": True}
 
 
@@ -380,3 +411,4 @@ async def startup() -> None:
 async def shutdown() -> None:
     if bot:
         await bot.session.close()
+    flush_sentry()

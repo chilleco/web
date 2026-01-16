@@ -3,6 +3,7 @@ services:
     image: ${REGISTRY}/${PROJECT_NAME}/api:${IMAGE_TAG}
     env_file: .env
     environment:
+      SERVICE: api
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
       RELEASE: ${RELEASE}
@@ -10,9 +11,6 @@ services:
       - ${DATA_PATH}/load:/data/load
       - ${DATA_PATH}/backup:/backup
       # - ./scripts:/app/scripts
-      # For logs
-      - ${DATA_PATH}/logs/api.log:/logs/app.log
-      - ${DATA_PATH}/logs/api.err:/logs/app.err
     ports:
       - target: 5000
         published: ${API_PORT}
@@ -52,11 +50,10 @@ services:
     image: ${REGISTRY}/${PROJECT_NAME}/api:${IMAGE_TAG}
     env_file: .env
     environment:
+      SERVICE: worker
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
       RELEASE: ${RELEASE}
-      LOG_FILE: /logs/worker.log
-      ERR_FILE: /logs/worker.err
     volumes:
       - ${DATA_PATH}/load:/data/load
       - ${DATA_PATH}/backup:/backup
@@ -64,9 +61,6 @@ services:
       - ${DATA_PATH}/sitemaps:/data/sitemaps
       - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
       - ${DATA_PATH}/robots.txt:/data/robots.txt
-      # For logs
-      - ${DATA_PATH}/logs/worker.log:/logs/worker.log
-      - ${DATA_PATH}/logs/worker.err:/logs/worker.err
     command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks.registry --workers 2 --log-level INFO"
     deploy:
       mode: replicated
@@ -95,15 +89,10 @@ services:
     image: ${REGISTRY}/${PROJECT_NAME}/api:${IMAGE_TAG}
     env_file: .env
     environment:
+      SERVICE: scheduler
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
       RELEASE: ${RELEASE}
-      LOG_FILE: /logs/scheduler.log
-      ERR_FILE: /logs/scheduler.err
-    volumes:
-      # For logs
-      - ${DATA_PATH}/logs/scheduler.log:/logs/scheduler.log
-      - ${DATA_PATH}/logs/scheduler.err:/logs/scheduler.err
     command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks.registry --log-level INFO"
     deploy:
       mode: replicated
@@ -172,13 +161,10 @@ services:
     image: ${REGISTRY}/${PROJECT_NAME}/tg:${IMAGE_TAG}
     env_file: .env
     environment:
+      SERVICE: tg
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
       TG: ${PROTOCOL}://${EXTERNAL_HOST}/tg/
-      LOG_FILE: /logs/tg.log
-      ERR_FILE: /logs/tg.err
-    volumes:
-      - ${DATA_PATH}/logs:/logs
     ports:
       - target: 80
         published: ${TG_PORT}

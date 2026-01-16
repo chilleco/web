@@ -6,11 +6,18 @@ import time
 from functools import wraps
 
 from consys.types import BaseType, validate
+import sentry_sdk
 from libdev.cfg import cfg
 from libdev.gen import generate, generate_id, generate_password
 from libdev.log import log
 
 from lib.reports import report
+from services.logging import setup_logging
+from services.sentry import init_sentry
+
+
+setup_logging()
+init_sentry()
 
 
 def handle_tasks(method):
@@ -18,11 +25,22 @@ def handle_tasks(method):
     async def inner(*args, **kwargs):
         now = time.time()
         log.info(f"Start {method.__name__}")
-        try:
-            return await method(*args, **kwargs)
-        except Exception as e:  # pylint: disable=broad-exception-caught
-            await report.critical(f"Task {method.__name__} failed: {e}", error=e)
-        log.info(f"Finish {method.__name__}: {time.time() - now:.0f}s")
+        with sentry_sdk.push_scope() as scope:
+            scope.set_tag("task", method.__name__)
+            scope.set_extra(
+                "task_args",
+                {
+                    "args": [repr(arg)[:500] for arg in args],
+                    "kwargs": {key: repr(value)[:500] for key, value in kwargs.items()},
+                },
+            )
+            with sentry_sdk.start_transaction(op="task", name=method.__name__):
+                try:
+                    return await method(*args, **kwargs)
+                except Exception as e:  # pylint: disable=broad-exception-caught
+                    await report.critical(f"Task {method.__name__} failed: {e}", error=e)
+                finally:
+                    log.info(f"Finish {method.__name__}: {time.time() - now:.0f}s")
 
     return inner
 
