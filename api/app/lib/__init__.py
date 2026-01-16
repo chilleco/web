@@ -12,6 +12,12 @@ from libdev.gen import generate, generate_id, generate_password
 from libdev.log import log
 
 from lib.reports import report
+from services.logging import setup_logging
+from services.sentry import init_sentry
+
+
+setup_logging()
+init_sentry()
 
 
 def handle_tasks(method):

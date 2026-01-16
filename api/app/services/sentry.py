@@ -45,14 +45,6 @@ def _default_sample_rate(env: str) -> float:
     return 0.2
 
 
-def _cfg_value(*keys: str) -> Any:
-    for key in keys:
-        value = cfg(key)
-        if value not in {None, ""}:
-            return value
-    return None
-
-
 def _build_integrations() -> list[Any]:
     return [
         FastApiIntegration(),
@@ -64,30 +56,24 @@ def _build_integrations() -> list[Any]:
 
 
 def init_sentry() -> bool:
-    dsn = _cfg_value("sentry.dsn", "SENTRY_DSN")
-    if not dsn:
+    if not cfg("sentry.dsn"):
         log.info("Sentry disabled: missing DSN")
         return False
 
-    env = str(_cfg_value("env", "ENV") or "local")
-    service = str(_cfg_value("NAME", "PROJECT_NAME") or "api")
+    env = cfg("env") or "test"
+    service = cfg("service") or "api"
     traces_sample_rate = _as_float(
-        _cfg_value("sentry.traces_sample_rate", "SENTRY_TRACES_SAMPLE_RATE"),
-        _default_sample_rate(env),
+        cfg("sentry.traces_sample_rate"), _default_sample_rate(env)
     )
     profiles_sample_rate = _as_float(
-        _cfg_value("sentry.profiles_sample_rate", "SENTRY_PROFILES_SAMPLE_RATE"),
-        traces_sample_rate,
+        cfg("sentry.profiles_sample_rate"), traces_sample_rate
     )
-    send_default_pii = _as_bool(
-        _cfg_value("sentry.send_default_pii", "SENTRY_SEND_DEFAULT_PII"),
-        True,
-    )
+    send_default_pii = _as_bool(cfg("sentry.send_default_pii"), True)
 
     sentry_sdk.init(
-        dsn=dsn,
+        dsn=cfg("sentry.dsn"),
         environment=env,
-        release=_cfg_value("release", "VERSION", "SENTRY_RELEASE"),
+        release=cfg("release"),
         server_name=service,
         integrations=_build_integrations(),
         traces_sample_rate=traces_sample_rate,

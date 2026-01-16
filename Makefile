@@ -118,22 +118,18 @@ logs-local:
 .PHONY: logs-api
 logs-api:
 	docker service logs --tail=1000 $(STACK_NAME)_api
-# 	tail -f ${DATA_PATH}/logs/api.log
 
 .PHONY: logs-worker
 logs-worker:
 	docker service logs --tail=1000 $(STACK_NAME)_worker
-# 	tail -f ${DATA_PATH}/logs/worker.log
 
 .PHONY: logs-scheduler
 logs-scheduler:
 	docker service logs --tail=1000 $(STACK_NAME)_scheduler
-# 	tail -f ${DATA_PATH}/logs/scheduler.log
 
 .PHONY: logs-tg
 logs-tg:
 	docker service logs --tail=1000 $(STACK_NAME)_tg
-# 	tail -f ${DATA_PATH}/logs/tg.log
 
 .PHONY: logs-web
 logs-web:

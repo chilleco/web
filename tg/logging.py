@@ -1,5 +1,5 @@
 """
-JSON logging to stdout with request correlation.
+JSON logging to stdout with request correlation for the TG service.
 """
 
 from __future__ import annotations
@@ -9,7 +9,6 @@ import json
 import sys
 from typing import Any
 
-import sentry_sdk
 from libdev.cfg import cfg
 from libdev.log import log
 
@@ -21,17 +20,10 @@ _trace_id_var: contextvars.ContextVar[str | None] = contextvars.ContextVar(
     "trace_id", default=None
 )
 
-_SERVICE = cfg("service") or "api"
+_SERVICE = cfg("service") or "tg"
 _ENV = cfg("env") or "test"
 _VERSION = cfg("release") or "unknown"
 _LEVEL = cfg("log.level") or "INFO"
-
-
-def _current_trace_id() -> str | None:
-    span = sentry_sdk.get_current_scope().span
-    if span and getattr(span, "trace_id", None):
-        return str(span.trace_id)
-    return None
 
 
 def set_request_context(request_id: str, trace_id: str | None = None) -> None:
@@ -46,7 +38,7 @@ def clear_request_context() -> None:
 
 def _inject_context(record: dict[str, Any]) -> dict[str, Any]:
     request_id = _request_id_var.get()
-    trace_id = _trace_id_var.get() or _current_trace_id()
+    trace_id = _trace_id_var.get()
     if request_id:
         record["extra"]["request_id"] = request_id
     if trace_id:

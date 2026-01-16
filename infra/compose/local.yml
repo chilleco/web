@@ -15,7 +15,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
     volumes:
       - ${DATA_PATH}/db:/data/db
-      - ${DATA_PATH}/logs/mongodb.log:/data/logs/mongodb.log
       - ../mongo/mongod.conf:/etc/mongod.conf
     ports:
       - 27017:27017
@@ -77,7 +76,6 @@ services:
     volumes:
       - ../nginx/local.conf:/etc/nginx/nginx.conf
       - ${DATA_PATH}/load:/load
-      - ${DATA_PATH}/logs:/data/logs
       # For sitemap
       - ${DATA_PATH}/sitemaps:/data/sitemaps
       - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
