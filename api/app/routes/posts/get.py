@@ -46,6 +46,12 @@ async def handler(
 
     extend = isinstance(data.id, int)
 
+    category_ids = {}
+    parents_map = {}
+    if extend:
+        category_ids = await get("category_ids") or {}
+        parents_map = await get("category_parents") or {}
+
     # Action tracking
     if data.search:
         Track.log(
@@ -90,13 +96,11 @@ async def handler(
         def handle(post):
             # Add category info
             if post.get("category"):
-                category_ids = get("category_ids") or {}
                 category = category_ids.get(post["category"])
                 if category:
                     post["category_data"] = category.json(
                         fields={"id", "url", "title"},
                     )
-                    parents_map = get("category_parents") or {}
                     post["category_data"]["parents"] = [
                         category_ids[parent].json(fields={"id", "url", "title"})
                         for parent in parents_map.get(post["category"], [])
@@ -170,10 +174,13 @@ async def handler(
         cond["token"] = {"$ne": request.state.token}
 
     # Get
+    category_childs = None
+    if data.category:
+        category_childs = await Category.get_childs(data.category)
     params = dict(
         status={"$exists": False} if request.state.status < 5 else None,
         category=(
-            {"$in": Category.get_childs(data.category)} if data.category else None
+            {"$in": category_childs} if data.category else None
         ),
         locale=(
             data.locale and {"$in": [None, data.locale]}

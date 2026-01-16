@@ -17,7 +17,7 @@ from models.category import Category
 router = APIRouter()
 
 
-def get_posts(ids, limit, category, locale):
+async def get_posts(ids, limit, category, locale):
     """Get posts by category, excluding by ID"""
 
     # Fields
@@ -57,6 +57,10 @@ def get_posts(ids, limit, category, locale):
         return post
 
     # Get
+    category_childs = None
+    if category:
+        category_childs = await Category.get_childs(category)
+
     posts = Post.complex(
         id={"$nin": ids} if ids else None,
         limit=limit,
@@ -64,7 +68,7 @@ def get_posts(ids, limit, category, locale):
         status={"$exists": False},
         category=(
             {
-                "$in": Category.get_childs(category),
+                "$in": category_childs,
             }
             if category
             else None
@@ -107,22 +111,25 @@ async def handler(
 
     posts = []
     if data.category:
-        posts.extend(get_posts(ids, int(data.limit // 3), data.category, data.locale))
+        posts.extend(
+            await get_posts(ids, int(data.limit // 3), data.category, data.locale)
+        )
         ids.extend([post["id"] for post in posts])
 
+        category_parents = await get("category_parents") or {}
+        parent_candidates = category_parents.get(data.category, []) + [data.category]
+        parent_category = parent_candidates[0]
         posts.extend(
-            get_posts(
+            await get_posts(
                 ids,
                 int(data.limit // 3),
-                (get("category_parents", {}).get(data.category, []) + [data.category])[
-                    0
-                ],
+                parent_category,
                 data.locale,
             )
         )
         ids.extend([post["id"] for post in posts])
 
-    posts.extend(get_posts(ids, data.limit - len(posts), None, data.locale))
+    posts.extend(await get_posts(ids, data.limit - len(posts), None, data.locale))
 
     # Response
     return {

@@ -37,6 +37,11 @@ set:
 	sudo systemctl restart nginx
 	sudo certbot --nginx
 
+.PHONY: certs
+certs: ## Update Let's Encrypt
+	sudo systemctl restart nginx
+	sudo certbot --nginx
+
 # ============================================================================
 # Docker Lifecycle
 # ============================================================================

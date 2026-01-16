@@ -31,7 +31,7 @@ async def _maybe_await(value: Any) -> Any:
 async def _cache_categories() -> None:
     from services.cache import cache_categories
 
-    cache_categories()
+    await cache_categories()
 
 
 PERIODIC_JOBS: Dict[str, Dict[str, Any]] = {
@@ -61,4 +61,3 @@ async def run_periodic(job: str) -> None:
         if delay_seconds > 0:
             next_run = datetime.now(tz=timezone.utc) + timedelta(seconds=delay_seconds)
             await run_periodic.schedule_by_time(redis_source, next_run, job)
-

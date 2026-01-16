@@ -49,9 +49,9 @@ class Category(Base):
         return tree
 
     @classmethod
-    def get_childs(cls, parent):
+    async def get_childs(cls, parent):
         """Get childs of category"""
-        childs_cache = get("category_childs") or {}
+        childs_cache = await get("category_childs") or {}
 
         if not childs_cache:
             # Build a fallback map when cache is empty or unavailable

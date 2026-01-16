@@ -13,4 +13,4 @@ async def on_startup():
         await reset_online_users.kiq()
     except Exception as exc:  # pylint: disable=broad-except
         log.error("Failed to enqueue reset_online_users: {}", str(exc))
-    cache_categories()  # TODO: remove
+    await cache_categories()  # TODO: remove

@@ -5,7 +5,7 @@ Message Queue
 import pickle
 
 from libdev.cfg import cfg
-from redis import Redis
+from redis.asyncio import Redis
 
 
 class Queue:
@@ -15,19 +15,29 @@ class Queue:
         self.broker = broker
         self.name = name
 
-    def push(self, data):
+    async def push(self, data):
         """Push data to queue"""
-        self.broker.rpush(self.name, pickle.dumps(data))
+        await self.broker.rpush(self.name, pickle.dumps(data))
 
-    def pop(self):
+    async def pop(self):
         """Pop data from queue"""
-        if not self.length():
+        if not await self.length():
             return None
-        return pickle.loads(self.broker.blpop(self.name)[1])
+        result = await self.broker.blpop(self.name)
+        if not result:
+            return None
+        return pickle.loads(result[1])
 
-    def length(self):
+    async def pop_nowait(self):
+        """Pop data without blocking"""
+        data = await self.broker.lpop(self.name)
+        if data is None:
+            return None
+        return pickle.loads(data)
+
+    async def length(self):
         """Length of queue"""
-        return self.broker.llen(self.name)
+        return await self.broker.llen(self.name)
 
 
 redis = Redis(
@@ -42,34 +52,34 @@ def queue(name):
     return Queue(redis, name)
 
 
-def expire(key, ttl):
+async def expire(key, ttl):
     """Change expiration time"""
     try:
-        redis.expire(key, ttl)
+        await redis.expire(key, ttl)
     except Exception as e:  # pylint: disable=broad-except
         print("Redis expire error", e)
 
 
-def save(key, data, ttl=None):
+async def save(key, data, ttl=None):
     """Save value"""
 
     data = pickle.dumps(data)
 
     try:
-        redis.set(key, data)
+        await redis.set(key, data)
     except Exception as e:  # pylint: disable=broad-except
         print("Redis save error", e)
         return
 
     if ttl is not None:
-        expire(key, ttl)
+        await expire(key, ttl)
 
 
-def get(key, default=None):
+async def get(key, default=None):
     """Get value"""
 
     try:
-        data = redis.get(key)
+        data = await redis.get(key)
     except Exception as e:  # pylint: disable=broad-except
         print("Redis get error", e)
         return default
@@ -80,9 +90,9 @@ def get(key, default=None):
     return pickle.loads(data)
 
 
-def increment(key):
+async def increment(key):
     try:
-        return redis.incr(key)
+        return await redis.incr(key)
     except Exception as e:  # pylint: disable=broad-except
         print(f"Redis increment error: {e}")
         return None

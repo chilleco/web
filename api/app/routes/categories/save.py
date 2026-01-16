@@ -174,7 +174,7 @@ async def save_category(
     changes = format_changes(category.get_changes())
     category.save()
 
-    cache_categories()
+    await cache_categories()
 
     Track.log(
         object=TrackObject.CATEGORY,

@@ -53,7 +53,7 @@ async def handler(
     category.rm()
 
     # Cache renewal
-    cache_categories()
+    await cache_categories()
 
     # Track
     Track.log(

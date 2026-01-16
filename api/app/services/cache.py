@@ -37,7 +37,7 @@ def get_childs(category_parents):
     return parents
 
 
-def cache_categories():
+async def cache_categories():
     """Cache categories"""
 
     categories = Category.get()
@@ -47,7 +47,7 @@ def cache_categories():
     category_ids = {category.id: category for category in categories}
     category_urls = {category.url: category for category in categories}
 
-    save("category_ids", category_ids)
-    save("category_urls", category_urls)
-    save("category_parents", category_parents)
-    save("category_childs", category_childs)
+    await save("category_ids", category_ids)
+    await save("category_urls", category_urls)
+    await save("category_parents", category_parents)
+    await save("category_childs", category_childs)
