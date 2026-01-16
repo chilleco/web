@@ -18,8 +18,11 @@ from libdev.log import log
 from libdev.req import fetch
 
 from tg.logging import clear_request_context, set_request_context, setup_logging
+from tg.sentry import flush_sentry, init_sentry
+import sentry_sdk
 
 setup_logging()
+init_sentry()
 
 TOKEN = cfg("tg.token")
 WEBHOOK_URL = cfg("tg")
@@ -52,6 +55,9 @@ async def request_context_middleware(request: Request, call_next):
     request_id = request.headers.get("x-request-id") or uuid4().hex
     trace_id = _trace_id_from_header(request.headers.get("sentry-trace"))
     set_request_context(request_id, trace_id)
+    sentry_sdk.set_extra("request_id", request_id)
+    if trace_id:
+        sentry_sdk.set_extra("trace_id", trace_id)
     try:
         response = await call_next(request)
     finally:
@@ -375,6 +381,7 @@ async def webhook(request: Request):
         await dispatcher.feed_update(bot, update)
     except Exception as exc:  # pylint: disable=broad-except
         log.error(f"Webhook handling failed: {exc}")
+        sentry_sdk.capture_exception(exc)
     return {"ok": True}
 
 
@@ -404,3 +411,4 @@ async def startup() -> None:
 async def shutdown() -> None:
     if bot:
         await bot.session.close()
+    flush_sentry()
