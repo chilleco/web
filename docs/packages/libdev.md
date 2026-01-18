@@ -1,6 +1,6 @@
 # LibDev Integration Guide
 
-This document is meant to be copied into consuming projects (`docs/` or similar) so that automated AI code writers and human contributors understand how to interact with the `libdev` package (version 0.96). It expands on the minimal README, explains what makes LibDev different from generic helper libraries, and records the rules the rest of the chill codebase expects consumers to follow.
+This document is meant to be copied into consuming projects (`docs/` or similar) so that automated AI code writers and human contributors understand how to interact with the `libdev` package. It expands on the minimal README, explains what makes LibDev different from generic helper libraries, and records the rules the rest of the chill codebase expects consumers to follow.
 
 ## Purpose & Scope
 - `libdev` is the canonical toolbox for DevOps and backend projects in this organization. It replaces ad-hoc helpers with a curated set of functions covering configuration, logging, network access, numeric/time formatting, validation, localization, file processing (S3 + images), and crypto.
@@ -11,7 +11,7 @@ This document is meant to be copied into consuming projects (`docs/` or similar)
 ```bash
 pip install libdev  # Latest from PyPI https://pypi.org/project/libdev/
 ```
-- Pin the version in each consumer so breaking changes are controlled. The current repo ships `__version__ = "0.96"`.
+- Pin the version in each consumer so breaking changes are controlled.
 - Local dev installs use PEP 621 metadata in `pyproject.toml` (no `requirements*.txt`). Install runtime deps with `pip install .`; install tooling/tests with `pip install .[dev]` or `make setup-dev`.
 - Run `make test` before releasing; `make release` builds and uploads wheels via `python -m build` + `twine`.
 
@@ -31,12 +31,12 @@ pip install libdev  # Latest from PyPI https://pypi.org/project/libdev/
 - Use `set_cfg("path.to.key", value)` to mutate the in-memory `sets` dictionary (e.g., overriding values in tests). Changes are not persisted back to disk.
 - Common keys:
   - `project_name`: default S3 bucket name.
-  - `mode`: used when building directory prefixes in S3 helpers (e.g., `test/uploads`).
+  - `env`: used when building directory prefixes in S3 helpers (e.g., `test/uploads`).
   - `s3.host`, `s3.user`, `s3.pass`, `s3.region`.
 - Example `sets.json` skeleton (do **not** check secrets into VCS):
 ```json
 {
-  "mode": "production",
+  "env": "PROD",
   "project_name": "my-bucket",
   "s3": {
     "host": "https://s3.example.com/",

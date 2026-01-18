@@ -243,7 +243,7 @@ requires-dist = [
     { name = "fastapi", specifier = "==0.126.0" },
     { name = "google-auth", specifier = "==2.45.0" },
     { name = "httptools", specifier = "==0.7.1" },
-    { name = "libdev", specifier = "==0.100" },
+    { name = "libdev", specifier = "==0.101" },
     { name = "pandas", specifier = "==2.3.3" },
     { name = "prometheus-fastapi-instrumentator", specifier = "==7.1.0" },
     { name = "pygsheets", specifier = "==2.0.6" },
@@ -808,7 +808,7 @@ wheels = [
 
 [[package]]
 name = "libdev"
-version = "0.100"
+version = "0.101"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -818,9 +818,9 @@ dependencies = [
     { name = "pillow-heif" },
     { name = "python-dotenv" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d6/2b/2c24d4a9af88527ad5f1d1ef238ff03673123158f2ef57e98f70530ae5ba/libdev-0.100.tar.gz", hash = "sha256:12f64cacf23b1e576d9b3be6ce0b48c52e2849b95083224c8665a1934123971e", size = 37666, upload-time = "2025-12-22T20:27:02.188Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1c/ea/5ba1fe7776d7f94d5557502facad7c170c68b3166b8b3b360103885c2097/libdev-0.101.tar.gz", hash = "sha256:a26737edabeeab3b9b62d9c8af76479a5098d29cf809aeeb7dfa241283189c99", size = 37686, upload-time = "2026-01-18T19:30:59.778Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ed/cf/f6803dda7b93f2f818ce5c77cccb9bb84b7539df552b810a08a2ff51fe02/libdev-0.100-py3-none-any.whl", hash = "sha256:afb9d5d7d4ddaa0a5a4032c0a73e160d470ba6eb59a576e8ffa1fd4af8cd2758", size = 30079, upload-time = "2025-12-22T20:27:00.737Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/17/46670ac5d14f48b78a9b0b2ed5f174878acdb792e07925068e36cf2ea33c/libdev-0.101-py3-none-any.whl", hash = "sha256:981d54fc7f7824005b21bb519043442705a0af5efcbe6f3d181f4307ba1908be", size = 30101, upload-time = "2026-01-18T19:30:58.075Z" },
 ]
 
 [[package]]
