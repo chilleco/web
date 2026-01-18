@@ -27,7 +27,7 @@ from services.sentry import flush_sentry
 from routes import router
 
 
-app = FastAPI(title=cfg("NAME", "API"), root_path="/api")
+app = FastAPI(title=cfg("NAME", "api"), root_path="/api")
 
 
 @app.get("/health")

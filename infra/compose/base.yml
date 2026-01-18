@@ -18,9 +18,9 @@ services:
     restart: unless-stopped
     env_file: ../../.env
     environment:
+      SERVICE: api
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
-      SERVICE: api
     volumes:
       - ../../api/scripts:/app/scripts
       # For data
@@ -37,9 +37,9 @@ services:
     restart: unless-stopped
     env_file: ../../.env
     environment:
+      SERVICE: worker
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
-      SERVICE: worker
     volumes:
       - ../../api/scripts:/app/scripts
       # For data
@@ -61,10 +61,9 @@ services:
     restart: unless-stopped
     env_file: ../../.env
     environment:
+      SERVICE: scheduler
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
-      SERVICE: scheduler
-    volumes:
     depends_on:
       - mq
     command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks.registry --log-level INFO"
@@ -77,10 +76,10 @@ services:
     restart: unless-stopped
     env_file: ../../.env
     environment:
+      SERVICE: tg
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
       TG: ${PROTOCOL}://${EXTERNAL_HOST}/tg/
-      SERVICE: tg
     depends_on:
       - api
 
