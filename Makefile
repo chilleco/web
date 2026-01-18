@@ -1,17 +1,19 @@
-include .env
+ENV_FILE ?= .env
+-include $(ENV_FILE)
 
 # ============================================================================
 # Common
 # ============================================================================
 
 # Files
-COMPOSE_BASE := infra/compose/$(COMPOSE_BASE)
+COMPOSE_BASE := infra/compose/base.yml
 COMPOSE_APP := infra/compose/$(ENV).yml
 # FIXME: rm, use COMPOSE_APP
 COMPOSE_LOCAL := infra/compose/local.yml
 COMPOSE_TEST := infra/compose/test.yml
 COMPOSE_DEV := infra/compose/dev.yml
 COMPOSE_PROD := infra/compose/prod.yml
+COMPOSE_ENV := --env-file $(ENV_FILE)
 
 # ============================================================================
 # Deployment
@@ -49,11 +51,11 @@ certs: ## Update Let's Encrypt
 # Start services
 .PHONY: up
 up:
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) -p ${PROJECT_NAME} up --build
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) -p ${PROJECT_NAME} up --build
 
 .PHONY: up-dev
 up-dev:
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -p ${PROJECT_NAME} up --build
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -p ${PROJECT_NAME} up --build
 
 .PHONY: up-prod
 up-prod:
@@ -61,16 +63,16 @@ up-prod:
 
 .PHONY: up-test
 up-test:
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} up --build
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} up --build
 
 # Stop services
 .PHONY: down
 down:
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) -p ${PROJECT_NAME} down
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) -p ${PROJECT_NAME} down
 
 .PHONY: down-dev
 down-dev:
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -p ${PROJECT_NAME} down
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -p ${PROJECT_NAME} down
 
 .PHONY: down-prod
 down-prod:
@@ -78,7 +80,7 @@ down-prod:
 
 .PHONY: down-test
 down-test:
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} down
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} down
 
 # ============================================================================
 # Status and monitoring
@@ -109,31 +111,27 @@ logs:
 
 .PHONY: logs-dev
 logs-dev:
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) logs
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) logs
 
 .PHONY: logs-local
 logs-local:
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) logs
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) logs
 
 .PHONY: logs-api
 logs-api:
 	docker service logs --tail=1000 $(STACK_NAME)_api
-# 	tail -f ${DATA_PATH}/logs/api.log
 
 .PHONY: logs-worker
 logs-worker:
 	docker service logs --tail=1000 $(STACK_NAME)_worker
-# 	tail -f ${DATA_PATH}/logs/worker.log
 
 .PHONY: logs-scheduler
 logs-scheduler:
 	docker service logs --tail=1000 $(STACK_NAME)_scheduler
-# 	tail -f ${DATA_PATH}/logs/scheduler.log
 
 .PHONY: logs-tg
 logs-tg:
 	docker service logs --tail=1000 $(STACK_NAME)_tg
-# 	tail -f ${DATA_PATH}/logs/tg.log
 
 .PHONY: logs-web
 logs-web:
@@ -165,7 +163,7 @@ reqs:
 
 .PHONY: test
 test: # FIXME
-	docker compose -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} up --build
+	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} up --build
 
 .PHONY: lint-api
 lint-api:

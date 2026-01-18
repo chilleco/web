@@ -18,17 +18,14 @@ services:
     restart: unless-stopped
     env_file: ../../.env
     environment:
+      SERVICE: api
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
-      LOG_FILE: /logs/api.log
-      ERR_FILE: /logs/api.err
     volumes:
       - ../../api/scripts:/app/scripts
       # For data
       - ${DATA_PATH}/load:/data/load
       - ${DATA_PATH}/backup:/backup
-      # For logs
-      - ${DATA_PATH}/logs:/logs
     depends_on:
       - mq
 
@@ -40,10 +37,9 @@ services:
     restart: unless-stopped
     env_file: ../../.env
     environment:
+      SERVICE: worker
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
-      LOG_FILE: /logs/worker.log
-      ERR_FILE: /logs/worker.err
     volumes:
       - ../../api/scripts:/app/scripts
       # For data
@@ -53,8 +49,6 @@ services:
       - ${DATA_PATH}/sitemaps:/data/sitemaps
       - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
       - ${DATA_PATH}/robots.txt:/data/robots.txt
-      # For logs
-      - ${DATA_PATH}/logs:/logs
     depends_on:
       - mq
     command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks.registry --workers 2 --log-level INFO"
@@ -67,13 +61,9 @@ services:
     restart: unless-stopped
     env_file: ../../.env
     environment:
+      SERVICE: scheduler
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
-      LOG_FILE: /logs/scheduler.log
-      ERR_FILE: /logs/scheduler.err
-    volumes:
-      # For logs
-      - ${DATA_PATH}/logs:/logs
     depends_on:
       - mq
     command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks.registry --log-level INFO"
@@ -86,14 +76,10 @@ services:
     restart: unless-stopped
     env_file: ../../.env
     environment:
+      SERVICE: tg
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
       TG: ${PROTOCOL}://${EXTERNAL_HOST}/tg/
-      LOG_FILE: /logs/tg.log
-      ERR_FILE: /logs/tg.err
-    volumes:
-      # For logs
-      - ${DATA_PATH}/logs:/logs
     depends_on:
       - api
 

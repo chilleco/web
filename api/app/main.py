@@ -23,12 +23,11 @@ from services.errors import ErrorsMiddleware
 from services.access import AccessMiddleware
 from services.limiter import get_uniq
 from services.on_startup import on_startup
+from services.sentry import flush_sentry
 from routes import router
 
 
-log.add("/backup/app.log")  # FIXME: file (to tgreports)
-
-app = FastAPI(title=cfg("NAME", "API"), root_path="/api")
+app = FastAPI(title=cfg("NAME", "api"), root_path="/api")
 
 
 @app.get("/health")
@@ -51,6 +50,12 @@ async def startup():
 
     # Tasks on start
     await on_startup()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    """Flush Sentry events on shutdown."""
+    flush_sentry()
 
 
 # Exceptions
