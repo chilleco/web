@@ -1,5 +1,6 @@
 ENV_FILE ?= .env
 -include $(ENV_FILE)
+ENV ?= test
 
 # ============================================================================
 # Common
@@ -7,13 +8,13 @@ ENV_FILE ?= .env
 
 # Files
 COMPOSE_BASE := infra/compose/base.yml
-COMPOSE_APP := infra/compose/$(ENV).yml
-# FIXME: rm, use COMPOSE_APP
-COMPOSE_LOCAL := infra/compose/local.yml
-COMPOSE_TEST := infra/compose/test.yml
-COMPOSE_DEV := infra/compose/dev.yml
-COMPOSE_PROD := infra/compose/prod.yml
 COMPOSE_ENV := --env-file $(ENV_FILE)
+ALLOWED_ENVS := local test dev pre prod
+ENV_NORMALIZED := $(shell printf '%s' "$(ENV)" | tr '[:upper:]' '[:lower:]')
+ENV_SAFE := $(if $(filter $(ENV_NORMALIZED),$(ALLOWED_ENVS)),$(ENV_NORMALIZED),test)
+COMPOSE_APP := infra/compose/$(ENV_SAFE).yml
+COMPOSE_CMD := docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_APP) -p ${PROJECT_NAME}
+STACK_NAME ?= ${PROJECT_NAME}-${ENV_SAFE}
 
 # ============================================================================
 # Deployment
@@ -44,51 +45,47 @@ certs: ## Update Let's Encrypt
 	sudo systemctl restart nginx
 	sudo certbot --nginx
 
+.PHONY: check-env
+check-env:
+	@if [ "$(ENV_NORMALIZED)" != "$(ENV_SAFE)" ]; then \
+		echo "ENV='$(ENV)' is not recognized. Using ENV='test'."; \
+	elif [ "$(ENV)" != "$(ENV_NORMALIZED)" ]; then \
+		echo "ENV='$(ENV)' normalized to lowercase: '$(ENV_SAFE)'."; \
+	fi
+
 # ============================================================================
 # Docker Lifecycle
 # ============================================================================
 
 # Start services
 .PHONY: up
-up:
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) -p ${PROJECT_NAME} up --build
-
-.PHONY: up-dev
-up-dev:
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -p ${PROJECT_NAME} up --build
-
-.PHONY: up-prod
-up-prod:
-	docker stack deploy -c deploy.yml --with-registry-auth --prune $(STACK_NAME)
-
-.PHONY: up-test
-up-test:
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} up --build
+up: check-env
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		docker stack deploy -c deploy.yml --with-registry-auth --prune $(STACK_NAME); \
+	else \
+		$(COMPOSE_CMD) up --build; \
+	fi
 
 # Stop services
 .PHONY: down
-down:
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) -p ${PROJECT_NAME} down
-
-.PHONY: down-dev
-down-dev:
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) -p ${PROJECT_NAME} down
-
-.PHONY: down-prod
-down-prod:
-	docker stack rm $(STACK_NAME)
-
-.PHONY: down-test
-down-test:
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} down
+down: check-env
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		docker stack rm $(STACK_NAME); \
+	else \
+		$(COMPOSE_CMD) down; \
+	fi
 
 # ============================================================================
 # Status and monitoring
 # ============================================================================
 
 .PHONY: status
-status:
-	docker stack services ${STACK_NAME}
+status: check-env
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		docker stack services $(STACK_NAME); \
+	else \
+		$(COMPOSE_CMD) ps; \
+	fi
 
 .PHONY: ps
 ps:
@@ -103,19 +100,15 @@ stats:
 # ============================================================================
 
 .PHONY: logs
-logs:
-	@services=$$(docker service ls -q --filter label=com.docker.stack.namespace=$(STACK_NAME)); \
-	for svc in $$services; do \
-		docker service logs --tail=1000 $$svc & \
-	done;
-
-.PHONY: logs-dev
-logs-dev:
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_DEV) logs
-
-.PHONY: logs-local
-logs-local:
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_LOCAL) logs
+logs: check-env
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		services=$$(docker service ls -q --filter label=com.docker.stack.namespace=$(STACK_NAME)); \
+		for svc in $$services; do \
+			docker service logs --tail=1000 $$svc & \
+		done; \
+	else \
+		$(COMPOSE_CMD) logs; \
+	fi
 
 .PHONY: logs-api
 logs-api:
@@ -163,7 +156,7 @@ reqs:
 
 .PHONY: test
 test: # FIXME
-	docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_TEST) -p ${PROJECT_NAME} up --build
+	@$(MAKE) up ENV=test
 
 .PHONY: lint-api
 lint-api:

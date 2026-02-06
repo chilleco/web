@@ -22,7 +22,7 @@ _trace_id_var: contextvars.ContextVar[str | None] = contextvars.ContextVar(
 )
 
 _SERVICE = cfg("service") or "api"
-_ENV = cfg("env") or "test"
+_ENV = cfg("env", "test")
 _VERSION = cfg("release") or "unknown"
 _LEVEL = cfg("log.level") or "INFO"
 

@@ -1,3 +1,8 @@
+import { getPublicAppEnv, isProdLikeAppEnv } from '@/shared/lib/env';
+
+const appEnv = getPublicAppEnv();
+const isProdLikeEnv = isProdLikeAppEnv(appEnv);
+
 // Application configuration
 export const APP_CONFIG = {
   name: 'Web App',
@@ -14,10 +19,10 @@ export const APP_CONFIG = {
 
   // Feature flags
   features: {
-    analytics: process.env.NODE_ENV === 'production',
+    analytics: isProdLikeEnv,
     darkMode: true,
     i18n: true,
-    telemetry: process.env.NODE_ENV === 'production',
+    telemetry: isProdLikeEnv,
   },
 
   // UI Configuration

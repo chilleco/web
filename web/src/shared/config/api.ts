@@ -70,11 +70,13 @@
  * the backend isn't available, while maintaining proper error handling in production.
  */
 
-const envName = (process.env.NEXT_PUBLIC_ENV || '').toUpperCase();
+import { getPublicAppEnv, isNonProdAppEnv } from '@/shared/lib/env';
+
+const appEnv = getPublicAppEnv();
 const mockFallbackEnv = process.env.NEXT_PUBLIC_USE_MOCK_FALLBACK;
-const isLocalEnv = envName === 'LOCAL' || envName === '';
-const isDevEnv = envName === 'DEV';
-const isNonProdEnv = isLocalEnv || isDevEnv;
+const isLocalEnv = appEnv === "local";
+const isDevEnv = appEnv === "dev";
+const isNonProdEnv = isNonProdAppEnv(appEnv);
 
 // Environment-based configuration
 export const API_CONFIG = {

@@ -129,7 +129,6 @@ services:
       # NEXT_PUBLIC_GOOGLE_ID: ${GOOGLE_ID}
       NEXT_PUBLIC_TG_BOT: ${TG_BOT}
       NODE_OPTIONS: "--max_old_space_size=4096"
-      NODE_ENV: "production"
     ports:
       - target: 3000
         published: ${WEB_PORT}

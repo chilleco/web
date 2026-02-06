@@ -20,7 +20,6 @@ COPY . .
 
 # Set build environment
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 
 # Build the application and strip dev dependencies for runtime
 RUN npm run build && npm prune --omit=dev
@@ -43,7 +42,6 @@ COPY package*.json ./
 RUN npm ci --no-audit --no-fund
 
 # Set development environment
-ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Expose port

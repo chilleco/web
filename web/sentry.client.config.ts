@@ -1,8 +1,9 @@
 import * as Sentry from "@sentry/nextjs";
+import { isNonProdAppEnv, resolveAppEnv } from "./src/shared/lib/env";
 
-const environment = process.env.NEXT_PUBLIC_ENV ?? process.env.NODE_ENV ?? "local";
+const environment = resolveAppEnv(process.env.NEXT_PUBLIC_ENV);
 const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN ?? "";
-const defaultSampleRate = ["local", "test", "dev"].includes(environment) ? 1.0 : 0.2;
+const defaultSampleRate = isNonProdAppEnv(environment) ? 1.0 : 0.2;
 
 const asFloat = (value: string | undefined, fallback: number) => {
   const parsed = Number.parseFloat(value ?? "");

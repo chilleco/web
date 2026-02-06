@@ -42,7 +42,7 @@ jobs:
 
   #     - name: Setting up environment variables
   #       run: |
-  #         cp base.env .env
+  #         cp .env.example .env
   #         echo "ENV=test" >> .env
   #         echo "DATA_PATH=./data" >> .env
 

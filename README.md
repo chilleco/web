@@ -24,7 +24,7 @@ Modern full-stack web application with Python FastAPI backend, Next.js frontend,
     <tbody>
         <tr>
             <td valign="top">
-                1. Configure <code> .env </code> from <code> base.env </code> and add:
+                1. Configure <code> .env </code> from <code> .env.example </code> and add:
                 <pre>
 # Type
 # local / test / dev / pre / prod
@@ -38,29 +38,16 @@ DATA_PATH=./data
                 </pre>
             </td>
             <td valign="top">
-                1. Configure <code> .env </code> from <code> base.env </code> and add:
-                <pre>
-\# Type
-\# local / test / dev / pre / prod
-ENV=prod
-
-\# Links
-PROTOCOL=https
-EXTERNAL_HOST=web.chill.services
-WEB_PORT=8201
-API_PORT=8202
-TG_PORT=8203
-REDIS_PORT=8204
-DATA_PATH=~/data/web
-                </pre>
+                1. Configure CI/CD variables/secrets (GitHub Actions vars+secrets or GitLab CI/CD variables).
+                Fill all keys from <code>.env.example</code> in CI variables/secrets.
             </td>
         </tr>
         <tr>
             <td>
-                2. <code> make dev </code>
+                2. <code> make up </code>
             </td>
             <td>
-                2. <code> make run </code>
+                2. <code> make release </code>
             </td>
         </tr>
         <tr>
@@ -73,6 +60,8 @@ DATA_PATH=~/data/web
         </tr>
     </tbody>
 </table>
+
+Use `make down` to stop services.
 
 ## Telegram bot (webhooks)
 - Service lives in `tg/` and runs a FastAPI webhook handler behind `/tg/`.

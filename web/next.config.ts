@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from 'next-intl/plugin';
+import { resolveAppEnv } from './src/shared/lib/env';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+const runtimeEnv = resolveAppEnv(process.env.NEXT_PUBLIC_ENV);
+const enableWatchPolling = ['local', 'test', 'dev'].includes(runtimeEnv);
 
 const nextConfig: NextConfig = {
   // Image configuration for external domains - allow all HTTPS domains
@@ -21,7 +24,7 @@ const nextConfig: NextConfig = {
   // Ensure proper bundle handling
   webpack: (config, { isServer, dev }) => {
     // Enable polling for file watching in Docker environments
-    if (dev && process.env.NODE_ENV === 'development') {
+    if (dev && enableWatchPolling) {
       config.watchOptions = {
         poll: 1000,
         aggregateTimeout: 300,

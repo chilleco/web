@@ -163,4 +163,4 @@ class SentryReport:
             )
 
 
-report = SentryReport(str(cfg("env") or "test"))
+report = SentryReport(cfg("env", "test"))

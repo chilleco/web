@@ -14,7 +14,10 @@ import { ThemeProvider } from '@/providers';
 import { PopupProvider } from '@/widgets/feedback-system';
 import { ToastProvider } from '@/widgets/feedback-system';
 import { StructuredData, ThemeAwareContent, VkBridgeInitializer } from '@/shared/components/layout';
+import { getPublicAppEnv, isNonProdAppEnv } from '@/shared/lib/env';
 import Script from "next/script";
+
+const appEnv = getPublicAppEnv();
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -117,7 +120,7 @@ export default async function LocaleLayout({
     params: Promise<{ locale: string }>;
 }) {
     const { locale } = await params;
-    const enableEruda = ["local", "dev", "test"].includes(process.env.NEXT_PUBLIC_ENV ?? "");
+    const enableEruda = isNonProdAppEnv(appEnv);
 
     // Ensure that the incoming `locale` is valid
     if (!routing.locales.includes(locale as Locale)) {

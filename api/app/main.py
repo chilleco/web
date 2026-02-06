@@ -30,6 +30,13 @@ from routes import router
 app = FastAPI(title=cfg("NAME", "api"), root_path="/api")
 
 
+def _resolve_env() -> str:
+    env = str(cfg("env") or "test").strip().lower()
+    if env in {"local", "test", "dev", "pre", "prod"}:
+        return env
+    return "test"
+
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
@@ -45,7 +52,7 @@ async def startup():
     await report.info("Restart server")
 
     # Prometheus
-    if cfg("env") in {"pre", "prod"}:
+    if _resolve_env() in {"pre", "prod"}:
         Instrumentator().instrument(app).expose(app)
 
     # Tasks on start

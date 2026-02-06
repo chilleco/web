@@ -60,7 +60,7 @@ def init_sentry() -> bool:
         log.info("Sentry disabled: missing DSN")
         return False
 
-    env = cfg("env") or "test"
+    env = cfg("env", "test")
     service = cfg("service") or "api"
     traces_sample_rate = _as_float(
         cfg("sentry.traces_sample_rate"), _default_sample_rate(env)
