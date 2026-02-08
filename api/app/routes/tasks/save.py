@@ -14,7 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from libdev.codes import get_network
 from consys.errors import ErrorAccess, ErrorWrong
 
-from lib import report
+from lib import log
 from models.task import Task
 from models.track import Track, TrackAction, TrackObject, format_changes
 
@@ -165,7 +165,7 @@ async def handler(
     )
 
     if new:
-        await report.important(
+        log.important(
             "New task",
             {
                 "task": task.id,

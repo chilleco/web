@@ -12,7 +12,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorWrong, ErrorInvalid
 
-from lib import cfg, report
+from lib import cfg, log
 from routes.users.auth import wrap_auth
 
 
@@ -63,7 +63,7 @@ async def handler(
         data_user = int(params["vk_user_id"])
         status = is_valid_vk(query=params)
     except Exception as e:
-        await report.warning(
+        log.warning(
             "Failed authorization attempt in the app",
             {
                 "url": data.url,

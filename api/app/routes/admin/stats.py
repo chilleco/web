@@ -6,7 +6,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel, Field
 from consys.errors import ErrorAccess
 
-from lib import report
+from lib import log
 from models.post import Post
 from models.product import Product
 from models.user import UserLocal
@@ -39,7 +39,7 @@ async def _get_users_count() -> int:
     # try:
     #     users = await complex_global_users(limit=None, offset=None, fields=["id"])
     # except Exception as exc:  # pylint: disable=broad-except
-    #     await report.warning("User count fallback (core)", error=exc)
+    #     log.warning("User count fallback (core)", error=exc)
     # else:
     #     if isinstance(users, list):
     #         return len(users)
@@ -50,7 +50,7 @@ async def _get_users_count() -> int:
     try:
         return UserLocal.count()
     except Exception as exc:  # pylint: disable=broad-except
-        await report.warning("User count fallback (local)", error=exc)
+        log.warning("User count fallback (local)", error=exc)
         return 0
 
 
@@ -69,13 +69,13 @@ async def handler(
     try:
         posts_count = Post.count()
     except Exception as exc:  # pylint: disable=broad-except
-        await report.warning("Posts count failed", error=exc)
+        log.warning("Posts count failed", error=exc)
         posts_count = 0
 
     try:
         products_count = Product.count()
     except Exception as exc:  # pylint: disable=broad-except
-        await report.warning("Products count failed", error=exc)
+        log.warning("Products count failed", error=exc)
         products_count = 0
 
     users_count = await _get_users_count()

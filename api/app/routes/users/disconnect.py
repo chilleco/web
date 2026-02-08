@@ -6,7 +6,7 @@ import time
 
 from consys.errors import ErrorWrong
 
-from lib import report
+from lib import log
 from lib.sockets import sio
 from models.socket import Socket
 from models.track import Track, TrackAction, TrackObject
@@ -78,5 +78,5 @@ async def online_stop(socket_id, close=True):
 @sio.on("disconnect")
 async def disconnect(sid):
     """Disconnect"""
-    await report.debug("OUT", sid)
+    log.debug("OUT", sid)
     await online_stop(sid)

@@ -11,7 +11,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorWrong, ErrorInvalid
 
-from lib import cfg, report
+from lib import cfg, log
 from routes.users.auth import wrap_auth
 
 
@@ -32,7 +32,7 @@ async def verify_telegram_web_app_data(telegram_init_data: str) -> tuple[bool, d
             if key != "hash"
         )
     except ValueError:
-        await report.error("Telegram auth data", {"data": telegram_init_data})
+        log.error("Telegram auth data", {"data": telegram_init_data})
         return False, {}
 
     secret_key_stage1 = hmac.new(

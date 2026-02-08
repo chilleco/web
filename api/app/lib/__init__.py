@@ -10,7 +10,6 @@ import sentry_sdk
 from libdev.cfg import cfg
 from libdev.gen import generate, generate_id, generate_password
 
-from lib.notify import report
 from services.logging import log, setup_logging
 from services.sentry import init_sentry
 
@@ -37,7 +36,7 @@ def handle_tasks(method):
                 try:
                     return await method(*args, **kwargs)
                 except Exception as e:  # pylint: disable=broad-exception-caught
-                    await report.critical(f"Task {method.__name__} failed: {e}", error=e)
+                    log.critical(f"Task {method.__name__} failed: {e}", error=e)
                 finally:
                     log.info(f"Finish {method.__name__}: {time.time() - now:.0f}s")
 
@@ -52,6 +51,5 @@ __all__ = (
     "generate_password",
     "BaseType",
     "validate",
-    "report",
     "handle_tasks",
 )

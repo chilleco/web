@@ -15,7 +15,7 @@ from consys.errors import BaseError
 from libdev.img import convert
 from libdev.s3 import upload
 
-from lib import cfg, log, report
+from lib import cfg, log
 from lib.sockets import asgi
 from services.parameters import ParametersMiddleware
 from services.monitoring import MonitoringMiddleware
@@ -49,7 +49,7 @@ async def startup():
     """Application startup event"""
 
     # Report about start
-    await report.info("Restart server")
+    log.info("Restart server")
 
     # Prometheus
     if _resolve_env() in {"pre", "prod"}:

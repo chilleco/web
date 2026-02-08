@@ -9,7 +9,7 @@ from consys.errors import ErrorAccess
 
 from models.post import Post
 from models.track import Track, TrackAction, TrackObject, format_changes
-from lib import report
+from lib import log
 
 
 router = APIRouter()
@@ -101,7 +101,7 @@ async def handler(
 
     # Report
     if new:
-        await report.important(
+        log.important(
             "Save post",
             {
                 "post": post.id,

@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from consys.errors import BaseError
 
-from lib import log, report
+from lib import log
 
 
 SUSPICIOUS_PATHS = {
@@ -74,7 +74,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
                 log.info(f"Response Body: {response_body}")
 
                 # Report
-                await report.warning(
+                log.warning(
                     response_body,
                     {
                         "method": request.method,
@@ -104,7 +104,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             )
 
             # Report
-            await report.critical(str(e), error=e)
+            log.critical(str(e), error=e)
 
             return JSONResponse(
                 status_code=500,

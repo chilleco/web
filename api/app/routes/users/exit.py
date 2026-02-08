@@ -5,7 +5,7 @@ The logout method of the user object of the API
 from fastapi import APIRouter, Request
 from consys.errors import ErrorAccess
 
-from lib import report
+from lib import log
 from models.socket import Socket
 from routes.users.disconnect import online_stop
 
@@ -25,7 +25,7 @@ async def handler(
 
     # Not authorized
     if request.state.status == 2:
-        await report.warning(
+        log.warning(
             "Already unauth",
             {
                 "token": request.state.token,

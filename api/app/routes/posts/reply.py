@@ -6,7 +6,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorAccess
 
-from lib import report
+from lib import log
 from models.post import Post
 from models.comment import Comment
 from models.track import Track, TrackAction, TrackObject, format_changes
@@ -82,7 +82,7 @@ async def handler(
 
     # Report
     if new:
-        await report.important(
+        log.important(
             "Reply",
             {
                 "post": comment.post,
