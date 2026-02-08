@@ -12,7 +12,7 @@ from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from libdev.cfg import cfg
-from libdev.log import log
+from tg.logging import log
 
 
 def _as_bool(value: Any, default: bool) -> bool:
@@ -86,7 +86,7 @@ def init_sentry() -> bool:
 
     log.info(
         "Sentry enabled",
-        {
+        extra={
             "env": env,
             "traces_sample_rate": traces_sample_rate,
             "profiles_sample_rate": profiles_sample_rate,

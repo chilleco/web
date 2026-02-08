@@ -9,10 +9,9 @@ from consys.types import BaseType, validate
 import sentry_sdk
 from libdev.cfg import cfg
 from libdev.gen import generate, generate_id, generate_password
-from libdev.log import log
 
-from lib.reports import report
-from services.logging import setup_logging
+from lib.notify import report
+from services.logging import log, setup_logging
 from services.sentry import init_sentry
 
 

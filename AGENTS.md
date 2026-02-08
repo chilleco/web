@@ -176,7 +176,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - **Caching**: Redis for session storage and caching
 - **Logging & alerts**: Structured loguru logging; error/perf reporting via Sentry (`api/app/services/sentry.py`).
 - **Log format**: Containers write JSON logs to stdout/stderr only (no file sinks). Required fields: `service`, `env`, `version`, `level`, `trace_id`/`request_id`, `msg`, `error.stack` (if present). Keep high-cardinality data as fields inside the JSON payload, not as log labels.
-- **Unified pipeline**: API/TG must emit logs through Loguru only; the same Loguru records must feed stdout JSON (Alloy -> Loki -> Grafana) and Sentry breadcrumbs/error events to keep correlation by `request_id`/`trace_id`.
+- **Unified pipeline**: API/TG must emit logs through Loguru only; the same Loguru records must feed stdout JSON (Alloy -> Loki -> Grafana), send `error/critical/exception` records to Sentry, and send Telegram alerts for `log.important(...)` and any log call with `silent=False` (default `silent=True`).
 - **Frontend Sentry**: Web app uses `@sentry/nextjs` (`web/sentry.client.config.ts`, `web/sentry.server.config.ts`, `web/sentry.edge.config.ts`) with `NEXT_PUBLIC_SENTRY_DSN`.
 - **Testing**: pytest with async test support
 - **Background Tasks**: Celery with Redis broker

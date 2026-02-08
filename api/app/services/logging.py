@@ -1,7 +1,8 @@
 """
-Unified Loguru observability for API:
-- JSON logs to stdout for Alloy -> Loki -> Grafana
-- Sentry breadcrumbs/events from the same Loguru records
+Unified Loguru logging for API:
+- JSON logs to stdout (Alloy -> Loki -> Grafana)
+- Error/critical events to Sentry
+- Optional Telegram notifications (silent=False / important)
 """
 
 from __future__ import annotations
@@ -9,11 +10,13 @@ from __future__ import annotations
 import contextvars
 import json
 import sys
-from typing import Any
+from typing import Any, Iterable
+from urllib import parse as urllib_parse
+from urllib import request as urllib_request
 
 import sentry_sdk
 from libdev.cfg import cfg
-from libdev.log import log
+from loguru import logger
 
 
 _request_id_var: contextvars.ContextVar[str | None] = contextvars.ContextVar(
@@ -27,7 +30,50 @@ _SERVICE = cfg("service") or "api"
 _ENV = cfg("env", "test")
 _VERSION = cfg("release") or "unknown"
 _LEVEL = cfg("log.level") or "INFO"
-_SKIP_SENTRY_CAPTURE_KEY = "_skip_sentry_capture"
+
+_NOTIFY_TOKEN = cfg("tg.token")
+_NOTIFY_CHAT = cfg("bug.chat")
+
+_INTERNAL_EXTRA_KEYS = {
+    "_notify",
+    "_skip_sentry_capture",
+    "request_id",
+    "trace_id",
+}
+
+
+def _as_float(value: Any, default: float) -> float:
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+_NOTIFY_TIMEOUT = _as_float(cfg("log.notify_timeout"), 3.0)
+
+
+def _json_safe(value: Any) -> Any:
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_json_safe(item) for item in value]
+    return str(value)
+
+
+def _normalize_tags(tags: dict[str, Any] | Iterable[str] | None) -> dict[str, str]:
+    if not tags:
+        return {}
+    if isinstance(tags, dict):
+        return {
+            str(key): str(value)
+            for key, value in tags.items()
+            if key and value is not None
+        }
+    return {str(tag): "true" for tag in tags if tag}
 
 
 def _current_trace_id() -> str | None:
@@ -59,16 +105,6 @@ def _to_sentry_level(level_name: str) -> str:
         "CRITICAL": "fatal",
     }
     return mapping.get(level_name.upper(), "info")
-
-
-def _json_safe(value: Any) -> Any:
-    if value is None or isinstance(value, (str, int, float, bool)):
-        return value
-    if isinstance(value, dict):
-        return {str(key): _json_safe(item) for key, item in value.items()}
-    if isinstance(value, (list, tuple, set)):
-        return [_json_safe(item) for item in value]
-    return str(value)
 
 
 def set_request_context(request_id: str, trace_id: str | None = None) -> None:
@@ -133,12 +169,20 @@ def _json_sink(message) -> None:
     extra = {
         key: _json_safe(value)
         for key, value in record["extra"].items()
-        if key not in {"trace_id", "request_id", _SKIP_SENTRY_CAPTURE_KEY}
+        if key not in _INTERNAL_EXTRA_KEYS
     }
     if extra:
         output["extra"] = extra
 
     sys.stdout.write(json.dumps(output, ensure_ascii=True) + "\n")
+
+
+def _apply_sentry_tags(scope: sentry_sdk.Scope, tags: Any) -> None:
+    if not isinstance(tags, dict):
+        return
+    for key, value in tags.items():
+        if value is not None:
+            scope.set_tag(str(key), str(value))
 
 
 def _sentry_sink(message) -> None:
@@ -152,7 +196,7 @@ def _sentry_sink(message) -> None:
     extra = {
         key: _json_safe(value)
         for key, value in record["extra"].items()
-        if key != _SKIP_SENTRY_CAPTURE_KEY
+        if key not in {"_skip_sentry_capture", "_notify"}
     }
 
     sentry_sdk.add_breadcrumb(
@@ -162,7 +206,7 @@ def _sentry_sink(message) -> None:
         data=extra or None,
     )
 
-    if record["extra"].get(_SKIP_SENTRY_CAPTURE_KEY):
+    if record["extra"].get("_skip_sentry_capture"):
         return
 
     if level_name not in {"ERROR", "CRITICAL"}:
@@ -171,6 +215,7 @@ def _sentry_sink(message) -> None:
     with sentry_sdk.push_scope() as scope:
         for key, value in extra.items():
             scope.set_extra(key, value)
+        _apply_sentry_tags(scope, extra.get("tags"))
         scope.set_tag("service", _SERVICE)
 
         exception = record.get("exception")
@@ -180,9 +225,223 @@ def _sentry_sink(message) -> None:
             sentry_sdk.capture_message(record["message"], level=sentry_level)
 
 
+def _notify_enabled() -> bool:
+    return bool(_NOTIFY_TOKEN and _NOTIFY_CHAT)
+
+
+def _safe_json(value: Any) -> str:
+    try:
+        return json.dumps(_json_safe(value), ensure_ascii=False)
+    except Exception:  # pylint: disable=broad-except
+        return str(value)
+
+
+def _build_notify_text(record: dict[str, Any], error_payload: dict[str, Any]) -> str:
+    lines = [f"[{_SERVICE}/{_ENV}] {record['level'].name}: {record['message']}"]
+
+    request_id = record["extra"].get("request_id")
+    trace_id = record["extra"].get("trace_id")
+    tags = record["extra"].get("tags")
+    payload = record["extra"].get("payload")
+
+    if request_id:
+        lines.append(f"request_id: {request_id}")
+    if trace_id:
+        lines.append(f"trace_id: {trace_id}")
+    if tags:
+        lines.append(f"tags: {_safe_json(tags)}")
+    if payload is not None:
+        lines.append(f"payload: {_safe_json(payload)}")
+    if error_payload.get("message"):
+        lines.append(f"error: {error_payload['message']}")
+
+    text = "\n".join(lines)
+    if len(text) > 3800:
+        return text[:3797] + "..."
+    return text
+
+
+def _send_notify(text: str) -> None:
+    if not _notify_enabled():
+        return
+    data = urllib_parse.urlencode(
+        {
+            "chat_id": str(_NOTIFY_CHAT),
+            "text": text,
+            "disable_web_page_preview": "true",
+        }
+    ).encode("utf-8")
+    req = urllib_request.Request(
+        f"https://api.telegram.org/bot{_NOTIFY_TOKEN}/sendMessage",
+        data=data,
+        method="POST",
+    )
+    req.add_header("Content-Type", "application/x-www-form-urlencoded")
+    try:
+        with urllib_request.urlopen(req, timeout=_NOTIFY_TIMEOUT):
+            return
+    except Exception as exc:  # pylint: disable=broad-except
+        sys.stderr.write(
+            f'{{"service":"{_SERVICE}","level":"ERROR","msg":"notify failed","error":"{str(exc)}"}}\n'
+        )
+
+
+def _notify_sink(message) -> None:
+    record = message.record
+    if not record["extra"].get("_notify"):
+        return
+    error_payload = _serialize_exception(record.get("exception"))
+    _send_notify(_build_notify_text(record, error_payload))
+
+
+class AppLogger:
+    """Project logger wrapper around Loguru with Sentry/notify controls."""
+
+    def __init__(self, raw_logger):
+        self._logger = raw_logger
+
+    def catch(self, *args, **kwargs):
+        return self._logger.catch(*args, **kwargs)
+
+    def bind(self, **kwargs):
+        return self._logger.bind(**kwargs)
+
+    def _extract_payload(
+        self, message: Any, args: tuple[Any, ...], extra: Any | None
+    ) -> tuple[tuple[Any, ...], Any | None]:
+        if extra is not None:
+            return args, extra
+        if (
+            len(args) == 1
+            and isinstance(args[0], (dict, list, tuple, set))
+            and isinstance(message, str)
+            and "{" not in message
+        ):
+            return tuple(), args[0]
+        return args, None
+
+    def _emit(
+        self,
+        level: str,
+        message: Any,
+        *args: Any,
+        tags: dict[str, Any] | Iterable[str] | None = None,
+        silent: bool = True,
+        extra: Any | None = None,
+        error: Exception | None = None,
+    ) -> None:
+        fmt_args, payload = self._extract_payload(message, args, extra)
+        context: dict[str, Any] = {}
+        normalized_tags = _normalize_tags(tags)
+        if normalized_tags:
+            context["tags"] = normalized_tags
+        if payload is not None:
+            context["payload"] = _json_safe(payload)
+        if not silent:
+            context["_notify"] = True
+
+        target = self._logger.bind(**context) if context else self._logger
+        if error is not None:
+            target.opt(exception=error).log(level.upper(), message, *fmt_args)
+            return
+        target.log(level.upper(), message, *fmt_args)
+
+    def log(
+        self,
+        level: str,
+        message: Any,
+        *args: Any,
+        tags: dict[str, Any] | Iterable[str] | None = None,
+        silent: bool = True,
+        extra: Any | None = None,
+        error: Exception | None = None,
+    ) -> None:
+        self._emit(
+            level,
+            message,
+            *args,
+            tags=tags,
+            silent=silent,
+            extra=extra,
+            error=error,
+        )
+
+    def trace(self, message: Any, *args: Any, **kwargs) -> None:
+        self._emit("TRACE", message, *args, **kwargs)
+
+    def debug(self, message: Any, *args: Any, **kwargs) -> None:
+        self._emit("DEBUG", message, *args, **kwargs)
+
+    def info(self, message: Any, *args: Any, **kwargs) -> None:
+        self._emit("INFO", message, *args, **kwargs)
+
+    def success(self, message: Any, *args: Any, **kwargs) -> None:
+        self._emit("SUCCESS", message, *args, **kwargs)
+
+    def warning(self, message: Any, *args: Any, **kwargs) -> None:
+        self._emit("WARNING", message, *args, **kwargs)
+
+    def error(self, message: Any, *args: Any, **kwargs) -> None:
+        self._emit("ERROR", message, *args, **kwargs)
+
+    def critical(self, message: Any, *args: Any, **kwargs) -> None:
+        self._emit("CRITICAL", message, *args, **kwargs)
+
+    def exception(
+        self,
+        message: Any,
+        *args: Any,
+        tags: dict[str, Any] | Iterable[str] | None = None,
+        silent: bool = True,
+        extra: Any | None = None,
+        error: Exception | None = None,
+    ) -> None:
+        fmt_args, payload = self._extract_payload(message, args, extra)
+        context: dict[str, Any] = {}
+        normalized_tags = _normalize_tags(tags)
+        if normalized_tags:
+            context["tags"] = normalized_tags
+        if payload is not None:
+            context["payload"] = _json_safe(payload)
+        if not silent:
+            context["_notify"] = True
+
+        target = self._logger.bind(**context) if context else self._logger
+        if error is not None:
+            target.opt(exception=error).error(message, *fmt_args)
+        else:
+            target.opt(exception=True).error(message, *fmt_args)
+
+    def important(
+        self,
+        message: Any,
+        *args: Any,
+        tags: dict[str, Any] | Iterable[str] | None = None,
+        silent: bool = False,
+        extra: Any | None = None,
+        error: Exception | None = None,
+    ) -> None:
+        merged_tags = _normalize_tags(tags)
+        merged_tags["important"] = "true"
+        self._emit(
+            "INFO",
+            message,
+            *args,
+            tags=merged_tags,
+            silent=silent,
+            extra=extra,
+            error=error,
+        )
+
+
+log = AppLogger(logger)
+
+
 def setup_logging() -> None:
-    log.remove()
-    log.configure(patcher=_inject_context)
-    log.add(_json_sink, level=_LEVEL, enqueue=True, catch=True)
-    # Keep Sentry sink synchronous so breadcrumbs/events stay on the active scope.
-    log.add(_sentry_sink, level=_LEVEL, enqueue=False, catch=True)
+    logger.remove()
+    logger.configure(patcher=_inject_context)
+    logger.add(_json_sink, level=_LEVEL, enqueue=True, catch=True)
+    # Keep Sentry sink synchronous to preserve active scope context.
+    logger.add(_sentry_sink, level=_LEVEL, enqueue=False, catch=True)
+    logger.add(_notify_sink, level=_LEVEL, enqueue=True, catch=True)
+

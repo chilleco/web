@@ -14,10 +14,9 @@ from fastapi.responses import JSONResponse
 from libdev.cfg import cfg
 from libdev.codes import get_flag
 from libdev.gen import generate
-from libdev.log import log
 from libdev.req import fetch
 
-from tg.logging import clear_request_context, set_request_context, setup_logging
+from tg.logging import clear_request_context, log, set_request_context, setup_logging
 from tg.sentry import flush_sentry, init_sentry
 import sentry_sdk
 
@@ -380,8 +379,7 @@ async def webhook(request: Request):
         update = Update.model_validate(update_data)
         await dispatcher.feed_update(bot, update)
     except Exception as exc:  # pylint: disable=broad-except
-        log.bind(_skip_sentry_capture=True).error(f"Webhook handling failed: {exc}")
-        sentry_sdk.capture_exception(exc)
+        log.error("Webhook handling failed: {}", str(exc), error=exc)
     return {"ok": True}
 
 
