@@ -20,14 +20,13 @@ async def check(user_id, params):
             chat_id=params["chat_id"],
             user_id=user_global.get_social(2)["id"],  # TODO: by networks
         )
-    except Exception as e:
+    except Exception:  # pylint: disable=broad-except
         log.error(
             "Check chat member",
             {
                 "user": user_id,
                 "chat_id": params["chat_id"],
             },
-            error=e,
         )
         return 1
 

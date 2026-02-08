@@ -2,8 +2,6 @@
 Request processing and response statuses formatting
 """
 
-import traceback
-
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -97,14 +95,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             )
 
         except Exception as e:  # pylint: disable=broad-except
-            # Log
-            tb_str = "".join(traceback.format_tb(e.__traceback__))
-            log.error(
-                f"Exception during request processing: {str(e)}\nTraceback: {tb_str}"
-            )
-
-            # Report
-            log.critical(str(e), error=e)
+            log.exception("Exception during request processing: {}", str(e))
 
             return JSONResponse(
                 status_code=500,

@@ -68,14 +68,13 @@ class AccessMiddleware(BaseHTTPMiddleware):
         try:
             token = token.split(" ")[1]
             token, user, status, network = await jwt_auth(self.jwt, token)
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             log.warning(
                 "Invalid token",
                 {
                     "url": url,
                     "token": token,
                 },
-                error=e,
             )
             return Response(content="Invalid token", status_code=401)
 

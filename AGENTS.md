@@ -177,6 +177,8 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - **Logging & alerts**: Structured loguru logging; error/perf reporting via Sentry (`api/app/services/sentry.py`).
 - **Log format**: Containers write JSON logs to stdout/stderr only (no file sinks). Required fields: `service`, `env`, `version`, `level`, `trace_id`/`request_id`, `msg`, `error.stack` (if present). Keep high-cardinality data as fields inside the JSON payload, not as log labels.
 - **Unified pipeline**: API/TG must emit logs through Loguru only; the same Loguru records must feed stdout JSON (Alloy -> Loki -> Grafana), send `error/critical/exception` records to Sentry, and send Telegram alerts for `log.important(...)` and any log call with `silent=False` (default `silent=True`).
+- **Logger import path (API)**: Import the final logger from `api/app/lib/__init__.py` (`from lib import log`) in application modules; only logging/sentry infrastructure modules may import from `services.logging`.
+- **Logger call contract**: Do not pass custom `error=` objects to logger calls. Raise/handle exceptions normally and use `log.exception(...)` or log inside `except` blocks so traceback is attached automatically.
 - **Frontend Sentry**: Web app uses `@sentry/nextjs` (`web/sentry.client.config.ts`, `web/sentry.server.config.ts`, `web/sentry.edge.config.ts`) with `NEXT_PUBLIC_SENTRY_DSN`.
 - **Testing**: pytest with async test support
 - **Background Tasks**: Celery with Redis broker

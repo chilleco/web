@@ -1,5 +1,3 @@
-import traceback
-
 from pathlib import Path
 
 from fastapi import FastAPI, Request, File, Form
@@ -91,8 +89,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def uncaught_exception_handler(request: Request, exc: Exception):
-    tb_str = "".join(traceback.format_tb(exc.__traceback__))
-    log.error(f"Unhandled exception: {exc}\nTraceback: {tb_str}")
+    log.exception("Unhandled exception: {}", str(exc))
     return JSONResponse(
         status_code=500,
         content={

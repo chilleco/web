@@ -1,8 +1,9 @@
 """
 Unified Loguru logging for TG:
 - JSON logs to stdout (Alloy -> Loki -> Grafana)
-- Error/critical events to Sentry
-- Optional Telegram notifications (silent=False / important)
+- Telegram notifications for important/silent=False events
+
+Sentry integration is configured in `tg/sentry.py`.
 """
 
 from __future__ import annotations
@@ -14,7 +15,6 @@ from typing import Any, Iterable
 from urllib import parse as urllib_parse
 from urllib import request as urllib_request
 
-import sentry_sdk
 from libdev.cfg import cfg
 from loguru import logger
 
@@ -33,13 +33,7 @@ _LEVEL = cfg("log.level") or "INFO"
 
 _NOTIFY_TOKEN = cfg("tg.token")
 _NOTIFY_CHAT = cfg("bug.chat")
-
-_INTERNAL_EXTRA_KEYS = {
-    "_notify",
-    "_skip_sentry_capture",
-    "request_id",
-    "trace_id",
-}
+_INTERNAL_EXTRA_KEYS = {"_notify", "request_id", "trace_id"}
 
 
 def _as_float(value: Any, default: float) -> float:
@@ -76,35 +70,8 @@ def _normalize_tags(tags: dict[str, Any] | Iterable[str] | None) -> dict[str, st
     return {str(tag): "true" for tag in tags if tag}
 
 
-def _current_trace_id() -> str | None:
-    span = sentry_sdk.get_current_scope().span
-    if span and getattr(span, "trace_id", None):
-        return str(span.trace_id)
-    return None
-
-
-def _is_sentry_enabled() -> bool:
-    try:
-        client = sentry_sdk.get_client()
-    except Exception:  # pylint: disable=broad-except
-        return False
-    if client is None:
-        return False
-    options = getattr(client, "options", None)
-    return bool(options and options.get("dsn"))
-
-
-def _to_sentry_level(level_name: str) -> str:
-    mapping = {
-        "TRACE": "debug",
-        "DEBUG": "debug",
-        "INFO": "info",
-        "SUCCESS": "info",
-        "WARNING": "warning",
-        "ERROR": "error",
-        "CRITICAL": "fatal",
-    }
-    return mapping.get(level_name.upper(), "info")
+def _has_active_exception() -> bool:
+    return sys.exc_info()[0] is not None
 
 
 def set_request_context(request_id: str, trace_id: str | None = None) -> None:
@@ -119,7 +86,7 @@ def clear_request_context() -> None:
 
 def _inject_context(record: dict[str, Any]) -> dict[str, Any]:
     request_id = _request_id_var.get()
-    trace_id = _trace_id_var.get() or _current_trace_id()
+    trace_id = _trace_id_var.get()
     if request_id:
         record["extra"]["request_id"] = request_id
     if trace_id:
@@ -175,54 +142,6 @@ def _json_sink(message) -> None:
         output["extra"] = extra
 
     sys.stdout.write(json.dumps(output, ensure_ascii=True) + "\n")
-
-
-def _apply_sentry_tags(scope: sentry_sdk.Scope, tags: Any) -> None:
-    if not isinstance(tags, dict):
-        return
-    for key, value in tags.items():
-        if value is not None:
-            scope.set_tag(str(key), str(value))
-
-
-def _sentry_sink(message) -> None:
-    if not _is_sentry_enabled():
-        return
-
-    record = message.record
-    level_name = record["level"].name.upper()
-    sentry_level = _to_sentry_level(level_name)
-
-    extra = {
-        key: _json_safe(value)
-        for key, value in record["extra"].items()
-        if key not in {"_skip_sentry_capture", "_notify"}
-    }
-
-    sentry_sdk.add_breadcrumb(
-        category=f"{_SERVICE}.log",
-        message=record["message"],
-        level=sentry_level,
-        data=extra or None,
-    )
-
-    if record["extra"].get("_skip_sentry_capture"):
-        return
-
-    if level_name not in {"ERROR", "CRITICAL"}:
-        return
-
-    with sentry_sdk.push_scope() as scope:
-        for key, value in extra.items():
-            scope.set_extra(key, value)
-        _apply_sentry_tags(scope, extra.get("tags"))
-        scope.set_tag("service", _SERVICE)
-
-        exception = record.get("exception")
-        if exception and exception.value is not None:
-            sentry_sdk.capture_exception(exception.value)
-        else:
-            sentry_sdk.capture_message(record["message"], level=sentry_level)
 
 
 def _notify_enabled() -> bool:
@@ -295,7 +214,7 @@ def _notify_sink(message) -> None:
 
 
 class AppLogger:
-    """Project logger wrapper around Loguru with Sentry/notify controls."""
+    """Project logger wrapper around Loguru with notify controls."""
 
     def __init__(self, raw_logger):
         self._logger = raw_logger
@@ -305,6 +224,22 @@ class AppLogger:
 
     def bind(self, **kwargs):
         return self._logger.bind(**kwargs)
+
+    def _fallback(self, level: str, message: Any, exc: Exception) -> None:
+        try:
+            payload = {
+                "service": _SERVICE,
+                "env": _ENV,
+                "version": _VERSION,
+                "level": "ERROR",
+                "msg": "logger emit failed",
+                "log_level": level.upper(),
+                "log_message": str(message),
+                "error": str(exc),
+            }
+            sys.stderr.write(json.dumps(payload, ensure_ascii=True) + "\n")
+        except Exception:  # pylint: disable=broad-except
+            return
 
     def _extract_payload(
         self, message: Any, args: tuple[Any, ...], extra: Any | None
@@ -328,7 +263,6 @@ class AppLogger:
         tags: dict[str, Any] | Iterable[str] | None = None,
         silent: bool = True,
         extra: Any | None = None,
-        error: Exception | None = None,
     ) -> None:
         fmt_args, payload = self._extract_payload(message, args, extra)
         context: dict[str, Any] = {}
@@ -341,10 +275,13 @@ class AppLogger:
             context["_notify"] = True
 
         target = self._logger.bind(**context) if context else self._logger
-        if error is not None:
-            target.opt(exception=error).log(level.upper(), message, *fmt_args)
-            return
-        target.log(level.upper(), message, *fmt_args)
+        try:
+            if _has_active_exception():
+                target.opt(exception=True).log(level.upper(), message, *fmt_args)
+            else:
+                target.log(level.upper(), message, *fmt_args)
+        except Exception as exc:  # pylint: disable=broad-except
+            self._fallback(level, message, exc)
 
     def log(
         self,
@@ -354,7 +291,6 @@ class AppLogger:
         tags: dict[str, Any] | Iterable[str] | None = None,
         silent: bool = True,
         extra: Any | None = None,
-        error: Exception | None = None,
     ) -> None:
         self._emit(
             level,
@@ -363,7 +299,6 @@ class AppLogger:
             tags=tags,
             silent=silent,
             extra=extra,
-            error=error,
         )
 
     def trace(self, message: Any, *args: Any, **kwargs) -> None:
@@ -394,7 +329,6 @@ class AppLogger:
         tags: dict[str, Any] | Iterable[str] | None = None,
         silent: bool = True,
         extra: Any | None = None,
-        error: Exception | None = None,
     ) -> None:
         fmt_args, payload = self._extract_payload(message, args, extra)
         context: dict[str, Any] = {}
@@ -407,10 +341,10 @@ class AppLogger:
             context["_notify"] = True
 
         target = self._logger.bind(**context) if context else self._logger
-        if error is not None:
-            target.opt(exception=error).error(message, *fmt_args)
-        else:
+        try:
             target.opt(exception=True).error(message, *fmt_args)
+        except Exception as exc:  # pylint: disable=broad-except
+            self._fallback("ERROR", message, exc)
 
     def important(
         self,
@@ -419,7 +353,6 @@ class AppLogger:
         tags: dict[str, Any] | Iterable[str] | None = None,
         silent: bool = False,
         extra: Any | None = None,
-        error: Exception | None = None,
     ) -> None:
         merged_tags = _normalize_tags(tags)
         merged_tags["important"] = "true"
@@ -430,18 +363,25 @@ class AppLogger:
             tags=merged_tags,
             silent=silent,
             extra=extra,
-            error=error,
         )
 
 
 log = AppLogger(logger)
 
 
+def add_external_sink(
+    sink: Any,
+    *,
+    level: str | None = None,
+    enqueue: bool = False,
+    catch: bool = True,
+) -> int:
+    return logger.add(sink, level=level or _LEVEL, enqueue=enqueue, catch=catch)
+
+
 def setup_logging() -> None:
     logger.remove()
     logger.configure(patcher=_inject_context)
     logger.add(_json_sink, level=_LEVEL, enqueue=True, catch=True)
-    # Keep Sentry sink synchronous to preserve active scope context.
-    logger.add(_sentry_sink, level=_LEVEL, enqueue=False, catch=True)
     logger.add(_notify_sink, level=_LEVEL, enqueue=True, catch=True)
 

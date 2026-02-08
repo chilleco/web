@@ -36,21 +36,10 @@ async def _get_users_count() -> int:
     Return total users from the core service with graceful fallbacks.
     """
 
-    # try:
-    #     users = await complex_global_users(limit=None, offset=None, fields=["id"])
-    # except Exception as exc:  # pylint: disable=broad-except
-    #     log.warning("User count fallback (core)", error=exc)
-    # else:
-    #     if isinstance(users, list):
-    #         return len(users)
-    #     if users:
-    #         return 1
-    #     return 0
-
     try:
         return UserLocal.count()
     except Exception as exc:  # pylint: disable=broad-except
-        log.warning("User count fallback (local)", error=exc)
+        log.warning("User count fallback (local): {}", str(exc))
         return 0
 
 
@@ -69,13 +58,13 @@ async def handler(
     try:
         posts_count = Post.count()
     except Exception as exc:  # pylint: disable=broad-except
-        log.warning("Posts count failed", error=exc)
+        log.warning("Posts count failed: {}", str(exc))
         posts_count = 0
 
     try:
         products_count = Product.count()
     except Exception as exc:  # pylint: disable=broad-except
-        log.warning("Products count failed", error=exc)
+        log.warning("Products count failed: {}", str(exc))
         products_count = 0
 
     users_count = await _get_users_count()

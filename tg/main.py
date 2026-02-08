@@ -16,9 +16,17 @@ from libdev.codes import get_flag
 from libdev.gen import generate
 from libdev.req import fetch
 
-from tg.logging import clear_request_context, log, set_request_context, setup_logging
-from tg.sentry import flush_sentry, init_sentry
-import sentry_sdk
+from tg.logging import (
+    clear_request_context,
+    log,
+    set_request_context as set_log_request_context,
+    setup_logging,
+)
+from tg.sentry import (
+    flush_sentry,
+    init_sentry,
+    set_request_context as set_sentry_request_context,
+)
 
 setup_logging()
 init_sentry()
@@ -53,10 +61,8 @@ def _trace_id_from_header(value: str | None) -> str | None:
 async def request_context_middleware(request: Request, call_next):
     request_id = request.headers.get("x-request-id") or uuid4().hex
     trace_id = _trace_id_from_header(request.headers.get("sentry-trace"))
-    set_request_context(request_id, trace_id)
-    sentry_sdk.set_extra("request_id", request_id)
-    if trace_id:
-        sentry_sdk.set_extra("trace_id", trace_id)
+    set_log_request_context(request_id, trace_id)
+    set_sentry_request_context(request_id, trace_id)
     try:
         response = await call_next(request)
     finally:
@@ -379,7 +385,7 @@ async def webhook(request: Request):
         update = Update.model_validate(update_data)
         await dispatcher.feed_update(bot, update)
     except Exception as exc:  # pylint: disable=broad-except
-        log.error("Webhook handling failed: {}", str(exc), error=exc)
+        log.exception("Webhook handling failed: {}", str(exc))
     return {"ok": True}
 
 
