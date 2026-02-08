@@ -42,10 +42,11 @@ class SentryReport:
 
     def _log(self, level: str, text: str, extra: Any | None) -> None:
         payload = _normalize_extra(extra)
+        logger = log.bind(_skip_sentry_capture=True)
         if payload:
-            log.log(level.upper(), "{} | {}", text, payload)
+            logger.log(level.upper(), "{} | {}", text, payload)
         else:
-            log.log(level.upper(), "{}", text)
+            logger.log(level.upper(), "{}", text)
 
     def _capture(
         self,

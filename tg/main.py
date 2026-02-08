@@ -380,7 +380,7 @@ async def webhook(request: Request):
         update = Update.model_validate(update_data)
         await dispatcher.feed_update(bot, update)
     except Exception as exc:  # pylint: disable=broad-except
-        log.error(f"Webhook handling failed: {exc}")
+        log.bind(_skip_sentry_capture=True).error(f"Webhook handling failed: {exc}")
         sentry_sdk.capture_exception(exc)
     return {"ok": True}
 

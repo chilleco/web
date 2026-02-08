@@ -1,5 +1,7 @@
 """
-JSON logging to stdout with request correlation.
+Unified Loguru observability for API:
+- JSON logs to stdout for Alloy -> Loki -> Grafana
+- Sentry breadcrumbs/events from the same Loguru records
 """
 
 from __future__ import annotations
@@ -25,6 +27,7 @@ _SERVICE = cfg("service") or "api"
 _ENV = cfg("env", "test")
 _VERSION = cfg("release") or "unknown"
 _LEVEL = cfg("log.level") or "INFO"
+_SKIP_SENTRY_CAPTURE_KEY = "_skip_sentry_capture"
 
 
 def _current_trace_id() -> str | None:
@@ -32,6 +35,40 @@ def _current_trace_id() -> str | None:
     if span and getattr(span, "trace_id", None):
         return str(span.trace_id)
     return None
+
+
+def _is_sentry_enabled() -> bool:
+    try:
+        client = sentry_sdk.get_client()
+    except Exception:  # pylint: disable=broad-except
+        return False
+    if client is None:
+        return False
+    options = getattr(client, "options", None)
+    return bool(options and options.get("dsn"))
+
+
+def _to_sentry_level(level_name: str) -> str:
+    mapping = {
+        "TRACE": "debug",
+        "DEBUG": "debug",
+        "INFO": "info",
+        "SUCCESS": "info",
+        "WARNING": "warning",
+        "ERROR": "error",
+        "CRITICAL": "fatal",
+    }
+    return mapping.get(level_name.upper(), "info")
+
+
+def _json_safe(value: Any) -> Any:
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, dict):
+        return {str(key): _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_json_safe(item) for item in value]
+    return str(value)
 
 
 def set_request_context(request_id: str, trace_id: str | None = None) -> None:
@@ -94,9 +131,9 @@ def _json_sink(message) -> None:
         output["error.type"] = error_payload["type"]
 
     extra = {
-        key: value
+        key: _json_safe(value)
         for key, value in record["extra"].items()
-        if key not in {"trace_id", "request_id"}
+        if key not in {"trace_id", "request_id", _SKIP_SENTRY_CAPTURE_KEY}
     }
     if extra:
         output["extra"] = extra
@@ -104,7 +141,48 @@ def _json_sink(message) -> None:
     sys.stdout.write(json.dumps(output, ensure_ascii=True) + "\n")
 
 
+def _sentry_sink(message) -> None:
+    if not _is_sentry_enabled():
+        return
+
+    record = message.record
+    level_name = record["level"].name.upper()
+    sentry_level = _to_sentry_level(level_name)
+
+    extra = {
+        key: _json_safe(value)
+        for key, value in record["extra"].items()
+        if key != _SKIP_SENTRY_CAPTURE_KEY
+    }
+
+    sentry_sdk.add_breadcrumb(
+        category=f"{_SERVICE}.log",
+        message=record["message"],
+        level=sentry_level,
+        data=extra or None,
+    )
+
+    if record["extra"].get(_SKIP_SENTRY_CAPTURE_KEY):
+        return
+
+    if level_name not in {"ERROR", "CRITICAL"}:
+        return
+
+    with sentry_sdk.push_scope() as scope:
+        for key, value in extra.items():
+            scope.set_extra(key, value)
+        scope.set_tag("service", _SERVICE)
+
+        exception = record.get("exception")
+        if exception and exception.value is not None:
+            sentry_sdk.capture_exception(exception.value)
+        else:
+            sentry_sdk.capture_message(record["message"], level=sentry_level)
+
+
 def setup_logging() -> None:
     log.remove()
     log.configure(patcher=_inject_context)
-    log.add(_json_sink, level=_LEVEL, enqueue=True)
+    log.add(_json_sink, level=_LEVEL, enqueue=True, catch=True)
+    # Keep Sentry sink synchronous so breadcrumbs/events stay on the active scope.
+    log.add(_sentry_sink, level=_LEVEL, enqueue=False, catch=True)

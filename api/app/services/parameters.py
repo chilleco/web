@@ -13,6 +13,13 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from services.logging import clear_request_context, set_request_context
 
 
+def _trace_id_from_header(value: str | None) -> str | None:
+    if not value:
+        return None
+    parts = value.split("-", 1)
+    return parts[0] if parts else None
+
+
 class ParametersMiddleware(BaseHTTPMiddleware):
     """Getting parameters middleware"""
 
@@ -21,9 +28,13 @@ class ParametersMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         request_id = request.headers.get("x-request-id") or uuid4().hex
+        trace_id = _trace_id_from_header(request.headers.get("sentry-trace"))
         request.state.request_id = request_id
-        set_request_context(request_id)
+        request.state.trace_id = trace_id
+        set_request_context(request_id, trace_id)
         sentry_sdk.set_extra("request_id", request_id)
+        if trace_id:
+            sentry_sdk.set_extra("trace_id", trace_id)
 
         if request.method != "POST":
             request.state.ip = None

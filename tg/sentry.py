@@ -6,12 +6,9 @@ from __future__ import annotations
 
 from typing import Any, Iterable
 
-import logging
-
 import sentry_sdk
 from sentry_sdk.integrations.asyncio import AsyncioIntegration
 from sentry_sdk.integrations.fastapi import FastApiIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from libdev.cfg import cfg
@@ -50,7 +47,6 @@ def _build_integrations() -> list[Any]:
         FastApiIntegration(),
         StarletteIntegration(),
         AsyncioIntegration(),
-        LoggingIntegration(level=logging.INFO, event_level=logging.ERROR),
     ]
 
 
