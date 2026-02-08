@@ -385,7 +385,7 @@ async def webhook(request: Request):
         update = Update.model_validate(update_data)
         await dispatcher.feed_update(bot, update)
     except Exception as exc:  # pylint: disable=broad-except
-        log.exception("Webhook handling failed: {}", str(exc))
+        log.exception(f"Webhook handling failed: {exc}")
     return {"ok": True}
 
 

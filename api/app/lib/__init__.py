@@ -18,7 +18,10 @@ from services.logging import (
 from services.sentry import init_sentry, task_scope
 
 
-setup_logging()
+setup_logging(
+    notify_token=cfg("tg.token"),
+    notify_chat=cfg("bug.chat"),
+)
 init_sentry()
 
 
@@ -26,14 +29,14 @@ def handle_tasks(method):
     @wraps(method)
     async def inner(*args, **kwargs):
         now = time.time()
-        log.info("Start {}", method.__name__)
+        log.info(f"Start {method.__name__}")
         with task_scope(method.__name__, args=args, kwargs=kwargs):
             try:
                 return await method(*args, **kwargs)
             except Exception as exc:  # pylint: disable=broad-exception-caught
-                log.critical("Task {} failed: {}", method.__name__, str(exc))
+                log.critical(f"Task {method.__name__} failed: {exc}")
             finally:
-                log.info("Finish {}: {:.0f}s", method.__name__, time.time() - now)
+                log.info(f"Finish {method.__name__}: {time.time() - now:.0f}s")
 
     return inner
 

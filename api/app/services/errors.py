@@ -95,7 +95,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             )
 
         except Exception as e:  # pylint: disable=broad-except
-            log.exception("Exception during request processing: {}", str(e))
+            log.exception(f"Exception during request processing: {e}")
 
             return JSONResponse(
                 status_code=500,

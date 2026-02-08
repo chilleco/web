@@ -179,6 +179,48 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - **Unified pipeline**: API/TG must emit logs through Loguru only; the same Loguru records must feed stdout JSON (Alloy -> Loki -> Grafana), send `error/critical/exception` records to Sentry, and send Telegram alerts for `log.important(...)` and any log call with `silent=False` (default `silent=True`).
 - **Logger import path (API)**: Import the final logger from `api/app/lib/__init__.py` (`from lib import log`) in application modules; only logging/sentry infrastructure modules may import from `services.logging`.
 - **Logger call contract**: Do not pass custom `error=` objects to logger calls. Raise/handle exceptions normally and use `log.exception(...)` or log inside `except` blocks so traceback is attached automatically.
+- **Logger message style**: Use f-strings in logger calls (for consistency with project style), not Loguru `{}`-placeholder formatting.
+- **Logger bootstrap (API)**: `setup_logging(notify_token=None, notify_chat=None)` must receive Telegram notify credentials from the caller (`lib/__init__.py`); if omitted, notification sink stays disabled.
+- **Logger methods and params**:
+  - Standard methods: `log.trace|debug|info|success|warning|error|critical(message, *args, tags=None, silent=True, extra=None)`
+  - Exception method: `log.exception(message, *args, tags=None, silent=True, extra=None)` (always attaches traceback)
+  - Important method: `log.important(message, *args, tags=None, silent=False, extra=None)` (info-level log + Telegram notify by default)
+  - Generic method: `log.log(level, message, *args, tags=None, silent=True, extra=None)`
+  - Helpers: `log.catch(...)` decorator/context and `log.bind(**kwargs)` for bound logger context
+  - Param meanings: `message` (log text), `*args` (optional payload shortcut), `tags` (labels for logs/Sentry), `silent` (when `False`, send Telegram notify), `extra` (explicit payload attached to record)
+  - Payload shortcut: when `message` has no `{}` placeholders and one positional `dict/list/tuple/set` is passed, it is treated as `payload` automatically.
+- **Logger usage examples**:
+  - Basic:
+    ```python
+    log.info(f"Restart server")
+    ```
+  - With payload (no notify):
+    ```python
+    log.warning("Invalid token", {"url": url, "token": token})
+    ```
+  - With tags:
+    ```python
+    log.error(f"Payment failed for order {order_id}", tags={"feature": "billing", "order": order_id})
+    ```
+  - With explicit payload via `extra`:
+    ```python
+    log.info(f"Sync finished", extra={"count": total, "duration_ms": duration_ms})
+    ```
+  - Force Telegram notify from non-`important` method:
+    ```python
+    log.error(f"Provider timeout for {provider}", silent=False, tags={"provider": provider})
+    ```
+  - Important event (notify by default):
+    ```python
+    log.important(f"Manual moderation required for user {user_id}", tags={"object": "user", "action": "review"})
+    ```
+  - Exception handling:
+    ```python
+    try:
+        await run_job()
+    except Exception as exc:
+        log.exception(f"Job failed: {exc}")
+    ```
 - **Frontend Sentry**: Web app uses `@sentry/nextjs` (`web/sentry.client.config.ts`, `web/sentry.server.config.ts`, `web/sentry.edge.config.ts`) with `NEXT_PUBLIC_SENTRY_DSN`.
 - **Testing**: pytest with async test support
 - **Background Tasks**: Celery with Redis broker

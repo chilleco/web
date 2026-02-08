@@ -31,8 +31,8 @@ _ENV = cfg("env", "test")
 _VERSION = cfg("release") or "unknown"
 _LEVEL = cfg("log.level") or "INFO"
 
-_NOTIFY_TOKEN = cfg("tg.token")
-_NOTIFY_CHAT = cfg("bug.chat")
+_NOTIFY_TOKEN: str | None = None
+_NOTIFY_CHAT: str | int | None = None
 _INTERNAL_EXTRA_KEYS = {"_notify", "request_id", "trace_id"}
 
 
@@ -379,9 +379,14 @@ def add_external_sink(
     return logger.add(sink, level=level or _LEVEL, enqueue=enqueue, catch=catch)
 
 
-def setup_logging() -> None:
+def setup_logging(
+    notify_token: str | None = None,
+    notify_chat: str | int | None = None,
+) -> None:
+    global _NOTIFY_TOKEN, _NOTIFY_CHAT
+    _NOTIFY_TOKEN = notify_token
+    _NOTIFY_CHAT = notify_chat
     logger.remove()
     logger.configure(patcher=_inject_context)
     logger.add(_json_sink, level=_LEVEL, enqueue=True, catch=True)
     logger.add(_notify_sink, level=_LEVEL, enqueue=True, catch=True)
-

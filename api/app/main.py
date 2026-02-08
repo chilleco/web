@@ -89,7 +89,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def uncaught_exception_handler(request: Request, exc: Exception):
-    log.exception("Unhandled exception: {}", str(exc))
+    log.exception(f"Unhandled exception: {exc}")
     return JSONResponse(
         status_code=500,
         content={
