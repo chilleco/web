@@ -14,7 +14,7 @@ from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from libdev.cfg import cfg
-from tg.logging import add_external_sink
+from libdev.log import add_external_sink
 
 
 _SENTRY_SINK_ID: int | None = None

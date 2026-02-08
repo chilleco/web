@@ -14,9 +14,8 @@ from sentry_sdk.integrations.asyncio import AsyncioIntegration
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
-
 from libdev.cfg import cfg
-from services.logging import add_external_sink
+from libdev.log import add_external_sink
 
 
 _SENTRY_SINK_ID: int | None = None

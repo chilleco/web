@@ -15,20 +15,18 @@ from libdev.cfg import cfg
 from libdev.codes import get_flag
 from libdev.gen import generate
 from libdev.req import fetch
+from libdev.log import log, setup_logging, clear_request_context, set_request_context
 
-from tg.logging import (
-    clear_request_context,
-    log,
-    set_request_context as set_log_request_context,
-    setup_logging,
-)
-from tg.sentry import (
+from .sentry import (
     flush_sentry,
     init_sentry,
     set_request_context as set_sentry_request_context,
 )
 
-setup_logging()
+setup_logging(
+    notify_token=cfg("tg.token"),
+    notify_chat=cfg("bug.chat"),
+)
 init_sentry()
 
 TOKEN = cfg("tg.token")
@@ -61,7 +59,7 @@ def _trace_id_from_header(value: str | None) -> str | None:
 async def request_context_middleware(request: Request, call_next):
     request_id = request.headers.get("x-request-id") or uuid4().hex
     trace_id = _trace_id_from_header(request.headers.get("sentry-trace"))
-    set_log_request_context(request_id, trace_id)
+    set_request_context(request_id, trace_id)
     set_sentry_request_context(request_id, trace_id)
     try:
         response = await call_next(request)

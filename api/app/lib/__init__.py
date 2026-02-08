@@ -9,12 +9,7 @@ from consys.types import BaseType, validate
 from libdev.cfg import cfg
 from libdev.gen import generate, generate_id, generate_password
 
-from services.logging import (
-    clear_request_context,
-    log,
-    set_request_context,
-    setup_logging,
-)
+from libdev.log import log, setup_logging, clear_request_context, set_request_context
 from services.sentry import init_sentry, task_scope
 
 
