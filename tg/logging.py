@@ -26,6 +26,7 @@ _trace_id_var: contextvars.ContextVar[str | None] = contextvars.ContextVar(
     "trace_id", default=None
 )
 
+_PROJECT = cfg("PROJECT_NAME") or cfg("name") or "untitled"
 _SERVICE = cfg("service") or "tg"
 _ENV = cfg("env", "test")
 _VERSION = cfg("release") or "unknown"
@@ -33,7 +34,19 @@ _LEVEL = cfg("log.level") or "INFO"
 
 _NOTIFY_TOKEN = cfg("tg.token")
 _NOTIFY_CHAT = cfg("bug.chat")
-_INTERNAL_EXTRA_KEYS = {"_notify", "request_id", "trace_id"}
+_INTERNAL_EXTRA_KEYS = {"_notify", "_notify_type", "request_id", "trace_id"}
+_TYPE_SYMBOLS = {
+    "DEBUG": "💬",
+    "INFO": "🟢",
+    "WARNING": "⚠️",
+    "ERROR": "❗️",
+    "CRITICAL": "‼️",
+    "EXCEPT": "‼️",
+    "EXCEPTION": "‼️",
+    "IMPORTANT": "✅",
+    "REQUEST": "🛎",
+}
+_MARKDOWN_V2_SPECIALS = set("_[]()~`>#+-=|{}.!*")
 
 
 def _as_float(value: Any, default: float) -> float:
@@ -58,16 +71,43 @@ def _json_safe(value: Any) -> Any:
     return str(value)
 
 
-def _normalize_tags(tags: dict[str, Any] | Iterable[str] | None) -> dict[str, str]:
+def _safe_json(value: Any) -> str:
+    try:
+        return json.dumps(_json_safe(value), ensure_ascii=False)
+    except Exception:  # pylint: disable=broad-except
+        return str(value)
+
+
+def _escape_markdown_v2(text: Any) -> str:
+    source = str(text)
+    escaped: list[str] = []
+    for char in source:
+        if char == "\\" or char in _MARKDOWN_V2_SPECIALS:
+            escaped.append("\\" + char)
+        else:
+            escaped.append(char)
+    return "".join(escaped)
+
+
+def _build_extra_lines(payload: Any) -> list[str]:
+    if payload is None:
+        return []
+    if isinstance(payload, dict):
+        lines: list[str] = ["*Extra:*"]
+        for key, value in payload.items():
+            lines.append(
+                f"{_escape_markdown_v2(key)}: {_escape_markdown_v2(_safe_json(value))}"
+            )
+        return lines
+    return [f"*Extra:* {_escape_markdown_v2(_safe_json(payload))}"]
+
+
+def _normalize_tags(tags: str | Iterable[str] | None) -> list[str]:
     if not tags:
-        return {}
-    if isinstance(tags, dict):
-        return {
-            str(key): str(value)
-            for key, value in tags.items()
-            if key and value is not None
-        }
-    return {str(tag): "true" for tag in tags if tag}
+        return []
+    if isinstance(tags, str):
+        return [tags] if tags else []
+    return [str(tag) for tag in tags if tag]
 
 
 def _has_active_exception() -> bool:
@@ -110,19 +150,27 @@ def _serialize_exception(exception: Any | None) -> dict[str, Any]:
     }
 
 
+def _message_with_payload(record: dict[str, Any]) -> str:
+    payload = record["extra"].get("payload")
+    if payload is None:
+        return record["message"]
+    return f"{record['message']} | {_safe_json(payload)}"
+
+
 def _json_sink(message) -> None:
     record = message.record
     exception = record.get("exception")
     error_payload = _serialize_exception(exception)
 
     output: dict[str, Any] = {
+        "project": _PROJECT,
         "service": _SERVICE,
         "env": _ENV,
         "version": _VERSION,
         "level": record["level"].name,
         "trace_id": record["extra"].get("trace_id"),
         "request_id": record["extra"].get("request_id"),
-        "msg": record["message"],
+        "msg": _message_with_payload(record),
         "time": record["time"].isoformat(),
     }
 
@@ -148,31 +196,39 @@ def _notify_enabled() -> bool:
     return bool(_NOTIFY_TOKEN and _NOTIFY_CHAT)
 
 
-def _safe_json(value: Any) -> str:
-    try:
-        return json.dumps(_json_safe(value), ensure_ascii=False)
-    except Exception:  # pylint: disable=broad-except
-        return str(value)
-
-
 def _build_notify_text(record: dict[str, Any], error_payload: dict[str, Any]) -> str:
-    lines = [f"[{_SERVICE}/{_ENV}] {record['level'].name}: {record['message']}"]
-
+    notify_type = str(
+        record["extra"].get("_notify_type") or record["level"].name or "INFO"
+    ).upper()
+    symbol = _TYPE_SYMBOLS.get(notify_type, _TYPE_SYMBOLS["INFO"])
     request_id = record["extra"].get("request_id")
     trace_id = record["extra"].get("trace_id")
     tags = record["extra"].get("tags")
     payload = record["extra"].get("payload")
 
-    if request_id:
-        lines.append(f"request_id: {request_id}")
-    if trace_id:
-        lines.append(f"trace_id: {trace_id}")
-    if tags:
-        lines.append(f"tags: {_safe_json(tags)}")
-    if payload is not None:
-        lines.append(f"payload: {_safe_json(payload)}")
+    lines: list[str] = [
+        f"{symbol} *{_escape_markdown_v2(notify_type)}*",
+        f"*Project:* {_escape_markdown_v2(_PROJECT)}",
+        f"*Service:* {_escape_markdown_v2(_SERVICE)}",
+        f"*Env:* {_escape_markdown_v2(_ENV)}",
+        "",
+        f"*Message:* {_escape_markdown_v2(record.get('message', ''))}",
+    ]
+
+    lines.extend(_build_extra_lines(payload))
+
     if error_payload.get("message"):
-        lines.append(f"error: {error_payload['message']}")
+        lines.append(f"*Error:* {_escape_markdown_v2(error_payload['message'])}")
+    if tags:
+        if isinstance(tags, (list, tuple, set)):
+            tags_text = ", ".join(str(tag) for tag in tags)
+        else:
+            tags_text = str(tags)
+        lines.append(f"*Tags:* {_escape_markdown_v2(tags_text)}")
+    if request_id:
+        lines.append(f"*Request ID:* {_escape_markdown_v2(request_id)}")
+    if trace_id:
+        lines.append(f"*Trace ID:* {_escape_markdown_v2(trace_id)}")
 
     text = "\n".join(lines)
     if len(text) > 3800:
@@ -187,6 +243,7 @@ def _send_notify(text: str) -> None:
         {
             "chat_id": str(_NOTIFY_CHAT),
             "text": text,
+            "parse_mode": "MarkdownV2",
             "disable_web_page_preview": "true",
         }
     ).encode("utf-8")
@@ -201,7 +258,17 @@ def _send_notify(text: str) -> None:
             return
     except Exception as exc:  # pylint: disable=broad-except
         sys.stderr.write(
-            f'{{"service":"{_SERVICE}","level":"ERROR","msg":"notify failed","error":"{str(exc)}"}}\n'
+            json.dumps(
+                {
+                    "project": _PROJECT,
+                    "service": _SERVICE,
+                    "level": "ERROR",
+                    "msg": "notify failed",
+                    "error": str(exc),
+                },
+                ensure_ascii=True,
+            )
+            + "\n"
         )
 
 
@@ -228,6 +295,7 @@ class AppLogger:
     def _fallback(self, level: str, message: Any, exc: Exception) -> None:
         try:
             payload = {
+                "project": _PROJECT,
                 "service": _SERVICE,
                 "env": _ENV,
                 "version": _VERSION,
@@ -260,9 +328,10 @@ class AppLogger:
         level: str,
         message: Any,
         *args: Any,
-        tags: dict[str, Any] | Iterable[str] | None = None,
+        tags: str | Iterable[str] | None = None,
         silent: bool = True,
         extra: Any | None = None,
+        notify_type: str | None = None,
     ) -> None:
         fmt_args, payload = self._extract_payload(message, args, extra)
         context: dict[str, Any] = {}
@@ -273,6 +342,8 @@ class AppLogger:
             context["payload"] = _json_safe(payload)
         if not silent:
             context["_notify"] = True
+            if notify_type:
+                context["_notify_type"] = notify_type
 
         target = self._logger.bind(**context) if context else self._logger
         try:
@@ -288,7 +359,7 @@ class AppLogger:
         level: str,
         message: Any,
         *args: Any,
-        tags: dict[str, Any] | Iterable[str] | None = None,
+        tags: str | Iterable[str] | None = None,
         silent: bool = True,
         extra: Any | None = None,
     ) -> None:
@@ -326,7 +397,7 @@ class AppLogger:
         self,
         message: Any,
         *args: Any,
-        tags: dict[str, Any] | Iterable[str] | None = None,
+        tags: str | Iterable[str] | None = None,
         silent: bool = True,
         extra: Any | None = None,
     ) -> None:
@@ -339,6 +410,7 @@ class AppLogger:
             context["payload"] = _json_safe(payload)
         if not silent:
             context["_notify"] = True
+            context["_notify_type"] = "ERROR"
 
         target = self._logger.bind(**context) if context else self._logger
         try:
@@ -350,23 +422,44 @@ class AppLogger:
         self,
         message: Any,
         *args: Any,
-        tags: dict[str, Any] | Iterable[str] | None = None,
+        tags: str | Iterable[str] | None = None,
         silent: bool = False,
         extra: Any | None = None,
     ) -> None:
-        merged_tags = _normalize_tags(tags)
-        merged_tags["important"] = "true"
         self._emit(
             "INFO",
             message,
             *args,
-            tags=merged_tags,
+            tags=tags,
             silent=silent,
             extra=extra,
+            notify_type="IMPORTANT",
         )
+
+    def request(
+        self,
+        message: Any,
+        *args: Any,
+        tags: str | Iterable[str] | None = None,
+        silent: bool = True,
+        extra: Any | None = None,
+    ) -> None:
+        self._emit(
+            "INFO",
+            message,
+            *args,
+            tags=tags,
+            silent=silent,
+            extra=extra,
+            notify_type="REQUEST",
+        )
+
+    def except_(self, message: Any, *args: Any, **kwargs) -> None:
+        self.exception(message, *args, **kwargs)
 
 
 log = AppLogger(logger)
+setattr(AppLogger, "except", AppLogger.exception)
 
 
 def add_external_sink(
@@ -384,4 +477,3 @@ def setup_logging() -> None:
     logger.configure(patcher=_inject_context)
     logger.add(_json_sink, level=_LEVEL, enqueue=True, catch=True)
     logger.add(_notify_sink, level=_LEVEL, enqueue=True, catch=True)
-

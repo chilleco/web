@@ -175,20 +175,25 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - **Authentication**: JWT tokens with FastAPI security
 - **Caching**: Redis for session storage and caching
 - **Logging & alerts**: Structured loguru logging; error/perf reporting via Sentry (`api/app/services/sentry.py`).
-- **Log format**: Containers write JSON logs to stdout/stderr only (no file sinks). Required fields: `service`, `env`, `version`, `level`, `trace_id`/`request_id`, `msg`, `error.stack` (if present). Keep high-cardinality data as fields inside the JSON payload, not as log labels.
+- **Log format**: Containers write JSON logs to stdout/stderr only (no file sinks). Required fields: `project`, `service`, `env`, `version`, `level`, `trace_id`/`request_id`, `msg`, `error.stack` (if present). Keep high-cardinality data as fields inside the JSON payload, not as log labels.
 - **Unified pipeline**: API/TG must emit logs through Loguru only; the same Loguru records must feed stdout JSON (Alloy -> Loki -> Grafana), send `error/critical/exception` records to Sentry, and send Telegram alerts for `log.important(...)` and any log call with `silent=False` (default `silent=True`).
 - **Logger import path (API)**: Import the final logger from `api/app/lib/__init__.py` (`from lib import log`) in application modules; only logging/sentry infrastructure modules may import from `services.logging`.
 - **Logger call contract**: Do not pass custom `error=` objects to logger calls. Raise/handle exceptions normally and use `log.exception(...)` or log inside `except` blocks so traceback is attached automatically.
 - **Logger message style**: Use f-strings in logger calls (for consistency with project style), not Loguru `{}`-placeholder formatting.
-- **Logger bootstrap (API)**: `setup_logging(notify_token=None, notify_chat=None)` must receive Telegram notify credentials from the caller (`lib/__init__.py`); if omitted, notification sink stays disabled.
+- **Logger bootstrap (API)**: `setup_logging(project=None, service=None, env=None, version=None, level=None, notify_token=None, notify_chat=None)` must receive Telegram notify credentials from the caller (`lib/__init__.py`); if omitted, notification sink stays disabled.
+- **Notify transport (API)**: Keep Telegram notify transport helpers in `api/app/services/notify.py`; `api/app/services/logging.py` must call that module instead of implementing HTTP notify requests inline.
+- **Telegram notify formatting**: Notifications must use `MarkdownV2` parse mode and escape all dynamic values (`message`, `extra` keys/values, tags, ids, trace/user data) to prevent Markdown parsing errors.
 - **Logger methods and params**:
   - Standard methods: `log.trace|debug|info|success|warning|error|critical(message, *args, tags=None, silent=True, extra=None)`
-  - Exception method: `log.exception(message, *args, tags=None, silent=True, extra=None)` (always attaches traceback)
-  - Important method: `log.important(message, *args, tags=None, silent=False, extra=None)` (info-level log + Telegram notify by default)
+  - Exception methods: `log.exception(message, *args, tags=None, silent=True, extra=None)` (always attaches traceback) and alias `log.except_(...)`
+  - Important method: `log.important(message, *args, tags=None, silent=False, extra=None)` (INFO log + Telegram notify type `IMPORTANT`)
+  - Request method: `log.request(message, *args, tags=None, silent=True, extra=None)` (INFO log + Telegram notify type `REQUEST` when `silent=False`)
   - Generic method: `log.log(level, message, *args, tags=None, silent=True, extra=None)`
   - Helpers: `log.catch(...)` decorator/context and `log.bind(**kwargs)` for bound logger context
-  - Param meanings: `message` (log text), `*args` (optional payload shortcut), `tags` (labels for logs/Sentry), `silent` (when `False`, send Telegram notify), `extra` (explicit payload attached to record)
+  - Param meanings: `message` (log text), `*args` (optional payload shortcut), `tags` (string label or list of string labels only; no key/value), `silent` (when `False`, send Telegram notify), `extra` (key/value payload attached to log and Sentry extras)
   - Payload shortcut: when `message` has no `{}` placeholders and one positional `dict/list/tuple/set` is passed, it is treated as `payload` automatically.
+  - Extra rendering: payload from `extra` (or payload shortcut) is appended after the main log message text in JSON `msg` and is also attached to Sentry as `payload`.
+  - Telegram notify types and symbols: `DEBUG=💬`, `INFO=🟢`, `WARNING=⚠️`, `ERROR=❗️`, `CRITICAL=‼️`, `IMPORTANT=✅`, `REQUEST=🛎`.
 - **Logger usage examples**:
   - Basic:
     ```python
@@ -200,26 +205,30 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
     ```
   - With tags:
     ```python
-    log.error(f"Payment failed for order {order_id}", tags={"feature": "billing", "order": order_id})
+    log.error(f"Payment failed for order {order_id}", tags=["billing", "payments"])
     ```
-  - With explicit payload via `extra`:
+  - With explicit key/value payload via `extra`:
     ```python
     log.info(f"Sync finished", extra={"count": total, "duration_ms": duration_ms})
     ```
   - Force Telegram notify from non-`important` method:
     ```python
-    log.error(f"Provider timeout for {provider}", silent=False, tags={"provider": provider})
+    log.error(f"Provider timeout for {provider}", silent=False, tags="provider", extra={"provider": provider})
     ```
   - Important event (notify by default):
     ```python
-    log.important(f"Manual moderation required for user {user_id}", tags={"object": "user", "action": "review"})
+    log.important(f"Manual moderation required for user {user_id}", tags="moderation", extra={"user_id": user_id})
+    ```
+  - Request event:
+    ```python
+    log.request(f"Users export requested", silent=False, tags=["admin", "export"], extra={"requested_by": user_id})
     ```
   - Exception handling:
     ```python
     try:
         await run_job()
     except Exception as exc:
-        log.exception(f"Job failed: {exc}")
+        log.except_(f"Job failed: {exc}", extra={"job": job_name})
     ```
 - **Frontend Sentry**: Web app uses `@sentry/nextjs` (`web/sentry.client.config.ts`, `web/sentry.server.config.ts`, `web/sentry.edge.config.ts`) with `NEXT_PUBLIC_SENTRY_DSN`.
 - **Testing**: pytest with async test support
