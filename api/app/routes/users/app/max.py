@@ -11,7 +11,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel
 from consys.errors import ErrorWrong, ErrorInvalid
 
-from lib import cfg, report
+from lib import cfg, log
 from routes.users.auth import wrap_auth
 
 
@@ -32,7 +32,7 @@ async def verify_max_web_app_data(init_data_raw: str) -> tuple[bool, dict]:
             if key != "hash"
         )
     except ValueError:
-        await report.error("MAX auth data", {"data": init_data_raw})
+        log.error("MAX auth data", {"data": init_data_raw})
         return False, {}
 
     secret_key = hmac.new(

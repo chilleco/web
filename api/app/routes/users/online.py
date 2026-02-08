@@ -4,7 +4,7 @@ The online socket of the user object of the API
 
 from consys.errors import ErrorWrong
 
-from lib import report
+from lib import log
 from lib.sockets import sio
 from models.socket import Socket
 
@@ -21,7 +21,7 @@ from models.socket import Socket
 
 #     if spaces:
 #         if len(spaces) > 1:
-#             await report.warning("More than 1 active space", {
+#             log.warning("More than 1 active space", {
 #                 'user': user_id,
 #                 'spaces': [space.id for space in spaces],
 #             })
@@ -105,7 +105,7 @@ async def online_start(token_id, socket_id=None):
 
         else:
             if socket.token != token_id:
-                await report.warning(
+                log.warning(
                     "Wrong socket.token",
                     {
                         "from": socket.token,
@@ -116,7 +116,7 @@ async def online_start(token_id, socket_id=None):
                 changed = True
 
             if socket.user != user_id:
-                await report.warning(
+                log.warning(
                     "Wrong socket.user",
                     {
                         "from": socket.user,
@@ -185,10 +185,10 @@ async def online(sid, data):
     # TODO: Проверка, что токен не скомпрометирован - по ip?
     # TODO: Определить вкладку (tab - sid)
 
-    await report.debug("ON", sid)
+    log.debug("ON", sid)
 
     if not data["token"]:
-        await report.warning("Invalid token")
+        log.warning("Invalid token")
         return
 
     # Send sockets

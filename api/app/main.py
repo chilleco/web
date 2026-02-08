@@ -1,5 +1,3 @@
-import traceback
-
 from pathlib import Path
 
 from fastapi import FastAPI, Request, File, Form
@@ -15,7 +13,7 @@ from consys.errors import BaseError
 from libdev.img import convert
 from libdev.s3 import upload
 
-from lib import cfg, log, report
+from lib import cfg, log
 from lib.sockets import asgi
 from services.parameters import ParametersMiddleware
 from services.monitoring import MonitoringMiddleware
@@ -49,7 +47,7 @@ async def startup():
     """Application startup event"""
 
     # Report about start
-    await report.info("Restart server")
+    log.info("Restart server")
 
     # Prometheus
     if _resolve_env() in {"pre", "prod"}:
@@ -91,8 +89,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def uncaught_exception_handler(request: Request, exc: Exception):
-    tb_str = "".join(traceback.format_tb(exc.__traceback__))
-    log.error(f"Unhandled exception: {exc}\nTraceback: {tb_str}")
+    log.exception(f"Unhandled exception: {exc}")
     return JSONResponse(
         status_code=500,
         content={

@@ -72,7 +72,7 @@ async def handler(
         user.tasks.append(task.id)
         user.save()
 
-        # await report.important(
+        # log.important(
         #     "Complete task",
         #     {
         #         "user": user.get_name(),

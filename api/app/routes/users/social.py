@@ -11,7 +11,7 @@ from libdev.req import fetch
 from libdev.codes import get_network
 from consys.errors import ErrorAccess, ErrorWrong
 
-from lib import cfg, report
+from lib import cfg, log
 from routes.users.auth import wrap_auth
 
 
@@ -90,12 +90,12 @@ async def handler(
     elif social == 4:
         login, user, name, surname, image, mail = await auth_google(data)
     else:
-        await report.error("Unknown social", {"social": social})
+        log.error("Unknown social", {"social": social})
         raise ErrorWrong("social")
 
     # Wrong ID
     if not user:
-        await report.error(
+        log.error(
             "Wrong ID",
             {
                 "social": social,

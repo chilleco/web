@@ -1,7 +1,7 @@
 from aiogram.enums import ChatMemberStatus
 from consys.errors import ErrorWrong
 
-from lib import report
+from lib import log
 from lib.tg import tg
 from models.user import complex_global_users
 
@@ -20,14 +20,13 @@ async def check(user_id, params):
             chat_id=params["chat_id"],
             user_id=user_global.get_social(2)["id"],  # TODO: by networks
         )
-    except Exception as e:
-        await report.error(
+    except Exception:  # pylint: disable=broad-except
+        log.error(
             "Check chat member",
             {
                 "user": user_id,
                 "chat_id": params["chat_id"],
             },
-            error=e,
         )
         return 1
 

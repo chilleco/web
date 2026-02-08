@@ -12,7 +12,7 @@ from userhub import auth, detect_type
 from consys.errors import ErrorInvalid, ErrorWrong
 from libdev.crypt import decrypt, encrypt
 
-from lib import cfg, log, report
+from lib import cfg, log
 from models.track import Track, TrackAction, TrackObject, _resolve_source
 from models.user import UserLocal, complex_global_users, get_name, get_social
 
@@ -144,7 +144,7 @@ async def wrap_auth(*args, **kwargs):
         try:
             locale = user.get("locale") or social.get("locale")
 
-            await report.important(
+            log.important(
                 "User registration",
                 {
                     "social": social.get("id"),

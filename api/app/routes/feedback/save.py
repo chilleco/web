@@ -9,7 +9,7 @@ from fastapi import APIRouter, Body, Request
 from pydantic import BaseModel, ConfigDict, Field
 from consys.errors import ErrorWrong
 
-from lib import report
+from lib import log
 from models.feedback import Feedback
 from models.track import Track, TrackAction, TrackObject, _resolve_source
 
@@ -81,7 +81,7 @@ async def handler(request: Request, data: FeedbackSaveRequest = Body(...)):
         },
     )
 
-    await report.important(
+    log.important(
         "Feedback",
         {
             "id": feedback.id,

@@ -2,14 +2,12 @@
 Request processing and response statuses formatting
 """
 
-import traceback
-
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from consys.errors import BaseError
 
-from lib import log, report
+from lib import log
 
 
 SUSPICIOUS_PATHS = {
@@ -74,7 +72,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
                 log.info(f"Response Body: {response_body}")
 
                 # Report
-                await report.warning(
+                log.warning(
                     response_body,
                     {
                         "method": request.method,
@@ -97,14 +95,7 @@ class ErrorsMiddleware(BaseHTTPMiddleware):
             )
 
         except Exception as e:  # pylint: disable=broad-except
-            # Log
-            tb_str = "".join(traceback.format_tb(e.__traceback__))
-            log.error(
-                f"Exception during request processing: {str(e)}\nTraceback: {tb_str}"
-            )
-
-            # Report
-            await report.critical(str(e), error=e)
+            log.exception(f"Exception during request processing: {e}")
 
             return JSONResponse(
                 status_code=500,
