@@ -24,8 +24,10 @@ COPY . .
 # Set build environment
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the application and strip dev dependencies for runtime
-RUN pnpm run build && pnpm prune --prod
+# Build the application and strip dev dependencies for runtime.
+# `pnpm prune` may trigger lifecycle scripts after removing dev deps;
+# disable scripts to avoid husky/prepare failures in CI Docker builds.
+RUN pnpm run build && pnpm prune --prod --ignore-scripts
 
 # ========================================
 # Development Stage - Development runtime with hot reload
