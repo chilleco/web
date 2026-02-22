@@ -8,6 +8,7 @@
 
 ## JavaScript
 .next/
+.pnpm-store/
 
 # Keys & sets
 *.env

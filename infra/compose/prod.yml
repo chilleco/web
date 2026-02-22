@@ -134,7 +134,7 @@ services:
         published: ${WEB_PORT}
         protocol: tcp
         mode: ingress
-    command: ["npm", "start"]
+    command: ["pnpm", "start"]
     deploy:
       mode: replicated
       replicas: 1

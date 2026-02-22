@@ -6,6 +6,7 @@
 # Dependencies
 node_modules
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
@@ -40,6 +41,7 @@ jspm_packages/
 
 # Optional npm cache directory
 .npm
+.pnpm-store
 
 # Optional eslint cache
 .eslintcache

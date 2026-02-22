@@ -27,5 +27,5 @@ services:
   web:
     depends_on:
       - api
-    # command: bash -c "npm run build && npm start"
-    command: bash -c "npm i && node_modules/.bin/eslint . --ext .js --ext .jsx"
+    # command: bash -c "pnpm run build && pnpm start"
+    command: bash -c "pnpm install && pnpm exec eslint . --ext .js --ext .jsx"

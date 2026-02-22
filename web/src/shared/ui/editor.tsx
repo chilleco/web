@@ -91,7 +91,7 @@ export function Editor({ value, onChange, disabled, className, placeholder }: Ed
               editable.style.padding = '1rem';
               editable.classList.add('ckeditor-theme-adaptive');
             }
-            const toolbar = editor.ui.view.toolbar?.element;
+            const toolbar = (editor.ui.view as { toolbar?: { element?: HTMLElement | null } }).toolbar?.element;
             if (toolbar) {
               toolbar.classList.add('ckeditor-theme-adaptive');
             }

@@ -101,7 +101,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - **Verify APIs with curl**: When adding or debugging endpoints, hit them with `curl` (use bearer tokens provided in examples when available) to confirm responses and contracts before handoff.
 - Add relevant information to this AGENTS.md file; Update the main README.md if necessary
 - **API sanity via curl**: When debugging/adding flows, hit backend endpoints with curl locally (using provided bearer tokens when available) to validate responses and fix errors before shipping.
-- **Pre-handoff checks**: Always run `npm run lint` and `npm run build` (or `make lint-web`) yourself before finishing a task; fix any errors locally. If sandbox/network blocks them, explicitly note the failure reason and keep TypeScript/routing types clean (use typed `redirect/push` objects aligned with `web/src/i18n/routing.ts`).
+- **Pre-handoff checks**: Always run `pnpm run lint` and `pnpm run build` (or `make lint-web`) yourself before finishing a task; fix any errors locally. If sandbox/network blocks them, explicitly note the failure reason and keep TypeScript/routing types clean (use typed `redirect/push` objects aligned with `web/src/i18n/routing.ts`).
 - **Track actions with enums**: Use `Track.log` + `TrackObject`/`TrackAction` enums from `api/app/models/track.py` for every audited change (objects: user, post, product, category, comment, space, payment, session, system; actions: create, update, remove, search, view, disconnect). Always pass `request` to capture context (source/network, status/roles, locale, user agent, ip via `request.state.ip`, url, token) and provide `params` with compact change sets only (no before/after echoes) via `{"id": entity.id, "changes": format_changes(entity.get_changes())}`. Example: `Track.log(object=TrackObject.POST, action=TrackAction.UPDATE, user=request.state.user, token=request.state.token, request=request, params={"id": post.id, "changes": format_changes(post.get_changes())})`. The admin feed uses `/admin/activity/` (default 20 last events) with filters for user, ip, object/action, and date range—keep Track entries consistent.
 - **User profiles fetch**: When you need user login/name/surname in responses or UI feeds, never stuff them into Track params. Use `fetch_user_profiles(ids)` from `api/app/models/user.py` to fetch global users first and overlay `UserLocal` fields in one batched request; reuse this helper across routes instead of ad-hoc UserLocal queries.
 - **Reuse cards/items**: Always reuse existing card/item components for repeated contexts (landing listings, related/recommended blocks, similar products, etc.)—e.g., use the shared PostCard for any post teasers (landing, related posts) and the shared product card for similar products instead of creating new variants.
@@ -130,7 +130,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 ✅ Error handling with proper HTTP status codes
 ✅ Tests cover all critical paths
 ✅ No sensitive data in logs
-✅ Generate TypeScript schemas after API changes (`npm run generate-schemas`)
+✅ Generate TypeScript schemas after API changes (`pnpm run generate-schemas`)
 
 #### FrontEnd
 ✅ All text uses i18n keys (no hardcoded strings)
@@ -148,8 +148,8 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 ✅ Responsive design with Tailwind CSS
 ✅ Redux Toolkit for state management
 ✅ Error handling with toast notifications
-✅ Run `npm run build` to validate FSD structure
-✅ Run `npm run lint` for code quality
+✅ Run `pnpm run build` to validate FSD structure
+✅ Run `pnpm run lint` for code quality
 
 ### Testing
 #### Local
@@ -403,14 +403,14 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 6. **Frontend Implementation**: Build frontend components/pages; verify styling/locales/themes/access/mobile.
 7. **Frontend Tests**: Add frontend tests.
 8. **Run tests and linters**: Avoid extra layers unless justified.
-9. **Frontend prod parity**: Before merging, rerun frontend lint/build and fix all prod build errors (typed routes, lint violations). Ensure `npm run build` (or CI web-check job) passes without errors.
-10. **Local verification gate**: Always run `npm run lint` and `npm run build` (or `make lint-web`/`make lint-web-fix` + build) before handing off; if blocked by sandbox/network (e.g., Google Fonts fetch), report the failure reason explicitly in the summary and keep the TypeScript check clean.
-- On any dependency change, regenerate lockfiles: backend via `uv lock --python 3.13` in `api/`; frontend by refreshing the JS lockfile (`npm install` in `web/` to update `package-lock.json`).
+9. **Frontend prod parity**: Before merging, rerun frontend lint/build and fix all prod build errors (typed routes, lint violations). Ensure `pnpm run build` (or CI web-check job) passes without errors.
+10. **Local verification gate**: Always run `pnpm run lint` and `pnpm run build` (or `make lint-web`/`make lint-web-fix` + build) before handing off; if blocked by sandbox/network (e.g., Google Fonts fetch), report the failure reason explicitly in the summary and keep the TypeScript check clean.
+- On any dependency change, regenerate lockfiles: backend via `uv lock --python 3.13` in `api/`; frontend by refreshing the JS lockfile (`pnpm install` in `web/` to update `pnpm-lock.yaml`).
 
 ## Commands
-- Frontend (`web/`): `npm install`; `npm run dev`; `npm run build`; `npm run start`; `npm run lint`.
+- Frontend (`web/`): `pnpm install`; `pnpm run dev`; `pnpm run build`; `pnpm run start`; `pnpm run lint`.
 - New lint helpers: `make lint-web` (check) and `make lint-web-fix` (auto-fix) run from repo root.
-- Pre-commit hook: husky runs `npm --prefix web run lint:fix`; run `npm install` in `web/` (or `npm run prepare`) to ensure hooks are installed if missing.
+- Pre-commit hook: husky runs `corepack pnpm --dir web run lint:fix`; run `pnpm install` in `web/` (or `pnpm run prepare`) to ensure hooks are installed if missing.
 - Stack (repo root): unified commands only — `make up`, `make down`, `make logs`, `make status` (behavior depends on `ENV`).
 - Tests: `make test` for API + web in compose; `make test-api` or `make test-web` individually.
 

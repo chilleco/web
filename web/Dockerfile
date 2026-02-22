@@ -10,10 +10,13 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy package files for full install
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
+
+# Enable pinned pnpm via Corepack
+RUN corepack enable && corepack prepare pnpm@10.30.1 --activate
 
 # Install ALL dependencies for building (including dev dependencies)
-RUN npm ci --no-audit --no-fund
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
@@ -22,7 +25,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the application and strip dev dependencies for runtime
-RUN npm run build && npm prune --omit=dev
+RUN pnpm run build && pnpm prune --prod
 
 # ========================================
 # Development Stage - Development runtime with hot reload
@@ -36,10 +39,13 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
+
+# Enable pinned pnpm via Corepack
+RUN corepack enable && corepack prepare pnpm@10.30.1 --activate
 
 # Install ALL dependencies (including dev dependencies)
-RUN npm ci --no-audit --no-fund
+RUN pnpm install --frozen-lockfile
 
 # Set development environment
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -48,7 +54,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 EXPOSE 3000
 
 # Start development server
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]
 
 # ========================================
 # Runner Stage - Production runtime
@@ -71,6 +77,9 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000
 
+# Enable pinned pnpm via Corepack for runtime commands
+RUN corepack enable && corepack prepare pnpm@10.30.1 --activate
+
 # Copy production dependencies only
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
@@ -80,7 +89,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/postcss.config.mjs ./
 COPY --from=builder --chown=nextjs:nodejs /app/components.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/pnpm-lock.yaml ./
 
 # Switch to non-root user
 USER nextjs
@@ -93,4 +103,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]

@@ -28,4 +28,4 @@ services:
       - /app/node_modules
       - /app/.next
       - /app/.swc
-    command: npm run dev
+    command: pnpm run dev

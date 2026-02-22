@@ -171,11 +171,11 @@ lint-api:
 
 .PHONY: lint-web
 lint-web:
-	cd web && npm run lint
+	cd web && corepack pnpm run lint
 
 .PHONY: lint-web-fix
 lint-web-fix:
-	cd web && npm run lint:fix
+	cd web && corepack pnpm run lint:fix
 
 .PHONY: unit-test
 unit-test:
