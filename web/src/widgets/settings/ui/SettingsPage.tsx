@@ -6,8 +6,7 @@ import { useRouter } from '@/i18n/routing';
 import { Box } from '@/shared/ui/box';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
-import { Logo, ThemeSwitcher } from '@/shared/components/layout';
-import { LanguageSwitcher } from '@/features/navigation';
+import { Logo } from '@/shared/components/layout';
 import { CategoriesHoverPopup } from '@/widgets/category';
 import { Footer } from '@/widgets/footer';
 import {
@@ -226,10 +225,14 @@ export default function SettingsPage() {
     const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const query = formData.get('search') as string;
-        if (query.trim()) {
-            console.log('Search query:', query);
-        }
+        const value = formData.get('search');
+        const query = typeof value === 'string' ? value.trim() : '';
+
+        router.push(
+            query
+                ? { pathname: '/catalog', query: { q: query } }
+                : { pathname: '/catalog' }
+        );
     };
 
     const handleOpenProfile = () => handleNavigate('/profile');

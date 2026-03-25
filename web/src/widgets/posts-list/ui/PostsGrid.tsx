@@ -61,7 +61,6 @@ export function PostsGrid({
             }
 
         } catch (err) {
-            console.error('Error loading posts:', err);
             const errorMessage = err instanceof Error ? err.message : 'Failed to load posts';
             setError(errorMessage);
             showError(errorMessage);

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { EntityManagement } from '@/shared/ui';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { usePopupActions } from '@/widgets/feedback-system';
 import { deleteSpace, getSpaces, type Space } from '@/entities/space';
 import { SpaceListItem } from './SpaceListItem';
 
@@ -14,6 +15,7 @@ interface SpaceManagementProps {
 export function SpaceManagement({ triggerRefresh }: SpaceManagementProps = {}) {
   const t = useTranslations('admin.spaces');
   const { success, error: showError } = useToastActions();
+  const { confirmDelete } = usePopupActions();
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +50,8 @@ export function SpaceManagement({ triggerRefresh }: SpaceManagementProps = {}) {
   }, [triggerRefresh, loadSpaces]);
 
   const handleDeleteSpace = async (space: Space) => {
-    if (!confirm(t('actions.deleteConfirm', { title: space.title }))) {
+    const isConfirmed = await confirmDelete(t('actions.deleteConfirm', { title: space.title }));
+    if (!isConfirmed) {
       return;
     }
 

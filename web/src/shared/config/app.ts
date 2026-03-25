@@ -5,9 +5,9 @@ const isProdLikeEnv = isProdLikeAppEnv(appEnv);
 
 // Application configuration
 export const APP_CONFIG = {
-  name: 'Web App',
+  name: 'Launchpad',
   version: '1.0.0',
-  description: 'Modern web application',
+  description: 'Reusable full-stack launch template',
   author: 'Alex Poloz',
 
   // API Configuration

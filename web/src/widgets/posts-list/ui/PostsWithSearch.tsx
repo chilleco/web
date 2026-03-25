@@ -73,7 +73,6 @@ export function PostsWithSearch({
             }
 
         } catch (err) {
-            console.error('Error loading posts:', err);
             const errorMessage = err instanceof Error ? err.message : 'Failed to load posts';
             showError(errorMessage);
         } finally {

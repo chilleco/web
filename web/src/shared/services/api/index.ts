@@ -9,12 +9,3 @@ export type { ApiRequestOptions, ApiResponse } from './client';
 
 // Export authentication functions
 export * from './auth';
-
-// Common API utilities
-/**
- * Health check endpoint
- */
-export async function healthCheck(): Promise<{ status: string; timestamp: string }> {
-    const { api } = await import('./client');
-    return api.get('/health/');
-}

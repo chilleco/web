@@ -1,5 +1,7 @@
-# Template Web App
-Modern full-stack web application with Python FastAPI backend, Next.js frontend, Telegram bot, and Telegram / VK / MAX Mini App support. Built with Docker containers and featuring multilingual support, and production-ready flow.
+# Launchpad Template
+Reusable full-stack launch template with Python FastAPI backend, Next.js frontend, Telegram bot, and Telegram / VK / MAX Mini App support. Built with Docker containers, multilingual routing, and production-ready flows.
+
+Reference pages and shared template surfaces should stay honest: ship only real links and real actions, or render disabled localized states until the backend contract is wired.
 
 ## Background tasks (Taskiq)
 - Worker: `uv run taskiq worker tasks.broker:broker tasks.registry`

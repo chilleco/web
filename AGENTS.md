@@ -84,6 +84,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - **Cursor pointer everywhere**: All clickable elements/blocks/links/pickers/sliders must explicitly set `cursor-pointer` for clear affordance
 - **Dialog affordance**: Dialog close buttons AND the dimmed overlay/backdrop used to close dialogs must have `cursor-pointer`
 - **No duplicate API calls**: guard client-side fetch effects with stable fetch keys/in-flight refs so Strict Mode doesn’t trigger the same request multiple times (one request per dataset)
+- **Honest template surfaces**: Never ship fake counters, `#` links, console-only submit handlers, or mock success actions on real routes. If a flow is not wired yet, hide it or render a disabled localized state with a clear reason.
 - **Documentation**: Write documentation directly in code files as comments and docstrings, not as separated files (No new .md files to describe logic, usage, or implementation details; No example .json files to show data structures or logging formats)
 - **Required fields UX**: For all forms mark required inputs with `*` and highlight missing/invalid required fields with a red focus/outline when the API returns validation errors (e.g., `detail` value). Keep visual feedback consistent across the app.
 - **Popups/Toasts**: Emit only one localized toast per error; map backend `detail`/field keys to translated messages and surface the exact field causing the issue (no duplicate global+local toasts).
@@ -95,6 +96,7 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - **Shared translations first**: Use existing `system.*` translation keys for shared labels (loading, refresh, common actions) instead of introducing feature-specific duplicates; migrate simple words from feature scopes to `system.*` when touching those areas.
   - When adding new locale strings, ensure non-English locales are translated (avoid copy-pasting English into `ru`/`es`/`ar`/`zh`).
 - **No duplicated UI/i18n**: If multiple screens/forms need the same control or helper text, extract a shared component in `web/src/shared/ui/` and move the strings to `system.*` (delete feature-scoped duplicates).
+- **Delete dead frontend layers**: Remove unused demo slices, duplicate toast hooks, unused providers, and speculative wrappers instead of keeping parallel infrastructure in the runtime tree.
 - **Unit suffixes**: Show measurement units using right-side labels/suffix segments on inputs (e.g., %, kg, cm); keep left labels clean.
 - **Number inputs**: Hide browser stepper arrows and prevent scroll-wheel value changes; use shared Input defaults or equivalent handlers for any custom number fields.
 - **Allow clearing inputs**: Form fields (including numeric inputs) must allow users to clear the value with Backspace/Delete before retyping; do not force immediate fallback values while typing.

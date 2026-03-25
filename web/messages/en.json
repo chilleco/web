@@ -40,20 +40,39 @@
     "sections": "Sections"
   },
   "hub": {
-    "toastDemo": {
-      "title": "Toasts",
-      "description": "Trigger each toast variant to verify styling.",
-      "actions": {
-        "default": "Default"
+    "description": "Live interaction layer for rooms, chat, calls, and collaborative work.",
+    "intro": {
+      "title": "What this area represents",
+      "body": "Use the hub as the realtime interaction layer of the product: rooms, chat threads, video calls, shared boards, presence, and coordination flows. It should feel live and social, not editorial or support-oriented."
+    },
+    "modes": {
+      "title": "Interaction modes",
+      "rooms": {
+        "title": "Rooms and spaces",
+        "description": "Persistent rooms with members, roles, presence, unread state, and fast context switching."
       },
-      "messages": {
-        "default": "This is a default toast",
-        "success": "This is a success toast",
-        "error": "This is an error toast",
-        "warning": "This is a warning toast",
-        "info": "This is an info toast",
-        "loading": "Loading..."
+      "chat": {
+        "title": "Chat and threads",
+        "description": "Message flows for direct chat, room discussion, replies, reactions, and lightweight coordination."
+      },
+      "calls": {
+        "title": "Voice and video",
+        "description": "Call flows with clear join state, participant status, scheduling, and post-call context."
+      },
+      "boards": {
+        "title": "Boards and whiteboards",
+        "description": "Shared planning surfaces for notes, comments, review, and collaborative thinking."
       }
+    },
+    "principles": {
+      "title": "Product rules",
+      "realtime": "Design this section around realtime presence, unread state, typing, and participant context instead of static content blocks.",
+      "lowNoise": "Keep interaction UI minimal and human: clear room lists, readable message density, and no decorative overload.",
+      "realStates": "Show only real backend or transport states. Do not fake online counts, room activity, or call metrics."
+    },
+    "activation": {
+      "title": "Before shipping interaction flows",
+      "body": "Wire rooms, membership, messaging, calls, permissions, and shared boards to real backend contracts or realtime transport first. If a capability is not ready yet, keep it hidden or disabled with a localized reason."
     }
   },
   "tasks": {
@@ -381,6 +400,8 @@
     "next": "Next",
     "download": "Download",
     "cancel": "Cancel",
+    "ok": "OK",
+    "confirm": "Confirm",
     "none": "None",
     "yes": "Yes",
     "no": "No",
@@ -392,6 +413,7 @@
     "iconKeyPlaceholder": "home",
     "iconKeyDescription": "Enter a FontAwesome icon key (without 'fa-' prefix). Leave empty for no icon.",
     "item": "Item",
+    "deleteItemConfirm": "Delete \"{item}\"?",
     "processing": "Processing",
     "errors": {
       "unsupportedImageFormat": "Unsupported image format. Please convert the file to JPG or PNG and try again."
@@ -411,9 +433,9 @@
     "smz": "Self-employed"
   },
   "brand": {
-    "name": "web",
-    "description": "Template web app",
-    "tagline": "Template web app",
+    "name": "Launchpad",
+    "description": "Reusable full-stack launch template",
+    "tagline": "Reusable full-stack launch template",
     "address": "St. Petersburg, Russia"
   },
   "footer": {

@@ -30,15 +30,19 @@ export default function Header() {
     const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const query = formData.get('search') as string;
-        if (query.trim()) {
-            // Handle search logic
-            console.log('Search query:', query);
-        }
+        const value = formData.get('search');
+        const query = typeof value === 'string' ? value.trim() : '';
+
+        router.push(
+            query
+                ? { pathname: '/catalog', query: { q: query } }
+                : { pathname: '/catalog' }
+        );
+        setIsMobileMenuOpen(false);
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-50 w-full bg-background/95 shadow-[0_0.25rem_1rem_rgba(0,0,0,0.08)] backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="w-full px-4 flex h-16 items-center">
                 {/* Logo */}
                 <div className="mr-6 flex items-center space-x-2 flex-shrink-0 w-24">
@@ -69,7 +73,7 @@ export default function Header() {
                             />
                             <button
                                 type="submit"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                             >
                                 <SearchIcon size={16} />
                             </button>

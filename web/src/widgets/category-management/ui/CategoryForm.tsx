@@ -245,7 +245,6 @@ export function CategoryForm({
       // TODO: Handle image upload
       // For now, we'll skip image upload as it requires a separate endpoint
       if (categoryFileData?.file) {
-        console.warn('Image upload not yet implemented');
         info(t('form.imageUploadNotice'), {
           title: t('form.noteTitle')
         });

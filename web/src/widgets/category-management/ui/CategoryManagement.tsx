@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { EntityManagement } from '@/shared/ui';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { usePopupActions } from '@/widgets/feedback-system';
 import { getCategories, deleteCategory } from '@/entities/category/api/categoryApi';
 import type { Category } from '@/entities/category/model/category';
 import { CategoryForm } from './CategoryForm';
@@ -28,6 +29,7 @@ export function CategoryManagement({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const { confirmDelete } = usePopupActions();
 
   const loadCategories = useCallback(async () => {
     try {
@@ -69,7 +71,8 @@ export function CategoryManagement({
   }, [triggerRefresh, loadCategories]);
 
   const handleDeleteCategory = async (category: Category) => {
-    if (!confirm(t('deleteConfirm', { title: category.title }))) {
+    const isConfirmed = await confirmDelete(t('deleteConfirm', { title: category.title }));
+    if (!isConfirmed) {
       return;
     }
 

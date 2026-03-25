@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { EntityManagement } from '@/shared/ui';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { usePopupActions } from '@/widgets/feedback-system';
 import { getPosts, deletePost, Post } from '@/entities/post';
 import { PostListItem } from './PostListItem';
 
@@ -16,10 +17,12 @@ export function PostManagement({
 }: PostManagementProps = {}) {
   const tAdmin = useTranslations('admin.posts');
   const tSystem = useTranslations('system');
+  const tPostDetail = useTranslations('posts.detail.actions');
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { success, error: showError } = useToastActions();
+  const { confirmDelete } = usePopupActions();
 
   const loadPosts = useCallback(async () => {
     try {
@@ -47,7 +50,9 @@ export function PostManagement({
   }, [triggerRefresh, loadPosts]);
 
   const handleDelete = async (post: Post) => {
-    if (!confirm(tSystem('delete'))) return;
+    const isConfirmed = await confirmDelete(tPostDetail('deleteConfirm', { title: post.title }));
+    if (!isConfirmed) return;
+
     try {
       await deletePost(post.id);
       await loadPosts();

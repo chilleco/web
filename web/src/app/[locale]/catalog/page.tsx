@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { PageHeader } from '@/shared/ui/page-header';
@@ -26,10 +27,12 @@ export default function CatalogPage() {
     const tSearch = useTranslations('search');
     const tSystem = useTranslations('system');
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const urlQuery = searchParams.get('q')?.trim() ?? '';
 
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState(urlQuery);
     const [filters, setFilters] = useState<SearchFilters>({});
-    const [appliedQuery, setAppliedQuery] = useState('');
+    const [appliedQuery, setAppliedQuery] = useState(urlQuery);
     const [appliedFilters, setAppliedFilters] = useState<SearchFilters>({});
 
     // Redux state
@@ -75,14 +78,19 @@ export default function CatalogPage() {
 
     // Handle search
     const handleSearch = useCallback((searchQuery: string, searchFilters: SearchFilters) => {
-        const nextQuery = searchQuery ?? query;
+        const nextQuery = (searchQuery ?? query).trim();
         const nextFilters = searchFilters ?? filters;
 
         setQuery(nextQuery);
         setFilters(nextFilters);
         setAppliedQuery(nextQuery);
         setAppliedFilters(nextFilters);
-    }, [filters, query]);
+        router.replace(
+            nextQuery
+                ? { pathname: '/catalog', query: { q: nextQuery } }
+                : { pathname: '/catalog' }
+        );
+    }, [filters, query, router]);
 
     // Handle favorites and cart actions
     const handleOpenFavorites = useCallback(() => {
@@ -118,6 +126,11 @@ export default function CatalogPage() {
         },
         [showError, tSystem]
     );
+
+    useEffect(() => {
+        setQuery((currentQuery) => (currentQuery === urlQuery ? currentQuery : urlQuery));
+        setAppliedQuery((currentQuery) => (currentQuery === urlQuery ? currentQuery : urlQuery));
+    }, [urlQuery]);
 
     useEffect(() => {
         if (!selectedSpace?.link) {
