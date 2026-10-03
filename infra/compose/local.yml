@@ -22,7 +22,8 @@ services:
 
   api:
     depends_on:
-      - db
+      db:
+        condition: service_started
     volumes:
       # For hot reload
       - ../../api/app:/app
@@ -36,14 +37,16 @@ services:
 
   worker:
     depends_on:
-      - db
+      db:
+        condition: service_started
     volumes:
       # For hot reload
       - ../../api/app:/app
 
   scheduler:
     depends_on:
-      - db
+      db:
+        condition: service_started
     volumes:
       # For hot reload
       - ../../api/app:/app
@@ -85,4 +88,4 @@ services:
       # - jobs
       - web
     ports:
-      - ${EXTERNAL_PORT}:80
+      - ${EXTERNAL_PORT:-80}:80

@@ -9,6 +9,16 @@ services:
     volumes:
       - ${DATA_PATH}/redis:/data
     command: sh -c "redis-server --requirepass ${REDIS_PASS}"
+    # REDIS_HOST=redis and REDIS_HOST=mq must resolve to the same broker.
+    networks:
+      default:
+        aliases:
+          - redis
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$REDIS_PASS\" redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   api:
     image: ${PROJECT_NAME}/api
@@ -27,7 +37,8 @@ services:
       - ${DATA_PATH}/load:/data/load
       - ${DATA_PATH}/backup:/backup
     depends_on:
-      - mq
+      mq:
+        condition: service_healthy
 
   worker:
     image: ${PROJECT_NAME}/api
@@ -50,7 +61,8 @@ services:
       - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
       - ${DATA_PATH}/robots.txt:/data/robots.txt
     depends_on:
-      - mq
+      mq:
+        condition: service_healthy
     command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks.registry --workers 2 --log-level INFO"
 
   scheduler:
@@ -65,7 +77,8 @@ services:
       API: ${PROTOCOL}://${EXTERNAL_HOST}/api/
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
     depends_on:
-      - mq
+      mq:
+        condition: service_healthy
     command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks.registry --log-level INFO"
 
   tg:

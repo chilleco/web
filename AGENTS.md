@@ -74,6 +74,8 @@ The "tasks" feature is a reward checklist that grants users inner coins after ve
 - Base URLs: server-side requests must use `http://api:5000/` (internal Docker network); client-side requests must use `NEXT_PUBLIC_API` through nginx; do not add separate API base URL variables.
 - Detect environment via `NEXT_PUBLIC_ENV` (mirrors `ENV`).
 - Web stack builds use Node 24 (Docker + compose test) and Next 16/React 19; keep local runtime and `@types/node` aligned when bumping.
+- The API image checks that `libdev.s3` imports with `ENV` alone; keep LibDev at 0.102 or newer and rebuild older images rather than adding `MODE`.
+- Compose Redis is the `mq` service with the `redis` network alias; API, workers, and scheduler wait for its healthcheck. Local nginx defaults to port 80 when `EXTERNAL_PORT` is empty.
 
 ## Golden Rules of coding & editing
 - **Explain the plan** (brief): research, make strategy and all steps of changing. compliance with the rules of the repository and the specifics of custom libraries and components
