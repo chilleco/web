@@ -14,7 +14,13 @@ ENV_NORMALIZED := $(shell printf '%s' "$(ENV)" | tr '[:upper:]' '[:lower:]')
 ENV_SAFE := $(if $(filter $(ENV_NORMALIZED),$(ALLOWED_ENVS)),$(ENV_NORMALIZED),test)
 COMPOSE_APP := infra/compose/$(ENV_SAFE).yml
 COMPOSE_CMD := docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_APP) -p ${PROJECT_NAME}
+COMPOSE_SWARM := infra/compose/prod.yml
+DEPLOY_FILE := deploy.yml
 STACK_NAME ?= ${PROJECT_NAME}-${ENV_SAFE}
+
+# envsubst must receive the CI values loaded by Make, not only shell exports.
+export PROJECT_NAME REGISTRY IMAGE_TAG RELEASE DATA_PATH PROTOCOL EXTERNAL_HOST
+export API_PORT WEB_PORT TG_PORT NAME LOCALE TG_BOT
 
 # ============================================================================
 # Deployment
@@ -53,15 +59,59 @@ check-env:
 		echo "ENV='$(ENV)' normalized to lowercase: '$(ENV_SAFE)'."; \
 	fi
 
+# Reuse the CI artifact when present; recover it atomically from CI settings otherwise.
+.PHONY: check-deploy
+check-deploy: check-env
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		if [ ! -f "$(DEPLOY_FILE)" ]; then \
+			missing=0; \
+			for key in PROJECT_NAME REGISTRY IMAGE_TAG DATA_PATH PROTOCOL EXTERNAL_HOST API_PORT WEB_PORT TG_PORT; do \
+				if [ -z "$$(printenv "$$key")" ]; then \
+					echo "Missing CI setting: $$key" >&2; \
+					missing=1; \
+				fi; \
+			done; \
+			if [ "$$missing" = "1" ]; then \
+				echo "deploy.yml is missing. Run the CI/CD deployment to provision this checkout." >&2; \
+				exit 1; \
+			fi; \
+			command -v envsubst >/dev/null 2>&1 || { echo "envsubst is required (install gettext-base on Ubuntu)." >&2; exit 1; }; \
+			manifest=$$(mktemp "$(DEPLOY_FILE).XXXXXX") || exit 1; \
+			trap 'rm -f "$$manifest"' 0 1 2 15; \
+			ENV=$(ENV_SAFE) envsubst < "$(COMPOSE_SWARM)" > "$$manifest" || exit 1; \
+			docker stack config -c "$$manifest" >/dev/null || exit 1; \
+			mv "$$manifest" "$(DEPLOY_FILE)" || exit 1; \
+			echo "Generated $(DEPLOY_FILE) from CI settings."; \
+		else \
+			docker stack config -c "$(DEPLOY_FILE)" >/dev/null || exit 1; \
+		fi; \
+	fi
+
+.PHONY: check
+check: check-deploy
+	@echo "ENV=$(ENV_SAFE)"
+	@if [ -z "$$PROJECT_NAME" ]; then echo "PROJECT_NAME is required." >&2; exit 1; fi
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		state=$$(docker info --format '{{.Swarm.LocalNodeState}} {{.Swarm.ControlAvailable}}') || exit 1; \
+		if [ "$$state" != "active true" ]; then \
+			echo "A Swarm manager is required. Initialize this VPS with docker swarm init, or run deployment on an existing manager." >&2; \
+			exit 1; \
+		fi; \
+		echo "Swarm manifest valid; manager ready."; \
+	else \
+		$(COMPOSE_CMD) config --quiet || exit 1; \
+		echo "Compose configuration valid."; \
+	fi
+
 # ============================================================================
 # Lifecycle
 # ============================================================================
 
 # Start services
 .PHONY: up
-up: check-env
+up: check
 	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
-		docker stack deploy -c deploy.yml --with-registry-auth --prune $(STACK_NAME); \
+		docker stack deploy -c $(DEPLOY_FILE) --with-registry-auth --prune $(STACK_NAME); \
 	else \
 		$(COMPOSE_CMD) up --build; \
 	fi
@@ -153,6 +203,10 @@ reqs:
 # ============================================================================
 # Tests & Linter
 # ============================================================================
+
+.PHONY: test-infra
+test-infra:
+	python3 -B -m unittest discover -s infra/tests -p 'test_*.py'
 
 .PHONY: test
 test: # FIXME

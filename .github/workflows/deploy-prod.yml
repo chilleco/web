@@ -3,10 +3,10 @@ name: CI/CD main
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 env:
   ENV: prod
-  COMPOSE_FILE: infra/compose/prod.yml
 
 jobs:
   web-check:
@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
           cache-dependency-path: web/pnpm-lock.yaml
 
@@ -226,7 +226,7 @@ jobs:
             done < "$ENV_FILE_PATH"
             export RELEASE="$RELEASE"
             export IMAGE_TAG="$IMAGE_TAG"
-            envsubst < "$COMPOSE_FILE" > "$FOLDER/deploy.yml"
+            make check-deploy ENV="$ENV" ENV_FILE="$ENV_FILE_PATH" || exit 1
 
             # optional: pull fresh images
             for service in api web tg; do

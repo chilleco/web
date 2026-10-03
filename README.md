@@ -66,6 +66,8 @@ DATA_PATH=./data
 
 Use `make down` to stop services.
 
+Run `make check` before starting: it validates the selected configuration and, for `pre`/`prod`, requires a Swarm manager. CI provisions the runtime environment and `deploy.yml`. If the manifest is missing but the CI settings are available, `make check` and `make up` regenerate it; otherwise they report the missing setting names. Checking out a branch or running `git pull` does not run the production pipeline. It runs on pushes to `main` or through **Run workflow** in GitHub Actions, where you can select the branch to deploy once this workflow is available on the default branch.
+
 ## Telegram bot (webhooks)
 - Service lives in `tg/` and runs a FastAPI webhook handler behind `/tg/`.
 - Required env: `TG_TOKEN` (bot token) and `TG` (public webhook URL like `https://host/tg/`).
