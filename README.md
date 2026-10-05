@@ -68,6 +68,8 @@ Use `make down` to stop services.
 
 Run `make check` before starting: it validates the selected configuration and, for `pre`/`prod`, requires a Swarm manager. CI provisions the runtime environment and `deploy.yml`. If the manifest is missing but the CI settings are available, `make check` and `make up` regenerate it; otherwise they report the missing setting names. Checking out a branch or running `git pull` does not run the production pipeline. It runs on pushes to `main` or through **Run workflow** in GitHub Actions, where you can select the branch to deploy once this workflow is available on the default branch.
 
+After deployment, `make ready` waits for running replicas (180 seconds by default); `make check` does not test service health. Use `make log` (or `make logs`) for application errors and `make tasks` for full Swarm task errors. CI builds new image tags from the selected commit before deployment; pulling source on the VPS and running `make up` reuses the last CI image tag. Production requires reachable MongoDB and Redis at their CI-configured hosts; the local Compose `db`/`mq` containers are not part of the production stack.
+
 ## Telegram bot (webhooks)
 - Service lives in `tg/` and runs a FastAPI webhook handler behind `/tg/`.
 - Required env: `TG_TOKEN` (bot token) and `TG` (public webhook URL like `https://host/tg/`).

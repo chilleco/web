@@ -17,7 +17,8 @@ from libdev.gen import generate
 from libdev.req import fetch
 from libdev.log import log, setup_logging, clear_request_context, set_request_context
 
-from .sentry import (
+# Uvicorn loads main:app as a top-level module in the container.
+from sentry import (
     flush_sentry,
     init_sentry,
     set_request_context as set_sentry_request_context,

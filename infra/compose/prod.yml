@@ -64,6 +64,9 @@ services:
       - ${DATA_PATH}/sitemap.xml:/data/sitemap.xml
       - ${DATA_PATH}/robots.txt:/data/robots.txt
     command: bash -c "cd /app && uv run taskiq worker --app-dir /app tasks.broker:broker tasks.registry --workers 2 --log-level INFO"
+    # Disable the API image's HTTP probe for background-only processes.
+    healthcheck:
+      disable: true
     deploy:
       mode: replicated
       replicas: 1
@@ -96,6 +99,8 @@ services:
       WEB: ${PROTOCOL}://${EXTERNAL_HOST}/
       RELEASE: ${RELEASE}
     command: bash -c "cd /app && uv run taskiq scheduler --app-dir /app tasks.scheduler:scheduler tasks.registry --log-level INFO"
+    healthcheck:
+      disable: true
     deploy:
       mode: replicated
       replicas: 1
@@ -136,7 +141,7 @@ services:
         published: ${WEB_PORT}
         protocol: tcp
         mode: ingress
-    command: ["pnpm", "start"]
+    command: ["node", "server.js"]
     deploy:
       mode: replicated
       replicas: 1

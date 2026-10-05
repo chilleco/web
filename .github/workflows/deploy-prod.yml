@@ -91,14 +91,28 @@ jobs:
           password: ${{ secrets.REGISTRY_TOKEN }}     # PAT or token
 
       - name: Build & push images
+        env:
+          NEXT_PUBLIC_ENV: ${{ env.ENV }}
+          NEXT_PUBLIC_API: ${{ vars.PROTOCOL }}://${{ vars.EXTERNAL_HOST }}/api/
+          NEXT_PUBLIC_WEB: ${{ vars.PROTOCOL }}://${{ vars.EXTERNAL_HOST }}/
+          NEXT_PUBLIC_NAME: ${{ vars.NAME }}
+          NEXT_PUBLIC_LOCALE: ${{ vars.LOCALE }}
+          NEXT_PUBLIC_TG_BOT: ${{ vars.TG_BOT }}
         run: |
           for svc in api web tg; do
             CONTEXT="$svc"
             DOCKERFILE="$svc/Dockerfile"
             IMAGE="${{ vars.REGISTRY_HOST }}/${{ vars.REGISTRY_OWNER }}/${{ vars.PROJECT_NAME }}/${svc}"
+            BUILD_ARGS=()
+            if [ "$svc" = "web" ]; then
+              for key in NEXT_PUBLIC_ENV NEXT_PUBLIC_API NEXT_PUBLIC_WEB NEXT_PUBLIC_NAME NEXT_PUBLIC_LOCALE NEXT_PUBLIC_TG_BOT; do
+                BUILD_ARGS+=(--build-arg "$key=$(printenv "$key")")
+              done
+            fi
             docker buildx build \
               --platform linux/amd64 \
               -f $DOCKERFILE \
+              "${BUILD_ARGS[@]}" \
               -t $IMAGE:${{ env.IMAGE_TAG }} \
               -t $IMAGE:latest \
               $CONTEXT \
@@ -230,7 +244,7 @@ jobs:
 
             # optional: pull fresh images
             for service in api web tg; do
-              sudo docker pull "$REGISTRY/$PROJECT_NAME/${service}:$IMAGE_TAG"
+              sudo docker pull "$REGISTRY/$PROJECT_NAME/${service}:$IMAGE_TAG" || exit 1
             done
 
             # deploy (with registry auth)
@@ -238,7 +252,7 @@ jobs:
                   --compose-file "$FOLDER/deploy.yml" \
                   --with-registry-auth \
                   --prune \
-                  "$STACK_NAME"
+                  "$STACK_NAME" || exit 1
 
             # force update all services to ensure new images are deployed
             # this handles cases where services are at max replicas per node
@@ -254,8 +268,11 @@ jobs:
                 --update-order stop-first \
                 --update-parallelism 1 \
                 --force \
-                "${STACK_NAME}_${service}"
+                "${STACK_NAME}_${service}" || exit 1
             done
+
+            # A valid manifest is not enough: fail the deployment on startup crashes.
+            sudo make ready ENV="$ENV" ENV_FILE="$ENV_FILE_PATH" || exit 1
 
             echo "Clean"
             yes | sudo docker system prune -a

@@ -71,6 +71,9 @@ COPY --chown=appuser:appuser . /app
 # Switch to non-root user
 USER appuser
 
+# Verify the actual Uvicorn entrypoint before publishing the image.
+RUN ENV=test python -c "from uvicorn.importer import import_from_string; import_from_string('main:app')"
+
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:80/health || exit 1

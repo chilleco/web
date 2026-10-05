@@ -34,6 +34,15 @@ elif args[:2] == ['stack', 'config']:
     raise SystemExit(int(os.environ.get('CHILL_STACK_CONFIG_EXIT', '0')))
 elif args[:2] == ['stack', 'deploy']:
     pass
+elif args[:2] == ['stack', 'services']:
+    print(os.environ.get('CHILL_SWARM_SERVICES', 'check-prod_api 1/1'))
+elif args[:2] == ['stack', 'ps']:
+    print('check-prod_api Failed: task: non-zero exit (1)')
+elif args[:2] == ['service', 'ls']:
+    print('api-service web-service')
+elif args[:2] == ['service', 'logs']:
+    print(args[-1] + ' startup log')
+    raise SystemExit(int(os.environ.get('CHILL_LOG_EXIT', '0')))
 elif args[:1] == ['compose']:
     raise SystemExit(int(os.environ.get('CHILL_COMPOSE_CONFIG_EXIT', '0')))
 else:
@@ -68,6 +77,8 @@ class MakeDeployTests(unittest.TestCase):
         state: str = "active true",
         stack_exit: int = 0,
         compose_exit: int = 0,
+        services: str = "check-prod_api 1/1 (max 3 per node)\ncheck-prod_web 1/1",
+        log_exit: int = 0,
     ) -> subprocess.CompletedProcess[str]:
         settings = {"ENV_FILE": "/dev/null", "ENV": "prod", "PROJECT_NAME": "check"}
         settings.update(values or {})
@@ -77,6 +88,8 @@ class MakeDeployTests(unittest.TestCase):
             "CHILL_SWARM_STATE": state,
             "CHILL_STACK_CONFIG_EXIT": str(stack_exit),
             "CHILL_COMPOSE_CONFIG_EXIT": str(compose_exit),
+            "CHILL_SWARM_SERVICES": services,
+            "CHILL_LOG_EXIT": str(log_exit),
         }
         return subprocess.run(
             ["make", "--no-print-directory", target, *(f"{key}={value}" for key, value in settings.items())],
@@ -180,6 +193,44 @@ class MakeDeployTests(unittest.TestCase):
         result = self.run_make("up", {"ENV": "local"}, compose_exit=1)
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(len(self.calls()), 1)
+
+    def test_ready_accepts_all_running_replicas(self) -> None:
+        result = self.run_make("ready", {"READY_TIMEOUT": "0"})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("requested running replicas", result.stdout)
+        self.assertEqual(self.calls(), [["stack", "services", "check-prod", "--format", "{{.Name}} {{.Replicas}}"]])
+
+    def test_ready_rejects_failed_missing_or_zero_replicas(self) -> None:
+        for services in ("check-prod_api 0/1 (max 3 per node)", "", "check-prod_api 0/0", "check-prod_api 1/2"):
+            with self.subTest(services=services):
+                result = self.run_make("ready", {"READY_TIMEOUT": "0"}, services=services)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("failed to become ready", result.stderr)
+                self.assertIn("non-zero exit (1)", result.stdout)
+                self.assertEqual(self.calls()[-1], ["stack", "ps", "--no-trunc", "check-prod"])
+
+    def test_log_alias_waits_for_all_service_logs(self) -> None:
+        result = self.run_make("log")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("api-service startup log", result.stdout)
+        self.assertIn("web-service startup log", result.stdout)
+        self.assertEqual(self.calls()[0], ["service", "ls", "-q", "--filter", "label=com.docker.stack.namespace=check-prod"])
+        self.assertCountEqual(self.calls()[1:], [["service", "logs", "--tail=1000", service] for service in ("api-service", "web-service")])
+
+    def test_log_failure_is_reported(self) -> None:
+        result = self.run_make("log", log_exit=1)
+        self.assertNotEqual(result.returncode, 0)
+
+    def test_local_log_alias_uses_compose(self) -> None:
+        result = self.run_make("log", {"ENV": "local"})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.calls()[0][-1], "logs")
+        self.assertEqual(self.calls()[0][0], "compose")
+
+    def test_tasks_shows_full_errors_for_the_selected_stack(self) -> None:
+        result = self.run_make("tasks", {"ENV": "PRE"})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.calls(), [["stack", "ps", "--no-trunc", "check-pre"]])
 
 
 if __name__ == "__main__":

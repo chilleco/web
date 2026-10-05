@@ -17,6 +17,8 @@ COMPOSE_CMD := docker compose $(COMPOSE_ENV) -f $(COMPOSE_BASE) -f $(COMPOSE_APP
 COMPOSE_SWARM := infra/compose/prod.yml
 DEPLOY_FILE := deploy.yml
 STACK_NAME ?= ${PROJECT_NAME}-${ENV_SAFE}
+READY_TIMEOUT ?= 180
+READY_INTERVAL ?= 5
 
 # envsubst must receive the CI values loaded by Make, not only shell exports.
 export PROJECT_NAME REGISTRY IMAGE_TAG RELEASE DATA_PATH PROTOCOL EXTERNAL_HOST
@@ -97,7 +99,7 @@ check: check-deploy
 			echo "A Swarm manager is required. Initialize this VPS with docker swarm init, or run deployment on an existing manager." >&2; \
 			exit 1; \
 		fi; \
-		echo "Swarm manifest valid; manager ready."; \
+		echo "Swarm manifest valid; manager ready. Use make ready to check running services."; \
 	else \
 		$(COMPOSE_CMD) config --quiet || exit 1; \
 		echo "Compose configuration valid."; \
@@ -137,6 +139,34 @@ status: check-env
 		$(COMPOSE_CMD) ps; \
 	fi
 
+# Swarm deploy returns before startup finishes; CI must wait for running replicas.
+.PHONY: ready
+ready: check-env
+	@if [ "$(ENV_SAFE)" != "pre" ] && [ "$(ENV_SAFE)" != "prod" ]; then \
+		echo "make ready requires a pre/prod Swarm stack." >&2; exit 1; \
+	fi; \
+	elapsed=0; \
+	while :; do \
+		services=$$(docker stack services "$(STACK_NAME)" --format '{{.Name}} {{.Replicas}}') || exit 1; \
+		if printf '%s\n' "$$services" | awk 'NF { count++; split($$2, replicas, "/"); if (replicas[1] != replicas[2] || replicas[2] < 1) failed=1 } END { exit (count == 0 || failed) }'; then \
+			echo "All Swarm services have their requested running replicas."; exit 0; \
+		fi; \
+		if [ "$$elapsed" -ge "$(READY_TIMEOUT)" ]; then \
+			echo "Swarm services failed to become ready. Inspect make log for startup errors." >&2; \
+			printf '%s\n' "$$services"; \
+			docker stack ps --no-trunc "$(STACK_NAME)"; exit 1; \
+		fi; \
+		sleep "$(READY_INTERVAL)"; elapsed=$$((elapsed + $(READY_INTERVAL))); \
+	done
+
+.PHONY: tasks
+tasks: check-env
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		docker stack ps --no-trunc "$(STACK_NAME)"; \
+	else \
+		$(COMPOSE_CMD) ps --all; \
+	fi
+
 .PHONY: ps
 ps:
 	docker ps --filter name="^${PROJECT_NAME}" --format "table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
@@ -149,13 +179,18 @@ stats:
 # Logs
 # ============================================================================
 
-.PHONY: logs
+.PHONY: log logs
+log: logs
+
 logs: check-env
 	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
-		services=$$(docker service ls -q --filter label=com.docker.stack.namespace=$(STACK_NAME)); \
+		services=$$(docker service ls -q --filter label=com.docker.stack.namespace=$(STACK_NAME)) || exit 1; \
+		pids=""; \
 		for svc in $$services; do \
 			docker service logs --tail=1000 $$svc & \
+			pids="$$pids $$!"; \
 		done; \
+		failed=0; for pid in $$pids; do wait "$$pid" || failed=1; done; exit "$$failed"; \
 	else \
 		$(COMPOSE_CMD) logs; \
 	fi
