@@ -18,6 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Deployment checks
+        working-directory: .
+        run: make test-infra ENV_FILE=/dev/null
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -116,7 +120,7 @@ jobs:
               -t $IMAGE:${{ env.IMAGE_TAG }} \
               -t $IMAGE:latest \
               $CONTEXT \
-              --push
+              --push || exit 1
           done
           #  --platform linux/amd64,linux/arm64
 
@@ -273,6 +277,7 @@ jobs:
 
             # A valid manifest is not enough: fail the deployment on startup crashes.
             sudo make ready ENV="$ENV" ENV_FILE="$ENV_FILE_PATH" || exit 1
+            sudo make check-db ENV="$ENV" ENV_FILE="$ENV_FILE_PATH" || exit 1
 
             echo "Clean"
             yes | sudo docker system prune -a

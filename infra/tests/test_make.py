@@ -43,10 +43,25 @@ elif args[:2] == ['service', 'ls']:
 elif args[:2] == ['service', 'logs']:
     print(args[-1] + ' startup log')
     raise SystemExit(int(os.environ.get('CHILL_LOG_EXIT', '0')))
+elif args[:1] == ['ps']:
+    print(os.environ.get('CHILL_API_CONTAINERS', 'api-container'))
+elif args[:1] == ['exec']:
+    raise SystemExit(int(os.environ.get('CHILL_DB_EXIT', '0')))
 elif args[:1] == ['compose']:
     raise SystemExit(int(os.environ.get('CHILL_COMPOSE_CONFIG_EXIT', '0')))
 else:
     raise SystemExit('Unexpected Docker command')
+"""
+GIT_STUB = """#!/usr/bin/env python3
+import os
+import sys
+
+if sys.argv[1:] != ['rev-parse', 'HEAD']:
+    raise SystemExit('Unexpected Git command')
+commit = os.environ.get('CHILL_CHECKOUT_COMMIT')
+if not commit:
+    raise SystemExit(1)
+print(commit)
 """
 
 
@@ -66,6 +81,9 @@ class MakeDeployTests(unittest.TestCase):
         docker = self.root / "bin/docker"
         docker.write_text(DOCKER_STUB)
         docker.chmod(0o755)
+        git = self.root / "bin/git"
+        git.write_text(GIT_STUB)
+        git.chmod(0o755)
         self.calls_file = self.root / "docker.calls"
         self.manifest = self.root / "deploy.yml"
 
@@ -79,6 +97,9 @@ class MakeDeployTests(unittest.TestCase):
         compose_exit: int = 0,
         services: str = "check-prod_api 1/1 (max 3 per node)\ncheck-prod_web 1/1",
         log_exit: int = 0,
+        commit: str = "",
+        containers: str = "api-container",
+        db_exit: int = 0,
     ) -> subprocess.CompletedProcess[str]:
         settings = {"ENV_FILE": "/dev/null", "ENV": "prod", "PROJECT_NAME": "check"}
         settings.update(values or {})
@@ -90,6 +111,9 @@ class MakeDeployTests(unittest.TestCase):
             "CHILL_COMPOSE_CONFIG_EXIT": str(compose_exit),
             "CHILL_SWARM_SERVICES": services,
             "CHILL_LOG_EXIT": str(log_exit),
+            "CHILL_CHECKOUT_COMMIT": commit,
+            "CHILL_API_CONTAINERS": containers,
+            "CHILL_DB_EXIT": str(db_exit),
         }
         return subprocess.run(
             ["make", "--no-print-directory", target, *(f"{key}={value}" for key, value in settings.items())],
@@ -117,6 +141,33 @@ class MakeDeployTests(unittest.TestCase):
         self.assertIn("Run the CI/CD deployment", result.stderr)
         self.assertFalse(self.manifest.exists())
         self.assertEqual(self.calls(), [])
+
+    def test_new_checkout_cannot_deploy_old_ci_images(self) -> None:
+        self.existing_manifest()
+        result = self.run_make("up", {**CI_SETTINGS, "IMAGE_TAG": "prod-e2ba7e8"}, commit="3591973" + "0" * 33)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("does not match checkout", result.stderr)
+        self.assertIn("git pull does not rebuild images", result.stderr)
+        self.assertEqual(self.calls(), [])
+
+    def test_overriding_image_tag_does_not_hide_old_ci_commit(self) -> None:
+        result = self.run_make("up", {**CI_SETTINGS, "IMAGE_TAG": "prod-3591973", "COMMIT_SHA": "e2ba7e8" + "0" * 33}, commit="3591973" + "0" * 33)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls(), [])
+
+    @unittest.skipUnless(shutil.which("envsubst"), "envsubst is required for manifest generation")
+    def test_matching_ci_commit_can_deploy(self) -> None:
+        commit = "3591973" + "0" * 33
+        result = self.run_make("up", {**CI_SETTINGS, "IMAGE_TAG": "prod-3591973", "COMMIT_SHA": commit}, commit=commit)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.calls()[-1][:2], ["stack", "deploy"])
+
+    def test_saved_manifest_must_match_ci_image_tag(self) -> None:
+        self.manifest.write_text('version: "3.8"\nservices:\n  web:\n    image: "registry.example/check/check/web:prod-e2ba7e8"\n')
+        result = self.run_make("up", {**CI_SETTINGS, "IMAGE_TAG": "prod-3591973"}, commit="3591973" + "0" * 33)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("different CI image tag", result.stderr)
+        self.assertEqual(self.calls(), [["stack", "config", "-c", "deploy.yml"]])
 
     @unittest.skipUnless(shutil.which("envsubst"), "envsubst is required for manifest generation")
     def test_missing_manifest_is_generated_before_swarm_deployment(self) -> None:
@@ -231,6 +282,29 @@ class MakeDeployTests(unittest.TestCase):
         result = self.run_make("tasks", {"ENV": "PRE"})
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(self.calls(), [["stack", "ps", "--no-trunc", "check-pre"]])
+
+    def test_database_check_uses_the_running_api_container(self) -> None:
+        result = self.run_make("check-db", containers="api-container\nother-container")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.calls(), [
+            ["ps", "--filter", "status=running", "--filter", "label=com.docker.swarm.service.name=check-prod_api", "--format", "{{.ID}}"],
+            ["exec", "api-container", "python", "-m", "services.check_db"],
+        ])
+
+    def test_database_check_propagates_connectivity_failure(self) -> None:
+        result = self.run_make("check-db", db_exit=1)
+        self.assertNotEqual(result.returncode, 0)
+
+    def test_database_check_reports_missing_container(self) -> None:
+        result = self.run_make("check-db", containers="")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("No API container is running", result.stderr)
+        self.assertEqual(len(self.calls()), 1)
+
+    def test_local_database_check_uses_compose(self) -> None:
+        result = self.run_make("check-db", {"ENV": "local"})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.calls()[0][-6:], ["exec", "-T", "api", "python", "-m", "services.check_db"])
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ READY_TIMEOUT ?= 180
 READY_INTERVAL ?= 5
 
 # envsubst must receive the CI values loaded by Make, not only shell exports.
-export PROJECT_NAME REGISTRY IMAGE_TAG RELEASE DATA_PATH PROTOCOL EXTERNAL_HOST
+export PROJECT_NAME REGISTRY IMAGE_TAG RELEASE COMMIT_SHA DATA_PATH PROTOCOL EXTERNAL_HOST
 export API_PORT WEB_PORT TG_PORT NAME LOCALE TG_BOT
 
 # ============================================================================
@@ -61,9 +61,28 @@ check-env:
 		echo "ENV='$(ENV)' normalized to lowercase: '$(ENV_SAFE)'."; \
 	fi
 
-# Reuse the CI artifact when present; recover it atomically from CI settings otherwise.
+# A newer checkout cannot run its fixes from an older CI image.
+.PHONY: check-release
+check-release: check-env
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		checkout=$$(git rev-parse HEAD 2>/dev/null || true); \
+		if [ -n "$$checkout" ]; then \
+			valid=0; \
+			case "$$IMAGE_TAG" in \
+				$(ENV_SAFE)-?*) release=$${IMAGE_TAG#$(ENV_SAFE)-}; \
+					case "$$checkout" in "$$release"*) valid=1 ;; esac ;; \
+			esac; \
+			if [ "$$valid" != "1" ] || { [ -n "$$COMMIT_SHA" ] && [ "$$COMMIT_SHA" != "$$checkout" ]; }; then \
+				echo "CI image tag '$$IMAGE_TAG' does not match checkout $$checkout." >&2; \
+				echo "Run the production CI build and deployment for this commit. git pull does not rebuild images or replace the saved deploy.yml." >&2; \
+				exit 1; \
+			fi; \
+		fi; \
+	fi
+
+# Reuse a matching CI artifact; recover a missing one atomically from CI settings.
 .PHONY: check-deploy
-check-deploy: check-env
+check-deploy: check-release
 	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
 		if [ ! -f "$(DEPLOY_FILE)" ]; then \
 			missing=0; \
@@ -86,6 +105,16 @@ check-deploy: check-env
 			echo "Generated $(DEPLOY_FILE) from CI settings."; \
 		else \
 			docker stack config -c "$(DEPLOY_FILE)" >/dev/null || exit 1; \
+		fi; \
+		if [ -n "$$IMAGE_TAG" ] && [ -n "$$REGISTRY" ]; then \
+			images=$$(awk '$$1 == "image:" { gsub(/\042|\047/, "", $$2); print $$2 }' "$(DEPLOY_FILE)"); \
+			for image in $$images; do \
+				case "$$image" in "$$REGISTRY/$$PROJECT_NAME/"*) \
+					case "$$image" in *":$$IMAGE_TAG"|*":$$IMAGE_TAG@sha256:"*) ;; \
+						*) echo "deploy.yml contains a different CI image tag. Run the production pipeline to regenerate it." >&2; exit 1 ;; \
+					esac ;; \
+				esac; \
+			done; \
 		fi; \
 	fi
 
@@ -165,6 +194,20 @@ tasks: check-env
 		docker stack ps --no-trunc "$(STACK_NAME)"; \
 	else \
 		$(COMPOSE_CMD) ps --all; \
+	fi
+
+# Probe external databases with the deployed container's configuration/network.
+.PHONY: check-db
+check-db: check-env
+	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \
+		containers=$$(docker ps --filter status=running --filter label=com.docker.swarm.service.name=$(STACK_NAME)_api --format '{{.ID}}') || exit 1; \
+		if [ -z "$$containers" ]; then \
+			echo "No API container is running on this node. Run make tasks, or run this check on the node hosting the API." >&2; exit 1; \
+		fi; \
+		set -- $$containers; \
+		docker exec "$$1" python -m services.check_db; \
+	else \
+		$(COMPOSE_CMD) exec -T api python -m services.check_db; \
 	fi
 
 .PHONY: ps
