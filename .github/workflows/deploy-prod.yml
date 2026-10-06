@@ -1,9 +1,15 @@
-name: CI/CD main
+name: CI/CD prod
+run-name: Deploy prod from ${{ github.ref_name }}
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "simplify-frontend" ]
   workflow_dispatch:
+
+# Both release branches update the same VPS stack; finish one release at a time.
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
 
 env:
   ENV: prod
@@ -125,7 +131,7 @@ jobs:
           #  --platform linux/amd64,linux/arm64
 
   deploy-main:
-    name: Deploy Main
+    name: Deploy Prod
     needs: build-and-push
     runs-on: ubuntu-latest
     environment: prod

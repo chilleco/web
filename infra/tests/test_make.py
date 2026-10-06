@@ -261,8 +261,15 @@ class MakeDeployTests(unittest.TestCase):
         self.assertIn("requested running replicas", result.stdout)
         self.assertEqual(self.calls(), [["stack", "services", "check-prod", "--format", "{{.Name}} {{.Replicas}}"]])
 
-    def test_ready_rejects_failed_missing_or_zero_replicas(self) -> None:
-        for services in ("check-prod_api 0/1 (max 3 per node)", "", "check-prod_api 0/0", "check-prod_api 1/2"):
+    def test_ready_reports_an_absent_stack_without_waiting(self) -> None:
+        result = self.run_make("ready", services="")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("has no services", result.stderr)
+        self.assertIn("Run production CI", result.stderr)
+        self.assertEqual(self.calls(), [["stack", "services", "check-prod", "--format", "{{.Name}} {{.Replicas}}"]])
+
+    def test_ready_rejects_failed_or_zero_replicas(self) -> None:
+        for services in ("check-prod_api 0/1 (max 3 per node)", "check-prod_api 0/0", "check-prod_api 1/2"):
             with self.subTest(services=services):
                 result = self.run_make("ready", {"READY_TIMEOUT": "0"}, services=services)
                 self.assertNotEqual(result.returncode, 0)

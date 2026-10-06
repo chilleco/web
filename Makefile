@@ -178,6 +178,9 @@ ready: check-env
 	elapsed=0; \
 	while :; do \
 		services=$$(docker stack services "$(STACK_NAME)" --format '{{.Name}} {{.Replicas}}') || exit 1; \
+		if [ -z "$$services" ]; then \
+			echo "Swarm stack '$(STACK_NAME)' has no services. Run production CI to deploy it before make ready." >&2; exit 1; \
+		fi; \
 		if printf '%s\n' "$$services" | awk 'NF { count++; split($$2, replicas, "/"); if (replicas[1] != replicas[2] || replicas[2] < 1) failed=1 } END { exit (count == 0 || failed) }'; then \
 			echo "All Swarm services have their requested running replicas."; exit 0; \
 		fi; \
