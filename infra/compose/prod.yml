@@ -1,6 +1,43 @@
 version: "3.8"
 
 services:
+  mq:
+    image: redis:8.2-alpine
+    env_file: .env
+    volumes:
+      - ${DATA_PATH}/redis:/data
+    # Re-enter the official entrypoint to set data ownership before dropping root.
+    # Expand the password inside the container, never in the generated manifest.
+    command:
+      - sh
+      - -ec
+      - 'exec docker-entrypoint.sh redis-server --appendonly yes --requirepass "$${REDIS_PASS:?REDIS_PASS is required}"'
+    networks:
+      default:
+        aliases:
+          - redis
+    healthcheck:
+      test: ["CMD-SHELL", 'REDISCLI_AUTH="$$REDIS_PASS" redis-cli ping | grep -qx PONG']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    deploy:
+      mode: replicated
+      replicas: 1
+      # The single VPS manager holds the persistent bind mount; use one writer.
+      placement:
+        constraints:
+          - node.role == manager
+      update_config:
+        parallelism: 1
+        order: stop-first
+      rollback_config:
+        parallelism: 1
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+
   api:
     image: ${REGISTRY}/${PROJECT_NAME}/api:${IMAGE_TAG}
     env_file: .env

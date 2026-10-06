@@ -20,6 +20,7 @@ STACK_NAME ?= ${PROJECT_NAME}-${ENV_SAFE}
 READY_TIMEOUT ?= 180
 READY_INTERVAL ?= 5
 
+# Substitute public CI settings only; keep escaped container variables intact.
 # envsubst must receive the CI values loaded by Make, not only shell exports.
 export PROJECT_NAME REGISTRY IMAGE_TAG RELEASE COMMIT_SHA DATA_PATH PROTOCOL EXTERNAL_HOST
 export API_PORT WEB_PORT TG_PORT NAME LOCALE TG_BOT
@@ -99,7 +100,7 @@ check-deploy: check-release
 			command -v envsubst >/dev/null 2>&1 || { echo "envsubst is required (install gettext-base on Ubuntu)." >&2; exit 1; }; \
 			manifest=$$(mktemp "$(DEPLOY_FILE).XXXXXX") || exit 1; \
 			trap 'rm -f "$$manifest"' 0 1 2 15; \
-			ENV=$(ENV_SAFE) envsubst < "$(COMPOSE_SWARM)" > "$$manifest" || exit 1; \
+			ENV=$(ENV_SAFE) envsubst '$${REGISTRY} $${PROJECT_NAME} $${IMAGE_TAG} $${RELEASE} $${DATA_PATH} $${PROTOCOL} $${EXTERNAL_HOST} $${API_PORT} $${WEB_PORT} $${TG_PORT} $${ENV} $${NAME} $${LOCALE} $${TG_BOT}' < "$(COMPOSE_SWARM)" > "$$manifest" || exit 1; \
 			docker stack config -c "$$manifest" >/dev/null || exit 1; \
 			mv "$$manifest" "$(DEPLOY_FILE)" || exit 1; \
 			echo "Generated $(DEPLOY_FILE) from CI settings."; \
@@ -196,7 +197,7 @@ tasks: check-env
 		$(COMPOSE_CMD) ps --all; \
 	fi
 
-# Probe external databases with the deployed container's configuration/network.
+# Probe databases with the deployed container's configuration/network.
 .PHONY: check-db
 check-db: check-env
 	@if [ "$(ENV_SAFE)" = "pre" ] || [ "$(ENV_SAFE)" = "prod" ]; then \

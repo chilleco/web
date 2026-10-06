@@ -189,6 +189,16 @@ class MakeDeployTests(unittest.TestCase):
         self.assertEqual(len(self.calls()), 1)
 
     @unittest.skipUnless(shutil.which("envsubst"), "envsubst is required for manifest generation")
+    def test_redis_password_is_expanded_only_inside_the_container(self) -> None:
+        password = "fixture-only-redis-password"
+        result = self.run_make("check-deploy", {**CI_SETTINGS, "REDIS_PASS": password})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        manifest = self.manifest.read_text()
+        self.assertNotIn(password, manifest)
+        self.assertIn('"$${REDIS_PASS:?REDIS_PASS is required}"', manifest)
+        self.assertIn('REDISCLI_AUTH="$$REDIS_PASS"', manifest)
+
+    @unittest.skipUnless(shutil.which("envsubst"), "envsubst is required for manifest generation")
     def test_invalid_generated_manifest_is_removed_without_deployment(self) -> None:
         result = self.run_make("up", CI_SETTINGS, stack_exit=1)
         self.assertNotEqual(result.returncode, 0)

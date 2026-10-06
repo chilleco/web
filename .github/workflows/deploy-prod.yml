@@ -189,6 +189,8 @@ jobs:
             else
                 cp -r "$FOLDER/data" "$DATA_PATH"
             fi
+            # Swarm bind mounts require the source directory to exist on the VPS.
+            mkdir -p "$DATA_PATH/redis" || exit 1
 
             echo "Generating .env"
             ENV_LIST="$FOLDER/infra/compose/.env.list"
