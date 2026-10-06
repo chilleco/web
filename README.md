@@ -74,6 +74,8 @@ Keep the GitHub Actions variable `REDIS_HOST=redis` and store `REDIS_PASS` in **
 
 `make check-release` blocks production deployment when the checkout and CI release differ; `make up` also rejects a saved manifest with an older CI image tag. Commit and push changes to `simplify-frontend` to deploy that branch directly: CI builds and publishes its images, replaces the VPS manifest, and deploys the stack. After CI succeeds, run `make ready`, `make check-db`, and `make status` on the VPS. If the stack has been removed, `make ready` reports that it must first be deployed through CI. Manual branch deployment additionally requires `workflow_dispatch` in the repository's default branch (`dev`); changing only the workflow on a feature branch does not enable the Run workflow button.
 
+GitHub variables `FOLDER=~/web` and `DATA_PATH=~/data/web` are supported: CI resolves the VPS paths before importing runtime settings and passes an absolute `deploy.yml` filename to Docker.
+
 ## Telegram bot (webhooks)
 - Service lives in `tg/` and runs a FastAPI webhook handler behind `/tg/`.
 - Required env: `TG_TOKEN` (bot token) and `TG` (public webhook URL like `https://host/tg/`).
