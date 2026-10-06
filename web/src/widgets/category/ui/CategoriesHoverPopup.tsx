@@ -67,8 +67,7 @@ export function CategoriesHoverPopup({
       setIsLoading(true);
       getCategories({ parent: 0, locale, status: 1, include_tree: true })
         .then(setCategories)
-        .catch((error) => {
-          console.warn('Failed to load categories for hover popup:', error);
+        .catch(() => {
           setCategories([]);
         })
         .finally(() => setIsLoading(false));

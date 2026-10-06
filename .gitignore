@@ -12,6 +12,7 @@
 
 # Keys & sets
 *.env
+/deploy.yml
 
 # Environments
 env/

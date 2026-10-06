@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 import {
     Dialog,
     DialogContent,
@@ -139,7 +140,7 @@ export default function Popup({
 export function AlertPopup({
     title,
     message,
-    confirmText = 'OK',
+    confirmText,
     onConfirm,
     ...props
 }: Omit<PopupProps, 'children' | 'actions'> & {
@@ -147,13 +148,15 @@ export function AlertPopup({
     confirmText?: string;
     onConfirm: () => void;
 }) {
+    const tSystem = useTranslations('system');
+
     return (
         <Popup
             {...props}
             title={title}
             actions={
                 <Button onClick={onConfirm} className="w-full sm:w-auto">
-                    {confirmText}
+                    {confirmText || tSystem('ok')}
                 </Button>
             }
         >
@@ -165,8 +168,8 @@ export function AlertPopup({
 export function ConfirmPopup({
     title,
     message,
-    confirmText = 'Confirm',
-    cancelText = 'Cancel',
+    confirmText,
+    cancelText,
     variant = 'default',
     onConfirm,
     onCancel,
@@ -179,6 +182,8 @@ export function ConfirmPopup({
     onConfirm: () => void;
     onCancel: () => void;
 }) {
+    const tSystem = useTranslations('system');
+
     return (
         <Popup
             {...props}
@@ -186,14 +191,14 @@ export function ConfirmPopup({
             actions={
                 <div className="flex flex-col-reverse sm:flex-row gap-2 w-full sm:w-auto">
                     <Button variant="outline" onClick={onCancel} className="flex-1 sm:flex-none">
-                        {cancelText}
+                        {cancelText || tSystem('cancel')}
                     </Button>
                     <Button
                         variant={variant === 'destructive' ? 'destructive' : 'default'}
                         onClick={onConfirm}
                         className="flex-1 sm:flex-none"
                     >
-                        {confirmText}
+                        {confirmText || tSystem('confirm')}
                     </Button>
                 </div>
             }

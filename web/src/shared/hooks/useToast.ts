@@ -68,13 +68,13 @@ export function useToast(): UseToastReturn {
         message: string,
         options: Partial<ToastOptions> = {}
     ): string => {
-        const toastId = `toast_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const toastId = `toast_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 
         // Separate action function from options to avoid storing in Redux
         const { action, ...reduxOptions } = options;
 
         // Add to Redux store (without the non-serializable action function)
-        dispatch(addToast({ message, ...reduxOptions }));
+        dispatch(addToast({ id: toastId, message, ...reduxOptions }));
 
         // Show with Sonner (with the action function)
         const toastConfig = {

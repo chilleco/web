@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
 import { ShoppingIcon, TagIcon, TrendingIcon, StarIcon, ReviewsIcon } from '@/shared/ui/icons';
-import { Product, ProductFeature } from '@/entities/product';
+import { Product } from '@/entities/product';
 import { useAppSelector } from '@/shared/stores/store';
 import { selectSelectedSpace } from '@/features/spaces/stores/spaceSelectionSlice';
 
@@ -27,14 +26,10 @@ export function ProductCard({
     imageLoading = 'lazy'
 }: ProductCardProps) {
     const t = useTranslations('catalog.product');
-    const tSystem = useTranslations('system');
     const selectedSpace = useAppSelector(selectSelectedSpace);
     const rawPriceFrom = typeof product.priceFrom === 'number' ? product.priceFrom : product.price || 0;
     const rawFinalPrice = typeof product.finalPriceFrom === 'number' ? product.finalPriceFrom : rawPriceFrom;
-    const marginFactor = useMemo(() => {
-        const margin = selectedSpace?.margin ?? 0;
-        return 1 + Math.max(0, margin) / 100;
-    }, [selectedSpace?.margin]);
+    const marginFactor = 1 + Math.max(0, selectedSpace?.margin ?? 0) / 100;
     const priceFrom = Math.round(rawPriceFrom * marginFactor);
     const discountFactor = rawPriceFrom > 0 ? rawFinalPrice / rawPriceFrom : 1;
     const finalPrice = Math.round(priceFrom * discountFactor);
@@ -47,28 +42,6 @@ export function ProductCard({
     const productImages = (product.images && product.images.length > 0)
         ? product.images
         : (primaryOption?.images || []);
-
-    // Like functionality - in production this would come from props or global state
-    const [isLiked, setIsLiked] = useState(isInFavorites);
-
-    useEffect(() => {
-        setIsLiked(isInFavorites);
-    }, [isInFavorites]);
-
-    const handleLikeClick = (id?: string | number) => {
-        // In production, this would call an API to like/unlike the product
-        console.log('Like clicked for product:', id);
-        setIsLiked(prev => !prev);
-
-        // Call the prop callback if provided
-        if (onToggleFavorite) {
-            onToggleFavorite(product);
-        }
-
-        // TODO: Integrate with API
-        // Example:
-        // await toggleProductLike(product.id);
-    };
 
     // Prepare filters (category, rating and reviews in filters row)
     const filters = [];
@@ -94,19 +67,6 @@ export function ProductCard({
             value: product.ratingCount
         });
     }
-
-    const formatFeatureValue = (feature: ProductFeature) => {
-        if (feature.valueType === 'boolean') {
-            return feature.value ? tSystem('yes') : tSystem('no');
-        }
-        return String(feature.value);
-    };
-
-    const combinedFeatures = [
-        ...(product.features || []),
-        ...(primaryOption?.attributes || []),
-        ...(primaryOption?.features || []),
-    ];
 
     // Prepare tags (below description)
     const tags = [];
@@ -167,9 +127,9 @@ export function ProductCard({
             currency={product.currency}
             actions={actions}
             variant="product"
-            showLikeButton={true}
-            isLiked={isLiked}
-            onLikeClick={handleLikeClick}
+            showLikeButton={Boolean(onToggleFavorite)}
+            isLiked={isInFavorites}
+            onLikeClick={onToggleFavorite ? () => onToggleFavorite(product) : undefined}
             id={product.id}
             href={productLink}
             imageLoading={imageLoading}

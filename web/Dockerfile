@@ -24,8 +24,16 @@ COPY . .
 # Set build environment
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the application and strip dev dependencies for runtime
-RUN pnpm run build && pnpm prune --prod
+# Next inlines public settings during build; runtime env_file cannot replace them.
+ARG NEXT_PUBLIC_ENV=test
+ARG NEXT_PUBLIC_API
+ARG NEXT_PUBLIC_WEB
+ARG NEXT_PUBLIC_NAME
+ARG NEXT_PUBLIC_LOCALE
+ARG NEXT_PUBLIC_TG_BOT
+
+# Build the traced production server and its runtime dependencies.
+RUN pnpm run build
 
 # ========================================
 # Development Stage - Development runtime with hot reload
@@ -63,6 +71,7 @@ FROM node:24-alpine AS runner
 
 # Install runtime dependencies
 RUN apk add --no-cache \
+    libc6-compat \
     curl \
     && rm -rf /var/cache/apk/*
 
@@ -75,22 +84,13 @@ WORKDIR /app
 
 # Set environment variables
 ENV NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3000
+    PORT=3000 \
+    HOSTNAME=0.0.0.0
 
-# Enable pinned pnpm via Corepack for runtime commands
-RUN corepack enable && corepack prepare pnpm@10.30.1 --activate
-
-# Copy production dependencies only
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-
-# Copy built application from builder
-COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./
-COPY --from=builder --chown=nextjs:nodejs /app/postcss.config.mjs ./
-COPY --from=builder --chown=nextjs:nodejs /app/components.json ./
+# Standalone includes the compiled config; source files and pnpm are not needed.
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
-COPY --from=builder --chown=nextjs:nodejs /app/pnpm-lock.yaml ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Switch to non-root user
 USER nextjs
@@ -103,4 +103,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 EXPOSE 3000
 
 # Start the application
-CMD ["pnpm", "start"]
+CMD ["node", "server.js"]

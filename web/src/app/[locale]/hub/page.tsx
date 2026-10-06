@@ -1,160 +1,145 @@
-import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
-import { PageHeader } from '@/shared/ui/page-header';
+import { getTranslations } from 'next-intl/server';
 import { Box } from '@/shared/ui/box';
-import { HubIcon, MessageIcon, QuestionIcon, BookIcon, PaletteIcon, ConstructionIcon } from '@/shared/ui/icons';
-import { HubToastDemo } from './_components/HubToastDemo';
+import { PageHeader } from '@/shared/ui/page-header';
+import { ConstructionIcon, HubIcon, MessageIcon, UsersIcon, VideoIcon, WhiteboardIcon } from '@/shared/ui/icons';
 
 export async function generateMetadata(): Promise<Metadata> {
-    const t = await getTranslations('navigation');
+    const [tNavigation, tHub] = await Promise.all([
+        getTranslations('navigation'),
+        getTranslations('hub'),
+    ]);
 
     return {
-        title: `${t('hub')} - Community Forum`,
-        description: 'Community forum for user-generated content and discussions',
+        title: tNavigation('hub'),
+        description: tHub('description'),
     };
 }
 
 export default async function HubPage() {
-    const t = await getTranslations('navigation');
+    const [tNavigation, tHub] = await Promise.all([
+        getTranslations('navigation'),
+        getTranslations('hub'),
+    ]);
+
+    const modes = [
+        {
+            key: 'rooms',
+            icon: UsersIcon,
+            title: tHub('modes.rooms.title'),
+            description: tHub('modes.rooms.description'),
+            className: 'bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400',
+        },
+        {
+            key: 'chat',
+            icon: MessageIcon,
+            title: tHub('modes.chat.title'),
+            description: tHub('modes.chat.description'),
+            className: 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+        },
+        {
+            key: 'calls',
+            icon: VideoIcon,
+            title: tHub('modes.calls.title'),
+            description: tHub('modes.calls.description'),
+            className: 'bg-violet-500/15 text-violet-600 dark:bg-violet-500/20 dark:text-violet-400',
+        },
+        {
+            key: 'boards',
+            icon: WhiteboardIcon,
+            title: tHub('modes.boards.title'),
+            description: tHub('modes.boards.description'),
+            className: 'bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
+        }
+    ];
+
+    const principles = [
+        tHub('principles.realtime'),
+        tHub('principles.lowNoise'),
+        tHub('principles.realStates'),
+    ];
 
     return (
         <div className="min-h-screen bg-background">
             <div className="container mx-auto px-4 py-8">
-                <div className="max-w-6xl mx-auto">
+                <div className="mx-auto max-w-6xl">
                     <PageHeader
                         icon={<HubIcon size={24} />}
                         iconClassName="bg-orange-500/15 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400"
-                        title={t('hub')}
-                        description="Community forum for user-generated content, discussions, and knowledge sharing."
+                        title={tNavigation('hub')}
+                        description={tHub('description')}
                     />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                        {/* Forum Categories */}
-                        <div className="lg:col-span-3">
-                            <h2 className="text-2xl font-semibold mb-6">Forum Categories</h2>
-
-                            <div className="space-y-4">
-                                {/* General Discussion */}
-                                <Box size="lg">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-4">
-                                            <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                                                <MessageIcon size={24} />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-semibold">General Discussion</h3>
-                                                <p className="text-muted-foreground">Open conversations about any topic</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <div className="text-sm font-medium">1,234 posts</div>
-                                            <div className="text-xs text-muted-foreground">Last: 2h ago</div>
-                                        </div>
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+                        <div className="space-y-6">
+                            <Box size="lg" className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-[0.75rem] bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+                                        <UsersIcon size={18} />
                                     </div>
-                                </Box>
+                                    <h2 className="text-xl font-semibold">{tHub('intro.title')}</h2>
+                                </div>
+                                <p className="text-sm leading-6 text-muted-foreground">
+                                    {tHub('intro.body')}
+                                </p>
+                            </Box>
 
-                                {/* Q&A */}
-                                <Box size="lg">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-4">
-                                            <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                                                <QuestionIcon size={24} />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-semibold">Questions & Answers</h3>
-                                                <p className="text-muted-foreground">Get help from the community</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <div className="text-sm font-medium">856 posts</div>
-                                            <div className="text-xs text-muted-foreground">Last: 1h ago</div>
-                                        </div>
+                            <Box size="lg" className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-[0.75rem] bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+                                        <MessageIcon size={18} />
                                     </div>
-                                </Box>
-
-                                {/* Tutorials */}
-                                <Box size="lg">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-4">
-                                            <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-                                                <BookIcon size={24} />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-semibold">Tutorials & Guides</h3>
-                                                <p className="text-muted-foreground">Share knowledge and learn new skills</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <div className="text-sm font-medium">432 posts</div>
-                                            <div className="text-xs text-muted-foreground">Last: 3h ago</div>
-                                        </div>
-                                    </div>
-                                </Box>
-
-                                {/* Showcase */}
-                                <Box size="lg">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-4">
-                                            <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
-                                                <PaletteIcon size={24} />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-semibold">Showcase</h3>
-                                                <p className="text-muted-foreground">Show off your projects and creations</p>
+                                    <h2 className="text-xl font-semibold">{tHub('modes.title')}</h2>
+                                </div>
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                    {modes.map(({ key, icon: Icon, title, description, className }) => (
+                                        <div
+                                            key={key}
+                                            className="rounded-[1rem] bg-muted/40 px-4 py-4"
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                <div className={`mt-0.5 flex h-9 w-9 items-center justify-center rounded-[0.75rem] ${className}`}>
+                                                    <Icon size={16} />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <div className="font-medium">{title}</div>
+                                                    <p className="text-sm text-muted-foreground">{description}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <div className="text-sm font-medium">298 posts</div>
-                                            <div className="text-xs text-muted-foreground">Last: 5h ago</div>
-                                        </div>
-                                    </div>
-                                </Box>
-                            </div>
+                                    ))}
+                                </div>
+                            </Box>
                         </div>
 
-                        {/* Sidebar */}
-                        <div className="lg:col-span-1">
-                            <div className="space-y-6">
-                                <HubToastDemo />
-                                {/* Community Stats */}
-                                <Box size="lg">
-                                    <h3 className="font-semibold mb-4">Community Stats</h3>
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Members</span>
-                                            <span className="font-medium">15,234</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Topics</span>
-                                            <span className="font-medium">2,820</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Posts</span>
-                                            <span className="font-medium">28,567</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Online</span>
-                                            <span className="font-medium text-green-600">234</span>
-                                        </div>
+                        <div className="space-y-6">
+                            <Box size="lg" className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-[0.75rem] bg-violet-500/15 text-violet-600 dark:bg-violet-500/20 dark:text-violet-400">
+                                        <ConstructionIcon size={18} />
                                     </div>
-                                </Box>
+                                    <h2 className="text-xl font-semibold">{tHub('principles.title')}</h2>
+                                </div>
+                                <ul className="space-y-3 text-sm text-muted-foreground">
+                                    {principles.map((item) => (
+                                        <li key={item} className="rounded-[0.75rem] bg-muted/40 px-4 py-3">
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </Box>
 
-                                {/* Recent Activity */}
-                                <Box size="lg">
-                                    <h3 className="font-semibold mb-4">Recent Activity</h3>
-                                    <div className="space-y-3 text-sm">
-                                        <div className="text-muted-foreground">
-                                            <span className="font-medium">User123</span> posted in General Discussion
-                                        </div>
-                                        <div className="text-muted-foreground">
-                                            <span className="font-medium">DevPro</span> answered a question
-                                        </div>
-                                        <div className="text-muted-foreground">
-                                            <span className="font-medium">Designer</span> shared a new tutorial
-                                        </div>
+                            <Box size="lg" className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-[0.75rem] bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
+                                        <VideoIcon size={18} />
                                     </div>
-                                </Box>
-                            </div>
+                                    <h2 className="text-xl font-semibold">{tHub('activation.title')}</h2>
+                                </div>
+                                <p className="text-sm leading-6 text-muted-foreground">
+                                    {tHub('activation.body')}
+                                </p>
+                            </Box>
                         </div>
                     </div>
                 </div>

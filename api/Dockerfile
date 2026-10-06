@@ -36,6 +36,9 @@ RUN if [ -f uv.lock ]; then \
         uv sync --no-cache; \
     fi
 
+# Catch legacy LibDev builds that require MODE instead of ENV before deployment.
+RUN ENV=test /.venv/bin/python -c "from libdev.s3 import upload"
+
 # ========================================
 # Final Stage - Runtime image
 # ========================================

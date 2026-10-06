@@ -14,6 +14,7 @@ import { ThemeProvider } from '@/providers';
 import { PopupProvider } from '@/widgets/feedback-system';
 import { ToastProvider } from '@/widgets/feedback-system';
 import { StructuredData, ThemeAwareContent, VkBridgeInitializer } from '@/shared/components/layout';
+import { APP_CONFIG } from '@/shared/config/app';
 import { getPublicAppEnv, isNonProdAppEnv } from '@/shared/lib/env';
 import Script from "next/script";
 
@@ -31,14 +32,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: {
-        default: "web",
-        template: "%s | web"
+        default: APP_CONFIG.name,
+        template: `%s | ${APP_CONFIG.name}`
     },
-    description: "Template web app",
-    keywords: ["web development"],
-    authors: [{ name: "Alex Poloz <alexypoloz@gmail.com>" }],
-    creator: "Alex Poloz <alexypoloz@gmail.com>",
-    publisher: "Alex Poloz <alexypoloz@gmail.com>",
+    description: APP_CONFIG.description,
+    keywords: ['launch template', 'next.js', 'fastapi'],
+    authors: [{ name: APP_CONFIG.author }],
+    creator: APP_CONFIG.author,
+    publisher: APP_CONFIG.author,
     formatDetection: {
         email: false,
         address: false,
@@ -56,16 +57,16 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "web",
-        description: "Template web app",
+        title: APP_CONFIG.name,
+        description: APP_CONFIG.description,
         url: '/',
-        siteName: 'web',
+        siteName: APP_CONFIG.name,
         images: [
             {
                 url: '/logo.svg',
                 width: 1200,
                 height: 630,
-                alt: 'web Logo',
+                alt: `${APP_CONFIG.name} logo`,
             },
         ],
         locale: 'en_US',
@@ -73,8 +74,8 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: "web",
-        description: "Template web app",
+        title: APP_CONFIG.name,
+        description: APP_CONFIG.description,
         images: ['/logo.svg'],
     },
     robots: {
@@ -97,7 +98,7 @@ export const metadata: Metadata = {
     appleWebApp: {
         capable: true,
         statusBarStyle: 'default',
-        title: 'web',
+        title: APP_CONFIG.name,
     },
 };
 

@@ -1,6 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
+import { Button } from '@/shared/ui/button';
 import Popup, { PopupProps } from './Popup';
 
 interface PopupContextType {
@@ -34,23 +36,26 @@ interface PopupProviderProps {
 }
 
 export function PopupProvider({ children }: PopupProviderProps) {
+    const tSystem = useTranslations('system');
     const [isOpen, setIsOpen] = useState(false);
     const [popupProps, setPopupProps] = useState<Omit<PopupProps, 'isOpen' | 'onClose'>>({});
-    const [currentPromiseResolve, setCurrentPromiseResolve] = useState<((value: unknown) => void) | null>(null);
+    const [currentPromiseResolve, setCurrentPromiseResolve] = useState<(() => void) | null>(null);
 
     const showPopup = useCallback((props: Omit<PopupProps, 'isOpen' | 'onClose'>) => {
         setPopupProps(props);
         setIsOpen(true);
     }, []);
 
-    const closePopup = useCallback(() => {
+    const finishPopup = useCallback((resolve?: () => void) => {
+        resolve?.();
+        setCurrentPromiseResolve(null);
+        setPopupProps({});
         setIsOpen(false);
-        // Resolve any pending promises
-        if (currentPromiseResolve) {
-            currentPromiseResolve(false);
-            setCurrentPromiseResolve(null);
-        }
-    }, [currentPromiseResolve]);
+    }, []);
+
+    const closePopup = useCallback(() => {
+        finishPopup(currentPromiseResolve ?? undefined);
+    }, [currentPromiseResolve, finishPopup]);
 
     const showAlert = useCallback((options: {
         title?: string;
@@ -58,24 +63,23 @@ export function PopupProvider({ children }: PopupProviderProps) {
         confirmText?: string;
     }) => {
         return new Promise<void>((resolve) => {
-            setCurrentPromiseResolve(() => resolve);
+            setCurrentPromiseResolve(() => () => resolve());
             showPopup({
                 title: options.title,
                 children: <p className="text-sm text-muted-foreground">{options.message}</p>,
                 actions: (
-                    <button
+                    <Button
                         onClick={() => {
-                            resolve();
-                            closePopup();
+                            finishPopup(() => resolve());
                         }}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full sm:w-auto"
+                        className="w-full sm:w-auto"
                     >
-                        {options.confirmText || 'OK'}
-                    </button>
+                        {options.confirmText || tSystem('ok')}
+                    </Button>
                 )
             });
         });
-    }, [showPopup, closePopup]);
+    }, [finishPopup, showPopup, tSystem]);
 
     const showConfirm = useCallback((options: {
         title?: string;
@@ -85,38 +89,35 @@ export function PopupProvider({ children }: PopupProviderProps) {
         variant?: 'default' | 'destructive';
     }) => {
         return new Promise<boolean>((resolve) => {
-            setCurrentPromiseResolve(() => resolve);
+            setCurrentPromiseResolve(() => () => resolve(false));
             showPopup({
                 title: options.title,
                 children: <p className="text-sm text-muted-foreground">{options.message}</p>,
                 actions: (
                     <div className="flex flex-col-reverse sm:flex-row gap-2 w-full sm:w-auto">
-                        <button
+                        <Button
+                            variant="outline"
                             onClick={() => {
-                                resolve(false);
-                                closePopup();
+                                finishPopup(() => resolve(false));
                             }}
-                            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 flex-1 sm:flex-none"
+                            className="flex-1 sm:flex-none"
                         >
-                            {options.cancelText || 'Cancel'}
-                        </button>
-                        <button
+                            {options.cancelText || tSystem('cancel')}
+                        </Button>
+                        <Button
+                            variant={options.variant === 'destructive' ? 'destructive' : 'default'}
                             onClick={() => {
-                                resolve(true);
-                                closePopup();
+                                finishPopup(() => resolve(true));
                             }}
-                            className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 flex-1 sm:flex-none ${options.variant === 'destructive'
-                                ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
-                                : 'bg-primary text-primary-foreground hover:bg-primary/90'
-                                }`}
+                            className="flex-1 sm:flex-none"
                         >
-                            {options.confirmText || 'Confirm'}
-                        </button>
+                            {options.confirmText || tSystem('confirm')}
+                        </Button>
                     </div>
                 )
             });
         });
-    }, [showPopup, closePopup]);
+    }, [finishPopup, showPopup, tSystem]);
 
     const contextValue: PopupContextType = {
         showPopup,
@@ -149,6 +150,7 @@ export function usePopup() {
 // Example usage hook for common patterns
 export function usePopupActions() {
     const { showAlert, showConfirm, showPopup, closePopup } = usePopup();
+    const tSystem = useTranslations('system');
 
     return {
         // Simple alert
@@ -163,24 +165,24 @@ export function usePopupActions() {
 
         // Quick success/error alerts
         success: (message: string) => showAlert({
-            title: 'Success',
+            title: tSystem('success'),
             message,
-            confirmText: 'OK'
+            confirmText: tSystem('ok')
         }),
 
         error: (message: string) => showAlert({
-            title: 'Error',
+            title: tSystem('error'),
             message,
-            confirmText: 'OK'
+            confirmText: tSystem('ok')
         }),
 
         // Destructive confirmation
-        confirmDelete: (message: string = 'Are you sure you want to delete this item?') =>
+        confirmDelete: (message: string = tSystem('deleteItemConfirm', { item: tSystem('item') })) =>
             showConfirm({
-                title: 'Delete Confirmation',
+                title: tSystem('delete'),
                 message,
-                confirmText: 'Delete',
-                cancelText: 'Cancel',
+                confirmText: tSystem('delete'),
+                cancelText: tSystem('cancel'),
                 variant: 'destructive'
             })
     };

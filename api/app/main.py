@@ -178,9 +178,9 @@ async def uploader(
 
     try:
         if converted:
-            url = await upload(converted, file_type="webp")
+            url = await upload(converted, directory=_resolve_env(), file_type="webp")
         else:
-            url = await upload(data, file_type=file_type or "bin")
+            url = await upload(data, directory=_resolve_env(), file_type=file_type or "bin")
     except Exception as exc:  # pylint: disable=broad-except
         # Normalize to a BaseError so middleware returns a 400 with detail
         raise BaseError(str(exc)) from exc

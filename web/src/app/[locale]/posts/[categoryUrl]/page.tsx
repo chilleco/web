@@ -152,8 +152,7 @@ async function loadRelatedPosts(post: Post, locale: string) {
     });
 
     return posts.filter((item) => item.id !== post.id).slice(0, 3);
-  } catch (error) {
-    console.error('Failed to load related posts', error);
+  } catch {
     return [];
   }
 }

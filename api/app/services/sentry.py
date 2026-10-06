@@ -178,7 +178,6 @@ def init_sentry() -> bool:
         send_default_pii=send_default_pii,
         max_request_body_size="always",
         attach_stacktrace=True,
-        with_locals=True,
         max_value_length=4096,
         in_app_include=[
             "routes",

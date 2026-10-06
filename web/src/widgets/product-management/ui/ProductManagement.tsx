@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { EntityManagement } from '@/shared/ui';
 import { useToastActions } from '@/shared/hooks/useToast';
+import { usePopupActions } from '@/widgets/feedback-system';
 import { getProducts, Product, deleteProduct } from '@/entities/product';
 import { ProductForm } from './ProductForm';
 import { ProductListItem } from './ProductListItem';
@@ -27,6 +28,7 @@ export function ProductManagement({
   const [error, setError] = useState<string | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const { success, error: showError } = useToastActions();
+  const { confirmDelete } = usePopupActions();
 
   const loadProducts = useCallback(async () => {
     try {
@@ -65,7 +67,9 @@ export function ProductManagement({
   };
 
   const handleDelete = async (product: Product) => {
-    if (!confirm(t('deleteConfirm', { title: product.title }))) return;
+    const isConfirmed = await confirmDelete(t('deleteConfirm', { title: product.title }));
+    if (!isConfirmed) return;
+
     try {
       await deleteProduct(product.id);
       await loadProducts();

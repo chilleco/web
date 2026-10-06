@@ -61,6 +61,7 @@ export default function Home() {
     const tAdminPosts = useTranslations('admin.posts');
     const tAdminProducts = useTranslations('admin.products');
     const tContact = useTranslations('contact');
+    const tSystem = useTranslations('system');
     const { success, error: showError } = useToastActions();
     const locale = useLocale();
     const [formData, setFormData] = useState({
@@ -86,11 +87,11 @@ export default function Home() {
                 setLandingPosts(response.posts.slice(0, 3));
             })
             .catch((error) => {
-                console.error('Error loading landing posts:', error);
-                showError(tAdminPosts('loading'));
+                const message = error instanceof Error ? error.message : tSystem('error');
+                showError(message);
             })
             .finally(() => setPostsLoading(false));
-    }, [locale, showError, tAdminPosts]);
+    }, [locale, showError, tSystem]);
 
     useEffect(() => {
         const fetchKey = `${locale}-landing-products`;
@@ -103,11 +104,11 @@ export default function Home() {
                 setLandingProducts(response.products.slice(0, 3));
             })
             .catch((error) => {
-                console.error('Error loading landing products:', error);
-                showError(tAdminProducts('loading'));
+                const message = error instanceof Error ? error.message : tSystem('error');
+                showError(message);
             })
             .finally(() => setProductsLoading(false));
-    }, [locale, showError, tAdminProducts]);
+    }, [locale, showError, tSystem]);
 
     const heroHighlights: Array<HighlightItem & { label: string; value: string }> = useMemo(
         () =>

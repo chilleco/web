@@ -1,12 +1,18 @@
-name: CI/CD main
+name: CI/CD prod
+run-name: Deploy prod from ${{ github.ref_name }}
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "simplify-frontend" ]
+  workflow_dispatch:
+
+# Both release branches update the same VPS stack; finish one release at a time.
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
 
 env:
   ENV: prod
-  COMPOSE_FILE: infra/compose/prod.yml
 
 jobs:
   web-check:
@@ -18,6 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Deployment checks
+        working-directory: .
+        run: make test-infra ENV_FILE=/dev/null
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -27,7 +37,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
           cache-dependency-path: web/pnpm-lock.yaml
 
@@ -91,23 +101,37 @@ jobs:
           password: ${{ secrets.REGISTRY_TOKEN }}     # PAT or token
 
       - name: Build & push images
+        env:
+          NEXT_PUBLIC_ENV: ${{ env.ENV }}
+          NEXT_PUBLIC_API: ${{ vars.PROTOCOL }}://${{ vars.EXTERNAL_HOST }}/api/
+          NEXT_PUBLIC_WEB: ${{ vars.PROTOCOL }}://${{ vars.EXTERNAL_HOST }}/
+          NEXT_PUBLIC_NAME: ${{ vars.NAME }}
+          NEXT_PUBLIC_LOCALE: ${{ vars.LOCALE }}
+          NEXT_PUBLIC_TG_BOT: ${{ vars.TG_BOT }}
         run: |
           for svc in api web tg; do
             CONTEXT="$svc"
             DOCKERFILE="$svc/Dockerfile"
             IMAGE="${{ vars.REGISTRY_HOST }}/${{ vars.REGISTRY_OWNER }}/${{ vars.PROJECT_NAME }}/${svc}"
+            BUILD_ARGS=()
+            if [ "$svc" = "web" ]; then
+              for key in NEXT_PUBLIC_ENV NEXT_PUBLIC_API NEXT_PUBLIC_WEB NEXT_PUBLIC_NAME NEXT_PUBLIC_LOCALE NEXT_PUBLIC_TG_BOT; do
+                BUILD_ARGS+=(--build-arg "$key=$(printenv "$key")")
+              done
+            fi
             docker buildx build \
               --platform linux/amd64 \
               -f $DOCKERFILE \
+              "${BUILD_ARGS[@]}" \
               -t $IMAGE:${{ env.IMAGE_TAG }} \
               -t $IMAGE:latest \
               $CONTEXT \
-              --push
+              --push || exit 1
           done
           #  --platform linux/amd64,linux/arm64
 
   deploy-main:
-    name: Deploy Main
+    name: Deploy Prod
     needs: build-and-push
     runs-on: ubuntu-latest
     environment: prod
@@ -142,21 +166,29 @@ jobs:
             REPOSITORY="git@${GITHUB_HOST}:${GITHUB_REPOSITORY}.git"
             REGISTRY="${{ vars.REGISTRY_HOST }}/${{ vars.REGISTRY_OWNER }}"
             DATA_PATH=${{ vars.DATA_PATH }}
-            DATA_ROOT="$(dirname "$DATA_PATH")"
             export ENV STACK_NAME COMMIT_SHA RELEASE IMAGE_TAG REPOSITORY REGISTRY
             echo "Pulling new version"
             if [ -d "$FOLDER" ];
             then
-                cd "$FOLDER"
+                cd "$FOLDER" || exit 1
                 git fetch --prune origin
                 git checkout -f --detach "$COMMIT_SHA"
                 git reset --hard "$COMMIT_SHA"
                 git clean -fd
             else
                 GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" git clone "$REPOSITORY" "$FOLDER"
-                cd "$FOLDER"
+                cd "$FOLDER" || exit 1
                 git checkout --detach "$COMMIT_SHA"
             fi
+
+            # Runtime settings may contain literal ~/ paths. Keep deployment paths
+            # separate from that import, and write their expanded values below.
+            deploy_dir="$(pwd -P)" || exit 1
+            case "$DATA_PATH" in
+              /*) data_dir="$DATA_PATH" ;;
+              *) data_dir="$deploy_dir/$DATA_PATH" ;;
+            esac
+            DATA_ROOT="$(dirname "$data_dir")"
 
             echo "Checking data directory"
             if [ -d "$DATA_ROOT" ];
@@ -165,16 +197,18 @@ jobs:
             else
                 mkdir -p "$DATA_ROOT"
             fi
-            if [ -d "$DATA_PATH" ];
+            if [ -d "$data_dir" ];
             then
                 echo ""
             else
-                cp -r "$FOLDER/data" "$DATA_PATH"
+                cp -r "$deploy_dir/data" "$data_dir"
             fi
+            # Swarm bind mounts require the source directory to exist on the VPS.
+            mkdir -p "$data_dir/redis" || exit 1
 
             echo "Generating .env"
-            ENV_LIST="$FOLDER/infra/compose/.env.list"
-            ENV_OUT="$FOLDER/.env"
+            ENV_LIST="$deploy_dir/infra/compose/.env.list"
+            ENV_OUT="$deploy_dir/.env"
             if ! command -v jq >/dev/null 2>&1; then
               echo "jq is required to generate .env from GitHub vars/secrets"
               exit 1
@@ -202,6 +236,10 @@ jobs:
               if [ -z "$value" ] && [ "$key_lc" != "$key" ]; then
                 value="$(printenv "$key_lc")"
               fi
+              case "$key" in
+                FOLDER) value="$deploy_dir" ;;
+                DATA_PATH) value="$data_dir" ;;
+              esac
               value="$(printf '%s' "$value" | tr '\r' '\n' | awk 'BEGIN{ORS="";} {gsub(/\n/,"\\\\n"); print}')"
               printf '%s=%s\n' "$key" "$value" >> "$ENV_OUT"
             done < "$ENV_LIST"
@@ -212,8 +250,8 @@ jobs:
                    --username ${{ vars.REGISTRY_USER }} --password-stdin
 
             # compile compose file
-            rm -f "$FOLDER/deploy.yml"
-            export ENV_FILE_PATH="$FOLDER/.env"
+            rm -f "$deploy_dir/deploy.yml"
+            export ENV_FILE_PATH="$deploy_dir/.env"
             while IFS='=' read -r key value; do
               case "$key" in
                 ''|\#*) continue ;;
@@ -226,19 +264,19 @@ jobs:
             done < "$ENV_FILE_PATH"
             export RELEASE="$RELEASE"
             export IMAGE_TAG="$IMAGE_TAG"
-            envsubst < "$COMPOSE_FILE" > "$FOLDER/deploy.yml"
+            make check-deploy ENV="$ENV" ENV_FILE="$ENV_FILE_PATH" || exit 1
 
             # optional: pull fresh images
             for service in api web tg; do
-              sudo docker pull "$REGISTRY/$PROJECT_NAME/${service}:$IMAGE_TAG"
+              sudo docker pull "$REGISTRY/$PROJECT_NAME/${service}:$IMAGE_TAG" || exit 1
             done
 
             # deploy (with registry auth)
             sudo docker stack deploy \
-                  --compose-file "$FOLDER/deploy.yml" \
+                  --compose-file "$deploy_dir/deploy.yml" \
                   --with-registry-auth \
                   --prune \
-                  "$STACK_NAME"
+                  "$STACK_NAME" || exit 1
 
             # force update all services to ensure new images are deployed
             # this handles cases where services are at max replicas per node
@@ -254,8 +292,12 @@ jobs:
                 --update-order stop-first \
                 --update-parallelism 1 \
                 --force \
-                "${STACK_NAME}_${service}"
+                "${STACK_NAME}_${service}" || exit 1
             done
+
+            # A valid manifest is not enough: fail the deployment on startup crashes.
+            sudo make ready ENV="$ENV" ENV_FILE="$ENV_FILE_PATH" || exit 1
+            sudo make check-db ENV="$ENV" ENV_FILE="$ENV_FILE_PATH" || exit 1
 
             echo "Clean"
             yes | sudo docker system prune -a

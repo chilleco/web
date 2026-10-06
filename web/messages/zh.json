@@ -40,20 +40,39 @@
     "sections": "版块"
   },
   "hub": {
-    "toastDemo": {
-      "title": "通知",
-      "description": "触发各类 Toast 以检查样式。",
-      "actions": {
-        "default": "默认"
+    "description": "用于房间、聊天、通话和协作工作的实时互动层。",
+    "intro": {
+      "title": "这个区域代表什么",
+      "body": "将 hub 用作产品的实时互动层：房间、聊天线程、视频通话、共享白板、在线状态与协作流程。它应该体现出实时和社交感，而不是内容页或支持中心。"
+    },
+    "modes": {
+      "title": "互动模式",
+      "rooms": {
+        "title": "房间与空间",
+        "description": "持久房间，包含成员、角色、在线状态、未读状态以及快速上下文切换。"
       },
-      "messages": {
-        "default": "默认提示",
-        "success": "成功提示",
-        "error": "错误提示",
-        "warning": "警告提示",
-        "info": "信息提示",
-        "loading": "加载中..."
+      "chat": {
+        "title": "聊天与线程",
+        "description": "支持私聊、房间讨论、回复、反应和轻量协作的消息流。"
+      },
+      "calls": {
+        "title": "语音与视频",
+        "description": "具备清晰加入状态、参与者状态、排期和通话后上下文的通话流程。"
+      },
+      "boards": {
+        "title": "白板与协作板",
+        "description": "用于笔记、评论、评审和共同思考的共享协作表面。"
       }
+    },
+    "principles": {
+      "title": "产品规则",
+      "realtime": "围绕实时在线、未读、输入状态和参与者上下文来设计，而不是静态内容模块。",
+      "lowNoise": "互动界面要保持克制和有人味：清晰的房间列表、舒适的消息密度、不过度装饰。",
+      "realStates": "只展示来自后端或传输层的真实状态，不要伪造在线人数、房间活跃度或通话指标。"
+    },
+    "activation": {
+      "title": "上线互动流程之前",
+      "body": "先把房间、成员、消息、通话、权限和共享白板接到真实后端契约或实时传输层。如果某个能力还没准备好，就先隐藏，或以本地化原因禁用。"
     }
   },
   "tasks": {
@@ -381,6 +400,8 @@
     "next": "下一个",
     "download": "下载",
     "cancel": "取消",
+    "ok": "确定",
+    "confirm": "确认",
     "none": "无",
     "yes": "是",
     "no": "否",
@@ -392,6 +413,7 @@
     "iconKeyPlaceholder": "home",
     "iconKeyDescription": "输入 FontAwesome 图标键（不含 'fa-' 前缀）。留空表示不使用图标。",
     "item": "项目",
+    "deleteItemConfirm": "删除“{item}”？",
     "processing": "处理中",
     "errors": {
       "unsupportedImageFormat": "不支持的图片格式。请将文件转换为 JPG 或 PNG 后重试。"
@@ -411,9 +433,9 @@
     "smz": "自由职业"
   },
   "brand": {
-    "name": "web",
-    "description": "模板Web应用程序",
-    "tagline": "模板Web应用程序",
+    "name": "Launchpad",
+    "description": "可复用的全栈上线模板",
+    "tagline": "可复用的全栈上线模板",
     "address": "俄罗斯圣彼得堡"
   },
   "footer": {

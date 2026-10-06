@@ -8,6 +8,8 @@ const runtimeEnv = resolveAppEnv(process.env.NEXT_PUBLIC_ENV);
 const enableWatchPolling = ['local', 'test', 'dev'].includes(runtimeEnv);
 
 const nextConfig: NextConfig = {
+  // Ship the traced server so the runtime does not reload build-time TS config.
+  output: 'standalone',
   // Image configuration for external domains - allow all HTTPS domains
   images: {
     remotePatterns: [

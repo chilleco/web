@@ -435,8 +435,7 @@ export default function SocialPage() {
                             image: 'https://placehold.co/600x400/png',
                         });
                         if (openTelegramShareMessage(shareMessage.id)) return;
-                    } catch (e) {
-                        console.log(`openTelegramShareMessage: ${e}`)
+                    } catch {
                         // Fallback to classic share link if prepared message fails.
                     }
                 }

@@ -40,20 +40,39 @@
     "sections": "Secciones"
   },
   "hub": {
-    "toastDemo": {
-      "title": "Notificaciones",
-      "description": "Activa cada variante de toast para comprobar el estilo.",
-      "actions": {
-        "default": "Predeterminado"
+    "description": "Capa de interacción en vivo para salas, chat, llamadas y trabajo colaborativo.",
+    "intro": {
+      "title": "Qué representa esta área",
+      "body": "Usa el hub como la capa de interacción en tiempo real del producto: salas, hilos de chat, videollamadas, pizarras compartidas, presencia y flujos de coordinación. Debe sentirse vivo y social, no editorial ni orientado a soporte."
+    },
+    "modes": {
+      "title": "Modos de interacción",
+      "rooms": {
+        "title": "Salas y espacios",
+        "description": "Salas persistentes con miembros, roles, presencia, estado de no leído y cambio rápido de contexto."
       },
-      "messages": {
-        "default": "Notificación predeterminada",
-        "success": "Notificación de éxito",
-        "error": "Notificación de error",
-        "warning": "Notificación de advertencia",
-        "info": "Notificación informativa",
-        "loading": "Cargando..."
+      "chat": {
+        "title": "Chat e hilos",
+        "description": "Flujos de mensajes para chat directo, discusión por sala, respuestas, reacciones y coordinación ligera."
+      },
+      "calls": {
+        "title": "Voz y video",
+        "description": "Flujos de llamadas con estado de unión claro, estado de participantes, agenda y contexto posterior."
+      },
+      "boards": {
+        "title": "Tableros y pizarras",
+        "description": "Superficies compartidas para notas, comentarios, revisión y pensamiento colaborativo."
       }
+    },
+    "principles": {
+      "title": "Reglas del producto",
+      "realtime": "Diseña esta sección alrededor de presencia en tiempo real, no leídos, escritura y contexto de participantes, no como bloques de contenido estático.",
+      "lowNoise": "Mantén la UI de interacción mínima y humana: listas claras de salas, densidad legible de mensajes y sin sobrecarga decorativa.",
+      "realStates": "Muestra solo estados reales del backend o del transporte. No simules usuarios en línea, actividad de salas ni métricas de llamadas."
+    },
+    "activation": {
+      "title": "Antes de lanzar flujos interactivos",
+      "body": "Conecta primero salas, membresía, mensajería, llamadas, permisos y pizarras compartidas a contratos reales del backend o al transporte en tiempo real. Si una capacidad aún no está lista, mantenla oculta o deshabilitada con una razón localizada."
     }
   },
   "tasks": {
@@ -381,6 +400,8 @@
     "next": "Siguiente",
     "download": "Descargar",
     "cancel": "Cancelar",
+    "ok": "Aceptar",
+    "confirm": "Confirmar",
     "none": "Ninguna",
     "yes": "Sí",
     "no": "No",
@@ -392,6 +413,7 @@
     "iconKeyPlaceholder": "home",
     "iconKeyDescription": "Ingresa una clave de icono FontAwesome (sin prefijo 'fa-'). Deja vacío para no usar icono.",
     "item": "Elemento",
+    "deleteItemConfirm": "¿Eliminar \"{item}\"?",
     "processing": "Procesando",
     "errors": {
       "unsupportedImageFormat": "Formato de imagen no admitido. Convierte el archivo a JPG o PNG y vuelve a intentarlo."
@@ -411,9 +433,9 @@
     "smz": "Autoempleado"
   },
   "brand": {
-    "name": "web",
-    "description": "Aplicación web de plantilla",
-    "tagline": "Aplicación web de plantilla",
+    "name": "Launchpad",
+    "description": "Plantilla full-stack reutilizable para lanzamientos",
+    "tagline": "Plantilla full-stack reutilizable para lanzamientos",
     "address": "San Petersburgo, Rusia"
   },
   "footer": {

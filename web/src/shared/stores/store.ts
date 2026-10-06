@@ -3,7 +3,6 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { combineReducers } from '@reduxjs/toolkit'
-import { counterSlice } from '@/features/demo/stores/counterSlice'
 import { userSettingsSlice } from '@/features/user/stores/userSettingsSlice'
 import { toastSlice } from '@/shared/stores/toastSlice'
 import { cartSlice } from '@/features/cart/stores/cartSlice'
@@ -12,12 +11,6 @@ import { sessionSlice } from '@/features/session/stores/sessionSlice'
 import { authSlice } from '@/features/auth/stores/authSlice'
 import { spaceSelectionSlice } from '@/features/spaces/stores/spaceSelectionSlice'
 import { layoutSlice } from '@/shared/stores/layoutSlice'
-
-// Persist configuration for counter
-const counterPersistConfig = {
-    key: 'counter',
-    storage,
-}
 
 // Persist configuration for user settings
 const userSettingsPersistConfig = {
@@ -56,7 +49,6 @@ const layoutPersistConfig = {
 }
 
 // Create persisted reducers
-const persistedCounterReducer = persistReducer(counterPersistConfig, counterSlice.reducer)
 const persistedUserSettingsReducer = persistReducer(userSettingsPersistConfig, userSettingsSlice.reducer)
 const persistedCartReducer = persistReducer(cartPersistConfig, cartSlice.reducer)
 const persistedFavoritesReducer = persistReducer(favoritesPersistConfig, favoritesSlice.reducer)
@@ -66,7 +58,6 @@ const persistedLayoutReducer = persistReducer(layoutPersistConfig, layoutSlice.r
 
 // Root reducer
 const rootReducer = combineReducers({
-    counter: persistedCounterReducer,
     userSettings: persistedUserSettingsReducer,
     cart: persistedCartReducer,
     favorites: persistedFavoritesReducer,

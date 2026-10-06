@@ -29,6 +29,7 @@ const initialState: ToastState = {
 };
 
 export interface AddToastPayload {
+    id?: string;
     type?: Toast['type'];
     title?: string;
     message: string;
@@ -50,7 +51,7 @@ const toastSlice = createSlice({
     reducers: {
         addToast: (state, action: PayloadAction<AddToastPayload>) => {
             const toast: Toast = {
-                id: `toast_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                id: action.payload.id ?? `toast_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
                 type: action.payload.type || 'default',
                 title: action.payload.title,
                 message: action.payload.message,
